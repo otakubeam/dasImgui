@@ -49,7 +49,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 				${DAS_IMGUI_DIR}/src/imgui_impl_glfw.h
 				${DAS_IMGUI_DIR}/src/imgui_impl_opengl2.cpp
 				${DAS_IMGUI_DIR}/src/imgui_impl_opengl2.h
-				${DAS_IMGUI_DIR}/example/imgui_app.das
+				${DAS_IMGUI_DIR}/example/imgui_opengl2.das
 			)
 			ADD_MODULE_LIB(libDasModuleImGuiApp)
 			ADD_MODULE_CPP(imgui_app)
