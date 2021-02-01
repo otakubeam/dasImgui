@@ -1,0 +1,1083 @@
+// ------------
+// enumerations
+// ------------
+
+DAS_BASE_BIND_ENUM_98(ImGuiDataType_,ImGuiDataType_
+	,ImGuiDataType_S8
+	,ImGuiDataType_U8
+	,ImGuiDataType_S16
+	,ImGuiDataType_U16
+	,ImGuiDataType_S32
+	,ImGuiDataType_U32
+	,ImGuiDataType_S64
+	,ImGuiDataType_U64
+	,ImGuiDataType_Float
+	,ImGuiDataType_Double
+	,ImGuiDataType_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiHoveredFlags_,ImGuiHoveredFlags_
+	,ImGuiHoveredFlags_None
+	,ImGuiHoveredFlags_ChildWindows
+	,ImGuiHoveredFlags_RootWindow
+	,ImGuiHoveredFlags_AnyWindow
+	,ImGuiHoveredFlags_AllowWhenBlockedByPopup
+	,ImGuiHoveredFlags_AllowWhenBlockedByActiveItem
+	,ImGuiHoveredFlags_AllowWhenOverlapped
+	,ImGuiHoveredFlags_AllowWhenDisabled
+	,ImGuiHoveredFlags_RectOnly
+	,ImGuiHoveredFlags_RootAndChildWindows
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiNavInput_,ImGuiNavInput_
+	,ImGuiNavInput_Activate
+	,ImGuiNavInput_Cancel
+	,ImGuiNavInput_Input
+	,ImGuiNavInput_Menu
+	,ImGuiNavInput_DpadLeft
+	,ImGuiNavInput_DpadRight
+	,ImGuiNavInput_DpadUp
+	,ImGuiNavInput_DpadDown
+	,ImGuiNavInput_LStickLeft
+	,ImGuiNavInput_LStickRight
+	,ImGuiNavInput_LStickUp
+	,ImGuiNavInput_LStickDown
+	,ImGuiNavInput_FocusPrev
+	,ImGuiNavInput_FocusNext
+	,ImGuiNavInput_TweakSlow
+	,ImGuiNavInput_TweakFast
+	,ImGuiNavInput_KeyMenu_
+	,ImGuiNavInput_KeyLeft_
+	,ImGuiNavInput_KeyRight_
+	,ImGuiNavInput_KeyUp_
+	,ImGuiNavInput_KeyDown_
+	,ImGuiNavInput_COUNT
+	,ImGuiNavInput_InternalStart_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiDir_,ImGuiDir_
+	,ImGuiDir_None
+	,ImGuiDir_Left
+	,ImGuiDir_Right
+	,ImGuiDir_Up
+	,ImGuiDir_Down
+	,ImGuiDir_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiCond_,ImGuiCond_
+	,ImGuiCond_None
+	,ImGuiCond_Always
+	,ImGuiCond_Once
+	,ImGuiCond_FirstUseEver
+	,ImGuiCond_Appearing
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiDragDropFlags_,ImGuiDragDropFlags_
+	,ImGuiDragDropFlags_None
+	,ImGuiDragDropFlags_SourceNoPreviewTooltip
+	,ImGuiDragDropFlags_SourceNoDisableHover
+	,ImGuiDragDropFlags_SourceNoHoldToOpenOthers
+	,ImGuiDragDropFlags_SourceAllowNullID
+	,ImGuiDragDropFlags_SourceExtern
+	,ImGuiDragDropFlags_SourceAutoExpirePayload
+	,ImGuiDragDropFlags_AcceptBeforeDelivery
+	,ImGuiDragDropFlags_AcceptNoDrawDefaultRect
+	,ImGuiDragDropFlags_AcceptNoPreviewTooltip
+	,ImGuiDragDropFlags_AcceptPeekOnly
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiColorEditFlags_,ImGuiColorEditFlags_
+	,ImGuiColorEditFlags_None
+	,ImGuiColorEditFlags_NoAlpha
+	,ImGuiColorEditFlags_NoPicker
+	,ImGuiColorEditFlags_NoOptions
+	,ImGuiColorEditFlags_NoSmallPreview
+	,ImGuiColorEditFlags_NoInputs
+	,ImGuiColorEditFlags_NoTooltip
+	,ImGuiColorEditFlags_NoLabel
+	,ImGuiColorEditFlags_NoSidePreview
+	,ImGuiColorEditFlags_NoDragDrop
+	,ImGuiColorEditFlags_NoBorder
+	,ImGuiColorEditFlags_AlphaBar
+	,ImGuiColorEditFlags_AlphaPreview
+	,ImGuiColorEditFlags_AlphaPreviewHalf
+	,ImGuiColorEditFlags_HDR
+	,ImGuiColorEditFlags_DisplayRGB
+	,ImGuiColorEditFlags_DisplayHSV
+	,ImGuiColorEditFlags_DisplayHex
+	,ImGuiColorEditFlags_Uint8
+	,ImGuiColorEditFlags_Float
+	,ImGuiColorEditFlags_PickerHueBar
+	,ImGuiColorEditFlags_PickerHueWheel
+	,ImGuiColorEditFlags_InputRGB
+	,ImGuiColorEditFlags_InputHSV
+	,ImGuiColorEditFlags__OptionsDefault
+	,ImGuiColorEditFlags__DisplayMask
+	,ImGuiColorEditFlags__DataTypeMask
+	,ImGuiColorEditFlags__PickerMask
+	,ImGuiColorEditFlags__InputMask
+	,ImGuiColorEditFlags_RGB
+	,ImGuiColorEditFlags_HSV
+	,ImGuiColorEditFlags_HEX
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiWindowFlags_,ImGuiWindowFlags_
+	,ImGuiWindowFlags_None
+	,ImGuiWindowFlags_NoTitleBar
+	,ImGuiWindowFlags_NoResize
+	,ImGuiWindowFlags_NoMove
+	,ImGuiWindowFlags_NoScrollbar
+	,ImGuiWindowFlags_NoScrollWithMouse
+	,ImGuiWindowFlags_NoCollapse
+	,ImGuiWindowFlags_AlwaysAutoResize
+	,ImGuiWindowFlags_NoBackground
+	,ImGuiWindowFlags_NoSavedSettings
+	,ImGuiWindowFlags_NoMouseInputs
+	,ImGuiWindowFlags_MenuBar
+	,ImGuiWindowFlags_HorizontalScrollbar
+	,ImGuiWindowFlags_NoFocusOnAppearing
+	,ImGuiWindowFlags_NoBringToFrontOnFocus
+	,ImGuiWindowFlags_AlwaysVerticalScrollbar
+	,ImGuiWindowFlags_AlwaysHorizontalScrollbar
+	,ImGuiWindowFlags_AlwaysUseWindowPadding
+	,ImGuiWindowFlags_NoNavInputs
+	,ImGuiWindowFlags_NoNavFocus
+	,ImGuiWindowFlags_UnsavedDocument
+	,ImGuiWindowFlags_NoNav
+	,ImGuiWindowFlags_NoDecoration
+	,ImGuiWindowFlags_NoInputs
+	,ImGuiWindowFlags_NavFlattened
+	,ImGuiWindowFlags_ChildWindow
+	,ImGuiWindowFlags_Tooltip
+	,ImGuiWindowFlags_Popup
+	,ImGuiWindowFlags_Modal
+	,ImGuiWindowFlags_ChildMenu
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiCol_,ImGuiCol_
+	,ImGuiCol_Text
+	,ImGuiCol_TextDisabled
+	,ImGuiCol_WindowBg
+	,ImGuiCol_ChildBg
+	,ImGuiCol_PopupBg
+	,ImGuiCol_Border
+	,ImGuiCol_BorderShadow
+	,ImGuiCol_FrameBg
+	,ImGuiCol_FrameBgHovered
+	,ImGuiCol_FrameBgActive
+	,ImGuiCol_TitleBg
+	,ImGuiCol_TitleBgActive
+	,ImGuiCol_TitleBgCollapsed
+	,ImGuiCol_MenuBarBg
+	,ImGuiCol_ScrollbarBg
+	,ImGuiCol_ScrollbarGrab
+	,ImGuiCol_ScrollbarGrabHovered
+	,ImGuiCol_ScrollbarGrabActive
+	,ImGuiCol_CheckMark
+	,ImGuiCol_SliderGrab
+	,ImGuiCol_SliderGrabActive
+	,ImGuiCol_Button
+	,ImGuiCol_ButtonHovered
+	,ImGuiCol_ButtonActive
+	,ImGuiCol_Header
+	,ImGuiCol_HeaderHovered
+	,ImGuiCol_HeaderActive
+	,ImGuiCol_Separator
+	,ImGuiCol_SeparatorHovered
+	,ImGuiCol_SeparatorActive
+	,ImGuiCol_ResizeGrip
+	,ImGuiCol_ResizeGripHovered
+	,ImGuiCol_ResizeGripActive
+	,ImGuiCol_Tab
+	,ImGuiCol_TabHovered
+	,ImGuiCol_TabActive
+	,ImGuiCol_TabUnfocused
+	,ImGuiCol_TabUnfocusedActive
+	,ImGuiCol_PlotLines
+	,ImGuiCol_PlotLinesHovered
+	,ImGuiCol_PlotHistogram
+	,ImGuiCol_PlotHistogramHovered
+	,ImGuiCol_TableHeaderBg
+	,ImGuiCol_TableBorderStrong
+	,ImGuiCol_TableBorderLight
+	,ImGuiCol_TableRowBg
+	,ImGuiCol_TableRowBgAlt
+	,ImGuiCol_TextSelectedBg
+	,ImGuiCol_DragDropTarget
+	,ImGuiCol_NavHighlight
+	,ImGuiCol_NavWindowingHighlight
+	,ImGuiCol_NavWindowingDimBg
+	,ImGuiCol_ModalWindowDimBg
+	,ImGuiCol_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTableFlags_,ImGuiTableFlags_
+	,ImGuiTableFlags_None
+	,ImGuiTableFlags_Resizable
+	,ImGuiTableFlags_Reorderable
+	,ImGuiTableFlags_Hideable
+	,ImGuiTableFlags_Sortable
+	,ImGuiTableFlags_NoSavedSettings
+	,ImGuiTableFlags_ContextMenuInBody
+	,ImGuiTableFlags_RowBg
+	,ImGuiTableFlags_BordersInnerH
+	,ImGuiTableFlags_BordersOuterH
+	,ImGuiTableFlags_BordersInnerV
+	,ImGuiTableFlags_BordersOuterV
+	,ImGuiTableFlags_BordersH
+	,ImGuiTableFlags_BordersV
+	,ImGuiTableFlags_BordersInner
+	,ImGuiTableFlags_BordersOuter
+	,ImGuiTableFlags_Borders
+	,ImGuiTableFlags_NoBordersInBody
+	,ImGuiTableFlags_NoBordersInBodyUntilResize
+	,ImGuiTableFlags_SizingFixedFit
+	,ImGuiTableFlags_SizingFixedSame
+	,ImGuiTableFlags_SizingStretchProp
+	,ImGuiTableFlags_SizingStretchSame
+	,ImGuiTableFlags_NoHostExtendX
+	,ImGuiTableFlags_NoHostExtendY
+	,ImGuiTableFlags_NoKeepColumnsVisible
+	,ImGuiTableFlags_PreciseWidths
+	,ImGuiTableFlags_NoClip
+	,ImGuiTableFlags_PadOuterX
+	,ImGuiTableFlags_NoPadOuterX
+	,ImGuiTableFlags_NoPadInnerX
+	,ImGuiTableFlags_ScrollX
+	,ImGuiTableFlags_ScrollY
+	,ImGuiTableFlags_SortMulti
+	,ImGuiTableFlags_SortTristate
+	,ImGuiTableFlags_SizingMask_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiKeyModFlags_,ImGuiKeyModFlags_
+	,ImGuiKeyModFlags_None
+	,ImGuiKeyModFlags_Ctrl
+	,ImGuiKeyModFlags_Shift
+	,ImGuiKeyModFlags_Alt
+	,ImGuiKeyModFlags_Super
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiFocusedFlags_,ImGuiFocusedFlags_
+	,ImGuiFocusedFlags_None
+	,ImGuiFocusedFlags_ChildWindows
+	,ImGuiFocusedFlags_RootWindow
+	,ImGuiFocusedFlags_AnyWindow
+	,ImGuiFocusedFlags_RootAndChildWindows
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiMouseCursor_,ImGuiMouseCursor_
+	,ImGuiMouseCursor_None
+	,ImGuiMouseCursor_Arrow
+	,ImGuiMouseCursor_TextInput
+	,ImGuiMouseCursor_ResizeAll
+	,ImGuiMouseCursor_ResizeNS
+	,ImGuiMouseCursor_ResizeEW
+	,ImGuiMouseCursor_ResizeNESW
+	,ImGuiMouseCursor_ResizeNWSE
+	,ImGuiMouseCursor_Hand
+	,ImGuiMouseCursor_NotAllowed
+	,ImGuiMouseCursor_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImDrawCornerFlags_,ImDrawCornerFlags_
+	,ImDrawCornerFlags_None
+	,ImDrawCornerFlags_TopLeft
+	,ImDrawCornerFlags_TopRight
+	,ImDrawCornerFlags_BotLeft
+	,ImDrawCornerFlags_BotRight
+	,ImDrawCornerFlags_Top
+	,ImDrawCornerFlags_Bot
+	,ImDrawCornerFlags_Left
+	,ImDrawCornerFlags_Right
+	,ImDrawCornerFlags_All
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTableBgTarget_,ImGuiTableBgTarget_
+	,ImGuiTableBgTarget_None
+	,ImGuiTableBgTarget_RowBg0
+	,ImGuiTableBgTarget_RowBg1
+	,ImGuiTableBgTarget_CellBg
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiButtonFlags_,ImGuiButtonFlags_
+	,ImGuiButtonFlags_None
+	,ImGuiButtonFlags_MouseButtonLeft
+	,ImGuiButtonFlags_MouseButtonRight
+	,ImGuiButtonFlags_MouseButtonMiddle
+	,ImGuiButtonFlags_MouseButtonMask_
+	,ImGuiButtonFlags_MouseButtonDefault_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiMouseButton_,ImGuiMouseButton_
+	,ImGuiMouseButton_Left
+	,ImGuiMouseButton_Right
+	,ImGuiMouseButton_Middle
+	,ImGuiMouseButton_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTabBarFlags_,ImGuiTabBarFlags_
+	,ImGuiTabBarFlags_None
+	,ImGuiTabBarFlags_Reorderable
+	,ImGuiTabBarFlags_AutoSelectNewTabs
+	,ImGuiTabBarFlags_TabListPopupButton
+	,ImGuiTabBarFlags_NoCloseWithMiddleMouseButton
+	,ImGuiTabBarFlags_NoTabListScrollingButtons
+	,ImGuiTabBarFlags_NoTooltip
+	,ImGuiTabBarFlags_FittingPolicyResizeDown
+	,ImGuiTabBarFlags_FittingPolicyScroll
+	,ImGuiTabBarFlags_FittingPolicyMask_
+	,ImGuiTabBarFlags_FittingPolicyDefault_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTreeNodeFlags_,ImGuiTreeNodeFlags_
+	,ImGuiTreeNodeFlags_None
+	,ImGuiTreeNodeFlags_Selected
+	,ImGuiTreeNodeFlags_Framed
+	,ImGuiTreeNodeFlags_AllowItemOverlap
+	,ImGuiTreeNodeFlags_NoTreePushOnOpen
+	,ImGuiTreeNodeFlags_NoAutoOpenOnLog
+	,ImGuiTreeNodeFlags_DefaultOpen
+	,ImGuiTreeNodeFlags_OpenOnDoubleClick
+	,ImGuiTreeNodeFlags_OpenOnArrow
+	,ImGuiTreeNodeFlags_Leaf
+	,ImGuiTreeNodeFlags_Bullet
+	,ImGuiTreeNodeFlags_FramePadding
+	,ImGuiTreeNodeFlags_SpanAvailWidth
+	,ImGuiTreeNodeFlags_SpanFullWidth
+	,ImGuiTreeNodeFlags_NavLeftJumpsBackHere
+	,ImGuiTreeNodeFlags_CollapsingHeader
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTabItemFlags_,ImGuiTabItemFlags_
+	,ImGuiTabItemFlags_None
+	,ImGuiTabItemFlags_UnsavedDocument
+	,ImGuiTabItemFlags_SetSelected
+	,ImGuiTabItemFlags_NoCloseWithMiddleMouseButton
+	,ImGuiTabItemFlags_NoPushId
+	,ImGuiTabItemFlags_NoTooltip
+	,ImGuiTabItemFlags_NoReorder
+	,ImGuiTabItemFlags_Leading
+	,ImGuiTabItemFlags_Trailing
+)
+
+DAS_BASE_BIND_ENUM_98(ImDrawListFlags_,ImDrawListFlags_
+	,ImDrawListFlags_None
+	,ImDrawListFlags_AntiAliasedLines
+	,ImDrawListFlags_AntiAliasedLinesUseTex
+	,ImDrawListFlags_AntiAliasedFill
+	,ImDrawListFlags_AllowVtxOffset
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiSelectableFlags_,ImGuiSelectableFlags_
+	,ImGuiSelectableFlags_None
+	,ImGuiSelectableFlags_DontClosePopups
+	,ImGuiSelectableFlags_SpanAllColumns
+	,ImGuiSelectableFlags_AllowDoubleClick
+	,ImGuiSelectableFlags_Disabled
+	,ImGuiSelectableFlags_AllowItemOverlap
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTableColumnFlags_,ImGuiTableColumnFlags_
+	,ImGuiTableColumnFlags_None
+	,ImGuiTableColumnFlags_DefaultHide
+	,ImGuiTableColumnFlags_DefaultSort
+	,ImGuiTableColumnFlags_WidthStretch
+	,ImGuiTableColumnFlags_WidthFixed
+	,ImGuiTableColumnFlags_NoResize
+	,ImGuiTableColumnFlags_NoReorder
+	,ImGuiTableColumnFlags_NoHide
+	,ImGuiTableColumnFlags_NoClip
+	,ImGuiTableColumnFlags_NoSort
+	,ImGuiTableColumnFlags_NoSortAscending
+	,ImGuiTableColumnFlags_NoSortDescending
+	,ImGuiTableColumnFlags_NoHeaderWidth
+	,ImGuiTableColumnFlags_PreferSortAscending
+	,ImGuiTableColumnFlags_PreferSortDescending
+	,ImGuiTableColumnFlags_IndentEnable
+	,ImGuiTableColumnFlags_IndentDisable
+	,ImGuiTableColumnFlags_IsEnabled
+	,ImGuiTableColumnFlags_IsVisible
+	,ImGuiTableColumnFlags_IsSorted
+	,ImGuiTableColumnFlags_IsHovered
+	,ImGuiTableColumnFlags_WidthMask_
+	,ImGuiTableColumnFlags_IndentMask_
+	,ImGuiTableColumnFlags_StatusMask_
+	,ImGuiTableColumnFlags_NoDirectResize_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiSortDirection_,ImGuiSortDirection_
+	,ImGuiSortDirection_None
+	,ImGuiSortDirection_Ascending
+	,ImGuiSortDirection_Descending
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiInputTextFlags_,ImGuiInputTextFlags_
+	,ImGuiInputTextFlags_None
+	,ImGuiInputTextFlags_CharsDecimal
+	,ImGuiInputTextFlags_CharsHexadecimal
+	,ImGuiInputTextFlags_CharsUppercase
+	,ImGuiInputTextFlags_CharsNoBlank
+	,ImGuiInputTextFlags_AutoSelectAll
+	,ImGuiInputTextFlags_EnterReturnsTrue
+	,ImGuiInputTextFlags_CallbackCompletion
+	,ImGuiInputTextFlags_CallbackHistory
+	,ImGuiInputTextFlags_CallbackAlways
+	,ImGuiInputTextFlags_CallbackCharFilter
+	,ImGuiInputTextFlags_AllowTabInput
+	,ImGuiInputTextFlags_CtrlEnterForNewLine
+	,ImGuiInputTextFlags_NoHorizontalScroll
+	,ImGuiInputTextFlags_AlwaysInsertMode
+	,ImGuiInputTextFlags_ReadOnly
+	,ImGuiInputTextFlags_Password
+	,ImGuiInputTextFlags_NoUndoRedo
+	,ImGuiInputTextFlags_CharsScientific
+	,ImGuiInputTextFlags_CallbackResize
+	,ImGuiInputTextFlags_CallbackEdit
+	,ImGuiInputTextFlags_Multiline
+	,ImGuiInputTextFlags_NoMarkEdited
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiBackendFlags_,ImGuiBackendFlags_
+	,ImGuiBackendFlags_None
+	,ImGuiBackendFlags_HasGamepad
+	,ImGuiBackendFlags_HasMouseCursors
+	,ImGuiBackendFlags_HasSetMousePos
+	,ImGuiBackendFlags_RendererHasVtxOffset
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiPopupFlags_,ImGuiPopupFlags_
+	,ImGuiPopupFlags_None
+	,ImGuiPopupFlags_MouseButtonLeft
+	,ImGuiPopupFlags_MouseButtonRight
+	,ImGuiPopupFlags_MouseButtonMiddle
+	,ImGuiPopupFlags_MouseButtonMask_
+	,ImGuiPopupFlags_MouseButtonDefault_
+	,ImGuiPopupFlags_NoOpenOverExistingPopup
+	,ImGuiPopupFlags_NoOpenOverItems
+	,ImGuiPopupFlags_AnyPopupId
+	,ImGuiPopupFlags_AnyPopupLevel
+	,ImGuiPopupFlags_AnyPopup
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiComboFlags_,ImGuiComboFlags_
+	,ImGuiComboFlags_None
+	,ImGuiComboFlags_PopupAlignLeft
+	,ImGuiComboFlags_HeightSmall
+	,ImGuiComboFlags_HeightRegular
+	,ImGuiComboFlags_HeightLarge
+	,ImGuiComboFlags_HeightLargest
+	,ImGuiComboFlags_NoArrowButton
+	,ImGuiComboFlags_NoPreview
+	,ImGuiComboFlags_HeightMask_
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiKey_,ImGuiKey_
+	,ImGuiKey_Tab
+	,ImGuiKey_LeftArrow
+	,ImGuiKey_RightArrow
+	,ImGuiKey_UpArrow
+	,ImGuiKey_DownArrow
+	,ImGuiKey_PageUp
+	,ImGuiKey_PageDown
+	,ImGuiKey_Home
+	,ImGuiKey_End
+	,ImGuiKey_Insert
+	,ImGuiKey_Delete
+	,ImGuiKey_Backspace
+	,ImGuiKey_Space
+	,ImGuiKey_Enter
+	,ImGuiKey_Escape
+	,ImGuiKey_KeyPadEnter
+	,ImGuiKey_A
+	,ImGuiKey_C
+	,ImGuiKey_V
+	,ImGuiKey_X
+	,ImGuiKey_Y
+	,ImGuiKey_Z
+	,ImGuiKey_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiStyleVar_,ImGuiStyleVar_
+	,ImGuiStyleVar_Alpha
+	,ImGuiStyleVar_WindowPadding
+	,ImGuiStyleVar_WindowRounding
+	,ImGuiStyleVar_WindowBorderSize
+	,ImGuiStyleVar_WindowMinSize
+	,ImGuiStyleVar_WindowTitleAlign
+	,ImGuiStyleVar_ChildRounding
+	,ImGuiStyleVar_ChildBorderSize
+	,ImGuiStyleVar_PopupRounding
+	,ImGuiStyleVar_PopupBorderSize
+	,ImGuiStyleVar_FramePadding
+	,ImGuiStyleVar_FrameRounding
+	,ImGuiStyleVar_FrameBorderSize
+	,ImGuiStyleVar_ItemSpacing
+	,ImGuiStyleVar_ItemInnerSpacing
+	,ImGuiStyleVar_IndentSpacing
+	,ImGuiStyleVar_CellPadding
+	,ImGuiStyleVar_ScrollbarSize
+	,ImGuiStyleVar_ScrollbarRounding
+	,ImGuiStyleVar_GrabMinSize
+	,ImGuiStyleVar_GrabRounding
+	,ImGuiStyleVar_TabRounding
+	,ImGuiStyleVar_ButtonTextAlign
+	,ImGuiStyleVar_SelectableTextAlign
+	,ImGuiStyleVar_COUNT
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiConfigFlags_,ImGuiConfigFlags_
+	,ImGuiConfigFlags_None
+	,ImGuiConfigFlags_NavEnableKeyboard
+	,ImGuiConfigFlags_NavEnableGamepad
+	,ImGuiConfigFlags_NavEnableSetMousePos
+	,ImGuiConfigFlags_NavNoCaptureKeyboard
+	,ImGuiConfigFlags_NoMouse
+	,ImGuiConfigFlags_NoMouseCursorChange
+	,ImGuiConfigFlags_IsSRGB
+	,ImGuiConfigFlags_IsTouchScreen
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiSliderFlags_,ImGuiSliderFlags_
+	,ImGuiSliderFlags_None
+	,ImGuiSliderFlags_AlwaysClamp
+	,ImGuiSliderFlags_Logarithmic
+	,ImGuiSliderFlags_NoRoundToFormat
+	,ImGuiSliderFlags_NoInput
+	,ImGuiSliderFlags_InvalidMask_
+	,ImGuiSliderFlags_ClampOnInput
+)
+
+DAS_BASE_BIND_ENUM_98(ImGuiTableRowFlags_,ImGuiTableRowFlags_
+	,ImGuiTableRowFlags_None
+	,ImGuiTableRowFlags_Headers
+)
+
+DAS_BASE_BIND_ENUM_98(ImFontAtlasFlags_,ImFontAtlasFlags_
+	,ImFontAtlasFlags_None
+	,ImFontAtlasFlags_NoPowerOfTwoHeight
+	,ImFontAtlasFlags_NoMouseCursors
+	,ImFontAtlasFlags_NoBakedLines
+)
+
+// ------------
+// structures
+// ------------
+
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImColor,ImColor)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawChannel,ImDrawChannel)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawListSplitter,ImDrawListSplitter)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawList,ImDrawList)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawData,ImDrawData)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontGlyphRangesBuilder,ImFontGlyphRangesBuilder)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiPayload,ImGuiPayload)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiStoragePair,ImGuiStorage::ImGuiStoragePair)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontConfig,ImFontConfig)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFont,ImFont)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiIO,ImGuiIO)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImNewWrapper,ImNewWrapper)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTableSortSpecs,ImGuiTableSortSpecs)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawVert,ImDrawVert)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawCmdHeader,ImDrawCmdHeader)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontGlyph,ImFontGlyph)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiOnceUponAFrame,ImGuiOnceUponAFrame)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontAtlas,ImFontAtlas)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextFilter,ImGuiTextFilter)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiSizeCallbackData,ImGuiSizeCallbackData)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiListClipper,ImGuiListClipper)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImVec2,ImVec2)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextBuffer,ImGuiTextBuffer)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImVec4,ImVec4)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiInputTextCallbackData,ImGuiInputTextCallbackData)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawCmd,ImDrawCmd)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontAtlasCustomRect,ImFontAtlasCustomRect)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiStyle,ImGuiStyle)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiStorage,ImGuiStorage)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextRange,ImGuiTextFilter::ImGuiTextRange)
+	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTableColumnSortSpecs,ImGuiTableColumnSortSpecs)
+
+
+    struct ImColor_GeneratedAnnotation : ManagedStructureAnnotation<ImColor> {
+        ImColor_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImColor", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Value)>("Value","Value");
+        }
+    };
+
+    struct ImDrawChannel_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawChannel> {
+        ImDrawChannel_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawChannel", ml) {
+        }
+        void init () {
+        }
+    };
+
+    struct ImDrawListSplitter_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawListSplitter> {
+        ImDrawListSplitter_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawListSplitter", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(_Current)>("_Current","_Current");
+			addField<DAS_BIND_MANAGED_FIELD(_Count)>("_Count","_Count");
+        }
+    };
+
+    struct ImDrawList_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawList> {
+        ImDrawList_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawList", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
+			addField<DAS_BIND_MANAGED_FIELD(_VtxCurrentIdx)>("_VtxCurrentIdx","_VtxCurrentIdx");
+			addField<DAS_BIND_MANAGED_FIELD(_OwnerName)>("_OwnerName","_OwnerName");
+			addField<DAS_BIND_MANAGED_FIELD(_VtxWritePtr)>("_VtxWritePtr","_VtxWritePtr");
+			addField<DAS_BIND_MANAGED_FIELD(_IdxWritePtr)>("_IdxWritePtr","_IdxWritePtr");
+			addField<DAS_BIND_MANAGED_FIELD(_CmdHeader)>("_CmdHeader","_CmdHeader");
+			addField<DAS_BIND_MANAGED_FIELD(_Splitter)>("_Splitter","_Splitter");
+			addField<DAS_BIND_MANAGED_FIELD(_FringeScale)>("_FringeScale","_FringeScale");
+        }
+    };
+
+    struct ImDrawData_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawData> {
+        ImDrawData_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawData", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Valid)>("Valid","Valid");
+			addField<DAS_BIND_MANAGED_FIELD(CmdLists)>("CmdLists","CmdLists");
+			addField<DAS_BIND_MANAGED_FIELD(CmdListsCount)>("CmdListsCount","CmdListsCount");
+			addField<DAS_BIND_MANAGED_FIELD(TotalIdxCount)>("TotalIdxCount","TotalIdxCount");
+			addField<DAS_BIND_MANAGED_FIELD(TotalVtxCount)>("TotalVtxCount","TotalVtxCount");
+			addField<DAS_BIND_MANAGED_FIELD(DisplayPos)>("DisplayPos","DisplayPos");
+			addField<DAS_BIND_MANAGED_FIELD(DisplaySize)>("DisplaySize","DisplaySize");
+			addField<DAS_BIND_MANAGED_FIELD(FramebufferScale)>("FramebufferScale","FramebufferScale");
+        }
+    };
+
+    struct ImFontGlyphRangesBuilder_GeneratedAnnotation : ManagedStructureAnnotation<ImFontGlyphRangesBuilder> {
+        ImFontGlyphRangesBuilder_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontGlyphRangesBuilder", ml) {
+        }
+        void init () {
+        }
+    };
+
+    struct ImGuiPayload_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiPayload> {
+        ImGuiPayload_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiPayload", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Data)>("Data","Data");
+			addField<DAS_BIND_MANAGED_FIELD(DataSize)>("DataSize","DataSize");
+			addField<DAS_BIND_MANAGED_FIELD(SourceId)>("SourceId","SourceId");
+			addField<DAS_BIND_MANAGED_FIELD(SourceParentId)>("SourceParentId","SourceParentId");
+			addField<DAS_BIND_MANAGED_FIELD(DataFrameCount)>("DataFrameCount","DataFrameCount");
+			addField<DAS_BIND_MANAGED_FIELD(DataType)>("DataType","DataType");
+			addField<DAS_BIND_MANAGED_FIELD(Preview)>("Preview","Preview");
+			addField<DAS_BIND_MANAGED_FIELD(Delivery)>("Delivery","Delivery");
+        }
+    };
+
+    struct ImGuiStoragePair_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStorage::ImGuiStoragePair> {
+        ImGuiStoragePair_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiStoragePair", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(key)>("key","key");
+        }
+    };
+
+    struct ImFontConfig_GeneratedAnnotation : ManagedStructureAnnotation<ImFontConfig> {
+        ImFontConfig_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontConfig", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(FontData)>("FontData","FontData");
+			addField<DAS_BIND_MANAGED_FIELD(FontDataSize)>("FontDataSize","FontDataSize");
+			addField<DAS_BIND_MANAGED_FIELD(FontDataOwnedByAtlas)>("FontDataOwnedByAtlas","FontDataOwnedByAtlas");
+			addField<DAS_BIND_MANAGED_FIELD(FontNo)>("FontNo","FontNo");
+			addField<DAS_BIND_MANAGED_FIELD(SizePixels)>("SizePixels","SizePixels");
+			addField<DAS_BIND_MANAGED_FIELD(OversampleH)>("OversampleH","OversampleH");
+			addField<DAS_BIND_MANAGED_FIELD(OversampleV)>("OversampleV","OversampleV");
+			addField<DAS_BIND_MANAGED_FIELD(PixelSnapH)>("PixelSnapH","PixelSnapH");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphExtraSpacing)>("GlyphExtraSpacing","GlyphExtraSpacing");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphOffset)>("GlyphOffset","GlyphOffset");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphRanges)>("GlyphRanges","GlyphRanges");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphMinAdvanceX)>("GlyphMinAdvanceX","GlyphMinAdvanceX");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphMaxAdvanceX)>("GlyphMaxAdvanceX","GlyphMaxAdvanceX");
+			addField<DAS_BIND_MANAGED_FIELD(MergeMode)>("MergeMode","MergeMode");
+			addField<DAS_BIND_MANAGED_FIELD(RasterizerFlags)>("RasterizerFlags","RasterizerFlags");
+			addField<DAS_BIND_MANAGED_FIELD(RasterizerMultiply)>("RasterizerMultiply","RasterizerMultiply");
+			addField<DAS_BIND_MANAGED_FIELD(EllipsisChar)>("EllipsisChar","EllipsisChar");
+			addField<DAS_BIND_MANAGED_FIELD(Name)>("Name","Name");
+			addField<DAS_BIND_MANAGED_FIELD(DstFont)>("DstFont","DstFont");
+        }
+    };
+
+    struct ImFont_GeneratedAnnotation : ManagedStructureAnnotation<ImFont> {
+        ImFont_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFont", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(FallbackAdvanceX)>("FallbackAdvanceX","FallbackAdvanceX");
+			addField<DAS_BIND_MANAGED_FIELD(FontSize)>("FontSize","FontSize");
+			addField<DAS_BIND_MANAGED_FIELD(FallbackGlyph)>("FallbackGlyph","FallbackGlyph");
+			addField<DAS_BIND_MANAGED_FIELD(ContainerAtlas)>("ContainerAtlas","ContainerAtlas");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigData)>("ConfigData","ConfigData");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigDataCount)>("ConfigDataCount","ConfigDataCount");
+			addField<DAS_BIND_MANAGED_FIELD(FallbackChar)>("FallbackChar","FallbackChar");
+			addField<DAS_BIND_MANAGED_FIELD(EllipsisChar)>("EllipsisChar","EllipsisChar");
+			addField<DAS_BIND_MANAGED_FIELD(DirtyLookupTables)>("DirtyLookupTables","DirtyLookupTables");
+			addField<DAS_BIND_MANAGED_FIELD(Scale)>("Scale","Scale");
+			addField<DAS_BIND_MANAGED_FIELD(Ascent)>("Ascent","Ascent");
+			addField<DAS_BIND_MANAGED_FIELD(Descent)>("Descent","Descent");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsTotalSurface)>("MetricsTotalSurface","MetricsTotalSurface");
+			addField<DAS_BIND_MANAGED_FIELD(Used4kPagesMap)>("Used4kPagesMap","Used4kPagesMap");
+        }
+    };
+
+    struct ImGuiIO_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiIO> {
+        ImGuiIO_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiIO", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(ConfigFlags)>("ConfigFlags","ConfigFlags");
+			addField<DAS_BIND_MANAGED_FIELD(BackendFlags)>("BackendFlags","BackendFlags");
+			addField<DAS_BIND_MANAGED_FIELD(DisplaySize)>("DisplaySize","DisplaySize");
+			addField<DAS_BIND_MANAGED_FIELD(DeltaTime)>("DeltaTime","DeltaTime");
+			addField<DAS_BIND_MANAGED_FIELD(IniSavingRate)>("IniSavingRate","IniSavingRate");
+			addField<DAS_BIND_MANAGED_FIELD(IniFilename)>("IniFilename","IniFilename");
+			addField<DAS_BIND_MANAGED_FIELD(LogFilename)>("LogFilename","LogFilename");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDoubleClickTime)>("MouseDoubleClickTime","MouseDoubleClickTime");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDoubleClickMaxDist)>("MouseDoubleClickMaxDist","MouseDoubleClickMaxDist");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDragThreshold)>("MouseDragThreshold","MouseDragThreshold");
+			addField<DAS_BIND_MANAGED_FIELD(KeyMap)>("KeyMap","KeyMap");
+			addField<DAS_BIND_MANAGED_FIELD(KeyRepeatDelay)>("KeyRepeatDelay","KeyRepeatDelay");
+			addField<DAS_BIND_MANAGED_FIELD(KeyRepeatRate)>("KeyRepeatRate","KeyRepeatRate");
+			addField<DAS_BIND_MANAGED_FIELD(UserData)>("UserData","UserData");
+			addField<DAS_BIND_MANAGED_FIELD(Fonts)>("Fonts","Fonts");
+			addField<DAS_BIND_MANAGED_FIELD(FontGlobalScale)>("FontGlobalScale","FontGlobalScale");
+			addField<DAS_BIND_MANAGED_FIELD(FontAllowUserScaling)>("FontAllowUserScaling","FontAllowUserScaling");
+			addField<DAS_BIND_MANAGED_FIELD(FontDefault)>("FontDefault","FontDefault");
+			addField<DAS_BIND_MANAGED_FIELD(DisplayFramebufferScale)>("DisplayFramebufferScale","DisplayFramebufferScale");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDrawCursor)>("MouseDrawCursor","MouseDrawCursor");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigMacOSXBehaviors)>("ConfigMacOSXBehaviors","ConfigMacOSXBehaviors");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigInputTextCursorBlink)>("ConfigInputTextCursorBlink","ConfigInputTextCursorBlink");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigDragClickToInputText)>("ConfigDragClickToInputText","ConfigDragClickToInputText");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigWindowsResizeFromEdges)>("ConfigWindowsResizeFromEdges","ConfigWindowsResizeFromEdges");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigWindowsMoveFromTitleBarOnly)>("ConfigWindowsMoveFromTitleBarOnly","ConfigWindowsMoveFromTitleBarOnly");
+			addField<DAS_BIND_MANAGED_FIELD(ConfigMemoryCompactTimer)>("ConfigMemoryCompactTimer","ConfigMemoryCompactTimer");
+			addField<DAS_BIND_MANAGED_FIELD(BackendPlatformName)>("BackendPlatformName","BackendPlatformName");
+			addField<DAS_BIND_MANAGED_FIELD(BackendRendererName)>("BackendRendererName","BackendRendererName");
+			addField<DAS_BIND_MANAGED_FIELD(BackendPlatformUserData)>("BackendPlatformUserData","BackendPlatformUserData");
+			addField<DAS_BIND_MANAGED_FIELD(BackendRendererUserData)>("BackendRendererUserData","BackendRendererUserData");
+			addField<DAS_BIND_MANAGED_FIELD(BackendLanguageUserData)>("BackendLanguageUserData","BackendLanguageUserData");
+			addField<DAS_BIND_MANAGED_FIELD(GetClipboardTextFn)>("GetClipboardTextFn","GetClipboardTextFn");
+			addField<DAS_BIND_MANAGED_FIELD(SetClipboardTextFn)>("SetClipboardTextFn","SetClipboardTextFn");
+			addField<DAS_BIND_MANAGED_FIELD(ClipboardUserData)>("ClipboardUserData","ClipboardUserData");
+			addField<DAS_BIND_MANAGED_FIELD(ImeSetInputScreenPosFn)>("ImeSetInputScreenPosFn","ImeSetInputScreenPosFn");
+			addField<DAS_BIND_MANAGED_FIELD(ImeWindowHandle)>("ImeWindowHandle","ImeWindowHandle");
+			addField<DAS_BIND_MANAGED_FIELD(MousePos)>("MousePos","MousePos");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDown)>("MouseDown","MouseDown");
+			addField<DAS_BIND_MANAGED_FIELD(MouseWheel)>("MouseWheel","MouseWheel");
+			addField<DAS_BIND_MANAGED_FIELD(MouseWheelH)>("MouseWheelH","MouseWheelH");
+			addField<DAS_BIND_MANAGED_FIELD(KeyCtrl)>("KeyCtrl","KeyCtrl");
+			addField<DAS_BIND_MANAGED_FIELD(KeyShift)>("KeyShift","KeyShift");
+			addField<DAS_BIND_MANAGED_FIELD(KeyAlt)>("KeyAlt","KeyAlt");
+			addField<DAS_BIND_MANAGED_FIELD(KeySuper)>("KeySuper","KeySuper");
+			addField<DAS_BIND_MANAGED_FIELD(KeysDown)>("KeysDown","KeysDown");
+			addField<DAS_BIND_MANAGED_FIELD(NavInputs)>("NavInputs","NavInputs");
+			addField<DAS_BIND_MANAGED_FIELD(WantCaptureMouse)>("WantCaptureMouse","WantCaptureMouse");
+			addField<DAS_BIND_MANAGED_FIELD(WantCaptureKeyboard)>("WantCaptureKeyboard","WantCaptureKeyboard");
+			addField<DAS_BIND_MANAGED_FIELD(WantTextInput)>("WantTextInput","WantTextInput");
+			addField<DAS_BIND_MANAGED_FIELD(WantSetMousePos)>("WantSetMousePos","WantSetMousePos");
+			addField<DAS_BIND_MANAGED_FIELD(WantSaveIniSettings)>("WantSaveIniSettings","WantSaveIniSettings");
+			addField<DAS_BIND_MANAGED_FIELD(NavActive)>("NavActive","NavActive");
+			addField<DAS_BIND_MANAGED_FIELD(NavVisible)>("NavVisible","NavVisible");
+			addField<DAS_BIND_MANAGED_FIELD(Framerate)>("Framerate","Framerate");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsRenderVertices)>("MetricsRenderVertices","MetricsRenderVertices");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsRenderIndices)>("MetricsRenderIndices","MetricsRenderIndices");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsRenderWindows)>("MetricsRenderWindows","MetricsRenderWindows");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsActiveWindows)>("MetricsActiveWindows","MetricsActiveWindows");
+			addField<DAS_BIND_MANAGED_FIELD(MetricsActiveAllocations)>("MetricsActiveAllocations","MetricsActiveAllocations");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDelta)>("MouseDelta","MouseDelta");
+			addField<DAS_BIND_MANAGED_FIELD(KeyMods)>("KeyMods","KeyMods");
+			addField<DAS_BIND_MANAGED_FIELD(MousePosPrev)>("MousePosPrev","MousePosPrev");
+			addField<DAS_BIND_MANAGED_FIELD(MouseClickedPos)>("MouseClickedPos","MouseClickedPos");
+			addField<DAS_BIND_MANAGED_FIELD(MouseClickedTime)>("MouseClickedTime","MouseClickedTime");
+			addField<DAS_BIND_MANAGED_FIELD(MouseClicked)>("MouseClicked","MouseClicked");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDoubleClicked)>("MouseDoubleClicked","MouseDoubleClicked");
+			addField<DAS_BIND_MANAGED_FIELD(MouseReleased)>("MouseReleased","MouseReleased");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDownOwned)>("MouseDownOwned","MouseDownOwned");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDownWasDoubleClick)>("MouseDownWasDoubleClick","MouseDownWasDoubleClick");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDownDuration)>("MouseDownDuration","MouseDownDuration");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDownDurationPrev)>("MouseDownDurationPrev","MouseDownDurationPrev");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDragMaxDistanceAbs)>("MouseDragMaxDistanceAbs","MouseDragMaxDistanceAbs");
+			addField<DAS_BIND_MANAGED_FIELD(MouseDragMaxDistanceSqr)>("MouseDragMaxDistanceSqr","MouseDragMaxDistanceSqr");
+			addField<DAS_BIND_MANAGED_FIELD(KeysDownDuration)>("KeysDownDuration","KeysDownDuration");
+			addField<DAS_BIND_MANAGED_FIELD(KeysDownDurationPrev)>("KeysDownDurationPrev","KeysDownDurationPrev");
+			addField<DAS_BIND_MANAGED_FIELD(NavInputsDownDuration)>("NavInputsDownDuration","NavInputsDownDuration");
+			addField<DAS_BIND_MANAGED_FIELD(NavInputsDownDurationPrev)>("NavInputsDownDurationPrev","NavInputsDownDurationPrev");
+			addField<DAS_BIND_MANAGED_FIELD(PenPressure)>("PenPressure","PenPressure");
+			addField<DAS_BIND_MANAGED_FIELD(InputQueueSurrogate)>("InputQueueSurrogate","InputQueueSurrogate");
+        }
+    };
+
+    struct ImNewWrapper_GeneratedAnnotation : ManagedStructureAnnotation<ImNewWrapper> {
+        ImNewWrapper_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImNewWrapper", ml) {
+        }
+        void init () {
+        }
+    };
+
+    struct ImGuiTableSortSpecs_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTableSortSpecs> {
+        ImGuiTableSortSpecs_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTableSortSpecs", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Specs)>("Specs","Specs");
+			addField<DAS_BIND_MANAGED_FIELD(SpecsCount)>("SpecsCount","SpecsCount");
+			addField<DAS_BIND_MANAGED_FIELD(SpecsDirty)>("SpecsDirty","SpecsDirty");
+        }
+    };
+
+    struct ImDrawVert_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawVert> {
+        ImDrawVert_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawVert", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(pos)>("pos","pos");
+			addField<DAS_BIND_MANAGED_FIELD(uv)>("uv","uv");
+			addField<DAS_BIND_MANAGED_FIELD(col)>("col","col");
+        }
+    };
+
+    struct ImDrawCmdHeader_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawCmdHeader> {
+        ImDrawCmdHeader_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawCmdHeader", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(ClipRect)>("ClipRect","ClipRect");
+			addField<DAS_BIND_MANAGED_FIELD(TextureId)>("TextureId","TextureId");
+			addField<DAS_BIND_MANAGED_FIELD(VtxOffset)>("VtxOffset","VtxOffset");
+        }
+    };
+
+    struct ImFontGlyph_GeneratedAnnotation : ManagedStructureAnnotation<ImFontGlyph> {
+        ImFontGlyph_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontGlyph", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(AdvanceX)>("AdvanceX","AdvanceX");
+			addField<DAS_BIND_MANAGED_FIELD(X0)>("X0","X0");
+			addField<DAS_BIND_MANAGED_FIELD(Y0)>("Y0","Y0");
+			addField<DAS_BIND_MANAGED_FIELD(X1)>("X1","X1");
+			addField<DAS_BIND_MANAGED_FIELD(Y1)>("Y1","Y1");
+			addField<DAS_BIND_MANAGED_FIELD(U0)>("U0","U0");
+			addField<DAS_BIND_MANAGED_FIELD(V0)>("V0","V0");
+			addField<DAS_BIND_MANAGED_FIELD(U1)>("U1","U1");
+			addField<DAS_BIND_MANAGED_FIELD(V1)>("V1","V1");
+        }
+    };
+
+    struct ImGuiOnceUponAFrame_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiOnceUponAFrame> {
+        ImGuiOnceUponAFrame_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiOnceUponAFrame", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(RefFrame)>("RefFrame","RefFrame");
+        }
+    };
+
+    struct ImFontAtlas_GeneratedAnnotation : ManagedStructureAnnotation<ImFontAtlas> {
+        ImFontAtlas_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontAtlas", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Locked)>("Locked","Locked");
+			addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
+			addField<DAS_BIND_MANAGED_FIELD(TexID)>("TexID","TexID");
+			addField<DAS_BIND_MANAGED_FIELD(TexDesiredWidth)>("TexDesiredWidth","TexDesiredWidth");
+			addField<DAS_BIND_MANAGED_FIELD(TexGlyphPadding)>("TexGlyphPadding","TexGlyphPadding");
+			addField<DAS_BIND_MANAGED_FIELD(TexPixelsAlpha8)>("TexPixelsAlpha8","TexPixelsAlpha8");
+			addField<DAS_BIND_MANAGED_FIELD(TexPixelsRGBA32)>("TexPixelsRGBA32","TexPixelsRGBA32");
+			addField<DAS_BIND_MANAGED_FIELD(TexWidth)>("TexWidth","TexWidth");
+			addField<DAS_BIND_MANAGED_FIELD(TexHeight)>("TexHeight","TexHeight");
+			addField<DAS_BIND_MANAGED_FIELD(TexUvScale)>("TexUvScale","TexUvScale");
+			addField<DAS_BIND_MANAGED_FIELD(TexUvWhitePixel)>("TexUvWhitePixel","TexUvWhitePixel");
+			addField<DAS_BIND_MANAGED_FIELD(TexUvLines)>("TexUvLines","TexUvLines");
+			addField<DAS_BIND_MANAGED_FIELD(PackIdMouseCursors)>("PackIdMouseCursors","PackIdMouseCursors");
+			addField<DAS_BIND_MANAGED_FIELD(PackIdLines)>("PackIdLines","PackIdLines");
+        }
+    };
+
+    struct ImGuiTextFilter_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTextFilter> {
+        ImGuiTextFilter_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTextFilter", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(InputBuf)>("InputBuf","InputBuf");
+			addField<DAS_BIND_MANAGED_FIELD(CountGrep)>("CountGrep","CountGrep");
+        }
+    };
+
+    struct ImGuiSizeCallbackData_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiSizeCallbackData> {
+        ImGuiSizeCallbackData_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiSizeCallbackData", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(UserData)>("UserData","UserData");
+			addField<DAS_BIND_MANAGED_FIELD(Pos)>("Pos","Pos");
+			addField<DAS_BIND_MANAGED_FIELD(CurrentSize)>("CurrentSize","CurrentSize");
+			addField<DAS_BIND_MANAGED_FIELD(DesiredSize)>("DesiredSize","DesiredSize");
+        }
+    };
+
+    struct ImGuiListClipper_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiListClipper> {
+        ImGuiListClipper_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiListClipper", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(DisplayStart)>("DisplayStart","DisplayStart");
+			addField<DAS_BIND_MANAGED_FIELD(DisplayEnd)>("DisplayEnd","DisplayEnd");
+			addField<DAS_BIND_MANAGED_FIELD(ItemsCount)>("ItemsCount","ItemsCount");
+			addField<DAS_BIND_MANAGED_FIELD(StepNo)>("StepNo","StepNo");
+			addField<DAS_BIND_MANAGED_FIELD(ItemsFrozen)>("ItemsFrozen","ItemsFrozen");
+			addField<DAS_BIND_MANAGED_FIELD(ItemsHeight)>("ItemsHeight","ItemsHeight");
+			addField<DAS_BIND_MANAGED_FIELD(StartPosY)>("StartPosY","StartPosY");
+        }
+    };
+
+    struct ImVec2_GeneratedAnnotation : ManagedStructureAnnotation<ImVec2> {
+        ImVec2_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec2", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(x)>("x","x");
+			addField<DAS_BIND_MANAGED_FIELD(y)>("y","y");
+        }
+    };
+
+    struct ImGuiTextBuffer_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTextBuffer> {
+        ImGuiTextBuffer_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTextBuffer", ml) {
+        }
+        void init () {
+        }
+    };
+
+    struct ImVec4_GeneratedAnnotation : ManagedStructureAnnotation<ImVec4> {
+        ImVec4_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec4", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(x)>("x","x");
+			addField<DAS_BIND_MANAGED_FIELD(y)>("y","y");
+			addField<DAS_BIND_MANAGED_FIELD(z)>("z","z");
+			addField<DAS_BIND_MANAGED_FIELD(w)>("w","w");
+        }
+    };
+
+    struct ImGuiInputTextCallbackData_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiInputTextCallbackData> {
+        ImGuiInputTextCallbackData_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiInputTextCallbackData", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(EventFlag)>("EventFlag","EventFlag");
+			addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
+			addField<DAS_BIND_MANAGED_FIELD(UserData)>("UserData","UserData");
+			addField<DAS_BIND_MANAGED_FIELD(EventChar)>("EventChar","EventChar");
+			addField<DAS_BIND_MANAGED_FIELD(EventKey)>("EventKey","EventKey");
+			addField<DAS_BIND_MANAGED_FIELD(Buf)>("Buf","Buf");
+			addField<DAS_BIND_MANAGED_FIELD(BufTextLen)>("BufTextLen","BufTextLen");
+			addField<DAS_BIND_MANAGED_FIELD(BufSize)>("BufSize","BufSize");
+			addField<DAS_BIND_MANAGED_FIELD(BufDirty)>("BufDirty","BufDirty");
+			addField<DAS_BIND_MANAGED_FIELD(CursorPos)>("CursorPos","CursorPos");
+			addField<DAS_BIND_MANAGED_FIELD(SelectionStart)>("SelectionStart","SelectionStart");
+			addField<DAS_BIND_MANAGED_FIELD(SelectionEnd)>("SelectionEnd","SelectionEnd");
+        }
+    };
+
+    struct ImDrawCmd_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawCmd> {
+        ImDrawCmd_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawCmd", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(ClipRect)>("ClipRect","ClipRect");
+			addField<DAS_BIND_MANAGED_FIELD(TextureId)>("TextureId","TextureId");
+			addField<DAS_BIND_MANAGED_FIELD(VtxOffset)>("VtxOffset","VtxOffset");
+			addField<DAS_BIND_MANAGED_FIELD(IdxOffset)>("IdxOffset","IdxOffset");
+			addField<DAS_BIND_MANAGED_FIELD(ElemCount)>("ElemCount","ElemCount");
+			addField<DAS_BIND_MANAGED_FIELD(UserCallback)>("UserCallback","UserCallback");
+			addField<DAS_BIND_MANAGED_FIELD(UserCallbackData)>("UserCallbackData","UserCallbackData");
+        }
+    };
+
+    struct ImFontAtlasCustomRect_GeneratedAnnotation : ManagedStructureAnnotation<ImFontAtlasCustomRect> {
+        ImFontAtlasCustomRect_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontAtlasCustomRect", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Width)>("Width","Width");
+			addField<DAS_BIND_MANAGED_FIELD(Height)>("Height","Height");
+			addField<DAS_BIND_MANAGED_FIELD(X)>("X","X");
+			addField<DAS_BIND_MANAGED_FIELD(Y)>("Y","Y");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphID)>("GlyphID","GlyphID");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphAdvanceX)>("GlyphAdvanceX","GlyphAdvanceX");
+			addField<DAS_BIND_MANAGED_FIELD(GlyphOffset)>("GlyphOffset","GlyphOffset");
+			addField<DAS_BIND_MANAGED_FIELD(Font)>("Font","Font");
+        }
+    };
+
+    struct ImGuiStyle_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStyle> {
+        ImGuiStyle_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiStyle", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(Alpha)>("Alpha","Alpha");
+			addField<DAS_BIND_MANAGED_FIELD(WindowPadding)>("WindowPadding","WindowPadding");
+			addField<DAS_BIND_MANAGED_FIELD(WindowRounding)>("WindowRounding","WindowRounding");
+			addField<DAS_BIND_MANAGED_FIELD(WindowBorderSize)>("WindowBorderSize","WindowBorderSize");
+			addField<DAS_BIND_MANAGED_FIELD(WindowMinSize)>("WindowMinSize","WindowMinSize");
+			addField<DAS_BIND_MANAGED_FIELD(WindowTitleAlign)>("WindowTitleAlign","WindowTitleAlign");
+			addField<DAS_BIND_MANAGED_FIELD(WindowMenuButtonPosition)>("WindowMenuButtonPosition","WindowMenuButtonPosition");
+			addField<DAS_BIND_MANAGED_FIELD(ChildRounding)>("ChildRounding","ChildRounding");
+			addField<DAS_BIND_MANAGED_FIELD(ChildBorderSize)>("ChildBorderSize","ChildBorderSize");
+			addField<DAS_BIND_MANAGED_FIELD(PopupRounding)>("PopupRounding","PopupRounding");
+			addField<DAS_BIND_MANAGED_FIELD(PopupBorderSize)>("PopupBorderSize","PopupBorderSize");
+			addField<DAS_BIND_MANAGED_FIELD(FramePadding)>("FramePadding","FramePadding");
+			addField<DAS_BIND_MANAGED_FIELD(FrameRounding)>("FrameRounding","FrameRounding");
+			addField<DAS_BIND_MANAGED_FIELD(FrameBorderSize)>("FrameBorderSize","FrameBorderSize");
+			addField<DAS_BIND_MANAGED_FIELD(ItemSpacing)>("ItemSpacing","ItemSpacing");
+			addField<DAS_BIND_MANAGED_FIELD(ItemInnerSpacing)>("ItemInnerSpacing","ItemInnerSpacing");
+			addField<DAS_BIND_MANAGED_FIELD(CellPadding)>("CellPadding","CellPadding");
+			addField<DAS_BIND_MANAGED_FIELD(TouchExtraPadding)>("TouchExtraPadding","TouchExtraPadding");
+			addField<DAS_BIND_MANAGED_FIELD(IndentSpacing)>("IndentSpacing","IndentSpacing");
+			addField<DAS_BIND_MANAGED_FIELD(ColumnsMinSpacing)>("ColumnsMinSpacing","ColumnsMinSpacing");
+			addField<DAS_BIND_MANAGED_FIELD(ScrollbarSize)>("ScrollbarSize","ScrollbarSize");
+			addField<DAS_BIND_MANAGED_FIELD(ScrollbarRounding)>("ScrollbarRounding","ScrollbarRounding");
+			addField<DAS_BIND_MANAGED_FIELD(GrabMinSize)>("GrabMinSize","GrabMinSize");
+			addField<DAS_BIND_MANAGED_FIELD(GrabRounding)>("GrabRounding","GrabRounding");
+			addField<DAS_BIND_MANAGED_FIELD(LogSliderDeadzone)>("LogSliderDeadzone","LogSliderDeadzone");
+			addField<DAS_BIND_MANAGED_FIELD(TabRounding)>("TabRounding","TabRounding");
+			addField<DAS_BIND_MANAGED_FIELD(TabBorderSize)>("TabBorderSize","TabBorderSize");
+			addField<DAS_BIND_MANAGED_FIELD(TabMinWidthForCloseButton)>("TabMinWidthForCloseButton","TabMinWidthForCloseButton");
+			addField<DAS_BIND_MANAGED_FIELD(ColorButtonPosition)>("ColorButtonPosition","ColorButtonPosition");
+			addField<DAS_BIND_MANAGED_FIELD(ButtonTextAlign)>("ButtonTextAlign","ButtonTextAlign");
+			addField<DAS_BIND_MANAGED_FIELD(SelectableTextAlign)>("SelectableTextAlign","SelectableTextAlign");
+			addField<DAS_BIND_MANAGED_FIELD(DisplayWindowPadding)>("DisplayWindowPadding","DisplayWindowPadding");
+			addField<DAS_BIND_MANAGED_FIELD(DisplaySafeAreaPadding)>("DisplaySafeAreaPadding","DisplaySafeAreaPadding");
+			addField<DAS_BIND_MANAGED_FIELD(MouseCursorScale)>("MouseCursorScale","MouseCursorScale");
+			addField<DAS_BIND_MANAGED_FIELD(AntiAliasedLines)>("AntiAliasedLines","AntiAliasedLines");
+			addField<DAS_BIND_MANAGED_FIELD(AntiAliasedLinesUseTex)>("AntiAliasedLinesUseTex","AntiAliasedLinesUseTex");
+			addField<DAS_BIND_MANAGED_FIELD(AntiAliasedFill)>("AntiAliasedFill","AntiAliasedFill");
+			addField<DAS_BIND_MANAGED_FIELD(CurveTessellationTol)>("CurveTessellationTol","CurveTessellationTol");
+			addField<DAS_BIND_MANAGED_FIELD(CircleSegmentMaxError)>("CircleSegmentMaxError","CircleSegmentMaxError");
+			addField<DAS_BIND_MANAGED_FIELD(Colors)>("Colors","Colors");
+        }
+    };
+
+    struct ImGuiStorage_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStorage> {
+        ImGuiStorage_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiStorage", ml) {
+        }
+        void init () {
+        }
+    };
+
+    struct ImGuiTextRange_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTextFilter::ImGuiTextRange> {
+        ImGuiTextRange_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTextRange", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(b)>("b","b");
+			addField<DAS_BIND_MANAGED_FIELD(e)>("e","e");
+        }
+    };
+
+    struct ImGuiTableColumnSortSpecs_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTableColumnSortSpecs> {
+        ImGuiTableColumnSortSpecs_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTableColumnSortSpecs", ml) {
+        }
+        void init () {
+			addField<DAS_BIND_MANAGED_FIELD(ColumnUserID)>("ColumnUserID","ColumnUserID");
+			addField<DAS_BIND_MANAGED_FIELD(ColumnIndex)>("ColumnIndex","ColumnIndex");
+			addField<DAS_BIND_MANAGED_FIELD(SortOrder)>("SortOrder","SortOrder");
+        }
+    };
+// ------------
+// functions
+// ------------
+
