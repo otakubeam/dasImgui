@@ -5,22 +5,11 @@ def main
 
     // configure
 
-    blocked_type_names <- [{auto[]
-        "ImVector";
-        "ImGuiStoragePair";
-        "ImDrawListSharedData";
-        "ImGuiInputTextCallback"
-    }]
-
     blocked_functions <- [{auto[]
         "operator delete";
         "operator new";
         "__security_init_cookie";
         "__security_check_cookie"
-    }]
-
-    cmres_functions <- [{auto[]
-        "ImGui_ImplVulkanH_SelectSurfaceFormat"
     }]
 
     // generate

@@ -8,7 +8,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 
 	FIND_PACKAGE(imgui)
     FIND_PACKAGE(glfw3)
-
+    FIND_PACKAGE(Vulkan)
 
     IF(NOT imgui_FOUND)
         MESSAGE(STATUS "IMGUI not found. Not building dasImGui.")
@@ -58,6 +58,39 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			ADD_DEPENDENCIES(libDasModuleImGuiApp libDaScript libDasModuleImGui)
 			TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiApp PUBLIC ${imgui_INCLUDE_DIR} ${glfw_INCLUDE_DIR})
 			SETUP_CPP11(libDasModuleImGuiApp)
+			IF(NOT Vulkan_FOUND)
+				MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
+			ELSE()
+				# libDasModuleImGuiVulkan
+				SET(DAS_IMGUI_VULKAN_MODULE_SRC
+					${DAS_IMGUI_DIR}/src/module_imgui_vulkan.cpp
+					${DAS_IMGUI_DIR}/src/imgui_impl_vulkan.cpp
+					${DAS_IMGUI_DIR}/src/imgui_impl_vulkan.h
+					${DAS_IMGUI_DIR}/example/imgui_vulkan.das
+				)
+				ADD_MODULE_LIB(libDasModuleImGuiVulkan)
+				ADD_MODULE_CPP(imgui_vulkan)
+				ADD_LIBRARY(libDasModuleImGuiVulkan ${DAS_IMGUI_VULKAN_MODULE_SRC})
+				TARGET_LINK_LIBRARIES(libDasModuleImGuiVulkan ${glfw_LIBRARIES})
+				ADD_DEPENDENCIES(libDasModuleImGuiVulkan libDaScript libDasModuleImGui)
+				TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiVulkan PUBLIC
+					${imgui_INCLUDE_DIR}
+					${glfw_INCLUDE_DIR}
+					${Vulkan_INCLUDE_DIR})
+				SETUP_CPP11(libDasModuleImGuiVulkan)
+
+				# GENERATED IMGUI VULKAN
+				CPP_BIND_AST(
+					VULKAN_GENERATE
+					generate_vulkan.das
+					${DAS_IMGUI_DIR}/src/imgui_vulkan_headers.h
+					${DAS_IMGUI_DIR}/src/module_imgui_vulkan
+					${DAS_IMGUI_DIR}/src
+					"${Vulkan_INCLUDE_DIR};${imgui_INCLUDE_DIR}"
+					""
+				)
+			ENDIF()
+
 		ENDIF()
 	ENDIF()
 ENDIF()
