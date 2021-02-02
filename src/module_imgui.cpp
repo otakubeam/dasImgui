@@ -67,6 +67,13 @@ MAKE_TYPE_FACTORY(ImDrawListSharedData,ImDrawListSharedData);
 
 #endif
 
+template <>
+struct cast_arg<ImVec2> {
+    static __forceinline ImVec2 to ( Context & ctx, SimNode * node ) {
+        return * (ImVec2 *) node->evalPtr(ctx);
+    }
+};
+
 // making custom builtin module
 class Module_imgui : public Module {
     ModuleLibrary lib;
