@@ -138,7 +138,7 @@ public:
             SideEffects::worstDefault,"das::TreeNodeEx");
         addExtern<DAS_BIND_FUN(das::TreeNodeEx2)>(*this,lib,"TreeNodeEx",
             SideEffects::worstDefault,"das::TreeNodeEx2");
-    }
+   }
     bool initialized = false;
     virtual bool initDependencies() override {
         if ( initialized ) return true;
@@ -146,6 +146,11 @@ public:
 #if USE_GENERATED
 #include "module_imgui.inc"
 #endif
+        // vector C-tors
+        addCtor<ImVec2>(*this,lib,"ImVec2","ImVec2");
+        addCtor<ImVec2,float,float>(*this,lib,"ImVec2","ImVec2");
+        addCtor<ImVec4>(*this,lib,"ImVec4","ImVec4");
+        addCtor<ImVec4,float,float,float,float>(*this,lib,"ImVec4","ImVec4");
         return true;
     }
     virtual ModuleAotType aotRequire ( TextWriter & tw ) const override {
