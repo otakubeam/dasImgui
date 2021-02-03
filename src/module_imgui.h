@@ -75,7 +75,3 @@ MAKE_EXTERNAL_TYPE_FACTORY(ImGuiStorage,ImGuiStorage)
 MAKE_EXTERNAL_TYPE_FACTORY(ImGuiTextRange,ImGuiTextFilter::ImGuiTextRange)
 MAKE_EXTERNAL_TYPE_FACTORY(ImGuiTableColumnSortSpecs,ImGuiTableColumnSortSpecs)
 
-// ------------
-// functions
-// ------------
-

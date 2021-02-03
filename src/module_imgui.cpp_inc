@@ -909,6 +909,7 @@ struct ImGuiListClipper_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiLi
 	}
 };
 struct ImVec2_GeneratedAnnotation : ManagedStructureAnnotation<ImVec2> {
+	virtual bool isLocal() const override { return true; }
 	ImVec2_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec2", ml) {
 	}
 	void init () {
@@ -923,6 +924,7 @@ struct ImGuiTextBuffer_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTex
 	}
 };
 struct ImVec4_GeneratedAnnotation : ManagedStructureAnnotation<ImVec4> {
+	virtual bool isLocal() const override { return true; }
 	ImVec4_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec4", ml) {
 	}
 	void init () {
@@ -1046,7 +1048,3 @@ struct ImGuiTableColumnSortSpecs_GeneratedAnnotation : ManagedStructureAnnotatio
 		addField<DAS_BIND_MANAGED_FIELD(SortOrder)>("SortOrder","SortOrder");
 	}
 };
-// ------------
-// functions
-// ------------
-

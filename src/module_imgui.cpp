@@ -74,6 +74,43 @@ struct cast_arg<ImVec2> {
     }
 };
 
+/*
+    TreeNode aka ImGui::TreeNode [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+    LogText aka ImGui::LogText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+    Text aka ImGui::Text [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function LabelText aka ImGui::LabelText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+    TextDisabled aka ImGui::TextDisabled [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function BulletText aka ImGui::BulletText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+    TreeNodeEx aka ImGui::TreeNodeEx [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+    TreeNodeEx aka ImGui::TreeNodeEx [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function SetTooltip aka ImGui::SetTooltip [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function TextWrapped aka ImGui::TextWrapped [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function TextColored aka ImGui::TextColored [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+[build] EXEC : warning : variadic function TreeNode aka ImGui::TreeNode [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
+
+*/
+
+namespace das {
+    void Text ( const char * txt ) {
+        ImGui::Text(escapeString(txt).c_str(),false);
+    }
+    void TextDisabled ( const char * txt ) {
+        ImGui::TextDisabled(escapeString(txt).c_str(),false);
+    }
+    void LogText ( const char * txt ) {
+        ImGui::LogText(escapeString(txt).c_str(),false);
+    }
+    void TreeNode ( const char * id, const char * txt ) {
+        ImGui::TreeNode(id, escapeString(txt).c_str(),false);
+    }
+    void TreeNodeEx ( const char * id, ImGuiTreeNodeFlags flags, const char * txt ) {
+        ImGui::TreeNodeEx(id, flags, escapeString(txt).c_str(),false);
+    }
+    void TreeNodeEx2 ( const void * id, ImGuiTreeNodeFlags flags, const char * txt ) {
+        ImGui::TreeNodeEx(id, flags, escapeString(txt).c_str(),false);
+    }
+}
+
 // making custom builtin module
 class Module_imgui : public Module {
     ModuleLibrary lib;
@@ -88,6 +125,19 @@ public:
             1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
         addAnnotation(make_smart<DummyTypeAnnotation>("ImDrawListSharedData", "ImDrawListSharedData",
             1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
+        // variadic functions
+        addExtern<DAS_BIND_FUN(das::Text)>(*this,lib,"Text",
+            SideEffects::worstDefault,"das::Text");
+        addExtern<DAS_BIND_FUN(das::TextDisabled)>(*this,lib,"TextDisabled",
+            SideEffects::worstDefault,"das::TextDisabled");
+        addExtern<DAS_BIND_FUN(das::LogText)>(*this,lib,"LogText",
+            SideEffects::worstDefault,"das::LogText");
+        addExtern<DAS_BIND_FUN(das::TreeNode)>(*this,lib,"TreeNode",
+            SideEffects::worstDefault,"das::TreeNode");
+        addExtern<DAS_BIND_FUN(das::TreeNodeEx)>(*this,lib,"TreeNodeEx",
+            SideEffects::worstDefault,"das::TreeNodeEx");
+        addExtern<DAS_BIND_FUN(das::TreeNodeEx2)>(*this,lib,"TreeNodeEx",
+            SideEffects::worstDefault,"das::TreeNodeEx2");
     }
     bool initialized = false;
     virtual bool initDependencies() override {

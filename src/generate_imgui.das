@@ -23,6 +23,12 @@ def main
         "ImGui_ImplVulkanH_SelectSurfaceFormat"
     }]
 
+    local_type_names <- [{auto[]
+        "ImVec2";
+        "ImVec3";
+        "ImVec4"
+    }]
+
     // generate
 
     var args <- get_command_line_arguments()
