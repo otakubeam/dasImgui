@@ -150,7 +150,7 @@ addExtern<DAS_BIND_FUN(ImGui::ListBoxFooter)>(*this, lib, "ListBoxFooter",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginPopup)>(*this, lib, "BeginPopup",SideEffects::worstDefault, "ImGui::BeginPopup")
 	->args({"str_id","flags"})
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndDragDropTarget)>(*this, lib, "EndDragDropTarget",SideEffects::worstDefault, "ImGui::EndDragDropTarget")
 	->args({})
@@ -164,16 +164,16 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",Si
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupModal)>(*this, lib, "BeginPopupModal",SideEffects::worstDefault, "ImGui::BeginPopupModal")
 	->args({"name","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFocusHere",SideEffects::worstDefault, "ImGui::SetKeyboardFocusHere")
 	->args({"offset"})
-		// offset : int = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalarN>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
 	->args({"label","data_type","p_data","components","p_min","p_max","format","flags"})
 		->arg_init(6,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(7,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ShowStyleSelector)>(*this, lib, "ShowStyleSelector",SideEffects::worstDefault, "ImGui::ShowStyleSelector")
 	->args({"label"})
@@ -186,37 +186,39 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetColumnFlags)>(*this, lib, "TableGetColumnF
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorPicker3)>(*this, lib, "ColorPicker3",SideEffects::worstDefault, "ImGui::ColorPicker3")
 	->args({"label","col","flags"})
-		// flags : ImGuiColorEditFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndPopup)>(*this, lib, "EndPopup",SideEffects::worstDefault, "ImGui::EndPopup")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemHovered)>(*this, lib, "IsItemHovered",SideEffects::worstDefault, "ImGui::IsItemHovered")
 	->args({"flags"})
-		// flags : ImGuiHoveredFlags = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputScalar)>(*this, lib, "InputScalar",SideEffects::worstDefault, "ImGui::InputScalar")
 	->args({"label","data_type","p_data","p_step","p_step_fast","format","flags"})
 		->arg_init(3,make_smart<ExprConstPtr>())
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstPtr>())
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetForegroundDrawList)>(*this, lib, "GetForegroundDrawList",SideEffects::worstDefault, "ImGui::GetForegroundDrawList")
 	->args({})
 ;
 addExtern<bool (*)(const char *, bool *, ImGuiTreeNodeFlags),ImGui::CollapsingHeader>(*this, lib, "CollapsingHeader",SideEffects::worstDefault, "ImGui::CollapsingHeader")
 	->args({"label","p_visible","flags"})
-		// flags : ImGuiTreeNodeFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetStyleColorName)>(*this, lib, "GetStyleColorName",SideEffects::worstDefault, "ImGui::GetStyleColorName")
 	->args({"idx"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::CaptureKeyboardFromApp)>(*this, lib, "CaptureKeyboardFromApp",SideEffects::worstDefault, "ImGui::CaptureKeyboardFromApp")
 	->args({"want_capture_keyboard_value"})
+		->arg_init(0,make_smart<ExprConstBool>(true))
 ;
 addExtern<DAS_BIND_FUN(ImGui::CaptureMouseFromApp)>(*this, lib, "CaptureMouseFromApp",SideEffects::worstDefault, "ImGui::CaptureMouseFromApp")
 	->args({"want_capture_mouse_value"})
+		->arg_init(0,make_smart<ExprConstBool>(true))
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, float),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
 	->args({"label","data_type","p_data","p_min","p_max","format","power"})
@@ -226,10 +228,11 @@ addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvailWidth)>(*this, lib, "GetConte
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollFromPosX)>(*this, lib, "SetScrollFromPosX",SideEffects::worstDefault, "ImGui::SetScrollFromPosX")
 	->args({"local_x","center_x_ratio"})
+		->arg_init(1,make_smart<ExprConstFloat>(0.5))
 ;
 addExtern<DAS_BIND_FUN(ImGui::OpenPopup)>(*this, lib, "OpenPopup",SideEffects::worstDefault, "ImGui::OpenPopup")
 	->args({"str_id","popup_flags"})
-		// popup_flags : ImGuiPopupFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::NewFrame)>(*this, lib, "NewFrame",SideEffects::worstDefault, "ImGui::NewFrame")
 	->args({})
@@ -242,9 +245,11 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextWindowFocus)>(*this, lib, "SetNextWindowFoc
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragInt)>(*this, lib, "DragInt",SideEffects::worstDefault, "ImGui::DragInt")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// v_min : int = 0
-		// v_max : int = 0
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::DestroyContext)>(*this, lib, "DestroyContext",SideEffects::worstDefault, "ImGui::DestroyContext")
 	->args({"ctx"})
@@ -261,11 +266,11 @@ addExtern<DAS_BIND_FUN(ImGui::GetDrawData)>(*this, lib, "GetDrawData",SideEffect
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetNextItemOpen)>(*this, lib, "SetNextItemOpen",SideEffects::worstDefault, "ImGui::SetNextItemOpen")
 	->args({"is_open","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemClicked)>(*this, lib, "IsItemClicked",SideEffects::worstDefault, "ImGui::IsItemClicked")
 	->args({"mouse_button"})
-		// mouse_button : ImGuiMouseButton = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
 	->args({"str_id","fmt","args"})
@@ -281,11 +286,11 @@ addExtern<void (*)(const char *),ImGui::SetWindowFocus>(*this, lib, "SetWindowFo
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputInt4)>(*this, lib, "InputInt4",SideEffects::worstDefault, "ImGui::InputInt4")
 	->args({"label","v","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InvisibleButton)>(*this, lib, "InvisibleButton",SideEffects::worstDefault, "ImGui::InvisibleButton")
 	->args({"str_id","size","flags"})
-		// flags : ImGuiButtonFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::CreateContext)>(*this, lib, "CreateContext",SideEffects::worstDefault, "ImGui::CreateContext")
 	->args({"shared_font_atlas"})
@@ -293,6 +298,7 @@ addExtern<DAS_BIND_FUN(ImGui::CreateContext)>(*this, lib, "CreateContext",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::Unindent)>(*this, lib, "Unindent",SideEffects::worstDefault, "ImGui::Unindent")
 	->args({"indent_w"})
+		->arg_init(0,make_smart<ExprConstFloat>(0))
 ;
 addExtern<bool (*)(const char *, int, int),ImGui::ListBoxHeader>(*this, lib, "ListBoxHeader",SideEffects::worstDefault, "ImGui::ListBoxHeader")
 	->args({"label","items_count","height_in_items"})
@@ -316,7 +322,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetCursorScreenPos)>(*this, lib, "SetCursorScreenP
 addExtern<DAS_BIND_FUN(ImGui::OpenPopupContextItem)>(*this, lib, "OpenPopupContextItem",SideEffects::worstDefault, "ImGui::OpenPopupContextItem")
 	->args({"str_id","mb"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-		// mb : ImGuiMouseButton = 1
+		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
 addExtern<void (*)(ImGuiStyleVar, float),ImGui::PushStyleVar>(*this, lib, "PushStyleVar",SideEffects::worstDefault, "ImGui::PushStyleVar")
 	->args({"idx","val"})
@@ -335,6 +341,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetTreeNodeToLabelSpacing)>(*this, lib, "GetTreeNo
 ;
 addExtern<bool (*)(const char *, const char *, bool *, bool),ImGui::MenuItem>(*this, lib, "MenuItem",SideEffects::worstDefault, "ImGui::MenuItem")
 	->args({"label","shortcut","p_selected","enabled"})
+		->arg_init(3,make_smart<ExprConstBool>(true))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetWindowHeight)>(*this, lib, "GetWindowHeight",SideEffects::worstDefault, "ImGui::GetWindowHeight")
 	->args({})
@@ -344,6 +351,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetWindowFontScale)>(*this, lib, "SetWindowFontSca
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollFromPosY)>(*this, lib, "SetScrollFromPosY",SideEffects::worstDefault, "ImGui::SetScrollFromPosY")
 	->args({"local_y","center_y_ratio"})
+		->arg_init(1,make_smart<ExprConstFloat>(0.5))
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat2>(*this, lib, "DragFloat2",SideEffects::worstDefault, "ImGui::DragFloat2")
 	->args({"label","v","v_speed","v_min","v_max","format","power"})
@@ -372,6 +380,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetMouseCursor)>(*this, lib, "GetMouseCursor",Side
 addExtern<bool (*)(const char *, const char *, bool, bool),ImGui::MenuItem>(*this, lib, "MenuItem",SideEffects::worstDefault, "ImGui::MenuItem")
 	->args({"label","shortcut","selected","enabled"})
 		->arg_init(1,make_smart<ExprConstPtr>())
+		->arg_init(2,make_smart<ExprConstBool>(false))
+		->arg_init(3,make_smart<ExprConstBool>(true))
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopFont)>(*this, lib, "PopFont",SideEffects::worstDefault, "ImGui::PopFont")
 	->args({})
@@ -390,6 +400,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetColumnOffset)>(*this, lib, "SetColumnOffset",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsKeyPressed)>(*this, lib, "IsKeyPressed",SideEffects::worstDefault, "ImGui::IsKeyPressed")
 	->args({"user_key_index","repeat"})
+		->arg_init(1,make_smart<ExprConstBool>(true))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsKeyDown)>(*this, lib, "IsKeyDown",SideEffects::worstDefault, "ImGui::IsKeyDown")
 	->args({"user_key_index"})
@@ -408,6 +419,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetCursorStartPos), SimNode_ExtFuncCallAndCopyOrMo
 ;
 addExtern<DAS_BIND_FUN(ImGui::PushTextWrapPos)>(*this, lib, "PushTextWrapPos",SideEffects::worstDefault, "ImGui::PushTextWrapPos")
 	->args({"wrap_local_pos_x"})
+		->arg_init(0,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetColumnIndex)>(*this, lib, "GetColumnIndex",SideEffects::worstDefault, "ImGui::GetColumnIndex")
 	->args({})
@@ -420,8 +432,10 @@ addExtern<bool (*)(const void *, ImGuiTreeNodeFlags, const char *, va_list),ImGu
 ;
 addExtern<void (*)(const char *, const float *, int, int, const char *, float, float, ImVec2, int),ImGui::PlotHistogram>(*this, lib, "PlotHistogram",SideEffects::worstDefault, "ImGui::PlotHistogram")
 	->args({"label","values","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size","stride"})
-		// values_offset : int = 0
+		->arg_init(3,make_smart<ExprConstInt>(0))
 		->arg_init(4,make_smart<ExprConstPtr>())
+		->arg_init(5,make_smart<ExprConstFloat>(3.40282347E+38))
+		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
 ;
 addExtern<void (*)(int),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
 	->args({"int_id"})
@@ -439,18 +453,19 @@ addExtern<void (*)(const void *),ImGui::TreePush>(*this, lib, "TreePush",SideEff
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetNextWindowPos)>(*this, lib, "SetNextWindowPos",SideEffects::worstDefault, "ImGui::SetNextWindowPos")
 	->args({"pos","cond","pivot"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputFloat3)>(*this, lib, "InputFloat3",SideEffects::worstDefault, "ImGui::InputFloat3")
 	->args({"label","v","format","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstString>("%.3f"))
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, ImGuiMouseButton, bool),ImGui::BeginPopupContextWindow>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
 	->args({"str_id","mb","over_items"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginDragDropSource)>(*this, lib, "BeginDragDropSource",SideEffects::worstDefault, "ImGui::BeginDragDropSource")
 	->args({"flags"})
-		// flags : ImGuiDragDropFlags = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetTime)>(*this, lib, "GetTime",SideEffects::worstDefault, "ImGui::GetTime")
 	->args({})
@@ -464,7 +479,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsWindowCollapsed)>(*this, lib, "IsWindowCollapsed
 addExtern<DAS_BIND_FUN(ImGui::VSliderScalar)>(*this, lib, "VSliderScalar",SideEffects::worstDefault, "ImGui::VSliderScalar")
 	->args({"label","size","data_type","p_data","p_min","p_max","format","flags"})
 		->arg_init(6,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(7,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Render)>(*this, lib, "Render",SideEffects::worstDefault, "ImGui::Render")
 	->args({})
@@ -477,18 +492,19 @@ addExtern<DAS_BIND_FUN(ImGui::EndFrame)>(*this, lib, "EndFrame",SideEffects::wor
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopStyleColor)>(*this, lib, "PopStyleColor",SideEffects::worstDefault, "ImGui::PopStyleColor")
 	->args({"count"})
-		// count : int = 1
+		->arg_init(0,make_smart<ExprConstInt>(1))
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, float, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::DragScalar>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
 	->args({"label","data_type","p_data","v_speed","p_min","p_max","format","flags"})
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(7,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderInt2)>(*this, lib, "SliderInt2",SideEffects::worstDefault, "ImGui::SliderInt2")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TreeAdvanceToLabelPos)>(*this, lib, "TreeAdvanceToLabelPos",SideEffects::worstDefault, "ImGui::TreeAdvanceToLabelPos")
 	->args({})
@@ -501,6 +517,7 @@ addExtern<bool (*)(const char *, unsigned int *, unsigned int),ImGui::CheckboxFl
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginMenu)>(*this, lib, "BeginMenu",SideEffects::worstDefault, "ImGui::BeginMenu")
 	->args({"label","enabled"})
+		->arg_init(1,make_smart<ExprConstBool>(true))
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat>(*this, lib, "DragFloat",SideEffects::worstDefault, "ImGui::DragFloat")
 	->args({"label","v","v_speed","v_min","v_max","format","power"})
@@ -510,20 +527,25 @@ addExtern<ImU32 (*)(const ImVec4 &),ImGui::GetColorU32>(*this, lib, "GetColorU32
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollHereY)>(*this, lib, "SetScrollHereY",SideEffects::worstDefault, "ImGui::SetScrollHereY")
 	->args({"center_y_ratio"})
+		->arg_init(0,make_smart<ExprConstFloat>(0.5))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableSetColumnIndex)>(*this, lib, "TableSetColumnIndex",SideEffects::worstDefault, "ImGui::TableSetColumnIndex")
 	->args({"column_n"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorButton)>(*this, lib, "ColorButton",SideEffects::worstDefault, "ImGui::ColorButton")
 	->args({"desc_id","col","flags","size"})
-		// flags : ImGuiColorEditFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxY)>(*this, lib, "GetScrollMaxY",SideEffects::worstDefault, "ImGui::GetScrollMaxY")
 	->args({})
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxX)>(*this, lib, "GetScrollMaxX",SideEffects::worstDefault, "ImGui::GetScrollMaxX")
 	->args({})
@@ -555,15 +577,18 @@ addExtern<DAS_BIND_FUN(ImGui::CalcItemWidth)>(*this, lib, "CalcItemWidth",SideEf
 ;
 addExtern<void (*)(const char *, const float *, int, int, const char *, float, float, ImVec2, int),ImGui::PlotLines>(*this, lib, "PlotLines",SideEffects::worstDefault, "ImGui::PlotLines")
 	->args({"label","values","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size","stride"})
-		// values_offset : int = 0
+		->arg_init(3,make_smart<ExprConstInt>(0))
 		->arg_init(4,make_smart<ExprConstPtr>())
+		->arg_init(5,make_smart<ExprConstFloat>(3.40282347E+38))
+		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
 ;
 addExtern<void (*)(const char *, unsigned int),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
 	->args({"prefix","v"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderAngle)>(*this, lib, "SliderAngle",SideEffects::worstDefault, "ImGui::SliderAngle")
 	->args({"label","v_rad","v_degrees_min","v_degrees_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%.0f deg"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::LogButtons)>(*this, lib, "LogButtons",SideEffects::worstDefault, "ImGui::LogButtons")
 	->args({})
@@ -573,7 +598,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetCursorPosX)>(*this, lib, "GetCursorPosX",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::TabItemButton)>(*this, lib, "TabItemButton",SideEffects::worstDefault, "ImGui::TabItemButton")
 	->args({"label","flags"})
-		// flags : ImGuiTabItemFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndTooltip)>(*this, lib, "EndTooltip",SideEffects::worstDefault, "ImGui::EndTooltip")
 	->args({})
@@ -584,12 +609,14 @@ addExtern<bool (*)(const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisi
 addExtern<DAS_BIND_FUN(ImGui::CalcTextSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
 	->args({"text","text_end","hide_text_after_double_hash","wrap_width"})
 		->arg_init(1,make_smart<ExprConstPtr>())
+		->arg_init(2,make_smart<ExprConstBool>(false))
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
 	->args({"label","v","v_speed","v_min","v_max","format","power"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::SameLine)>(*this, lib, "SameLine",SideEffects::worstDefault, "ImGui::SameLine")
 	->args({"offset_from_start_x","spacing"})
+		->arg_init(0,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Dummy)>(*this, lib, "Dummy",SideEffects::worstDefault, "ImGui::Dummy")
 	->args({"size"})
@@ -599,7 +626,7 @@ addExtern<DAS_BIND_FUN(ImGui::BeginGroup)>(*this, lib, "BeginGroup",SideEffects:
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginTabBar)>(*this, lib, "BeginTabBar",SideEffects::worstDefault, "ImGui::BeginTabBar")
 	->args({"str_id","flags"})
-		// flags : ImGuiTabBarFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetKeyPressedAmount)>(*this, lib, "GetKeyPressedAmount",SideEffects::worstDefault, "ImGui::GetKeyPressedAmount")
 	->args({"key_index","repeat_delay","rate"})
@@ -615,7 +642,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetStateStorage)>(*this, lib, "SetStateStorage",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderInt4)>(*this, lib, "SliderInt4",SideEffects::worstDefault, "ImGui::SliderInt4")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *, const void *, const char *, float),ImGui::DragScalarN>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
 	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","power"})
@@ -625,10 +653,11 @@ addExtern<DAS_BIND_FUN(ImGui::LabelTextV)>(*this, lib, "LabelTextV",SideEffects:
 ;
 addExtern<ImU32 (*)(ImGuiCol, float),ImGui::GetColorU32>(*this, lib, "GetColorU32",SideEffects::worstDefault, "ImGui::GetColorU32")
 	->args({"idx","alpha_mul"})
+		->arg_init(1,make_smart<ExprConstFloat>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorPicker4)>(*this, lib, "ColorPicker4",SideEffects::worstDefault, "ImGui::ColorPicker4")
 	->args({"label","col","flags","ref_col"})
-		// flags : ImGuiColorEditFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 		->arg_init(3,make_smart<ExprConstPtr>())
 ;
 addExtern<DAS_BIND_FUN(ImGui::PushButtonRepeat)>(*this, lib, "PushButtonRepeat",SideEffects::worstDefault, "ImGui::PushButtonRepeat")
@@ -651,7 +680,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextWindowContentSize)>(*this, lib, "SetNextWin
 ;
 addExtern<void (*)(const char *, const ImVec2 &, ImGuiCond),ImGui::SetWindowSize>(*this, lib, "SetWindowSize",SideEffects::worstDefault, "ImGui::SetWindowSize")
 	->args({"name","size","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, bool),ImGui::RadioButton>(*this, lib, "RadioButton",SideEffects::worstDefault, "ImGui::RadioButton")
 	->args({"label","active"})
@@ -664,10 +693,11 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMax), SimNode_ExtFuncCallAnd
 ;
 addExtern<bool (*)(const char *, ImGuiTreeNodeFlags),ImGui::CollapsingHeader>(*this, lib, "CollapsingHeader",SideEffects::worstDefault, "ImGui::CollapsingHeader")
 	->args({"label","flags"})
-		// flags : ImGuiTreeNodeFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollHereX)>(*this, lib, "SetScrollHereX",SideEffects::worstDefault, "ImGui::SetScrollHereX")
 	->args({"center_x_ratio"})
+		->arg_init(0,make_smart<ExprConstFloat>(0.5))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetCursorPosY)>(*this, lib, "GetCursorPosY",SideEffects::worstDefault, "ImGui::GetCursorPosY")
 	->args({})
@@ -698,16 +728,22 @@ addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImG
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragInt4)>(*this, lib, "DragInt4",SideEffects::worstDefault, "ImGui::DragInt4")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// v_min : int = 0
-		// v_max : int = 0
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndMenu)>(*this, lib, "EndMenu",SideEffects::worstDefault, "ImGui::EndMenu")
 	->args({})
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat2>(*this, lib, "DragFloat2",SideEffects::worstDefault, "ImGui::DragFloat2")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetTooltipV)>(*this, lib, "SetTooltipV",SideEffects::worstDefault, "ImGui::SetTooltipV")
 	->args({"fmt","args"})
@@ -719,7 +755,7 @@ addExtern<DAS_BIND_FUN(ImGui::StyleColorsDark)>(*this, lib, "StyleColorsDark",Si
 addExtern<DAS_BIND_FUN(ImGui::OpenPopupOnItemClick)>(*this, lib, "OpenPopupOnItemClick",SideEffects::worstDefault, "ImGui::OpenPopupOnItemClick")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-		// popup_flags : ImGuiPopupFlags = 1
+		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::DebugCheckVersionAndDataLayout)>(*this, lib, "DebugCheckVersionAndDataLayout",SideEffects::worstDefault, "ImGui::DebugCheckVersionAndDataLayout")
 	->args({"version_str","sz_io","sz_style","sz_vec2","sz_vec4","sz_drawvert","sz_drawidx"})
@@ -732,7 +768,7 @@ addExtern<DAS_BIND_FUN(ImGui::NextColumn)>(*this, lib, "NextColumn",SideEffects:
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetDragDropPayload)>(*this, lib, "SetDragDropPayload",SideEffects::worstDefault, "ImGui::SetDragDropPayload")
 	->args({"type","data","sz","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemVisible)>(*this, lib, "IsItemVisible",SideEffects::worstDefault, "ImGui::IsItemVisible")
 	->args({})
@@ -757,11 +793,12 @@ addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetNextTreeNodeOpen)>(*this, lib, "SetNextTreeNodeOpen",SideEffects::worstDefault, "ImGui::SetNextTreeNodeOpen")
 	->args({"open","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderInt3)>(*this, lib, "SliderInt3",SideEffects::worstDefault, "ImGui::SliderInt3")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Button)>(*this, lib, "Button",SideEffects::worstDefault, "ImGui::Button")
 	->args({"label","size"})
@@ -771,14 +808,17 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, flo
 ;
 addExtern<bool (*)(const char *, ImGuiTreeNodeFlags),ImGui::TreeNodeEx>(*this, lib, "TreeNodeEx",SideEffects::worstDefault, "ImGui::TreeNodeEx")
 	->args({"label","flags"})
-		// flags : ImGuiTreeNodeFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetFrameHeight)>(*this, lib, "GetFrameHeight",SideEffects::worstDefault, "ImGui::GetFrameHeight")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputFloat)>(*this, lib, "InputFloat",SideEffects::worstDefault, "ImGui::InputFloat")
 	->args({"label","v","step","step_fast","format","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(0))
+		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<void (*)(const char *),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
 	->args({"str_id"})
@@ -788,15 +828,16 @@ addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToDisk)>(*this, lib, "SaveIniSettin
 ;
 addExtern<void (*)(bool, ImGuiCond),ImGui::SetWindowCollapsed>(*this, lib, "SetWindowCollapsed",SideEffects::worstDefault, "ImGui::SetWindowCollapsed")
 	->args({"collapsed","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat>(*this, lib, "SliderFloat",SideEffects::worstDefault, "ImGui::SliderFloat")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowSize>(*this, lib, "SetWindowSize",SideEffects::worstDefault, "ImGui::SetWindowSize")
 	->args({"size","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetCursorPos)>(*this, lib, "SetCursorPos",SideEffects::worstDefault, "ImGui::SetCursorPos")
 	->args({"local_pos"})
@@ -809,7 +850,7 @@ addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromMemory)>(*this, lib, "LoadIniSe
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginCombo)>(*this, lib, "BeginCombo",SideEffects::worstDefault, "ImGui::BeginCombo")
 	->args({"label","preview_value","flags"})
-		// flags : ImGuiComboFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetContentRegionMax), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetContentRegionMax",SideEffects::worstDefault, "ImGui::GetContentRegionMax")
 	->args({})
@@ -820,15 +861,16 @@ addExtern<DAS_BIND_FUN(ImGui::GetStyle), SimNode_ExtFuncCallRef>(*this, lib, "Ge
 addExtern<DAS_BIND_FUN(ImGui::BeginTabItem)>(*this, lib, "BeginTabItem",SideEffects::worstDefault, "ImGui::BeginTabItem")
 	->args({"label","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		// flags : ImGuiTabItemFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginChildFrame)>(*this, lib, "BeginChildFrame",SideEffects::worstDefault, "ImGui::BeginChildFrame")
 	->args({"id","size","flags"})
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableSetupColumn)>(*this, lib, "TableSetupColumn",SideEffects::worstDefault, "ImGui::TableSetupColumn")
 	->args({"label","flags","init_width_or_weight","user_id"})
-		// flags : ImGuiTableColumnFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_init(2,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ProgressBar)>(*this, lib, "ProgressBar",SideEffects::worstDefault, "ImGui::ProgressBar")
 	->args({"fraction","size_arg","overlay"})
@@ -836,7 +878,7 @@ addExtern<DAS_BIND_FUN(ImGui::ProgressBar)>(*this, lib, "ProgressBar",SideEffect
 ;
 addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowPos>(*this, lib, "SetWindowPos",SideEffects::worstDefault, "ImGui::SetWindowPos")
 	->args({"pos","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffects::worstDefault, "ImGui::TextWrappedV")
 	->args({"fmt","args"})
@@ -858,7 +900,11 @@ addExtern<DAS_BIND_FUN(ImGui::ColorConvertHSVtoRGB)>(*this, lib, "ColorConvertHS
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat4>(*this, lib, "DragFloat4",SideEffects::worstDefault, "ImGui::DragFloat4")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableGetRowIndex)>(*this, lib, "TableGetRowIndex",SideEffects::worstDefault, "ImGui::TableGetRowIndex")
 	->args({})
@@ -885,11 +931,13 @@ addExtern<DAS_BIND_FUN(ImGui::GetFontSize)>(*this, lib, "GetFontSize",SideEffect
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginTable)>(*this, lib, "BeginTable",SideEffects::worstDefault, "ImGui::BeginTable")
 	->args({"str_id","column","flags","outer_size","inner_width"})
-		// flags : ImGuiTableFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputFloat2)>(*this, lib, "InputFloat2",SideEffects::worstDefault, "ImGui::InputFloat2")
 	->args({"label","v","format","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstString>("%.3f"))
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetWindowWidth)>(*this, lib, "GetWindowWidth",SideEffects::worstDefault, "ImGui::GetWindowWidth")
 	->args({})
@@ -900,16 +948,17 @@ addExtern<DAS_BIND_FUN(ImGui::GetCurrentContext)>(*this, lib, "GetCurrentContext
 addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
 	->args({"label","data_type","p_data","p_min","p_max","format","flags"})
 		->arg_init(5,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
 	->args({"str_id","size","border","flags"})
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(2,make_smart<ExprConstBool>(false))
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Begin)>(*this, lib, "Begin",SideEffects::worstDefault, "ImGui::Begin")
 	->args({"name","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeight)>(*this, lib, "GetTextLineHeight",SideEffects::worstDefault, "ImGui::GetTextLineHeight")
 	->args({})
@@ -959,18 +1008,23 @@ addExtern<DAS_BIND_FUN(ImGui::TextDisabledV)>(*this, lib, "TextDisabledV",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragFloatRange2)>(*this, lib, "DragFloatRange2",SideEffects::worstDefault, "ImGui::DragFloatRange2")
 	->args({"label","v_current_min","v_current_max","v_speed","v_min","v_max","format","format_max","flags"})
+		->arg_init(3,make_smart<ExprConstFloat>(1))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_init(5,make_smart<ExprConstFloat>(0))
+		->arg_init(6,make_smart<ExprConstString>("%.3f"))
 		->arg_init(7,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(8,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetColumnWidth)>(*this, lib, "GetColumnWidth",SideEffects::worstDefault, "ImGui::GetColumnWidth")
 	->args({"column_index"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetNextWindowCollapsed)>(*this, lib, "SetNextWindowCollapsed",SideEffects::worstDefault, "ImGui::SetNextWindowCollapsed")
 	->args({"collapsed","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Indent)>(*this, lib, "Indent",SideEffects::worstDefault, "ImGui::Indent")
 	->args({"indent_w"})
+		->arg_init(0,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertFloat4ToU32)>(*this, lib, "ColorConvertFloat4ToU32",SideEffects::worstDefault, "ImGui::ColorConvertFloat4ToU32")
 	->args({"in"})
@@ -980,13 +1034,17 @@ addExtern<DAS_BIND_FUN(ImGui::SetCurrentContext)>(*this, lib, "SetCurrentContext
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseHoveringRect)>(*this, lib, "IsMouseHoveringRect",SideEffects::worstDefault, "ImGui::IsMouseHoveringRect")
 	->args({"r_min","r_max","clip"})
+		->arg_init(2,make_smart<ExprConstBool>(true))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetItemRectSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetItemRectSize",SideEffects::worstDefault, "ImGui::GetItemRectSize")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputDouble)>(*this, lib, "InputDouble",SideEffects::worstDefault, "ImGui::InputDouble")
 	->args({"label","v","step","step_fast","format","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		// step : double = 0
+		// step_fast : double = 0
+		->arg_init(4,make_smart<ExprConstString>("%.6f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
 	->args({})
@@ -1007,52 +1065,59 @@ addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstPtr>())
 		->arg_init(7,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(8,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetCursorPosX)>(*this, lib, "SetCursorPosX",SideEffects::worstDefault, "ImGui::SetCursorPosX")
 	->args({"local_x"})
 ;
 addExtern<void (*)(const char *, float (*)(void *, int), void *, int, int, const char *, float, float, ImVec2),ImGui::PlotLines>(*this, lib, "PlotLines",SideEffects::worstDefault, "ImGui::PlotLines")
 	->args({"label","values_getter","data","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size"})
-		// values_offset : int = 0
+		->arg_init(4,make_smart<ExprConstInt>(0))
 		->arg_init(5,make_smart<ExprConstPtr>())
+		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
+		->arg_init(7,make_smart<ExprConstFloat>(3.40282347E+38))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsWindowHovered)>(*this, lib, "IsWindowHovered",SideEffects::worstDefault, "ImGui::IsWindowHovered")
 	->args({"flags"})
-		// flags : ImGuiHoveredFlags = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::VSliderFloat)>(*this, lib, "VSliderFloat",SideEffects::worstDefault, "ImGui::VSliderFloat")
 	->args({"label","size","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorEdit3)>(*this, lib, "ColorEdit3",SideEffects::worstDefault, "ImGui::ColorEdit3")
 	->args({"label","col","flags"})
-		// flags : ImGuiColorEditFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetClipboardText)>(*this, lib, "SetClipboardText",SideEffects::worstDefault, "ImGui::SetClipboardText")
 	->args({"text"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsWindowFocused)>(*this, lib, "IsWindowFocused",SideEffects::worstDefault, "ImGui::IsWindowFocused")
 	->args({"flags"})
-		// flags : ImGuiFocusedFlags = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsAnyItemFocused)>(*this, lib, "IsAnyItemFocused",SideEffects::worstDefault, "ImGui::IsAnyItemFocused")
 	->args({})
 ;
 addExtern<void (*)(const char *, bool, ImGuiCond),ImGui::SetWindowCollapsed>(*this, lib, "SetWindowCollapsed",SideEffects::worstDefault, "ImGui::SetWindowCollapsed")
 	->args({"name","collapsed","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, int *, const char *, int),ImGui::Combo>(*this, lib, "Combo",SideEffects::worstDefault, "ImGui::Combo")
 	->args({"label","current_item","items_separated_by_zeros","popup_max_height_in_items"})
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat>(*this, lib, "DragFloat",SideEffects::worstDefault, "ImGui::DragFloat")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::AcceptDragDropPayload)>(*this, lib, "AcceptDragDropPayload",SideEffects::worstDefault, "ImGui::AcceptDragDropPayload")
 	->args({"type","flags"})
-		// flags : ImGuiDragDropFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<void (*)(const char *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
 	->args({"str_id"})
@@ -1063,18 +1128,21 @@ addExtern<DAS_BIND_FUN(ImGui::TextUnformatted)>(*this, lib, "TextUnformatted",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragIntRange2)>(*this, lib, "DragIntRange2",SideEffects::worstDefault, "ImGui::DragIntRange2")
 	->args({"label","v_current_min","v_current_max","v_speed","v_min","v_max","format","format_max","flags"})
-		// v_min : int = 0
-		// v_max : int = 0
+		->arg_init(3,make_smart<ExprConstFloat>(1))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstInt>(0))
+		->arg_init(6,make_smart<ExprConstString>("%d"))
 		->arg_init(7,make_smart<ExprConstPtr>())
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(8,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetStateStorage)>(*this, lib, "GetStateStorage",SideEffects::worstDefault, "ImGui::GetStateStorage")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::Columns)>(*this, lib, "Columns",SideEffects::worstDefault, "ImGui::Columns")
 	->args({"count","id","border"})
-		// count : int = 1
+		->arg_init(0,make_smart<ExprConstInt>(1))
 		->arg_init(1,make_smart<ExprConstPtr>())
+		->arg_init(2,make_smart<ExprConstBool>(true))
 ;
 addExtern<bool (*)(const char *, int *, const char *const *, int, int),ImGui::ListBox>(*this, lib, "ListBox",SideEffects::worstDefault, "ImGui::ListBox")
 	->args({"label","current_item","items","items_count","height_in_items"})
@@ -1090,7 +1158,8 @@ addExtern<ImGuiID (*)(const void *),ImGui::GetID>(*this, lib, "GetID",SideEffect
 ;
 addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat4>(*this, lib, "SliderFloat4",SideEffects::worstDefault, "ImGui::SliderFloat4")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndTabItem)>(*this, lib, "EndTabItem",SideEffects::worstDefault, "ImGui::EndTabItem")
 	->args({})
@@ -1100,14 +1169,14 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemDeactivated)>(*this, lib, "IsItemDeactivated
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetNextWindowSize)>(*this, lib, "SetNextWindowSize",SideEffects::worstDefault, "ImGui::SetNextWindowSize")
 	->args({"size","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetCursorPos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetCursorPos",SideEffects::worstDefault, "ImGui::GetCursorPos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputInt3)>(*this, lib, "InputInt3",SideEffects::worstDefault, "ImGui::InputInt3")
 	->args({"label","v","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableNextColumn)>(*this, lib, "TableNextColumn",SideEffects::worstDefault, "ImGui::TableNextColumn")
 	->args({})
@@ -1117,7 +1186,7 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetColumnIndex)>(*this, lib, "TableGetColumnI
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopStyleVar)>(*this, lib, "PopStyleVar",SideEffects::worstDefault, "ImGui::PopStyleVar")
 	->args({"count"})
-		// count : int = 1
+		->arg_init(0,make_smart<ExprConstInt>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndMainMenuBar)>(*this, lib, "EndMainMenuBar",SideEffects::worstDefault, "ImGui::EndMainMenuBar")
 	->args({})
@@ -1125,7 +1194,7 @@ addExtern<DAS_BIND_FUN(ImGui::EndMainMenuBar)>(*this, lib, "EndMainMenuBar",Side
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextItem)>(*this, lib, "BeginPopupContextItem",SideEffects::worstDefault, "ImGui::BeginPopupContextItem")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-		// popup_flags : ImGuiPopupFlags = 1
+		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TextColoredV)>(*this, lib, "TextColoredV",SideEffects::worstDefault, "ImGui::TextColoredV")
 	->args({"col","fmt","args"})
@@ -1147,10 +1216,11 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseDragging)>(*this, lib, "IsMouseDragging",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollHere)>(*this, lib, "SetScrollHere",SideEffects::worstDefault, "ImGui::SetScrollHere")
 	->args({"center_ratio"})
+		->arg_init(0,make_smart<ExprConstFloat>(0.5))
 ;
 addExtern<void (*)(const char *, const ImVec2 &, ImGuiCond),ImGui::SetWindowPos>(*this, lib, "SetWindowPos",SideEffects::worstDefault, "ImGui::SetWindowPos")
 	->args({"name","pos","cond"})
-		// cond : ImGuiCond = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<bool (*)(const char *, int *, const char *const *, int, int),ImGui::Combo>(*this, lib, "Combo",SideEffects::worstDefault, "ImGui::Combo")
 	->args({"label","current_item","items","items_count","popup_max_height_in_items"})
@@ -1172,11 +1242,11 @@ addExtern<DAS_BIND_FUN(ImGui::InputScalarN)>(*this, lib, "InputScalarN",SideEffe
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstPtr>())
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(7,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ResetMouseDragDelta)>(*this, lib, "ResetMouseDragDelta",SideEffects::worstDefault, "ImGui::ResetMouseDragDelta")
 	->args({"button"})
-		// button : ImGuiMouseButton = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetFrameHeightWithSpacing)>(*this, lib, "GetFrameHeightWithSpacing",SideEffects::worstDefault, "ImGui::GetFrameHeightWithSpacing")
 	->args({})
@@ -1196,7 +1266,7 @@ addExtern<DAS_BIND_FUN(ImGui::EndChild)>(*this, lib, "EndChild",SideEffects::wor
 addExtern<bool (*)(const char *, ImGuiPopupFlags),ImGui::BeginPopupContextWindow>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-		// popup_flags : ImGuiPopupFlags = 1
+		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableGetColumnCount)>(*this, lib, "TableGetColumnCount",SideEffects::worstDefault, "ImGui::TableGetColumnCount")
 	->args({})
@@ -1226,8 +1296,10 @@ addExtern<DAS_BIND_FUN(ImGui::SetAllocatorFunctions)>(*this, lib, "SetAllocatorF
 ;
 addExtern<void (*)(const char *, float (*)(void *, int), void *, int, int, const char *, float, float, ImVec2),ImGui::PlotHistogram>(*this, lib, "PlotHistogram",SideEffects::worstDefault, "ImGui::PlotHistogram")
 	->args({"label","values_getter","data","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size"})
-		// values_offset : int = 0
+		->arg_init(4,make_smart<ExprConstInt>(0))
 		->arg_init(5,make_smart<ExprConstPtr>())
+		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
+		->arg_init(7,make_smart<ExprConstFloat>(3.40282347E+38))
 ;
 addExtern<DAS_BIND_FUN(ImGui::StyleColorsClassic)>(*this, lib, "StyleColorsClassic",SideEffects::worstDefault, "ImGui::StyleColorsClassic")
 	->args({"dst"})
@@ -1256,18 +1328,21 @@ addExtern<DAS_BIND_FUN(ImGui::CloseCurrentPopup)>(*this, lib, "CloseCurrentPopup
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableNextRow)>(*this, lib, "TableNextRow",SideEffects::worstDefault, "ImGui::TableNextRow")
 	->args({"row_flags","min_row_height"})
-		// row_flags : ImGuiTableRowFlags = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_init(1,make_smart<ExprConstFloat>(0))
 ;
 addExtern<bool (*)(ImGuiID, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
 	->args({"id","size","border","flags"})
-		// flags : ImGuiWindowFlags = 0
+		->arg_init(2,make_smart<ExprConstBool>(false))
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetFont)>(*this, lib, "GetFont",SideEffects::worstDefault, "ImGui::GetFont")
 	->args({})
 ;
 addExtern<bool (*)(const char *, bool, ImGuiSelectableFlags, const ImVec2 &),ImGui::Selectable>(*this, lib, "Selectable",SideEffects::worstDefault, "ImGui::Selectable")
 	->args({"label","selected","flags","size"})
-		// flags : ImGuiSelectableFlags = 0
+		->arg_init(1,make_smart<ExprConstBool>(false))
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetDragDropPayload)>(*this, lib, "GetDragDropPayload",SideEffects::worstDefault, "ImGui::GetDragDropPayload")
 	->args({})
@@ -1277,7 +1352,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetScrollY)>(*this, lib, "SetScrollY",SideEffects:
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorEdit4)>(*this, lib, "ColorEdit4",SideEffects::worstDefault, "ImGui::ColorEdit4")
 	->args({"label","col","flags"})
-		// flags : ImGuiColorEditFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::NewLine)>(*this, lib, "NewLine",SideEffects::worstDefault, "ImGui::NewLine")
 	->args({})
@@ -1285,28 +1360,30 @@ addExtern<DAS_BIND_FUN(ImGui::NewLine)>(*this, lib, "NewLine",SideEffects::worst
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextVoid)>(*this, lib, "BeginPopupContextVoid",SideEffects::worstDefault, "ImGui::BeginPopupContextVoid")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-		// popup_flags : ImGuiPopupFlags = 1
+		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
 	->args({"button","lock_threshold"})
-		// button : ImGuiMouseButton = 0
+		->arg_init(0,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::End)>(*this, lib, "End",SideEffects::worstDefault, "ImGui::End")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::VSliderInt)>(*this, lib, "VSliderInt",SideEffects::worstDefault, "ImGui::VSliderInt")
 	->args({"label","size","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputFloat4)>(*this, lib, "InputFloat4",SideEffects::worstDefault, "ImGui::InputFloat4")
 	->args({"label","v","format","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstString>("%.3f"))
+		->arg_init(3,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputInt)>(*this, lib, "InputInt",SideEffects::worstDefault, "ImGui::InputInt")
 	->args({"label","v","step","step_fast","flags"})
-		// step : int = 1
-		// step_fast : int = 100
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(1))
+		->arg_init(3,make_smart<ExprConstInt>(100))
+		->arg_init(4,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetOverlayDrawList)>(*this, lib, "GetOverlayDrawList",SideEffects::worstDefault, "ImGui::GetOverlayDrawList")
 	->args({})
@@ -1332,14 +1409,16 @@ addExtern<DAS_BIND_FUN(ImGui::PopButtonRepeat)>(*this, lib, "PopButtonRepeat",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderInt)>(*this, lib, "SliderInt",SideEffects::worstDefault, "ImGui::SliderInt")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndDragDropSource)>(*this, lib, "EndDragDropSource",SideEffects::worstDefault, "ImGui::EndDragDropSource")
 	->args({})
 ;
 addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat2>(*this, lib, "SliderFloat2",SideEffects::worstDefault, "ImGui::SliderFloat2")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableHeadersRow)>(*this, lib, "TableHeadersRow",SideEffects::worstDefault, "ImGui::TableHeadersRow")
 	->args({})
@@ -1349,31 +1428,36 @@ addExtern<DAS_BIND_FUN(ImGui::PushClipRect)>(*this, lib, "PushClipRect",SideEffe
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragInt3)>(*this, lib, "DragInt3",SideEffects::worstDefault, "ImGui::DragInt3")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// v_min : int = 0
-		// v_max : int = 0
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemFocused)>(*this, lib, "IsItemFocused",SideEffects::worstDefault, "ImGui::IsItemFocused")
 	->args({})
 ;
 addExtern<bool (*)(const char *, bool *, ImGuiSelectableFlags, const ImVec2 &),ImGui::Selectable>(*this, lib, "Selectable",SideEffects::worstDefault, "ImGui::Selectable")
 	->args({"label","p_selected","flags","size"})
-		// flags : ImGuiSelectableFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetVersion)>(*this, lib, "GetVersion",SideEffects::worstDefault, "ImGui::GetVersion")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseClicked)>(*this, lib, "IsMouseClicked",SideEffects::worstDefault, "ImGui::IsMouseClicked")
 	->args({"button","repeat"})
+		->arg_init(1,make_smart<ExprConstBool>(false))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetMousePos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragInt2)>(*this, lib, "DragInt2",SideEffects::worstDefault, "ImGui::DragInt2")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
-		// v_min : int = 0
-		// v_max : int = 0
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_init(6,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetCursorPosY)>(*this, lib, "SetCursorPosY",SideEffects::worstDefault, "ImGui::SetCursorPosY")
 	->args({"local_y"})
@@ -1384,7 +1468,7 @@ addExtern<DAS_BIND_FUN(ImGui::StyleColorsLight)>(*this, lib, "StyleColorsLight",
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsPopupOpen)>(*this, lib, "IsPopupOpen",SideEffects::worstDefault, "ImGui::IsPopupOpen")
 	->args({"str_id","flags"})
-		// flags : ImGuiPopupFlags = 0
+		->arg_init(1,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetBackgroundDrawList)>(*this, lib, "GetBackgroundDrawList",SideEffects::worstDefault, "ImGui::GetBackgroundDrawList")
 	->args({})
@@ -1394,7 +1478,8 @@ addExtern<DAS_BIND_FUN(ImGui::IsKeyReleased)>(*this, lib, "IsKeyReleased",SideEf
 ;
 addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat3>(*this, lib, "SliderFloat3",SideEffects::worstDefault, "ImGui::SliderFloat3")
 	->args({"label","v","v_min","v_max","format","flags"})
-		// flags : ImGuiSliderFlags = 0
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopID)>(*this, lib, "PopID",SideEffects::worstDefault, "ImGui::PopID")
 	->args({})
@@ -1404,7 +1489,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemToggledOpen)>(*this, lib, "IsItemToggledOpen
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputInt2)>(*this, lib, "InputInt2",SideEffects::worstDefault, "ImGui::InputInt2")
 	->args({"label","v","flags"})
-		// flags : ImGuiInputTextFlags = 0
+		->arg_init(2,make_smart<ExprConstInt>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableGetColumnName)>(*this, lib, "TableGetColumnName",SideEffects::worstDefault, "ImGui::TableGetColumnName")
 	->args({"column_n"})

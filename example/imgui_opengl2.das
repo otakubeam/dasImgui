@@ -10,9 +10,9 @@ def main
 	var f = 0.0
 	imgui_app("Testing IMGUI") <|
         imgui::NewFrame()
-		imgui::Begin("Position and color", null, 0)
+        imgui::Begin("Position and color")
 //        imgui::Text("Hello, world!")
-        imgui::SliderFloat("float", safe_addr(f), 0.0f, 1.0f, "%3f", 0)
+        imgui::SliderFloat("float", safe_addr(f), 0.0f, 1.0f)
 //        imgui::Text("This is text!")
         // imgui::ShowDemoWindow(null)
         imgui::Render()
