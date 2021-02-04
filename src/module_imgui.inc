@@ -1137,10 +1137,6 @@ addExtern<DAS_BIND_FUN(ImGui::AcceptDragDropPayload)>(*this, lib, "AcceptDragDro
 addExtern<void (*)(const char *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
 	->args({"str_id"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::TextUnformatted)>(*this, lib, "TextUnformatted",SideEffects::worstDefault, "ImGui::TextUnformatted")
-	->args({"text","text_end"})
-		->arg_init(1,make_smart<ExprConstString>(""))
-;
 addExtern<DAS_BIND_FUN(ImGui::DragIntRange2)>(*this, lib, "DragIntRange2",SideEffects::worstDefault, "ImGui::DragIntRange2")
 	->args({"label","v_current_min","v_current_max","v_speed","v_min","v_max","format","format_max","flags"})
 		->arg_init(3,make_smart<ExprConstFloat>(1))

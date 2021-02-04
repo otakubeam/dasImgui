@@ -36,16 +36,114 @@ def imgui_app ( title:string; blk : block )
     glfwDestroyWindow(window)
     glfwTerminate()
 
-def HelpMarker(desc:string)
-    TextDisabled("(?)");
-    if IsItemHovered()
-        BeginTooltip()
-        PushTextWrapPos(GetFontSize() * 35.0f)
-        TextUnformatted(desc)
-        PopTextWrapPos()
-        EndTooltip()
+var show_app_main_menu_bar = false
+var show_app_documents = false
+var show_app_console = false
+var show_app_log = false
+var show_app_layout = false
+var show_app_property_editor = false
+var show_app_long_text = false
+var show_app_auto_resize = false
+var show_app_constrained_resize = false
+var show_app_simple_overlay = false
+var show_app_window_titles = false
+var show_app_custom_rendering = false
 
-def showDemoWindow
+var show_app_metrics = false
+var show_app_style_editor = false
+var show_app_about = false
+
+var no_titlebar = false
+var no_scrollbar = false
+var no_menu = false
+var no_move = false
+var no_resize = false
+var no_collapse = false
+var no_close = false
+var no_nav = false
+var no_background = false
+var no_bring_to_front = false
+
+
+def DasShowDemoWindow ( _p_open : bool? )
+
+    var p_open = _p_open
+
+    var window_flags : ImGuiWindowFlags
+    if no_titlebar
+        window_flags |= ImGuiWindowFlags NoTitleBar
+    if no_scrollbar
+        window_flags |= ImGuiWindowFlags NoScrollbar
+    if !no_menu
+        window_flags |= ImGuiWindowFlags MenuBar
+    if no_move
+        window_flags |= ImGuiWindowFlags NoMove
+    if no_resize
+        window_flags |= ImGuiWindowFlags NoResize
+    if no_collapse
+        window_flags |= ImGuiWindowFlags NoCollapse
+    if no_nav
+        window_flags |= imgui_boost::ImGuiWindowFlags_NoNav
+    if no_background
+        window_flags |= ImGuiWindowFlags NoBackground
+    if no_bring_to_front
+        window_flags |= ImGuiWindowFlags NoBringToFrontOnFocus
+    if no_close
+        p_open = null
+
+    SetNextWindowPos( ImVec2(650., 20.), ImGuiCond FirstUseEver)
+    SetNextWindowSize( ImVec2(550., 680.), ImGuiCond FirstUseEver)
+
+    if !Begin("Dear ImGui Demo", p_open, window_flags)
+        End()
+
+    // Menu Bar
+    if BeginMenuBar()
+        if BeginMenu("Menu")
+            // ShowExampleMenuFile()
+            EndMenu()
+        if BeginMenu("Examples")
+            MenuItem("Main menu bar", show_app_main_menu_bar)
+            MenuItem("Console", show_app_console)
+            MenuItem("Log", show_app_log)
+            MenuItem("Simple layout", show_app_layout)
+            MenuItem("Property editor", show_app_property_editor)
+            MenuItem("Long text display", show_app_long_text)
+            MenuItem("Auto-resizing window", show_app_auto_resize)
+            MenuItem("Constrained-resizing window", show_app_constrained_resize)
+            MenuItem("Simple overlay", show_app_simple_overlay)
+            MenuItem("Manipulating window titles", show_app_window_titles)
+            MenuItem("Custom rendering", show_app_custom_rendering)
+            MenuItem("Documents", show_app_documents)
+            EndMenu()
+        if BeginMenu("Tools")
+            MenuItem("Metrics/Debugger", show_app_metrics)
+            MenuItem("Style Editor", show_app_style_editor)
+            MenuItem("About Dear ImGui", show_app_about)
+            EndMenu();
+        EndMenuBar();
+
+    Text("dear imgui says hello. {IMGUI_VERSION}")
+    Spacing()
+
+    if CollapsingHeader("Help")
+        Text("ABOUT THIS DEMO:")
+        BulletText("Sections below are demonstrating many aspects of the library.")
+        BulletText("The \"Examples\" menu above leads to more demo contents.")
+        BulletText("The \"Tools\" menu above gives access to: About Box, Style Editor,\n" +
+                          "and Metrics/Debugger (general purpose Dear ImGui debugging tool).")
+        Separator()
+        Text("PROGRAMMER GUIDE:")
+        BulletText("See the ShowDemoWindow() code in imgui_demo.cpp. <- you are here!")
+        BulletText("See comments in imgui.cpp.")
+        BulletText("See example applications in the examples/ folder.")
+        BulletText("Read the FAQ at http://www.dearimgui.org/faq/")
+        BulletText("Set 'io.ConfigFlags |= NavEnableKeyboard' for keyboard controls.")
+        BulletText("Set 'io.ConfigFlags |= NavEnableGamepad' for gamepad controls.")
+        Separator()
+        Text("USER GUIDE:")
+        DasShowUserGuide()
+
     if CollapsingHeader("Configuration")
         var io & = GetIO()
         if TreeNode("Configuration##2")
@@ -107,16 +205,52 @@ def showDemoWindow
                 LogFinish()
             TreePop()
 
+    End()
+
+def HelpMarker(desc:string)
+    TextDisabled("(?)");
+    if IsItemHovered()
+        BeginTooltip()
+        PushTextWrapPos(GetFontSize() * 35.0f)
+        TextUnformatted(desc)
+        PopTextWrapPos()
+        EndTooltip()
+
+def DasShowUserGuide()
+    let io & = GetIO()
+    BulletText("Double-click on title bar to collapse window.")
+    BulletText(
+        "Click and drag on lower corner to resize window\n" +
+        "(double-click to auto fit window to its contents).")
+    BulletText("CTRL+Click on a slider or drag box to input value as text.")
+    BulletText("TAB/SHIFT+TAB to cycle through keyboard editable fields.")
+    if io.FontAllowUserScaling
+        BulletText("CTRL+Mouse Wheel to zoom window contents.")
+    BulletText("While inputing text:\n")
+    Indent()
+    BulletText("CTRL+Left/Right to word jump.")
+    BulletText("CTRL+A or double-click to select all.")
+    BulletText("CTRL+X/C/V to use clipboard cut/copy/paste.")
+    BulletText("CTRL+Z,CTRL+Y to undo/redo.")
+    BulletText("ESCAPE to revert.")
+    BulletText("You can apply arithmetic operators +,*,/ on numerical values.\nUse +- to subtract.")
+    Unindent()
+    BulletText("With keyboard navigation enabled:")
+    Indent()
+    BulletText("Arrow keys to navigate.")
+    BulletText("Space to activate a widget.")
+    BulletText("Return to input text into a widget.")
+    BulletText("Escape to deactivate a widget, close popup, exit child window.")
+    BulletText("Alt to jump to the menu layer of a window.")
+    BulletText("CTRL+Tab to select a window.")
+    Unindent()
+
 [export]
 def main
 	var f = 0.0
 	imgui_app("Testing IMGUI") <|
         NewFrame()
-        Begin("Position and color")
-        Text("Hello, world!")
-        SliderFloat("float", f, 0.0f, 1.0f)
-        Text("This is text!")
         // imgui::ShowDemoWindow(null)
-        showDemoWindow()
+        DasShowDemoWindow(null)
         Render()
 

@@ -16,7 +16,8 @@ def main
         "operator delete";
         "operator new";
         "__security_init_cookie";
-        "__security_check_cookie"
+        "__security_check_cookie";
+        "ImGui::TextUnformatted"
     }]
 
     cmres_functions <- [{auto[]
