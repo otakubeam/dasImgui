@@ -2,10 +2,12 @@ require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
 
+require safe_addr
+
 def imgui_app ( title:string; blk : block )
     if glfwInit()==0
 		panic("can't init glfw")
-    var window = glfwCreateWindow(1280, 720, title, null, null)
+    var window = glfwCreateWindow(1920, 1280, title, null, null)
     if window==null
 		panic("can't create window")
     glfwMakeContextCurrent(window)
@@ -35,6 +37,44 @@ def imgui_app ( title:string; blk : block )
     DestroyContext(null)
     glfwDestroyWindow(window)
     glfwTerminate()
+
+def HelpMarker(desc:string)
+    TextDisabled("(?)");
+    if IsItemHovered()
+        BeginTooltip()
+        PushTextWrapPos(GetFontSize() * 35.0f)
+        TextUnformatted(desc)
+        PopTextWrapPos()
+        EndTooltip()
+
+def DasShowUserGuide()
+    let io & = GetIO()
+    BulletText("Double-click on title bar to collapse window.")
+    BulletText(
+        "Click and drag on lower corner to resize window\n" +
+        "(double-click to auto fit window to its contents).")
+    BulletText("CTRL+Click on a slider or drag box to input value as text.")
+    BulletText("TAB/SHIFT+TAB to cycle through keyboard editable fields.")
+    if io.FontAllowUserScaling
+        BulletText("CTRL+Mouse Wheel to zoom window contents.")
+    BulletText("While inputing text:\n")
+    Indent()
+    BulletText("CTRL+Left/Right to word jump.")
+    BulletText("CTRL+A or double-click to select all.")
+    BulletText("CTRL+X/C/V to use clipboard cut/copy/paste.")
+    BulletText("CTRL+Z,CTRL+Y to undo/redo.")
+    BulletText("ESCAPE to revert.")
+    BulletText("You can apply arithmetic operators +,*,/ on numerical values.\nUse +- to subtract.")
+    Unindent()
+    BulletText("With keyboard navigation enabled:")
+    Indent()
+    BulletText("Arrow keys to navigate.")
+    BulletText("Space to activate a widget.")
+    BulletText("Return to input text into a widget.")
+    BulletText("Escape to deactivate a widget, close popup, exit child window.")
+    BulletText("Alt to jump to the menu layer of a window.")
+    BulletText("CTRL+Tab to select a window.")
+    Unindent()
 
 var show_app_main_menu_bar = false
 var show_app_documents = false
@@ -97,10 +137,12 @@ def DasShowDemoWindow ( _p_open : bool? )
     if !Begin("Dear ImGui Demo", p_open, window_flags)
         End()
 
+    PushItemWidth(GetFontSize() * -12.)
+
     // Menu Bar
     if BeginMenuBar()
         if BeginMenu("Menu")
-            // ShowExampleMenuFile()
+            ShowExampleMenuFile()
             EndMenu()
         if BeginMenu("Examples")
             MenuItem("Main menu bar", show_app_main_menu_bar)
@@ -199,51 +241,324 @@ def DasShowDemoWindow ( _p_open : bool? )
                 "Try opening any of the contents below in this window and then click one of the \"Log To\" button.")
             LogButtons()
             HelpMarker("You can also call LogText() to output directly to the log without a visual output.")
-            if Button("Copy \"Hello, world!\" to clipboard", ImVec2(0.,0.))
+            if Button("Copy \"Hello, world!\" to clipboard")
                 LogToClipboard()
                 LogText("Hello, world!")
                 LogFinish()
             TreePop()
 
+    if CollapsingHeader("Window options")
+        if BeginTable("split", 3)
+            TableNextColumn()
+            Checkbox("No titlebar", no_titlebar)
+            TableNextColumn()
+            Checkbox("No scrollbar", no_scrollbar)
+            TableNextColumn()
+            Checkbox("No menu", no_menu)
+            TableNextColumn()
+            Checkbox("No move", no_move)
+            TableNextColumn()
+            Checkbox("No resize", no_resize)
+            TableNextColumn()
+            Checkbox("No collapse", no_collapse)
+            TableNextColumn()
+            Checkbox("No close", no_close)
+            TableNextColumn()
+            Checkbox("No nav", no_nav)
+            TableNextColumn()
+            Checkbox("No background", no_background)
+            TableNextColumn()
+            Checkbox("No bring to front", no_bring_to_front)
+            EndTable()
+
+    /*
+    ShowDemoWindowWidgets()
+    ShowDemoWindowLayout()
+    */
+    ShowDemoWindowPopups()
+    /*
+    ShowDemoWindowTables()
+    ShowDemoWindowMisc()
+    */
+
+    PopItemWidth()
     End()
 
-def HelpMarker(desc:string)
-    TextDisabled("(?)");
-    if IsItemHovered()
-        BeginTooltip()
-        PushTextWrapPos(GetFontSize() * 35.0f)
-        TextUnformatted(desc)
-        PopTextWrapPos()
-        EndTooltip()
+var ShowDemoWindowPopups_selected_fish = -1
+var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
+let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
 
-def DasShowUserGuide()
-    let io & = GetIO()
-    BulletText("Double-click on title bar to collapse window.")
-    BulletText(
-        "Click and drag on lower corner to resize window\n" +
-        "(double-click to auto fit window to its contents).")
-    BulletText("CTRL+Click on a slider or drag box to input value as text.")
-    BulletText("TAB/SHIFT+TAB to cycle through keyboard editable fields.")
-    if io.FontAllowUserScaling
-        BulletText("CTRL+Mouse Wheel to zoom window contents.")
-    BulletText("While inputing text:\n")
-    Indent()
-    BulletText("CTRL+Left/Right to word jump.")
-    BulletText("CTRL+A or double-click to select all.")
-    BulletText("CTRL+X/C/V to use clipboard cut/copy/paste.")
-    BulletText("CTRL+Z,CTRL+Y to undo/redo.")
-    BulletText("ESCAPE to revert.")
-    BulletText("You can apply arithmetic operators +,*,/ on numerical values.\nUse +- to subtract.")
-    Unindent()
-    BulletText("With keyboard navigation enabled:")
-    Indent()
-    BulletText("Arrow keys to navigate.")
-    BulletText("Space to activate a widget.")
-    BulletText("Return to input text into a widget.")
-    BulletText("Escape to deactivate a widget, close popup, exit child window.")
-    BulletText("Alt to jump to the menu layer of a window.")
-    BulletText("CTRL+Tab to select a window.")
-    Unindent()
+def ShowDemoWindowPopups()
+    if !CollapsingHeader("Popups & Modal windows")
+        return
+
+    if TreeNode("Popups")
+        TextWrapped(
+            "When a popup is active, it inhibits interacting with windows that are behind the popup. " +
+            "Clicking outside the popup closes it.")
+
+        if Button("Select..")
+            OpenPopup("my_select_popup")
+        SameLine()
+        TextUnformatted(ShowDemoWindowPopups_selected_fish == -1 ? "<None>" : ShowDemoWindowPopups_names[ShowDemoWindowPopups_selected_fish])
+        if BeginPopup("my_select_popup")
+            Text("Aquarium")
+            Separator()
+            for name,i in ShowDemoWindowPopups_names,range(100500)
+                if Selectable(name)
+                    ShowDemoWindowPopups_selected_fish = i
+            EndPopup()
+        if Button("Toggle..")
+            OpenPopup("my_toggle_popup")
+        if BeginPopup("my_toggle_popup")
+            for name,toggle in ShowDemoWindowPopups_names,ShowDemoWindowPopups_toggles
+                imgui_boost::MenuItem(name, "", toggle)
+            if BeginMenu("Sub-menu")
+                MenuItem("Click me")
+                EndMenu()
+            Separator()
+            Text("Tooltip here")
+            if IsItemHovered()
+                SetTooltip("I am a tooltip over a popup")
+            if Button("Stacked Popup")
+                OpenPopup("another popup")
+            if BeginPopup("another popup")
+                for name,toggle in ShowDemoWindowPopups_names,ShowDemoWindowPopups_toggles
+                    imgui_boost::MenuItem(name, "", toggle);
+                if BeginMenu("Sub-menu")
+                    MenuItem("Click me")
+                    if Button("Stacked Popup")
+                        OpenPopup("another popup")
+                    if BeginPopup("another popup")
+                        Text("I am the last one here.")
+                        EndPopup()
+                    EndMenu()
+                EndPopup()
+            EndPopup()
+
+        if Button("File Menu..")
+            OpenPopup("my_file_popup")
+        if BeginPopup("my_file_popup")
+            ShowExampleMenuFile()
+            EndPopup()
+        TreePop()
+
+/*
+
+    if (TreeNode("Context menus"))
+    {
+        // BeginPopupContextItem() is a helper to provide common/simple popup behavior of essentially doing:
+        //    if (IsItemHovered() && IsMouseReleased(ImGuiMouseButton_Right))
+        //       OpenPopup(id);
+        //    return BeginPopup(id);
+        // For more advanced uses you may want to replicate and customize this code.
+        // See details in BeginPopupContextItem().
+        static float value = 0.5f;
+        Text("Value = %.3f (<-- right-click here)", value);
+        if (BeginPopupContextItem("item context menu"))
+        {
+            if (Selectable("Set to zero")) value = 0.0f;
+            if (Selectable("Set to PI")) value = 3.1415f;
+            SetNextItemWidth(-1);
+            DragFloat("##Value", &value, 0.1f, 0.0f, 0.0f);
+            EndPopup();
+        }
+
+        // We can also use OpenPopupOnItemClick() which is the same as BeginPopupContextItem() but without the
+        // Begin() call. So here we will make it that clicking on the text field with the right mouse button (1)
+        // will toggle the visibility of the popup above.
+        Text("(You can also right-click me to open the same popup as above.)");
+        OpenPopupOnItemClick("item context menu", 1);
+
+        // When used after an item that has an ID (e.g.Button), we can skip providing an ID to BeginPopupContextItem().
+        // BeginPopupContextItem() will use the last item ID as the popup ID.
+        // In addition here, we want to include your editable label inside the button label.
+        // We use the ### operator to override the ID (read FAQ about ID for details)
+        static char name[32] = "Label1";
+        char buf[64];
+        sprintf(buf, "Button: %s###Button", name); // ### operator override ID ignoring the preceding label
+        Button(buf);
+        if (BeginPopupContextItem())
+        {
+            Text("Edit name:");
+            InputText("##edit", name, IM_ARRAYSIZE(name));
+            if (Button("Close"))
+                CloseCurrentPopup();
+            EndPopup();
+        }
+        SameLine(); Text("(<-- right-click here)");
+
+        TreePop();
+    }
+
+    if (TreeNode("Modals"))
+    {
+        TextWrapped("Modal windows are like popups but the user cannot close them by clicking outside.");
+
+        if (Button("Delete.."))
+            OpenPopup("Delete?");
+
+        // Always center this window when appearing
+        ImVec2 center(GetIO().DisplaySize.x * 0.5f, GetIO().DisplaySize.y * 0.5f);
+        SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
+            Separator();
+
+            //static int unused_i = 0;
+            //Combo("Combo", &unused_i, "Delete\0Delete harder\0");
+
+            static bool dont_ask_me_next_time = false;
+            PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+            PopStyleVar();
+
+            if (Button("OK", ImVec2(120, 0))) { CloseCurrentPopup(); }
+            SetItemDefaultFocus();
+            SameLine();
+            if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }
+            EndPopup();
+        }
+
+        if (Button("Stacked modals.."))
+            OpenPopup("Stacked 1");
+        if (BeginPopupModal("Stacked 1", NULL, ImGuiWindowFlags_MenuBar))
+        {
+            if (BeginMenuBar())
+            {
+                if (BeginMenu("File"))
+                {
+                    if (MenuItem("Some menu item")) {}
+                    EndMenu();
+                }
+                EndMenuBar();
+            }
+            Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.");
+
+            // Testing behavior of widgets stacking their own regular popups over the modal.
+            static int item = 1;
+            static float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
+            Combo("Combo", &item, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
+            ColorEdit4("color", color);
+
+            if (Button("Add another modal.."))
+                OpenPopup("Stacked 2");
+
+            // Also demonstrate passing a bool* to BeginPopupModal(), this will create a regular close button which
+            // will close the popup. Note that the visibility state of popups is owned by imgui, so the input value
+            // of the bool actually doesn't matter here.
+            bool unused_open = true;
+            if (BeginPopupModal("Stacked 2", &unused_open))
+            {
+                Text("Hello from Stacked The Second!");
+                if (Button("Close"))
+                    CloseCurrentPopup();
+                EndPopup();
+            }
+
+            if (Button("Close"))
+                CloseCurrentPopup();
+            EndPopup();
+        }
+
+        TreePop();
+    }
+
+    if (TreeNode("Menus inside a regular window"))
+    {
+        TextWrapped("Below we are testing adding menu items to a regular window. It's rather unusual but should work!");
+        Separator();
+
+        // Note: As a quirk in this very specific example, we want to differentiate the parent of this menu from the
+        // parent of the various popup menus above. To do so we are encloding the items in a PushID()/PopID() block
+        // to make them two different menusets. If we don't, opening any popup above and hovering our menu here would
+        // open it. This is because once a menu is active, we allow to switch to a sibling menu by just hovering on it,
+        // which is the desired behavior for regular menus.
+        PushID("foo");
+        MenuItem("Menu item", "CTRL+M");
+        if (BeginMenu("Menu inside a regular window"))
+        {
+            ShowExampleMenuFile();
+            EndMenu();
+        }
+        PopID();
+        Separator();
+        TreePop();
+    }
+}
+*/
+
+var ShowExampleMenuFile_enabled = true
+var ShowExampleMenuFile_f = 0.5f
+var ShowExampleMenuFile_n = 0
+var ShowExampleMenuFile_b = true
+
+def ShowExampleMenuFile()
+    MenuItem("(demo menu)", "", false, false)
+    if MenuItem("New")
+        pass
+    if MenuItem("Open", "Ctrl+O")
+        pass
+    if BeginMenu("Open Recent")
+        MenuItem("fish_hat.c")
+        MenuItem("fish_hat.inl")
+        MenuItem("fish_hat.h")
+        if BeginMenu("More..")
+            MenuItem("Hello")
+            MenuItem("Sailor")
+            if BeginMenu("Recurse..")
+                ShowExampleMenuFile()
+                EndMenu()
+            EndMenu()
+        EndMenu()
+    if MenuItem("Save", "Ctrl+S")
+        pass
+    if MenuItem("Save As..")
+        pass
+
+    Separator()
+    if BeginMenu("Options")
+        imgui_boost::MenuItem("Enabled", "", ShowExampleMenuFile_enabled);
+        BeginChild("child", ImVec2(0., 60.), true)
+        for i in range(1)
+            Text("Scrolling Text {i}");
+        EndChild()
+        SliderFloat("Value", ShowExampleMenuFile_f, 0.0f, 1.0f)
+        InputFloat("Input", ShowExampleMenuFile_f, 0.1f)
+
+
+        // WIP - split string etc
+        Combo("Combo", safe_addr(ShowExampleMenuFile_n), "Yes0No0Maybe0") // "Yes\0No\0Maybe\0\0")
+
+
+
+        EndMenu()
+
+    if BeginMenu("Colors")
+        let sz = GetTextLineHeight();
+        for col,i in range(100500),each_enum(type<ImGuiCol_>)
+            if i == ImGuiCol_ ImGuiCol_COUNT
+                continue
+            let name = GetStyleColorName(col)
+            let p = GetCursorScreenPos()
+            // GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32((ImGuiCol)i));
+            Dummy(ImVec2(sz, sz))
+            SameLine()
+            MenuItem(name)
+        EndMenu()
+
+    if BeginMenu("Options") // <-- Append!
+        Checkbox("SomeOption", ShowExampleMenuFile_b)
+        EndMenu()
+
+    if BeginMenu("Disabled", false)
+        assert(false)
+    if MenuItem("Checked", "", true)
+        pass
+    if MenuItem("Quit", "Alt+F4")
+        pass
 
 [export]
 def main

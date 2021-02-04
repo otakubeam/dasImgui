@@ -87,6 +87,9 @@ namespace das {
     void Text ( const char * txt ) {
         ImGui::Text(txt);
     }
+    void TextWrapped ( const char * txt ) {
+        ImGui::TextWrapped(txt);
+    }
     void TextDisabled ( const char * txt ) {
         ImGui::TextDisabled(txt);
     }
@@ -108,6 +111,9 @@ namespace das {
     void BulletText ( const char * txt ) {
         ImGui::BulletText(txt);
     }
+    void SetTooltip ( const char * txt ) {
+        ImGui::SetTooltip(txt);
+    }
 }
 
 // making custom builtin module
@@ -127,6 +133,8 @@ public:
         // variadic functions
         addExtern<DAS_BIND_FUN(das::Text)>(*this,lib,"Text",
             SideEffects::worstDefault,"das::Text");
+        addExtern<DAS_BIND_FUN(das::TextWrapped)>(*this,lib,"TextWrapped",
+            SideEffects::worstDefault,"das::TextWrapped");
         addExtern<DAS_BIND_FUN(das::TextDisabled)>(*this,lib,"TextDisabled",
             SideEffects::worstDefault,"das::TextDisabled");
         addExtern<DAS_BIND_FUN(das::LogText)>(*this,lib,"LogText",
@@ -139,6 +147,8 @@ public:
             SideEffects::worstDefault,"das::TreeNodeEx2");
         addExtern<DAS_BIND_FUN(das::BulletText)>(*this,lib,"BulletText",
             SideEffects::worstDefault,"das::BulletText");
+        addExtern<DAS_BIND_FUN(das::SetTooltip)>(*this,lib,"SetTooltip",
+            SideEffects::worstDefault,"das::SetTooltip");
         // text unfromatted
         addExtern<DAS_BIND_FUN(das::TextUnformatted)>(*this, lib, "TextUnformatted",
             SideEffects::worstDefault, "das::TextUnformatted")
