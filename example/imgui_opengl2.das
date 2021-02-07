@@ -1,3 +1,4 @@
+require strings
 require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
@@ -287,6 +288,8 @@ def DasShowDemoWindow ( _p_open : bool? )
 var ShowDemoWindowPopups_selected_fish = -1
 var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
 let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
+var ShowDemoWindowPopups_value = 0.5f
+var ShowDemoWindowPopups_name = reserve_string_buffer("Label1", 32)
 
 def ShowDemoWindowPopups()
     if !CollapsingHeader("Popups & Modal windows")
@@ -343,53 +346,31 @@ def ShowDemoWindowPopups()
             EndPopup()
         TreePop()
 
-/*
-
-    if (TreeNode("Context menus"))
-    {
-        // BeginPopupContextItem() is a helper to provide common/simple popup behavior of essentially doing:
-        //    if (IsItemHovered() && IsMouseReleased(ImGuiMouseButton_Right))
-        //       OpenPopup(id);
-        //    return BeginPopup(id);
-        // For more advanced uses you may want to replicate and customize this code.
-        // See details in BeginPopupContextItem().
-        static float value = 0.5f;
-        Text("Value = %.3f (<-- right-click here)", value);
-        if (BeginPopupContextItem("item context menu"))
-        {
-            if (Selectable("Set to zero")) value = 0.0f;
-            if (Selectable("Set to PI")) value = 3.1415f;
-            SetNextItemWidth(-1);
-            DragFloat("##Value", &value, 0.1f, 0.0f, 0.0f);
-            EndPopup();
-        }
-
-        // We can also use OpenPopupOnItemClick() which is the same as BeginPopupContextItem() but without the
-        // Begin() call. So here we will make it that clicking on the text field with the right mouse button (1)
-        // will toggle the visibility of the popup above.
+    if TreeNode("Context menus")
+        Text("Value = {ShowDemoWindowPopups_value} (<-- right-click here)")
+        if BeginPopupContextItem("item context menu")
+            if Selectable("Set to zero")
+                ShowDemoWindowPopups_value = 0.0f
+            if Selectable("Set to PI")
+                ShowDemoWindowPopups_value = 3.1415f
+            SetNextItemWidth(-1.)
+            DragFloat("##Value", safe_addr(ShowDemoWindowPopups_value), 0.1f, 0.0f, 0.0f)
+            EndPopup()
         Text("(You can also right-click me to open the same popup as above.)");
         OpenPopupOnItemClick("item context menu", 1);
-
-        // When used after an item that has an ID (e.g.Button), we can skip providing an ID to BeginPopupContextItem().
-        // BeginPopupContextItem() will use the last item ID as the popup ID.
-        // In addition here, we want to include your editable label inside the button label.
-        // We use the ### operator to override the ID (read FAQ about ID for details)
-        static char name[32] = "Label1";
-        char buf[64];
-        sprintf(buf, "Button: %s###Button", name); // ### operator override ID ignoring the preceding label
-        Button(buf);
-        if (BeginPopupContextItem())
-        {
+        var buf = "Button: {ShowDemoWindowPopups_name}"
+        Button(buf)
+        if BeginPopupContextItem()
             Text("Edit name:");
-            InputText("##edit", name, IM_ARRAYSIZE(name));
-            if (Button("Close"))
-                CloseCurrentPopup();
-            EndPopup();
-        }
-        SameLine(); Text("(<-- right-click here)");
+            InputText("##edit", ShowDemoWindowPopups_name, 32)
+            if Button("Close")
+                CloseCurrentPopup()
+            EndPopup()
+        SameLine()
+        Text("(<-- right-click here)")
+        TreePop()
 
-        TreePop();
-    }
+/*
 
     if (TreeNode("Modals"))
     {
@@ -527,13 +508,7 @@ def ShowExampleMenuFile()
         EndChild()
         SliderFloat("Value", ShowExampleMenuFile_f, 0.0f, 1.0f)
         InputFloat("Input", ShowExampleMenuFile_f, 0.1f)
-
-
-        // WIP - split string etc
-        Combo("Combo", safe_addr(ShowExampleMenuFile_n), "Yes0No0Maybe0") // "Yes\0No\0Maybe\0\0")
-
-
-
+        Combo("Combo", ShowExampleMenuFile_n, [[auto "Yes";"No";"Maybe"]])
         EndMenu()
 
     if BeginMenu("Colors")

@@ -114,6 +114,16 @@ namespace das {
     void SetTooltip ( const char * txt ) {
         ImGui::SetTooltip(txt);
     }
+
+    /*
+    IMGUI_API bool          InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+    IMGUI_API bool          InputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+    IMGUI_API bool          InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+    */
+
+    bool InputText ( const char* label, char* buf, int32_t buf_size, ImGuiInputTextFlags flags ) {
+        return ImGui::InputText(label,buf,buf_size,flags);
+    }
 }
 
 // making custom builtin module
@@ -153,6 +163,10 @@ public:
         addExtern<DAS_BIND_FUN(das::TextUnformatted)>(*this, lib, "TextUnformatted",
             SideEffects::worstDefault, "das::TextUnformatted")
             ->arg("text");
+        // input text
+        addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "InputText",
+            SideEffects::worstDefault, "das::InputText")
+                ->arg_init(3, make_smart<ExprConstInt>(0));
         // constants
         addConstant(*this,"IMGUI_VERSION", IMGUI_VERSION);
         addConstant(*this,"IMGUI_VERSION_NUM", IMGUI_VERSION_NUM);

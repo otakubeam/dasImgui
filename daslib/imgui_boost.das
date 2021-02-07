@@ -217,3 +217,16 @@ def Selectable(lab:string; var selected:bool&; flags:ImGuiSelectableFlags = bitf
 
 def InputFloat(lab:string; var v:float&; step:float = 0.0f; step_fast:float = 0.0f; format:string = "%.3f"; flags : ImGuiInputTextFlags = bitfield(0))
     return imgui::InputFloat(lab,safe_addr(v),step,step_fast,format,int(flags))
+
+def Combo ( lab:string; var current_item:int&; items:array<string>; popul_max_heigh_in_items : int = -1 )
+    let nItems = length(items)
+    unsafe
+        if nItems != 0
+            imgui::Combo(lab,addr(current_item),addr(items[0]),nItems,popul_max_heigh_in_items)
+        else
+            imgui::Combo(lab,addr(current_item),null,0,popul_max_heigh_in_items)
+
+def Combo ( lab:string; var current_item:int&; items:string[]; popul_max_heigh_in_items : int = -1 )
+    let nItems = typeinfo(dim items)
+    unsafe
+        imgui::Combo(lab,addr(current_item),addr(items[0]),nItems,popul_max_heigh_in_items)
