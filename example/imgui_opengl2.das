@@ -40,7 +40,7 @@ def imgui_app ( title:string; blk : block )
     glfwTerminate()
 
 def HelpMarker(desc:string)
-    TextDisabled("(?)");
+    TextDisabled("(?)")
     if IsItemHovered()
         BeginTooltip()
         PushTextWrapPos(GetFontSize() * 35.0f)
@@ -163,8 +163,8 @@ def DasShowDemoWindow ( _p_open : bool? )
             MenuItem("Metrics/Debugger", show_app_metrics)
             MenuItem("Style Editor", show_app_style_editor)
             MenuItem("About Dear ImGui", show_app_about)
-            EndMenu();
-        EndMenuBar();
+            EndMenu()
+        EndMenuBar()
 
     Text("dear imgui says hello. {IMGUI_VERSION}")
     Spacing()
@@ -191,11 +191,14 @@ def DasShowDemoWindow ( _p_open : bool? )
         var io & = GetIO()
         if TreeNode("Configuration##2")
             CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", io.ConfigFlags,ImGuiConfigFlags NavEnableKeyboard)
-            SameLine(); HelpMarker("Enable keyboard controls.")
+            SameLine()
+            HelpMarker("Enable keyboard controls.")
             CheckboxFlags("io.ConfigFlags: NavEnableGamepad", io.ConfigFlags, ImGuiConfigFlags NavEnableGamepad)
-            SameLine(); HelpMarker("Enable gamepad controls. Require backend to set io.BackendFlags |= ImGuiBackendFlags_HasGamepad.\n\nRead instructions in imgui.cpp for details.")
+            SameLine()
+            HelpMarker("Enable gamepad controls. Require backend to set io.BackendFlags |= ImGuiBackendFlags_HasGamepad.\n\nRead instructions in imgui.cpp for details.")
             CheckboxFlags("io.ConfigFlags: NavEnableSetMousePos", io.ConfigFlags, ImGuiConfigFlags NavEnableSetMousePos)
-            SameLine(); HelpMarker("Instruct navigation to move the mouse cursor. See comment for ImGuiConfigFlags_NavEnableSetMousePos.")
+            SameLine()
+            HelpMarker("Instruct navigation to move the mouse cursor. See comment for ImGuiConfigFlags_NavEnableSetMousePos.")
             CheckboxFlags("io.ConfigFlags: NoMouse", io.ConfigFlags, ImGuiConfigFlags NoMouse)
             var icf : ImGuiConfigFlags = ImGuiConfigFlags(io.ConfigFlags)
             if ImGuiConfigFlags(io.ConfigFlags).NoMouse
@@ -203,18 +206,23 @@ def DasShowDemoWindow ( _p_open : bool? )
                     SameLine()
                     Text("<<PRESS SPACE TO DISABLE>>")
                 if IsKeyPressed(GetKeyIndex(ImGuiKey_ ImGuiKey_Space))
-                    io.ConfigFlags &= ~int(ImGuiConfigFlags_ ImGuiConfigFlags_NoMouse);
+                    io.ConfigFlags &= ~int(ImGuiConfigFlags_ ImGuiConfigFlags_NoMouse)
             CheckboxFlags("io.ConfigFlags: NoMouseCursorChange", io.ConfigFlags, ImGuiConfigFlags NoMouseCursorChange)
-            SameLine(); HelpMarker("Instruct backend to not alter mouse cursor shape and visibility.")
+            SameLine()
+            HelpMarker("Instruct backend to not alter mouse cursor shape and visibility.")
             Checkbox("io.ConfigInputTextCursorBlink", io.ConfigInputTextCursorBlink)
-            SameLine(); HelpMarker("Enable blinking cursor (optional as some users consider it to be distracting)")
+            SameLine()
+            HelpMarker("Enable blinking cursor (optional as some users consider it to be distracting)")
             Checkbox("io.ConfigDragClickToInputText", io.ConfigDragClickToInputText)
-            SameLine(); HelpMarker("Enable turning DragXXX widgets into text input with a simple mouse click-release (without moving).")
+            SameLine()
+            HelpMarker("Enable turning DragXXX widgets into text input with a simple mouse click-release (without moving).")
             Checkbox("io.ConfigWindowsResizeFromEdges", io.ConfigWindowsResizeFromEdges)
-            SameLine(); HelpMarker("Enable resizing of windows from their edges and from the lower-left corner.\nThis requires (io.BackendFlags & ImGuiBackendFlags_HasMouseCursors) because it needs mouse cursor feedback.")
+            SameLine()
+            HelpMarker("Enable resizing of windows from their edges and from the lower-left corner.\nThis requires (io.BackendFlags & ImGuiBackendFlags_HasMouseCursors) because it needs mouse cursor feedback.")
             Checkbox("io.ConfigWindowsMoveFromTitleBarOnly", io.ConfigWindowsMoveFromTitleBarOnly)
             Checkbox("io.MouseDrawCursor", io.MouseDrawCursor)
-            SameLine(); HelpMarker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your application GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop applications may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).")
+            SameLine()
+            HelpMarker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your application GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop applications may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).")
             Text("Also see Style->Rendering for rendering options.")
             TreePop()
             Separator()
@@ -290,6 +298,11 @@ var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
 let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
 var ShowDemoWindowPopups_value = 0.5f
 var ShowDemoWindowPopups_name = reserve_string_buffer("Label1", 32)
+var ShowDemoWindowPopups_unused_i = 0
+var ShowDemoWindowPopups_dont_ask_me_next_time = false
+var ShowDemoWindowPopups_item = 1
+var ShowDemoWindowPopups_color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
+var ShowDemoWindowPopups_unused_open = true
 
 def ShowDemoWindowPopups()
     if !CollapsingHeader("Popups & Modal windows")
@@ -327,7 +340,7 @@ def ShowDemoWindowPopups()
                 OpenPopup("another popup")
             if BeginPopup("another popup")
                 for name,toggle in ShowDemoWindowPopups_names,ShowDemoWindowPopups_toggles
-                    imgui_boost::MenuItem(name, "", toggle);
+                    imgui_boost::MenuItem(name, "", toggle)
                 if BeginMenu("Sub-menu")
                     MenuItem("Click me")
                     if Button("Stacked Popup")
@@ -356,12 +369,12 @@ def ShowDemoWindowPopups()
             SetNextItemWidth(-1.)
             DragFloat("##Value", safe_addr(ShowDemoWindowPopups_value), 0.1f, 0.0f, 0.0f)
             EndPopup()
-        Text("(You can also right-click me to open the same popup as above.)");
-        OpenPopupOnItemClick("item context menu", 1);
+        Text("(You can also right-click me to open the same popup as above.)")
+        OpenPopupOnItemClick("item context menu", 1)
         var buf = "Button: {ShowDemoWindowPopups_name}"
         Button(buf)
         if BeginPopupContextItem()
-            Text("Edit name:");
+            Text("Edit name:")
             InputText("##edit", ShowDemoWindowPopups_name, 32)
             if Button("Close")
                 CloseCurrentPopup()
@@ -370,106 +383,61 @@ def ShowDemoWindowPopups()
         Text("(<-- right-click here)")
         TreePop()
 
-/*
+    if TreeNode("Modals")
+        TextWrapped("Modal windows are like popups but the user cannot close them by clicking outside.")
+        if Button("Delete..")
+            OpenPopup("Delete?")
+        var center = ImVec2(GetIO().DisplaySize.x * 0.5f, GetIO().DisplaySize.y * 0.5f)
+        SetNextWindowPos(center, ImGuiCond Appearing, ImVec2(0.5f, 0.5f))
+        if BeginPopupModal("Delete?", null, ImGuiWindowFlags AlwaysAutoResize)
+            Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n")
+            Separator()
+            Combo("Combo", ShowDemoWindowPopups_unused_i, [[auto "Delete"; "Delete harder"]])
+            PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f))
+            Checkbox("Don't ask me next time", ShowDemoWindowPopups_dont_ask_me_next_time)
+            PopStyleVar()
+            if Button("OK", ImVec2(120., 0.))
+                CloseCurrentPopup()
+            SetItemDefaultFocus()
+            SameLine()
+            if Button("Cancel", ImVec2(120., 0.))
+                CloseCurrentPopup()
+            EndPopup()
+        if Button("Stacked modals..")
+            OpenPopup("Stacked 1")
+        if BeginPopupModal("Stacked 1", null, ImGuiWindowFlags MenuBar)
+            if BeginMenuBar()
+                if BeginMenu("File")
+                    if MenuItem("Some menu item")
+                        pass
+                    EndMenu()
+                EndMenuBar()
+            Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.")
+            Combo("Combo", ShowDemoWindowPopups_item, [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
+            ColorEdit4("color", ShowDemoWindowPopups_color)
+            if Button("Add another modal..")
+                OpenPopup("Stacked 2")
+            if BeginPopupModal("Stacked 2", ShowDemoWindowPopups_unused_open)
+                Text("Hello from Stacked The Second!")
+                if Button("Close")
+                    CloseCurrentPopup()
+                EndPopup()
+            if Button("Close")
+                CloseCurrentPopup()
+            EndPopup()
+        TreePop()
 
-    if (TreeNode("Modals"))
-    {
-        TextWrapped("Modal windows are like popups but the user cannot close them by clicking outside.");
-
-        if (Button("Delete.."))
-            OpenPopup("Delete?");
-
-        // Always center this window when appearing
-        ImVec2 center(GetIO().DisplaySize.x * 0.5f, GetIO().DisplaySize.y * 0.5f);
-        SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-        if (BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
-            Separator();
-
-            //static int unused_i = 0;
-            //Combo("Combo", &unused_i, "Delete\0Delete harder\0");
-
-            static bool dont_ask_me_next_time = false;
-            PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-            Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-            PopStyleVar();
-
-            if (Button("OK", ImVec2(120, 0))) { CloseCurrentPopup(); }
-            SetItemDefaultFocus();
-            SameLine();
-            if (Button("Cancel", ImVec2(120, 0))) { CloseCurrentPopup(); }
-            EndPopup();
-        }
-
-        if (Button("Stacked modals.."))
-            OpenPopup("Stacked 1");
-        if (BeginPopupModal("Stacked 1", NULL, ImGuiWindowFlags_MenuBar))
-        {
-            if (BeginMenuBar())
-            {
-                if (BeginMenu("File"))
-                {
-                    if (MenuItem("Some menu item")) {}
-                    EndMenu();
-                }
-                EndMenuBar();
-            }
-            Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.");
-
-            // Testing behavior of widgets stacking their own regular popups over the modal.
-            static int item = 1;
-            static float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
-            Combo("Combo", &item, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
-            ColorEdit4("color", color);
-
-            if (Button("Add another modal.."))
-                OpenPopup("Stacked 2");
-
-            // Also demonstrate passing a bool* to BeginPopupModal(), this will create a regular close button which
-            // will close the popup. Note that the visibility state of popups is owned by imgui, so the input value
-            // of the bool actually doesn't matter here.
-            bool unused_open = true;
-            if (BeginPopupModal("Stacked 2", &unused_open))
-            {
-                Text("Hello from Stacked The Second!");
-                if (Button("Close"))
-                    CloseCurrentPopup();
-                EndPopup();
-            }
-
-            if (Button("Close"))
-                CloseCurrentPopup();
-            EndPopup();
-        }
-
-        TreePop();
-    }
-
-    if (TreeNode("Menus inside a regular window"))
-    {
-        TextWrapped("Below we are testing adding menu items to a regular window. It's rather unusual but should work!");
-        Separator();
-
-        // Note: As a quirk in this very specific example, we want to differentiate the parent of this menu from the
-        // parent of the various popup menus above. To do so we are encloding the items in a PushID()/PopID() block
-        // to make them two different menusets. If we don't, opening any popup above and hovering our menu here would
-        // open it. This is because once a menu is active, we allow to switch to a sibling menu by just hovering on it,
-        // which is the desired behavior for regular menus.
-        PushID("foo");
-        MenuItem("Menu item", "CTRL+M");
-        if (BeginMenu("Menu inside a regular window"))
-        {
-            ShowExampleMenuFile();
-            EndMenu();
-        }
-        PopID();
-        Separator();
-        TreePop();
-    }
-}
-*/
+    if TreeNode("Menus inside a regular window")
+        TextWrapped("Below we are testing adding menu items to a regular window. It's rather unusual but should work!")
+        Separator()
+        PushID("foo")
+        MenuItem("Menu item", "CTRL+M")
+        if BeginMenu("Menu inside a regular window")
+            ShowExampleMenuFile()
+            EndMenu()
+        PopID()
+        Separator()
+        TreePop()
 
 var ShowExampleMenuFile_enabled = true
 var ShowExampleMenuFile_f = 0.5f
@@ -501,10 +469,10 @@ def ShowExampleMenuFile()
 
     Separator()
     if BeginMenu("Options")
-        imgui_boost::MenuItem("Enabled", "", ShowExampleMenuFile_enabled);
+        imgui_boost::MenuItem("Enabled", "", ShowExampleMenuFile_enabled)
         BeginChild("child", ImVec2(0., 60.), true)
         for i in range(1)
-            Text("Scrolling Text {i}");
+            Text("Scrolling Text {i}")
         EndChild()
         SliderFloat("Value", ShowExampleMenuFile_f, 0.0f, 1.0f)
         InputFloat("Input", ShowExampleMenuFile_f, 0.1f)
@@ -512,13 +480,13 @@ def ShowExampleMenuFile()
         EndMenu()
 
     if BeginMenu("Colors")
-        let sz = GetTextLineHeight();
+        let sz = GetTextLineHeight()
         for col,i in range(100500),each_enum(type<ImGuiCol_>)
             if i == ImGuiCol_ ImGuiCol_COUNT
                 continue
             let name = GetStyleColorName(col)
             let p = GetCursorScreenPos()
-            // GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32((ImGuiCol)i));
+            // GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32((ImGuiCol)i))
             Dummy(ImVec2(sz, sz))
             SameLine()
             MenuItem(name)

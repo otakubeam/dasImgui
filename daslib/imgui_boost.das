@@ -170,8 +170,49 @@ bitfield ImGuiInputTextFlags
     CallbackResize
     CallbackEdit
 
+bitfield ImGuiColorEditFlags
+    None
+    NoAlpha
+    NoPicker
+    NoOptions
+    NoSmallPreview
+    NoInputs
+    NoTooltip
+    NoLabel
+    NoSidePreview
+    NoDragDrop
+    NoBorder
+    _bit11
+    _bit12
+    _bit13
+    _bit14
+    _bit15
+    AlphaBar
+    AlphaPreview
+    AlphaPreviewHalf
+    HDR
+    DisplayRGB
+    DisplayHSV
+    DisplayHex
+    Uint8
+    Float
+    PickerHueBar
+    PickerHueWheel
+    InputRGB
+    InputHSV
+
+let
+    ImGuiColorEditFlags__OptionsDefault = ImGuiColorEditFlags Uint8 | ImGuiColorEditFlags DisplayRGB | ImGuiColorEditFlags InputRGB | ImGuiColorEditFlags PickerHueBar
+
 def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags  = bitfield(0))
     return imgui::Begin(name,p_open,int(flags))
+
+def BeginPopupModal(name:string; p_open:bool?; flags:ImGuiWindowFlags = bitfield(0))
+    return imgui::BeginPopupModal(name, p_open, int(flags))
+
+def BeginPopupModal(name:string; var p_open:bool&; flags:ImGuiWindowFlags = bitfield(0))
+    unsafe
+        return imgui::BeginPopupModal(name, addr(p_open), int(flags))
 
 def GetKeyIndex(key:ImGuiKey_)
     return imgui::GetKeyIndex(int(key))
@@ -230,3 +271,17 @@ def Combo ( lab:string; var current_item:int&; items:string[]; popul_max_heigh_i
     let nItems = typeinfo(dim items)
     unsafe
         imgui::Combo(lab,addr(current_item),addr(items[0]),nItems,popul_max_heigh_in_items)
+
+def PushStyleVar(idx:ImGuiStyleVar_; val:float)
+    imgui::PushStyleVar(int(idx),val)
+
+def PushStyleVar(idx:ImGuiStyleVar_; val:ImVec2)
+    imgui::PushStyleVar(int(idx),val)
+
+def ColorEdit3(lab:string; var col:float[3]; flags:ImGuiColorEditFlags = bitfield(0))
+    unsafe
+        return imgui::ColorEdit3(lab,addr(col[0]),int(flags))
+
+def ColorEdit4(lab:string; var col:float[4]; flags:ImGuiColorEditFlags = bitfield(0))
+    unsafe
+        return imgui::ColorEdit4(lab,addr(col[0]),int(flags))
