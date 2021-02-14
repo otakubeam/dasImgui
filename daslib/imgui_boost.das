@@ -204,6 +204,21 @@ bitfield ImGuiColorEditFlags
 let
     ImGuiColorEditFlags__OptionsDefault = ImGuiColorEditFlags Uint8 | ImGuiColorEditFlags DisplayRGB | ImGuiColorEditFlags InputRGB | ImGuiColorEditFlags PickerHueBar
 
+bitfield ImDrawCornerFlags
+    TopLeft
+    TopRight
+    BotLeft
+    BotRight
+
+let
+    ImDrawCornerFlags_None      = bitfield(0)
+    ImDrawCornerFlags_Top       = ImDrawCornerFlags TopLeft | ImDrawCornerFlags TopRight
+    ImDrawCornerFlags_Bot       = ImDrawCornerFlags BotLeft | ImDrawCornerFlags BotRight
+    ImDrawCornerFlags_Left      = ImDrawCornerFlags TopLeft | ImDrawCornerFlags BotLeft
+    ImDrawCornerFlags_Right     = ImDrawCornerFlags TopRight | ImDrawCornerFlags BotRight
+    ImDrawCornerFlags_All       = bitfield(0xF)
+
+
 def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags  = bitfield(0))
     return imgui::Begin(name,p_open,int(flags))
 
@@ -285,3 +300,9 @@ def ColorEdit3(lab:string; var col:float[3]; flags:ImGuiColorEditFlags = bitfiel
 def ColorEdit4(lab:string; var col:float[4]; flags:ImGuiColorEditFlags = bitfield(0))
     unsafe
         return imgui::ColorEdit4(lab,addr(col[0]),int(flags))
+
+
+// ImDrawList
+
+def AddRectFilled(var self:ImDrawList; p_min,p_max:ImVec2; col:uint; rounding:float=0.0f; rounding_corners:ImDrawCornerFlags = ImDrawCornerFlags_All )
+    self |> imgui::AddRectFilled(p_min,p_max,col,rounding,int(rounding_corners))

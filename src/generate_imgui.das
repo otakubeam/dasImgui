@@ -17,7 +17,8 @@ def main
         "operator new";
         "__security_init_cookie";
         "__security_check_cookie";
-        "ImGui::TextUnformatted"
+        "ImGui::TextUnformatted";
+        "ImGuiTextFilter::PassFilter"
     }]
 
     cmres_functions <- [{auto[]

@@ -140,7 +140,6 @@ def DasShowDemoWindow ( _p_open : bool? )
 
     PushItemWidth(GetFontSize() * -12.)
 
-    // Menu Bar
     if BeginMenuBar()
         if BeginMenu("Menu")
             ShowExampleMenuFile()
@@ -287,9 +286,8 @@ def DasShowDemoWindow ( _p_open : bool? )
     ShowDemoWindowPopups()
     /*
     ShowDemoWindowTables()
-    ShowDemoWindowMisc()
     */
-
+    ShowDemoWindowMisc()
     PopItemWidth()
     End()
 
@@ -486,13 +484,13 @@ def ShowExampleMenuFile()
                 continue
             let name = GetStyleColorName(col)
             let p = GetCursorScreenPos()
-            // GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32((ImGuiCol)i))
+            *GetWindowDrawList() |> AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32(uint(i)))
             Dummy(ImVec2(sz, sz))
             SameLine()
             MenuItem(name)
         EndMenu()
 
-    if BeginMenu("Options") // <-- Append!
+    if BeginMenu("Options")
         Checkbox("SomeOption", ShowExampleMenuFile_b)
         EndMenu()
 
@@ -502,6 +500,178 @@ def ShowExampleMenuFile()
         pass
     if MenuItem("Quit", "Alt+F4")
         pass
+
+var ShowDemoWindowMisc_filter = new ImGuiTextFilter
+var ShowDemoWindowMisc_lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
+
+def ShowDemoWindowMisc()
+    if CollapsingHeader("Filtering")
+        Text("Filter usage:\n" +
+                    "  \"\"         display all lines\n" +
+                    "  \"xxx\"      display lines containing \"xxx\"\n" +
+                    "  \"xxx,yyy\"  display lines containing \"xxx\" or \"yyy\"\n" +
+                    "  \"-xxx\"     hide lines containing \"xxx\"")
+
+        *ShowDemoWindowMisc_filter |> Draw()
+        for ln in ShowDemoWindowMisc_lines
+            if *ShowDemoWindowMisc_filter |> PassFilter(ln)
+                BulletText("{ln}")
+
+/*
+    if (CollapsingHeader("Inputs, Navigation & Focus"))
+    {
+        ImGuiIO& io = GetIO();
+
+        // Display ImGuiIO output flags
+        Text("WantCaptureMouse: %d", io.WantCaptureMouse);
+        Text("WantCaptureKeyboard: %d", io.WantCaptureKeyboard);
+        Text("WantTextInput: %d", io.WantTextInput);
+        Text("WantSetMousePos: %d", io.WantSetMousePos);
+        Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
+
+        // Display Keyboard/Mouse state
+        if (TreeNode("Keyboard, Mouse & Navigation State"))
+        {
+            if (IsMousePosValid())
+                Text("Mouse pos: (%g, %g)", io.MousePos.x, io.MousePos.y);
+            else
+                Text("Mouse pos: <INVALID>");
+            Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
+            Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f)   { SameLine(); Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
+            Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseClicked(i))          { SameLine(); Text("b%d", i); }
+            Text("Mouse dblclick:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseDoubleClicked(i))    { SameLine(); Text("b%d", i); }
+            Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseReleased(i))         { SameLine(); Text("b%d", i); }
+            Text("Mouse wheel: %.1f", io.MouseWheel);
+
+            Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f)     { SameLine(); Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
+            Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (IsKeyPressed(i))             { SameLine(); Text("%d (0x%X)", i, i); }
+            Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (IsKeyReleased(i))            { SameLine(); Text("%d (0x%X)", i, i); }
+            Text("Keys mods: %s%s%s%s", io.KeyCtrl ? "CTRL " : "", io.KeyShift ? "SHIFT " : "", io.KeyAlt ? "ALT " : "", io.KeySuper ? "SUPER " : "");
+            Text("Chars queue:");    for (int i = 0; i < io.InputQueueCharacters.Size; i++) { ImWchar c = io.InputQueueCharacters[i]; SameLine();  Text("\'%c\' (0x%04X)", (c > ' ' && c <= 255) ? (char)c : '?', c); } // FIXME: We should convert 'c' to UTF-8 here but the functions are not public.
+
+            Text("NavInputs down:");     for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputs[i] > 0.0f)              { SameLine(); Text("[%d] %.2f", i, io.NavInputs[i]); }
+            Text("NavInputs pressed:");  for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] == 0.0f) { SameLine(); Text("[%d]", i); }
+            Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { SameLine(); Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
+
+            Button("Hovering me sets the\nkeyboard capture flag");
+            if (IsItemHovered())
+                CaptureKeyboardFromApp(true);
+            SameLine();
+            Button("Holding me clears the\nthe keyboard capture flag");
+            if (IsItemActive())
+                CaptureKeyboardFromApp(false);
+
+            TreePop();
+        }
+
+        if (TreeNode("Tabbing"))
+        {
+            Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.");
+            static char buf[32] = "hello";
+            InputText("1", buf, IM_ARRAYSIZE(buf));
+            InputText("2", buf, IM_ARRAYSIZE(buf));
+            InputText("3", buf, IM_ARRAYSIZE(buf));
+            PushAllowKeyboardFocus(false);
+            InputText("4 (tab skip)", buf, IM_ARRAYSIZE(buf));
+            //SameLine(); HelpMarker("Use PushAllowKeyboardFocus(bool) to disable tabbing through certain widgets.");
+            PopAllowKeyboardFocus();
+            InputText("5", buf, IM_ARRAYSIZE(buf));
+            TreePop();
+        }
+
+        if (TreeNode("Focus from code"))
+        {
+            bool focus_1 = Button("Focus on 1"); SameLine();
+            bool focus_2 = Button("Focus on 2"); SameLine();
+            bool focus_3 = Button("Focus on 3");
+            int has_focus = 0;
+            static char buf[128] = "click on a button to set focus";
+
+            if (focus_1) SetKeyboardFocusHere();
+            InputText("1", buf, IM_ARRAYSIZE(buf));
+            if (IsItemActive()) has_focus = 1;
+
+            if (focus_2) SetKeyboardFocusHere();
+            InputText("2", buf, IM_ARRAYSIZE(buf));
+            if (IsItemActive()) has_focus = 2;
+
+            PushAllowKeyboardFocus(false);
+            if (focus_3) SetKeyboardFocusHere();
+            InputText("3 (tab skip)", buf, IM_ARRAYSIZE(buf));
+            if (IsItemActive()) has_focus = 3;
+            PopAllowKeyboardFocus();
+
+            if (has_focus)
+                Text("Item with focus: %d", has_focus);
+            else
+                Text("Item with focus: <none>");
+
+            // Use >= 0 parameter to SetKeyboardFocusHere() to focus an upcoming item
+            static float f3[3] = { 0.0f, 0.0f, 0.0f };
+            int focus_ahead = -1;
+            if (Button("Focus on X")) { focus_ahead = 0; } SameLine();
+            if (Button("Focus on Y")) { focus_ahead = 1; } SameLine();
+            if (Button("Focus on Z")) { focus_ahead = 2; }
+            if (focus_ahead != -1) SetKeyboardFocusHere(focus_ahead);
+            SliderFloat3("Float3", &f3[0], 0.0f, 1.0f);
+
+            TextWrapped("NB: Cursor & selection are preserved when refocusing last used item in code.");
+            TreePop();
+        }
+
+        if (TreeNode("Dragging"))
+        {
+            TextWrapped("You can use GetMouseDragDelta(0) to query for the dragged amount on any widget.");
+            for (int button = 0; button < 3; button++)
+            {
+                Text("IsMouseDragging(%d):", button);
+                Text("  w/ default threshold: %d,", IsMouseDragging(button));
+                Text("  w/ zero threshold: %d,", IsMouseDragging(button, 0.0f));
+                Text("  w/ large threshold: %d,", IsMouseDragging(button, 20.0f));
+            }
+
+            Button("Drag Me");
+            if (IsItemActive())
+                GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, GetColorU32(ImGuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+
+            // Drag operations gets "unlocked" when the mouse has moved past a certain threshold
+            // (the default threshold is stored in io.MouseDragThreshold). You can request a lower or higher
+            // threshold using the second parameter of IsMouseDragging() and GetMouseDragDelta().
+            ImVec2 value_raw = GetMouseDragDelta(0, 0.0f);
+            ImVec2 value_with_lock_threshold = GetMouseDragDelta(0);
+            ImVec2 mouse_delta = io.MouseDelta;
+            Text("GetMouseDragDelta(0):");
+            Text("  w/ default threshold: (%.1f, %.1f)", value_with_lock_threshold.x, value_with_lock_threshold.y);
+            Text("  w/ zero threshold: (%.1f, %.1f)", value_raw.x, value_raw.y);
+            Text("io.MouseDelta: (%.1f, %.1f)", mouse_delta.x, mouse_delta.y);
+            TreePop();
+        }
+
+        if (TreeNode("Mouse cursors"))
+        {
+            const char* mouse_cursors_names[] = { "Arrow", "TextInput", "ResizeAll", "ResizeNS", "ResizeEW", "ResizeNESW", "ResizeNWSE", "Hand", "NotAllowed" };
+            IM_ASSERT(IM_ARRAYSIZE(mouse_cursors_names) == ImGuiMouseCursor_COUNT);
+
+            ImGuiMouseCursor current = GetMouseCursor();
+            Text("Current mouse cursor = %d: %s", current, mouse_cursors_names[current]);
+            Text("Hover to see mouse cursors:");
+            SameLine(); HelpMarker(
+                "Your application can render a different mouse cursor based on what GetMouseCursor() returns. "
+                "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, "
+                "otherwise your backend needs to handle it.");
+            for (int i = 0; i < ImGuiMouseCursor_COUNT; i++)
+            {
+                char label[32];
+                sprintf(label, "Mouse cursor %d: %s", i, mouse_cursors_names[i]);
+                Bullet(); Selectable(label, false);
+                if (IsItemHovered())
+                    SetMouseCursor(i);
+            }
+            TreePop();
+        }
+    }
+}
+*/
 
 [export]
 def main

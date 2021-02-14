@@ -10,6 +10,24 @@ IF(NOT DAS_IMGUI_INCLUDED)
     FIND_PACKAGE(glfw3)
     FIND_PACKAGE(Vulkan)
 
+
+#	SET(imgui_INCLUDE_DIR
+#		${DAS_IMGUI_DIR}/imgui
+#
+#	SET(DAS_IMGUI_SRC
+#		${imgui_INCLUDE_DIR}/imconfig.h
+#		${imgui_INCLUDE_DIR}/imgui.cpp
+#		${imgui_INCLUDE_DIR}/imgui.h
+#		${imgui_INCLUDE_DIR}/imgui_demo.cpp
+#		${imgui_INCLUDE_DIR}/imgui_draw.cpp
+#		${imgui_INCLUDE_DIR}/imgui_internal.h
+#		${imgui_INCLUDE_DIR}/imgui_tables.cpp
+#		${imgui_INCLUDE_DIR}/imgui_widgets.cpp
+#		${imgui_INCLUDE_DIR}/imstb_rectpack.h
+#		${imgui_INCLUDE_DIR}/imstb_textedit.h
+#		${imgui_INCLUDE_DIR}/imstb_truetype.h
+#
+
     IF(NOT imgui_FOUND)
         MESSAGE(STATUS "IMGUI not found. Not building dasImGui.")
 	ELSE()

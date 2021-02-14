@@ -124,6 +124,12 @@ namespace das {
     bool InputText ( const char* label, char* buf, int32_t buf_size, ImGuiInputTextFlags flags ) {
         return ImGui::InputText(label,buf,buf_size,flags);
     }
+
+    // ImGui::ImGuiTextFilter::PassFilter
+
+    bool PassFilter ( ImGuiTextFilter & filter, const char* text ) {
+        return filter.PassFilter(text, nullptr);
+    }
 }
 
 // making custom builtin module
@@ -183,6 +189,9 @@ public:
         addCtor<ImVec2,float,float>(*this,lib,"ImVec2","ImVec2");
         addCtor<ImVec4>(*this,lib,"ImVec4","ImVec4");
         addCtor<ImVec4,float,float,float,float>(*this,lib,"ImVec4","ImVec4");
+        // imgui text filter
+        addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
+            SideEffects::worstDefault, "das::PassFilter");
         return true;
     }
     virtual ModuleAotType aotRequire ( TextWriter & tw ) const override {
