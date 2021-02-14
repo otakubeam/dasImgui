@@ -503,6 +503,10 @@ def ShowExampleMenuFile()
 
 var ShowDemoWindowMisc_filter = new ImGuiTextFilter
 var ShowDemoWindowMisc_lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
+var ShowDemoWindowMisc_mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
+var ShowDemoWindowMisc_buf = reserve_string_buffer("click on a button to set focus", 128)
+var ShowDemoWindowMisc_f3 = [[float[3] 0.0f; 0.0f; 0.0f ]]
+var ShowDemoWindowMisc_buft = reserve_string_buffer("hello", 32)
 
 def ShowDemoWindowMisc()
     if CollapsingHeader("Filtering")
@@ -517,161 +521,186 @@ def ShowDemoWindowMisc()
             if *ShowDemoWindowMisc_filter |> PassFilter(ln)
                 BulletText("{ln}")
 
-/*
-    if (CollapsingHeader("Inputs, Navigation & Focus"))
-    {
-        ImGuiIO& io = GetIO();
+    if CollapsingHeader("Inputs, Navigation & Focus")
+        var io & = GetIO()
 
-        // Display ImGuiIO output flags
-        Text("WantCaptureMouse: %d", io.WantCaptureMouse);
-        Text("WantCaptureKeyboard: %d", io.WantCaptureKeyboard);
-        Text("WantTextInput: %d", io.WantTextInput);
-        Text("WantSetMousePos: %d", io.WantSetMousePos);
-        Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
+        Text("WantCaptureMouse: {io.WantCaptureMouse}")
+        Text("WantCaptureKeyboard: {io.WantCaptureKeyboard}")
+        Text("WantTextInput: {io.WantTextInput}")
+        Text("WantSetMousePos: {io.WantSetMousePos}")
+        Text("NavActive: {io.NavActive}, NavVisible: {io.NavVisible}")
 
-        // Display Keyboard/Mouse state
-        if (TreeNode("Keyboard, Mouse & Navigation State"))
-        {
+        if TreeNode("Keyboard, Mouse & Navigation State")
             if (IsMousePosValid())
-                Text("Mouse pos: (%g, %g)", io.MousePos.x, io.MousePos.y);
+                Text("Mouse pos: ({io.MousePos.x}, {io.MousePos.y})")
             else
-                Text("Mouse pos: <INVALID>");
-            Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
-            Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f)   { SameLine(); Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
-            Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseClicked(i))          { SameLine(); Text("b%d", i); }
-            Text("Mouse dblclick:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseDoubleClicked(i))    { SameLine(); Text("b%d", i); }
-            Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (IsMouseReleased(i))         { SameLine(); Text("b%d", i); }
-            Text("Mouse wheel: %.1f", io.MouseWheel);
+                Text("Mouse pos: <INVALID>")
+            Text("Mouse delta: ({io.MouseDelta.x}, {io.MouseDelta.y})")
+            Text("Mouse down:")
+            for i in range(length(io.MouseDown))
+                if io.MouseDownDuration[i] >= 0.0f
+                    SameLine()
+                    Text("b{i} ({io.MouseDownDuration[i]} secs)")
+            Text("Mouse clicked:")
+            for i in range(length(io.MouseDown))
+                if IsMouseClicked(i)
+                    SameLine()
+                    Text("b{i}")
+            Text("Mouse dblclick:")
+            for i in range(length(io.MouseDown))
+                if IsMouseDoubleClicked(i)
+                    SameLine()
+                    Text("b{i}")
+            Text("Mouse released:")
+            for i in range(length(io.MouseDown))
+                if IsMouseReleased(i)
+                    SameLine()
+                    Text("b{i}")
+            Text("Mouse wheel: {io.MouseWheel}")
+            Text("Keys down:")
+            for i in range(length(io.KeysDown))
+                if io.KeysDownDuration[i] >= 0.0f
+                    SameLine()
+                    Text("{i} (0x{uint(i)}) ({io.KeysDownDuration[i]} secs)")
+            Text("Keys pressed:")
+            for i in range(length(io.KeysDown))
+                if IsKeyPressed(i)
+                    SameLine()
+                    Text("{i} (0x{uint(i)})")
+            Text("Keys release:")
+            for i in range(length(io.KeysDown))
+                if IsKeyReleased(i)
+                    SameLine()
+                    Text("{i} (0x{uint(i)})")
+            Text("Keys mods: {io.KeyCtrl ? "CTRL " : ""}{io.KeyShift ? "SHIFT " : ""}{io.KeyAlt ? "ALT " : ""}{io.KeySuper ? "SUPER " : ""}")
 
-            Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f)     { SameLine(); Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
-            Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (IsKeyPressed(i))             { SameLine(); Text("%d (0x%X)", i, i); }
-            Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (IsKeyReleased(i))            { SameLine(); Text("%d (0x%X)", i, i); }
-            Text("Keys mods: %s%s%s%s", io.KeyCtrl ? "CTRL " : "", io.KeyShift ? "SHIFT " : "", io.KeyAlt ? "ALT " : "", io.KeySuper ? "SUPER " : "");
-            Text("Chars queue:");    for (int i = 0; i < io.InputQueueCharacters.Size; i++) { ImWchar c = io.InputQueueCharacters[i]; SameLine();  Text("\'%c\' (0x%04X)", (c > ' ' && c <= 255) ? (char)c : '?', c); } // FIXME: We should convert 'c' to UTF-8 here but the functions are not public.
+            // TODO: support ImVector
+            /*
+            Text("Chars queue:")
+            for i in range(io.InputQueueCharacters.Size)
+                let c = io.InputQueueCharacters[i]
+                SameLine()
+                Text("'{(c > ' ' && c <= 255) ? to_char(c) : "?"}' (0x{uint(c)})")
+            */
 
-            Text("NavInputs down:");     for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputs[i] > 0.0f)              { SameLine(); Text("[%d] %.2f", i, io.NavInputs[i]); }
-            Text("NavInputs pressed:");  for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] == 0.0f) { SameLine(); Text("[%d]", i); }
-            Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { SameLine(); Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
+            Text("NavInputs down:")
+            for i in range(length(io.NavInputs))
+                if io.NavInputs[i] > 0.0f
+                    SameLine()
+                    Text("[{i}] {io.NavInputs[i]}")
+            Text("NavInputs pressed:")
+            for i in range(length(io.NavInputs))
+                if io.NavInputsDownDuration[i] == 0.0f
+                    SameLine()
+                    Text("[{i}]")
+            Text("NavInputs duration:")
+            for i in range(length(io.NavInputs))
+                if io.NavInputsDownDuration[i] >= 0.0f
+                    SameLine()
+                    Text("[{i}] {io.NavInputsDownDuration[i]}")
+            Button("Hovering me sets the\nkeyboard capture flag")
+            if IsItemHovered()
+                CaptureKeyboardFromApp(true)
+            SameLine()
+            Button("Holding me clears the\nthe keyboard capture flag")
+            if IsItemActive()
+                CaptureKeyboardFromApp(false)
+            TreePop()
 
-            Button("Hovering me sets the\nkeyboard capture flag");
-            if (IsItemHovered())
-                CaptureKeyboardFromApp(true);
-            SameLine();
-            Button("Holding me clears the\nthe keyboard capture flag");
-            if (IsItemActive())
-                CaptureKeyboardFromApp(false);
+        if TreeNode("Tabbing")
+            Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.")
+            InputText("1", ShowDemoWindowMisc_buft, 32)
+            InputText("2", ShowDemoWindowMisc_buft, 32)
+            InputText("3", ShowDemoWindowMisc_buft, 32)
+            PushAllowKeyboardFocus(false)
+            InputText("4 (tab skip)", ShowDemoWindowMisc_buft, 32)
+            PopAllowKeyboardFocus()
+            InputText("5", ShowDemoWindowMisc_buft, 32)
+            TreePop()
 
-            TreePop();
-        }
-
-        if (TreeNode("Tabbing"))
-        {
-            Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.");
-            static char buf[32] = "hello";
-            InputText("1", buf, IM_ARRAYSIZE(buf));
-            InputText("2", buf, IM_ARRAYSIZE(buf));
-            InputText("3", buf, IM_ARRAYSIZE(buf));
-            PushAllowKeyboardFocus(false);
-            InputText("4 (tab skip)", buf, IM_ARRAYSIZE(buf));
-            //SameLine(); HelpMarker("Use PushAllowKeyboardFocus(bool) to disable tabbing through certain widgets.");
-            PopAllowKeyboardFocus();
-            InputText("5", buf, IM_ARRAYSIZE(buf));
-            TreePop();
-        }
-
-        if (TreeNode("Focus from code"))
-        {
-            bool focus_1 = Button("Focus on 1"); SameLine();
-            bool focus_2 = Button("Focus on 2"); SameLine();
-            bool focus_3 = Button("Focus on 3");
-            int has_focus = 0;
-            static char buf[128] = "click on a button to set focus";
-
-            if (focus_1) SetKeyboardFocusHere();
-            InputText("1", buf, IM_ARRAYSIZE(buf));
-            if (IsItemActive()) has_focus = 1;
-
-            if (focus_2) SetKeyboardFocusHere();
-            InputText("2", buf, IM_ARRAYSIZE(buf));
-            if (IsItemActive()) has_focus = 2;
-
-            PushAllowKeyboardFocus(false);
-            if (focus_3) SetKeyboardFocusHere();
-            InputText("3 (tab skip)", buf, IM_ARRAYSIZE(buf));
-            if (IsItemActive()) has_focus = 3;
-            PopAllowKeyboardFocus();
-
-            if (has_focus)
-                Text("Item with focus: %d", has_focus);
+        if TreeNode("Focus from code")
+            var focus_1 = Button("Focus on 1")
+            SameLine()
+            var focus_2 = Button("Focus on 2")
+            SameLine()
+            var focus_3 = Button("Focus on 3")
+            var has_focus = 0
+            if focus_1
+                SetKeyboardFocusHere()
+            InputText("1", ShowDemoWindowMisc_buf, 128)
+            if IsItemActive()
+                has_focus = 1
+            if focus_2
+                SetKeyboardFocusHere()
+            InputText("2", ShowDemoWindowMisc_buf, 128)
+            if IsItemActive()
+                has_focus = 2
+            PushAllowKeyboardFocus(false)
+            if focus_3
+                SetKeyboardFocusHere()
+            InputText("3 (tab skip)", ShowDemoWindowMisc_buf, 128)
+            if IsItemActive()
+                has_focus = 3
+            PopAllowKeyboardFocus()
+            if has_focus!=0
+                Text("Item with focus: {has_focus}")
             else
-                Text("Item with focus: <none>");
+                Text("Item with focus: <none>")
+            var focus_ahead = -1
+            if Button("Focus on X")
+                focus_ahead = 0
+            SameLine()
+            if Button("Focus on Y")
+                focus_ahead = 1
+            SameLine()
+            if Button("Focus on Z")
+                focus_ahead = 2
+            if focus_ahead != -1
+                SetKeyboardFocusHere(focus_ahead)
+            SliderFloat3("Float3", safe_addr(ShowDemoWindowMisc_f3[0]), 0.0f, 1.0f)
+            TextWrapped("NB: Cursor & selection are preserved when refocusing last used item in code.")
+            TreePop()
 
-            // Use >= 0 parameter to SetKeyboardFocusHere() to focus an upcoming item
-            static float f3[3] = { 0.0f, 0.0f, 0.0f };
-            int focus_ahead = -1;
-            if (Button("Focus on X")) { focus_ahead = 0; } SameLine();
-            if (Button("Focus on Y")) { focus_ahead = 1; } SameLine();
-            if (Button("Focus on Z")) { focus_ahead = 2; }
-            if (focus_ahead != -1) SetKeyboardFocusHere(focus_ahead);
-            SliderFloat3("Float3", &f3[0], 0.0f, 1.0f);
+        if TreeNode("Dragging")
+            TextWrapped("You can use GetMouseDragDelta(0) to query for the dragged amount on any widget.")
+            for button in range(3)
+                Text("IsMouseDragging({button}):")
+                Text("  w/ default threshold: {IsMouseDragging(button)},")
+                Text("  w/ zero threshold: {IsMouseDragging(button, 0.0f)},")
+                Text("  w/ large threshold: {IsMouseDragging(button, 20.0f)},")
+            Button("Drag Me")
+            if IsItemActive()
+                *GetForegroundDrawList() |> AddLine(
+                    io.MouseClickedPos[0],
+                    io.MousePos,
+                    GetColorU32(int(ImGuiCol_ ImGuiCol_Button)),
+                    4.0f)
+            let value_raw = GetMouseDragDelta(0, 0.0f)
+            let value_with_lock_threshold = GetMouseDragDelta(0)
+            let mouse_delta = io.MouseDelta;
+            Text("GetMouseDragDelta(0):")
+            Text("  w/ default threshold: ({value_with_lock_threshold.x}, {value_with_lock_threshold.y})")
+            Text("  w/ zero threshold: ({value_raw.x}, {value_raw.y})")
+            Text("io.MouseDelta: ({mouse_delta.x}, {mouse_delta.y})")
+            TreePop()
 
-            TextWrapped("NB: Cursor & selection are preserved when refocusing last used item in code.");
-            TreePop();
-        }
+        if TreeNode("Mouse cursors")
+            let current = GetMouseCursor()
+            Text("Current mouse cursor = {current}: {ShowDemoWindowMisc_mouse_cursors_names[current]}")
+            Text("Hover to see mouse cursors:")
+            SameLine()
+            HelpMarker(
+                "Your application can render a different mouse cursor based on what GetMouseCursor() returns. " +
+                "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, " +
+                "otherwise your backend needs to handle it.")
+            for mcn,i in ShowDemoWindowMisc_mouse_cursors_names,range(100500)
+                let lab = "Mouse cursor {i}: {mcn}"
+                Bullet()
+                Selectable(lab, false)
+                if IsItemHovered()
+                    SetMouseCursor(i)
+            TreePop()
 
-        if (TreeNode("Dragging"))
-        {
-            TextWrapped("You can use GetMouseDragDelta(0) to query for the dragged amount on any widget.");
-            for (int button = 0; button < 3; button++)
-            {
-                Text("IsMouseDragging(%d):", button);
-                Text("  w/ default threshold: %d,", IsMouseDragging(button));
-                Text("  w/ zero threshold: %d,", IsMouseDragging(button, 0.0f));
-                Text("  w/ large threshold: %d,", IsMouseDragging(button, 20.0f));
-            }
-
-            Button("Drag Me");
-            if (IsItemActive())
-                GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, GetColorU32(ImGuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
-
-            // Drag operations gets "unlocked" when the mouse has moved past a certain threshold
-            // (the default threshold is stored in io.MouseDragThreshold). You can request a lower or higher
-            // threshold using the second parameter of IsMouseDragging() and GetMouseDragDelta().
-            ImVec2 value_raw = GetMouseDragDelta(0, 0.0f);
-            ImVec2 value_with_lock_threshold = GetMouseDragDelta(0);
-            ImVec2 mouse_delta = io.MouseDelta;
-            Text("GetMouseDragDelta(0):");
-            Text("  w/ default threshold: (%.1f, %.1f)", value_with_lock_threshold.x, value_with_lock_threshold.y);
-            Text("  w/ zero threshold: (%.1f, %.1f)", value_raw.x, value_raw.y);
-            Text("io.MouseDelta: (%.1f, %.1f)", mouse_delta.x, mouse_delta.y);
-            TreePop();
-        }
-
-        if (TreeNode("Mouse cursors"))
-        {
-            const char* mouse_cursors_names[] = { "Arrow", "TextInput", "ResizeAll", "ResizeNS", "ResizeEW", "ResizeNESW", "ResizeNWSE", "Hand", "NotAllowed" };
-            IM_ASSERT(IM_ARRAYSIZE(mouse_cursors_names) == ImGuiMouseCursor_COUNT);
-
-            ImGuiMouseCursor current = GetMouseCursor();
-            Text("Current mouse cursor = %d: %s", current, mouse_cursors_names[current]);
-            Text("Hover to see mouse cursors:");
-            SameLine(); HelpMarker(
-                "Your application can render a different mouse cursor based on what GetMouseCursor() returns. "
-                "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, "
-                "otherwise your backend needs to handle it.");
-            for (int i = 0; i < ImGuiMouseCursor_COUNT; i++)
-            {
-                char label[32];
-                sprintf(label, "Mouse cursor %d: %s", i, mouse_cursors_names[i]);
-                Bullet(); Selectable(label, false);
-                if (IsItemHovered())
-                    SetMouseCursor(i);
-            }
-            TreePop();
-        }
-    }
-}
-*/
 
 [export]
 def main
