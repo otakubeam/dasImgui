@@ -33,10 +33,17 @@ IF(NOT DAS_IMGUI_INCLUDED)
 	ELSE()
 		# libDasModuleImGui
 		SET(DAS_IMGUI_MODULE_SRC
+			${DAS_IMGUI_DIR}/src/need_imgui.h
 			${DAS_IMGUI_DIR}/src/module_imgui.cpp
-			${DAS_IMGUI_DIR}/src/module_imgui.inc
+			${DAS_IMGUI_DIR}/src/module_imgui_enums.cpp
+			${DAS_IMGUI_DIR}/src/module_imgui_ann.cpp
+			${DAS_IMGUI_DIR}/src/module_imgui_fun.cpp
+			${DAS_IMGUI_DIR}/src/module_imgui_method.cpp
 			${DAS_IMGUI_DIR}/src/module_imgui.h
-			${DAS_IMGUI_DIR}/src/module_imgui.cpp_inc
+			${DAS_IMGUI_DIR}/src/module_imgui.inc
+			${DAS_IMGUI_DIR}/src/module_imgui.method.inc
+			${DAS_IMGUI_DIR}/src/module_imgui.enum.inc
+			${DAS_IMGUI_DIR}/src/module_imgui.enum.cpp_inc
 		)
 		ADD_MODULE_LIB(libDasModuleImGui)
 		ADD_MODULE_CPP(imgui)
