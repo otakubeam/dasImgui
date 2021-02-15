@@ -28,7 +28,8 @@ def main
     local_type_names <- [{auto[]
         "ImVec2";
         "ImVec3";
-        "ImVec4"
+        "ImVec4";
+        "ImColor"
     }]
 
     // generate

@@ -228,6 +228,9 @@ def IM_COL32(R,G,B,A:uint)
 def IM_COL32(R,G,B,A:int)
     return (uint(A)<<IM_COL32_A_SHIFT) | (uint(B)<<IM_COL32_B_SHIFT) | (uint(G)<<IM_COL32_G_SHIFT) | (uint(R)<<IM_COL32_R_SHIFT)
 
+def ImVec4 ( col:ImColor )
+    return col.Value
+
 def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags  = bitfield(0))
     return imgui::Begin(name,p_open,int(flags))
 
@@ -302,6 +305,12 @@ def PushStyleVar(idx:ImGuiStyleVar_; val:float)
 def PushStyleVar(idx:ImGuiStyleVar_; val:ImVec2)
     imgui::PushStyleVar(int(idx),val)
 
+def PushStyleColor(idx:ImGuiCol_;col:uint)
+    imgui::PushStyleColor(int(idx),col)
+
+def PushStyleColor(idx:ImGuiCol_;col:ImVec4)
+    imgui::PushStyleColor(int(idx),col)
+
 def ColorEdit3(lab:string; var col:float[3]; flags:ImGuiColorEditFlags = bitfield(0))
     unsafe
         return imgui::ColorEdit3(lab,addr(col[0]),int(flags))
@@ -310,8 +319,9 @@ def ColorEdit4(lab:string; var col:float[4]; flags:ImGuiColorEditFlags = bitfiel
     unsafe
         return imgui::ColorEdit4(lab,addr(col[0]),int(flags))
 
-
 // ImDrawList
 
 def AddRectFilled(var self:ImDrawList; p_min,p_max:ImVec2; col:uint; rounding:float=0.0f; rounding_corners:ImDrawCornerFlags = ImDrawCornerFlags_All )
     self |> imgui::AddRectFilled(p_min,p_max,col,rounding,int(rounding_corners))
+
+

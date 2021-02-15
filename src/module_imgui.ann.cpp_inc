@@ -35,6 +35,7 @@
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTableColumnSortSpecs,ImGuiTableColumnSortSpecs)
 
 struct ImColor_GeneratedAnnotation : ManagedStructureAnnotation<ImColor> {
+	virtual bool isLocal() const override { return true; }
 	ImColor_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImColor", ml) {
 	}
 	void init () {

@@ -18,7 +18,6 @@ using namespace das;
 [build] EXEC : warning : variadic function BulletText aka ImGui::BulletText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function SetTooltip aka ImGui::SetTooltip [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function TextWrapped aka ImGui::TextWrapped [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
-[build] EXEC : warning : variadic function TextColored aka ImGui::TextColored [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function TreeNode aka ImGui::TreeNode [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 */
 
@@ -31,6 +30,9 @@ namespace das {
     }
     void TextDisabled ( const char * txt ) {
         ImGui::TextDisabled(txt);
+    }
+    void TextColored ( const ImVec4 & col, const char * txt ) {
+        ImGui::TextColored(col,txt);
     }
     void LogText ( const char * txt ) {
         ImGui::LogText(txt);
@@ -78,6 +80,12 @@ namespace das {
         const char* text_begin, float wrap_width = 0.0f, const ImVec4* cpu_fine_clip_rect = nullptr) {
         drawList.AddText(font,font_size,pos,col,text_begin,nullptr,wrap_width,cpu_fine_clip_rect);
     }
+
+    // ImColor
+
+    ImColor HSV(float h, float s, float v, float a = 1.0f) {
+        return ImColor::HSV(h,s,v,a);
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -90,33 +98,6 @@ Module_imgui::Module_imgui() : Module("imgui") {
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
     addAnnotation(make_smart<DummyTypeAnnotation>("ImDrawListSharedData", "ImDrawListSharedData",
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
-    // variadic functions
-    addExtern<DAS_BIND_FUN(das::Text)>(*this,lib,"Text",
-        SideEffects::worstDefault,"das::Text");
-    addExtern<DAS_BIND_FUN(das::TextWrapped)>(*this,lib,"TextWrapped",
-        SideEffects::worstDefault,"das::TextWrapped");
-    addExtern<DAS_BIND_FUN(das::TextDisabled)>(*this,lib,"TextDisabled",
-        SideEffects::worstDefault,"das::TextDisabled");
-    addExtern<DAS_BIND_FUN(das::LogText)>(*this,lib,"LogText",
-        SideEffects::worstDefault,"das::LogText");
-    addExtern<DAS_BIND_FUN(das::TreeNode)>(*this,lib,"TreeNode",
-        SideEffects::worstDefault,"das::TreeNode");
-    addExtern<DAS_BIND_FUN(das::TreeNodeEx)>(*this,lib,"TreeNodeEx",
-        SideEffects::worstDefault,"das::TreeNodeEx");
-    addExtern<DAS_BIND_FUN(das::TreeNodeEx2)>(*this,lib,"TreeNodeEx",
-        SideEffects::worstDefault,"das::TreeNodeEx2");
-    addExtern<DAS_BIND_FUN(das::BulletText)>(*this,lib,"BulletText",
-        SideEffects::worstDefault,"das::BulletText");
-    addExtern<DAS_BIND_FUN(das::SetTooltip)>(*this,lib,"SetTooltip",
-        SideEffects::worstDefault,"das::SetTooltip");
-    // text unfromatted
-    addExtern<DAS_BIND_FUN(das::TextUnformatted)>(*this, lib, "TextUnformatted",
-        SideEffects::worstDefault, "das::TextUnformatted")
-        ->arg("text");
-    // input text
-    addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "InputText",
-        SideEffects::worstDefault, "das::InputText")
-            ->arg_init(3, make_smart<ExprConstInt>(0));
     // constants
     addConstant(*this,"IMGUI_VERSION", IMGUI_VERSION);
     addConstant(*this,"IMGUI_VERSION_NUM", IMGUI_VERSION_NUM);
@@ -144,6 +125,11 @@ bool Module_imgui::initDependencies() {
     // imgui text filter
     addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
         SideEffects::worstDefault, "das::PassFilter");
+    // imcolor
+    addExtern<DAS_BIND_FUN(das::HSV),SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "HSV",
+        SideEffects::worstDefault, "das::HSV")
+            ->args({"h","s","v","a"})
+                ->arg_init(3,make_smart<ExprConstFloat>(1.0f));
     // imgui draw list
     addExtern<DAS_BIND_FUN(das::AddText)>(*this, lib, "AddText",
         SideEffects::worstDefault, "das::AddText");
@@ -152,6 +138,35 @@ bool Module_imgui::initDependencies() {
 	        ->args({"drawList","font","font_size","pos","col","text","wrap_width","cpu_fine_clip_rect"})
 		        ->arg_init(6,make_smart<ExprConstFloat>(0.0f))
 		        ->arg_init(7,make_smart<ExprConstPtr>());
+    // variadic functions
+    addExtern<DAS_BIND_FUN(das::Text)>(*this,lib,"Text",
+        SideEffects::worstDefault,"das::Text");
+    addExtern<DAS_BIND_FUN(das::TextWrapped)>(*this,lib,"TextWrapped",
+        SideEffects::worstDefault,"das::TextWrapped");
+    addExtern<DAS_BIND_FUN(das::TextDisabled)>(*this,lib,"TextDisabled",
+        SideEffects::worstDefault,"das::TextDisabled");
+    addExtern<DAS_BIND_FUN(das::TextColored)>(*this,lib,"TextColored",
+        SideEffects::worstDefault,"das::TextColored");
+    addExtern<DAS_BIND_FUN(das::LogText)>(*this,lib,"LogText",
+        SideEffects::worstDefault,"das::LogText");
+    addExtern<DAS_BIND_FUN(das::TreeNode)>(*this,lib,"TreeNode",
+        SideEffects::worstDefault,"das::TreeNode");
+    addExtern<DAS_BIND_FUN(das::TreeNodeEx)>(*this,lib,"TreeNodeEx",
+        SideEffects::worstDefault,"das::TreeNodeEx");
+    addExtern<DAS_BIND_FUN(das::TreeNodeEx2)>(*this,lib,"TreeNodeEx",
+        SideEffects::worstDefault,"das::TreeNodeEx2");
+    addExtern<DAS_BIND_FUN(das::BulletText)>(*this,lib,"BulletText",
+        SideEffects::worstDefault,"das::BulletText");
+    addExtern<DAS_BIND_FUN(das::SetTooltip)>(*this,lib,"SetTooltip",
+        SideEffects::worstDefault,"das::SetTooltip");
+    // text unfromatted
+    addExtern<DAS_BIND_FUN(das::TextUnformatted)>(*this, lib, "TextUnformatted",
+        SideEffects::worstDefault, "das::TextUnformatted")
+        ->arg("text");
+    // input text
+    addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "InputText",
+        SideEffects::worstDefault, "das::InputText")
+            ->arg_init(3, make_smart<ExprConstInt>(0));
 #endif
     return true;
 }

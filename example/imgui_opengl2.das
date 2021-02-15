@@ -1,3 +1,4 @@
+require math
 require strings
 require imgui_app
 require daslib/glfw_boost
@@ -169,7 +170,7 @@ def DasShowDemoWindow ( _p_open : bool? )
     if !Begin("Dear ImGui Demo", p_open, window_flags)
         End()
 
-    PushItemWidth(GetFontSize() * -12.)
+    PushItemWidth(float(GetFontSize()) * -12.)
 
     if BeginMenuBar()
         if BeginMenu("Menu")
@@ -1164,291 +1165,232 @@ static void ShowDemoWindowLayout()
 
         TreePop()
     }
-
-    if (TreeNode("Scrolling"))
-    {
-        // Vertical scroll functions
-        HelpMarker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
-
-        static int track_item = 50;
-        static bool enable_track = true;
-        static bool enable_extra_decorations = false;
-        static float scroll_to_off_px = 0.0f;
-        static float scroll_to_pos_px = 200.0f;
-
-        Checkbox("Decoration", &enable_extra_decorations)
-
-        Checkbox("Track", &enable_track)
-        PushItemWidth(100)
-        SameLine(140) enable_track |= DragInt("##item", &track_item, 0.25f, 0, 99, "Item = %d")
-
-        bool scroll_to_off = Button("Scroll Offset")
-        SameLine(140) scroll_to_off |= DragFloat("##off", &scroll_to_off_px, 1.00f, 0, FLT_MAX, "+%.0f px")
-
-        bool scroll_to_pos = Button("Scroll To Pos")
-        SameLine(140) scroll_to_pos |= DragFloat("##pos", &scroll_to_pos_px, 1.00f, -10, FLT_MAX, "X/Y = %.0f px")
-        PopItemWidth()
-
-        if (scroll_to_off || scroll_to_pos)
-            enable_track = false;
-
-        ImGuiStyle& style = GetStyle()
-        float child_w = (GetContentRegionAvail().x - 4 * style.ItemSpacing.x) / 5;
-        if (child_w < 1.0f)
-            child_w = 1.0f;
-        PushID("##VerticalScrolling")
-        for (int i = 0; i < 5; i++)
-        {
-            if (i > 0) SameLine()
-            BeginGroup()
-            const char* names[] = { "Top", "25%", "Center", "75%", "Bottom" };
-            TextUnformatted(names[i])
-
-            const ImGuiWindowFlags child_flags = enable_extra_decorations ? ImGuiWindowFlags_MenuBar : 0;
-            const ImGuiID child_id = GetID((void*)(intptr_t)i)
-            const bool child_is_visible = BeginChild(child_id, ImVec2(child_w, 200.0f), true, child_flags)
-            if (BeginMenuBar())
-            {
-                TextUnformatted("abc")
-                EndMenuBar()
-            }
-            if (scroll_to_off)
-                SetScrollY(scroll_to_off_px)
-            if (scroll_to_pos)
-                SetScrollFromPosY(GetCursorStartPos().y + scroll_to_pos_px, i * 0.25f)
-            if (child_is_visible) // Avoid calling SetScrollHereY when running with culled items
-            {
-                for (int item = 0; item < 100; item++)
-                {
-                    if (enable_track && item == track_item)
-                    {
-                        TextColored(ImVec4(1, 1, 0, 1), "Item %d", item)
-                        SetScrollHereY(i * 0.25f) // 0.0f:top, 0.5f:center, 1.0f:bottom
-                    }
-                    else
-                    {
-                        Text("Item %d", item)
-                    }
-                }
-            }
-            float scroll_y = GetScrollY()
-            float scroll_max_y = GetScrollMaxY()
-            EndChild()
-            Text("%.0f/%.0f", scroll_y, scroll_max_y)
-            EndGroup()
-        }
-        PopID()
-
-        // Horizontal scroll functions
-        Spacing()
-        HelpMarker(
-            "Use SetScrollHereX() or SetScrollFromPosX() to scroll to a given horizontal position.\n\n"
-            "Because the clipping rectangle of most window hides half worth of WindowPadding on the "
-            "left/right, using SetScrollFromPosX(+1) will usually result in clipped text whereas the "
-            "equivalent SetScrollFromPosY(+1) wouldn't.")
-        PushID("##HorizontalScrolling")
-        for (int i = 0; i < 5; i++)
-        {
-            float child_height = GetTextLineHeight() + style.ScrollbarSize + style.WindowPadding.y * 2.0f;
-            ImGuiWindowFlags child_flags = ImGuiWindowFlags_HorizontalScrollbar | (enable_extra_decorations ? ImGuiWindowFlags_AlwaysVerticalScrollbar : 0)
-            ImGuiID child_id = GetID((void*)(intptr_t)i)
-            bool child_is_visible = BeginChild(child_id, ImVec2(-100, child_height), true, child_flags)
-            if (scroll_to_off)
-                SetScrollX(scroll_to_off_px)
-            if (scroll_to_pos)
-                SetScrollFromPosX(GetCursorStartPos().x + scroll_to_pos_px, i * 0.25f)
-            if (child_is_visible) // Avoid calling SetScrollHereY when running with culled items
-            {
-                for (int item = 0; item < 100; item++)
-                {
-                    if (enable_track && item == track_item)
-                    {
-                        TextColored(ImVec4(1, 1, 0, 1), "Item %d", item)
-                        SetScrollHereX(i * 0.25f) // 0.0f:left, 0.5f:center, 1.0f:right
-                    }
-                    else
-                    {
-                        Text("Item %d", item)
-                    }
-                    SameLine()
-                }
-            }
-            float scroll_x = GetScrollX()
-            float scroll_max_x = GetScrollMaxX()
-            EndChild()
-            SameLine()
-            const char* names[] = { "Left", "25%", "Center", "75%", "Right" };
-            Text("%s\n%.0f/%.0f", names[i], scroll_x, scroll_max_x)
-            Spacing()
-        }
-        PopID()
-
-        // Miscellaneous Horizontal Scrolling Demo
-        HelpMarker(
-            "Horizontal scrolling for a window is enabled via the ImGuiWindowFlags_HorizontalScrollbar flag.\n\n"
-            "You may want to also explicitly specify content width by using SetNextWindowContentWidth() before Begin().")
-        static int lines = 7;
-        SliderInt("Lines", &lines, 1, 15)
-        PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f)
-        PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.0f, 1.0f))
-        ImVec2 scrolling_child_size = ImVec2(0, GetFrameHeightWithSpacing() * 7 + 30)
-        BeginChild("scrolling", scrolling_child_size, true, ImGuiWindowFlags_HorizontalScrollbar)
-        for (int line = 0; line < lines; line++)
-        {
-            // Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
-            // If you want to create your own time line for a real application you may be better off manipulating
-            // the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
-            // yourself. You may also want to use the lower-level ImDrawList API.
-            int num_buttons = 10 + ((line & 1) ? line * 9 : line * 3)
-            for (int n = 0; n < num_buttons; n++)
-            {
-                if (n > 0) SameLine()
-                PushID(n + line * 1000)
-                char num_buf[16];
-                sprintf(num_buf, "%d", n)
-                const char* label = (!(n % 15)) ? "FizzBuzz" : (!(n % 3)) ? "Fizz" : (!(n % 5)) ? "Buzz" : num_buf;
-                float hue = n * 0.05f;
-                PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(hue, 0.6f, 0.6f))
-                PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(hue, 0.7f, 0.7f))
-                PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(hue, 0.8f, 0.8f))
-                Button(label, ImVec2(40.0f + sinf((float)(line + n)) * 20.0f, 0.0f))
-                PopStyleColor(3)
-                PopID()
-            }
-        }
-        float scroll_x = GetScrollX()
-        float scroll_max_x = GetScrollMaxX()
-        EndChild()
-        PopStyleVar(2)
-        float scroll_x_delta = 0.0f;
-        SmallButton("<<")
-        if (IsItemActive())
-            scroll_x_delta = -GetIO().DeltaTime * 1000.0f;
-        SameLine()
-        Text("Scroll from code") SameLine()
-        SmallButton(">>")
-        if (IsItemActive())
-            scroll_x_delta = +GetIO().DeltaTime * 1000.0f;
-        SameLine()
-        Text("%.0f/%.0f", scroll_x, scroll_max_x)
-        if (scroll_x_delta != 0.0f)
-        {
-            // Demonstrate a trick: you can use Begin to set yourself in the context of another window
-            // (here we are already out of your child window)
-            BeginChild("scrolling")
-            SetScrollX(GetScrollX() + scroll_x_delta)
-            EndChild()
-        }
-        Spacing()
-
-        static bool show_horizontal_contents_size_demo_window = false;
-        Checkbox("Show Horizontal contents size demo window", &show_horizontal_contents_size_demo_window)
-
-        if (show_horizontal_contents_size_demo_window)
-        {
-            static bool show_h_scrollbar = true;
-            static bool show_button = true;
-            static bool show_tree_nodes = true;
-            static bool show_text_wrapped = false;
-            static bool show_columns = true;
-            static bool show_tab_bar = true;
-            static bool show_child = false;
-            static bool explicit_content_size = false;
-            static float contents_size_x = 300.0f;
-            if (explicit_content_size)
-                SetNextWindowContentSize(ImVec2(contents_size_x, 0.0f))
-            Begin("Horizontal contents size demo window", &show_horizontal_contents_size_demo_window, show_h_scrollbar ? ImGuiWindowFlags_HorizontalScrollbar : 0)
-            PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 0))
-            PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 0))
-            HelpMarker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
-            Checkbox("H-scrollbar", &show_h_scrollbar)
-            Checkbox("Button", &show_button)            // Will grow contents size (unless explicitly overwritten)
-            Checkbox("Tree nodes", &show_tree_nodes)    // Will grow contents size and display highlight over full width
-            Checkbox("Text wrapped", &show_text_wrapped)// Will grow and use contents size
-            Checkbox("Columns", &show_columns)          // Will use contents size
-            Checkbox("Tab bar", &show_tab_bar)          // Will use contents size
-            Checkbox("Child", &show_child)              // Will grow and use contents size
-            Checkbox("Explicit content size", &explicit_content_size)
-            Text("Scroll %.1f/%.1f %.1f/%.1f", GetScrollX(), GetScrollMaxX(), GetScrollY(), GetScrollMaxY())
-            if (explicit_content_size)
-            {
-                SameLine()
-                SetNextItemWidth(100)
-                DragFloat("##csx", &contents_size_x)
-                ImVec2 p = GetCursorScreenPos()
-                GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + 10, p.y + 10), IM_COL32_WHITE)
-                GetWindowDrawList()->AddRectFilled(ImVec2(p.x + contents_size_x - 10, p.y), ImVec2(p.x + contents_size_x, p.y + 10), IM_COL32_WHITE)
-                Dummy(ImVec2(0, 10))
-            }
-            PopStyleVar(2)
-            Separator()
-            if (show_button)
-            {
-                Button("this is a 300-wide button", ImVec2(300, 0))
-            }
-            if (show_tree_nodes)
-            {
-                bool open = true;
-                if (TreeNode("this is a tree node"))
-                {
-                    if (TreeNode("another one of those tree node..."))
-                    {
-                        Text("Some tree contents")
-                        TreePop()
-                    }
-                    TreePop()
-                }
-                CollapsingHeader("CollapsingHeader", &open)
-            }
-            if (show_text_wrapped)
-            {
-                TextWrapped("This text should automatically wrap on the edge of the work rectangle.")
-            }
-            if (show_columns)
-            {
-                Text("Tables:")
-                if (BeginTable("table", 4, ImGuiTableFlags_Borders))
-                {
-                    for (int n = 0; n < 4; n++)
-                    {
-                        TableNextColumn()
-                        Text("Width %.2f", GetContentRegionAvail().x)
-                    }
-                    EndTable()
-                }
-                Text("Columns:")
-                Columns(4)
-                for (int n = 0; n < 4; n++)
-                {
-                    Text("Width %.2f", GetColumnWidth())
-                    NextColumn()
-                }
-                Columns(1)
-            }
-            if (show_tab_bar && BeginTabBar("Hello"))
-            {
-                if (BeginTabItem("OneOneOne")) { EndTabItem() }
-                if (BeginTabItem("TwoTwoTwo")) { EndTabItem() }
-                if (BeginTabItem("ThreeThreeThree")) { EndTabItem() }
-                if (BeginTabItem("FourFourFour")) { EndTabItem() }
-                EndTabBar()
-            }
-            if (show_child)
-            {
-                BeginChild("child", ImVec2(0, 0), true)
-                EndChild()
-            }
-            End()
-        }
-
-        TreePop()
-    }
-
 */
 
 def ShowDemoWindowLayout
     if !CollapsingHeader("Layout & Scrolling")
         return
+
+    if TreeNode("Scrolling")
+        HelpMarker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
+        static_let <|
+            var track_item = 50
+            var enable_track = true
+            var enable_extra_decorations = false
+            var scroll_to_off_px = 0.0f
+            var scroll_to_pos_px = 200.0f
+        Checkbox("Decoration", safe_addr(enable_extra_decorations))
+        Checkbox("Track", safe_addr(enable_track))
+        PushItemWidth(100.)
+        SameLine(140.)
+        enable_track = DragInt("##item", safe_addr(track_item), 0.25f, 0, 99, "Item = %d") || enable_track
+        var scroll_to_off = Button("Scroll Offset")
+        SameLine(140.)
+        scroll_to_off = DragFloat("##off", safe_addr(scroll_to_off_px), 1.00f, 0., FLT_MAX, "+%.0f px") || scroll_to_off
+        var scroll_to_pos = Button("Scroll To Pos")
+        SameLine(140.)
+        scroll_to_pos = DragFloat("##pos", safe_addr(scroll_to_pos_px), 1.00f, -10., FLT_MAX, "X/Y = %.0f px") || scroll_to_pos
+        PopItemWidth()
+        if scroll_to_off || scroll_to_pos
+            enable_track = false
+        var style & = GetStyle()
+        var child_w = (GetContentRegionAvail().x - 4. * style.ItemSpacing.x) / 5.
+        if child_w < 1.0f
+            child_w = 1.0f
+        PushID("##VerticalScrolling")
+        for i in range(5)
+            if i > 0
+                SameLine()
+            BeginGroup()
+            static_let <|
+                let names_v = [[string[] "Top"; "25%"; "Center"; "75%"; "Bottom" ]]
+            TextUnformatted(names_v[i])
+            let child_flags = enable_extra_decorations ? ImGuiWindowFlags MenuBar : bitfield(0)
+            var child_id : uint
+            unsafe
+                child_id = GetID(reinterpret<void?> i)
+            let child_is_visible = BeginChild(child_id, ImVec2(child_w, 200.0f), true, int(child_flags))
+            if BeginMenuBar()
+                TextUnformatted("abc")
+                EndMenuBar()
+            if scroll_to_off
+                SetScrollY(scroll_to_off_px)
+            if scroll_to_pos
+                SetScrollFromPosY(GetCursorStartPos().y + scroll_to_pos_px, float(i) * 0.25f)
+            if child_is_visible
+                for item in range(100)
+                    if enable_track && item==track_item
+                        TextColored(ImVec4(1., 1., 0., 1.), "Item {item}")
+                        SetScrollHereY(float(i) * 0.25f)
+                    else
+                        Text("Item {item}")
+            let scroll_y = GetScrollY()
+            let scroll_max_y = GetScrollMaxY()
+            EndChild()
+            Text("{scroll_y}/{scroll_max_y}")
+            EndGroup()
+        PopID()
+        Spacing()
+        HelpMarker(
+            "Use SetScrollHereX() or SetScrollFromPosX() to scroll to a given horizontal position.\n\n"+
+            "Because the clipping rectangle of most window hides half worth of WindowPadding on the "+
+            "left/right, using SetScrollFromPosX(+1) will usually result in clipped text whereas the "+
+            "equivalent SetScrollFromPosY(+1) wouldn't.")
+        PushID("##HorizontalScrolling")
+        for i in range(5)
+            let child_height = GetTextLineHeight() + style.ScrollbarSize + style.WindowPadding.y * 2.0f
+            let child_flags = ImGuiWindowFlags HorizontalScrollbar | (enable_extra_decorations ? ImGuiWindowFlags AlwaysVerticalScrollbar : bitfield(0))
+            var child_id : uint
+            unsafe
+                child_id = GetID(reinterpret<void?> i)
+            let child_is_visible = BeginChild(child_id, ImVec2(-100., child_height), true, int(child_flags))
+            if scroll_to_off
+                SetScrollX(scroll_to_off_px)
+            if scroll_to_pos
+                SetScrollFromPosX(GetCursorStartPos().x + scroll_to_pos_px, float(i) * 0.25f)
+            if child_is_visible
+                for item in range(100)
+                    if enable_track && item == track_item
+                        TextColored(ImVec4(1., 1., 0., 1.), "Item {item}")
+                        SetScrollHereX(float(i) * 0.25f)
+                    else
+                        Text("Item {item}")
+                    SameLine()
+            let scroll_x = GetScrollX()
+            let scroll_max_x = GetScrollMaxX()
+            EndChild()
+            SameLine()
+            static_let <|
+                let names_h = [[string[] "Left"; "25%"; "Center"; "75%"; "Right" ]]
+            Text("{names_h[i]}\n{scroll_x}/{scroll_max_x}")
+            Spacing()
+        PopID()
+        HelpMarker(
+            "Horizontal scrolling for a window is enabled via the ImGuiWindowFlags_HorizontalScrollbar flag.\n\n"+
+            "You may want to also explicitly specify content width by using SetNextWindowContentWidth() before Begin().")
+        static_let <|
+            var lines = 7
+        SliderInt("Lines", safe_addr(lines), 1, 15)
+        PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FrameRounding, 3.0f)
+        PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(2.0f, 1.0f))
+        let scrolling_child_size = ImVec2(0., GetFrameHeightWithSpacing() * 7.0 + 30.0)
+        BeginChild("scrolling", scrolling_child_size, true, int(ImGuiWindowFlags_ ImGuiWindowFlags_HorizontalScrollbar))
+        for line in range(lines)
+            let num_buttons = 10 + ((line & 1)!=0 ? line * 9 : line * 3)
+            for n in range(num_buttons)
+                if n > 0
+                    SameLine()
+                PushID(n + line * 1000)
+                let num_buf = "{n}"
+                let lab = ((n % 15)==0) ? "FizzBuzz" : ((n % 3)==0) ? "Fizz" : ((n % 5)==0) ? "Buzz" : num_buf
+                let hue = float(n) * 0.05f
+                PushStyleColor(ImGuiCol_ ImGuiCol_Button, ImVec4(HSV(hue, 0.6f, 0.6f)))
+                PushStyleColor(ImGuiCol_ ImGuiCol_ButtonHovered,  ImVec4(HSV(hue, 0.7f, 0.7f)))
+                PushStyleColor(ImGuiCol_ ImGuiCol_ButtonActive, ImVec4( HSV(hue, 0.8f, 0.8f)))
+                Button(lab, ImVec2(40.0f + sin(float(line + n)) * 20.0f, 0.0f))
+                PopStyleColor(3)
+                PopID()
+        let scroll_x = GetScrollX()
+        let scroll_max_x = GetScrollMaxX()
+        EndChild()
+        PopStyleVar(2)
+        var scroll_x_delta = 0.0f
+        SmallButton("<<")
+        if IsItemActive()
+            scroll_x_delta = -GetIO().DeltaTime * 1000.0f
+        SameLine()
+        Text("Scroll from code")
+        SameLine()
+        SmallButton(">>")
+        if IsItemActive()
+            scroll_x_delta = +GetIO().DeltaTime * 1000.0f
+        SameLine()
+        Text("{scroll_x}/{scroll_max_x}")
+        if scroll_x_delta != 0.0f
+            BeginChild("scrolling", ImVec2(0.,0.))
+            SetScrollX(GetScrollX() + scroll_x_delta)
+            EndChild()
+        Spacing()
+        static_let <|
+            var show_horizontal_contents_size_demo_window = false
+        Checkbox("Show Horizontal contents size demo window", safe_addr(show_horizontal_contents_size_demo_window))
+        if show_horizontal_contents_size_demo_window
+            static_let <|
+                var show_h_scrollbar = true
+                var show_button = true
+                var show_tree_nodes = true
+                var show_text_wrapped = false
+                var show_columns = true
+                var show_tab_bar = true
+                var show_child = false
+                var explicit_content_size = false
+                var contents_size_x = 300.0f
+            if explicit_content_size
+                SetNextWindowContentSize(ImVec2(contents_size_x, 0.0f))
+            Begin("Horizontal contents size demo window", safe_addr(show_horizontal_contents_size_demo_window),
+                int(show_h_scrollbar ? ImGuiWindowFlags HorizontalScrollbar : bitfield(0)))
+            PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_ItemSpacing, ImVec2(2., 0.))
+            PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(2., 0.))
+            HelpMarker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
+            Checkbox("H-scrollbar", safe_addr(show_h_scrollbar))
+            Checkbox("Button", safe_addr(show_button))
+            Checkbox("Tree nodes", safe_addr(show_tree_nodes))
+            Checkbox("Text wrapped", safe_addr(show_text_wrapped))
+            Checkbox("Columns", safe_addr(show_columns))
+            Checkbox("Tab bar", safe_addr(show_tab_bar))
+            Checkbox("Child", safe_addr(show_child))
+            Checkbox("Explicit content size", safe_addr(explicit_content_size))
+            Text("Scroll {GetScrollX()}/{GetScrollMaxX()} {GetScrollY()}/{GetScrollMaxY()}")
+            if explicit_content_size
+                SameLine()
+                SetNextItemWidth(100.)
+                DragFloat("##csx", safe_addr(contents_size_x))
+                var p = GetCursorScreenPos()
+                *GetWindowDrawList() |> AddRectFilled(p, ImVec2(p.x + 10., p.y + 10.), IM_COL32_WHITE)
+                *GetWindowDrawList() |> AddRectFilled(ImVec2(p.x + contents_size_x - 10., p.y), ImVec2(p.x + contents_size_x, p.y + 10.), IM_COL32_WHITE)
+                Dummy(ImVec2(0., 10.))
+            PopStyleVar(2)
+            Separator()
+            if show_button
+                Button("this is a 300-wide button", ImVec2(300., 0.))
+            if show_tree_nodes
+                var open = true
+                if TreeNode("this is a tree node")
+                    if TreeNode("another one of those tree node...")
+                        Text("Some tree contents")
+                        TreePop()
+                    TreePop()
+                CollapsingHeader("CollapsingHeader", safe_addr(open))
+            if show_text_wrapped
+                TextWrapped("This text should automatically wrap on the edge of the work rectangle.")
+            if show_columns
+                Text("Tables:")
+                if BeginTable("table", 4, ImGuiTableFlags_Borders)
+                    for n in range(4)
+                        TableNextColumn()
+                        Text("Width {GetContentRegionAvail().x}")
+                    EndTable()
+                Text("Columns:")
+                Columns(4)
+                for n in range(4)
+                    Text("Width {GetColumnWidth()}")
+                    NextColumn()
+                Columns(1)
+            if show_tab_bar && BeginTabBar("Hello")
+                if BeginTabItem("OneOneOne")
+                    EndTabItem()
+                if BeginTabItem("TwoTwoTwo")
+                    EndTabItem()
+                if BeginTabItem("ThreeThreeThree")
+                    EndTabItem()
+                if BeginTabItem("FourFourFour")
+                    EndTabItem()
+                EndTabBar()
+            if show_child
+                BeginChild("child", ImVec2(0., 0.), true)
+                EndChild()
+            End()
+        TreePop()
 
     if TreeNode("Clipping")
         static_let <|
