@@ -332,25 +332,25 @@ def ShowDemoWindowPopups()
             "Clicking outside the popup closes it.")
 
         static_let <|
-            var ShowDemoWindowPopups_selected_fish = -1
-            var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
-            let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
+            var selected_fish = -1
+            var toggles <- [{bool[] true; false; false; false; false}]
+            let names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
 
         if Button("Select..")
             OpenPopup("my_select_popup")
         SameLine()
-        TextUnformatted(ShowDemoWindowPopups_selected_fish == -1 ? "<None>" : ShowDemoWindowPopups_names[ShowDemoWindowPopups_selected_fish])
+        TextUnformatted(selected_fish == -1 ? "<None>" : names[selected_fish])
         if BeginPopup("my_select_popup")
             Text("Aquarium")
             Separator()
-            for name,i in ShowDemoWindowPopups_names,range(100500)
+            for name,i in names,range(100500)
                 if Selectable(name)
-                    ShowDemoWindowPopups_selected_fish = i
+                    selected_fish = i
             EndPopup()
         if Button("Toggle..")
             OpenPopup("my_toggle_popup")
         if BeginPopup("my_toggle_popup")
-            for name,toggle in ShowDemoWindowPopups_names,ShowDemoWindowPopups_toggles
+            for name,toggle in names,toggles
                 imgui_boost::MenuItem(name, "", toggle)
             if BeginMenu("Sub-menu")
                 MenuItem("Click me")
@@ -362,7 +362,7 @@ def ShowDemoWindowPopups()
             if Button("Stacked Popup")
                 OpenPopup("another popup")
             if BeginPopup("another popup")
-                for name,toggle in ShowDemoWindowPopups_names,ShowDemoWindowPopups_toggles
+                for name,toggle in names,toggles
                     imgui_boost::MenuItem(name, "", toggle)
                 if BeginMenu("Sub-menu")
                     MenuItem("Click me")
@@ -384,25 +384,25 @@ def ShowDemoWindowPopups()
 
     if TreeNode("Context menus")
         static_let <|
-            var ShowDemoWindowPopups_value = 0.5f
-        Text("Value = {ShowDemoWindowPopups_value} (<-- right-click here)")
+            var value = 0.5f
+        Text("Value = {value} (<-- right-click here)")
         if BeginPopupContextItem("item context menu")
             if Selectable("Set to zero")
-                ShowDemoWindowPopups_value = 0.0f
+                value = 0.0f
             if Selectable("Set to PI")
-                ShowDemoWindowPopups_value = 3.1415f
+                value = 3.1415f
             SetNextItemWidth(-1.)
-            DragFloat("##Value", safe_addr(ShowDemoWindowPopups_value), 0.1f, 0.0f, 0.0f)
+            DragFloat("##Value", safe_addr(value), 0.1f, 0.0f, 0.0f)
             EndPopup()
         Text("(You can also right-click me to open the same popup as above.)")
         OpenPopupOnItemClick("item context menu", 1)
         static_let <|
-            var ShowDemoWindowPopups_name = reserve_string_buffer("Label1", 32)
-        var buf = "Button: {ShowDemoWindowPopups_name}"
+            var name = reserve_string_buffer("Label1", 32)
+        var buf = "Button: {name}"
         Button(buf)
         if BeginPopupContextItem()
             Text("Edit name:")
-            InputText("##edit", ShowDemoWindowPopups_name, 32)
+            InputText("##edit", name, 32)
             if Button("Close")
                 CloseCurrentPopup()
             EndPopup()
@@ -420,12 +420,12 @@ def ShowDemoWindowPopups()
             Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n")
             Separator()
             static_let <|
-                var ShowDemoWindowPopups_unused_i = 0
-            Combo("Combo", ShowDemoWindowPopups_unused_i, [[auto "Delete"; "Delete harder"]])
+                var unused_i = 0
+            Combo("Combo", unused_i, [[auto "Delete"; "Delete harder"]])
             static_let <|
-                var ShowDemoWindowPopups_dont_ask_me_next_time = false
+                var dont_ask_me_next_time = false
             PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f))
-            Checkbox("Don't ask me next time", ShowDemoWindowPopups_dont_ask_me_next_time)
+            Checkbox("Don't ask me next time", dont_ask_me_next_time)
             PopStyleVar()
             if Button("OK", ImVec2(120., 0.))
                 CloseCurrentPopup()
@@ -445,15 +445,15 @@ def ShowDemoWindowPopups()
                 EndMenuBar()
             Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.")
             static_let <|
-                var ShowDemoWindowPopups_item = 1
-                var ShowDemoWindowPopups_color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
-            Combo("Combo", ShowDemoWindowPopups_item, [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
-            ColorEdit4("color", ShowDemoWindowPopups_color)
+                var item = 1
+                var color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
+            Combo("Combo", item, [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
+            ColorEdit4("color", color)
             if Button("Add another modal..")
                 OpenPopup("Stacked 2")
             static_let <|
-                var ShowDemoWindowPopups_unused_open = true
-            if BeginPopupModal("Stacked 2", ShowDemoWindowPopups_unused_open)
+                var unused_open = true
+            if BeginPopupModal("Stacked 2", unused_open)
                 Text("Hello from Stacked The Second!")
                 if Button("Close")
                     CloseCurrentPopup()
@@ -501,18 +501,18 @@ def ShowExampleMenuFile()
     Separator()
     if BeginMenu("Options")
         static_let <|
-            var ShowExampleMenuFile_enabled = true
-        imgui_boost::MenuItem("Enabled", "", ShowExampleMenuFile_enabled)
+            var enabled = true
+        imgui_boost::MenuItem("Enabled", "", enabled)
         BeginChild("child", ImVec2(0., 60.), true)
         for i in range(1)
             Text("Scrolling Text {i}")
         EndChild()
         static_let <|
-            var ShowExampleMenuFile_f = 0.5f
-            var ShowExampleMenuFile_n = 0
-        SliderFloat("Value", ShowExampleMenuFile_f, 0.0f, 1.0f)
-        InputFloat("Input", ShowExampleMenuFile_f, 0.1f)
-        Combo("Combo", ShowExampleMenuFile_n, [[auto "Yes";"No";"Maybe"]])
+            var f = 0.5f
+            var n = 0
+        SliderFloat("Value", f, 0.0f, 1.0f)
+        InputFloat("Input", f, 0.1f)
+        Combo("Combo", n, [[auto "Yes";"No";"Maybe"]])
         EndMenu()
 
     if BeginMenu("Colors")
@@ -530,8 +530,8 @@ def ShowExampleMenuFile()
 
     if BeginMenu("Options")
         static_let <|
-            var ShowExampleMenuFile_b = true
-        Checkbox("SomeOption", ShowExampleMenuFile_b)
+            var b = true
+        Checkbox("SomeOption", b)
         EndMenu()
 
     if BeginMenu("Disabled", false)
@@ -544,18 +544,18 @@ def ShowExampleMenuFile()
 def ShowDemoWindowMisc()
     if CollapsingHeader("Filtering")
         static_let <|
-            var ShowDemoWindowMisc_filter = new ImGuiTextFilter
+            var filter = new ImGuiTextFilter
         Text("Filter usage:\n" +
                     "  \"\"         display all lines\n" +
                     "  \"xxx\"      display lines containing \"xxx\"\n" +
                     "  \"xxx,yyy\"  display lines containing \"xxx\" or \"yyy\"\n" +
                     "  \"-xxx\"     hide lines containing \"xxx\"")
 
-        *ShowDemoWindowMisc_filter |> Draw()
+        *filter |> Draw()
         static_let <|
-            var ShowDemoWindowMisc_lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
-        for ln in ShowDemoWindowMisc_lines
-            if *ShowDemoWindowMisc_filter |> PassFilter(ln)
+            var lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
+        for ln in lines
+            if *filter |> PassFilter(ln)
                 BulletText("{ln}")
 
     if CollapsingHeader("Inputs, Navigation & Focus")
@@ -646,15 +646,15 @@ def ShowDemoWindowMisc()
 
         if TreeNode("Tabbing")
             static_let <|
-                var ShowDemoWindowMisc_buft = reserve_string_buffer("hello", 32)
+                var buft = reserve_string_buffer("hello", 32)
             Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.")
-            InputText("1", ShowDemoWindowMisc_buft, 32)
-            InputText("2", ShowDemoWindowMisc_buft, 32)
-            InputText("3", ShowDemoWindowMisc_buft, 32)
+            InputText("1", buft, 32)
+            InputText("2", buft, 32)
+            InputText("3", buft, 32)
             PushAllowKeyboardFocus(false)
-            InputText("4 (tab skip)", ShowDemoWindowMisc_buft, 32)
+            InputText("4 (tab skip)", buft, 32)
             PopAllowKeyboardFocus()
-            InputText("5", ShowDemoWindowMisc_buft, 32)
+            InputText("5", buft, 32)
             TreePop()
 
         if TreeNode("Focus from code")
@@ -665,21 +665,21 @@ def ShowDemoWindowMisc()
             var focus_3 = Button("Focus on 3")
             var has_focus = 0
             static_let <|
-                var ShowDemoWindowMisc_buf = reserve_string_buffer("click on a button to set focus", 128)
+                var buf = reserve_string_buffer("click on a button to set focus", 128)
             if focus_1
                 SetKeyboardFocusHere()
-            InputText("1", ShowDemoWindowMisc_buf, 128)
+            InputText("1", buf, 128)
             if IsItemActive()
                 has_focus = 1
             if focus_2
                 SetKeyboardFocusHere()
-            InputText("2", ShowDemoWindowMisc_buf, 128)
+            InputText("2", buf, 128)
             if IsItemActive()
                 has_focus = 2
             PushAllowKeyboardFocus(false)
             if focus_3
                 SetKeyboardFocusHere()
-            InputText("3 (tab skip)", ShowDemoWindowMisc_buf, 128)
+            InputText("3 (tab skip)", buf, 128)
             if IsItemActive()
                 has_focus = 3
             PopAllowKeyboardFocus()
@@ -688,7 +688,7 @@ def ShowDemoWindowMisc()
             else
                 Text("Item with focus: <none>")
             static_let <|
-                var ShowDemoWindowMisc_f3 = [[float[3] 0.0f; 0.0f; 0.0f ]]
+                var f3 = [[float[3] 0.0f; 0.0f; 0.0f ]]
             var focus_ahead = -1
             if Button("Focus on X")
                 focus_ahead = 0
@@ -700,7 +700,7 @@ def ShowDemoWindowMisc()
                 focus_ahead = 2
             if focus_ahead != -1
                 SetKeyboardFocusHere(focus_ahead)
-            SliderFloat3("Float3", safe_addr(ShowDemoWindowMisc_f3[0]), 0.0f, 1.0f)
+            SliderFloat3("Float3", safe_addr(f3[0]), 0.0f, 1.0f)
             TextWrapped("NB: Cursor & selection are preserved when refocusing last used item in code.")
             TreePop()
 
@@ -729,16 +729,16 @@ def ShowDemoWindowMisc()
 
         if TreeNode("Mouse cursors")
             static_let <|
-                var ShowDemoWindowMisc_mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
+                var mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
             let current = GetMouseCursor()
-            Text("Current mouse cursor = {current}: {ShowDemoWindowMisc_mouse_cursors_names[current]}")
+            Text("Current mouse cursor = {current}: {mouse_cursors_names[current]}")
             Text("Hover to see mouse cursors:")
             SameLine()
             HelpMarker(
                 "Your application can render a different mouse cursor based on what GetMouseCursor() returns. " +
                 "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, " +
                 "otherwise your backend needs to handle it.")
-            for mcn,i in ShowDemoWindowMisc_mouse_cursors_names,range(100500)
+            for mcn,i in mouse_cursors_names,range(100500)
                 let lab = "Mouse cursor {i}: {mcn}"
                 Bullet()
                 Selectable(lab, false)
@@ -1452,23 +1452,23 @@ def ShowDemoWindowLayout
 
     if TreeNode("Clipping")
         static_let <|
-            var ShowDemoWindowLayout_size = ImVec2(100.0f, 100.0f)
-            var ShowDemoWindowLayout_offset = ImVec2(30.0f, 30.0f)
-        DragFloat2("size", safe_addr(ShowDemoWindowLayout_size.x), 0.5f, 1.0f, 200.0f, "%.0f")
+            var size = ImVec2(100.0f, 100.0f)
+            var offset = ImVec2(30.0f, 30.0f)
+        DragFloat2("size", safe_addr(size.x), 0.5f, 1.0f, 200.0f, "%.0f")
         TextWrapped("(Click and drag to scroll)")
         for n in range(3)
             if n > 0
                 SameLine()
             PushID(n)
             BeginGroup()
-            InvisibleButton("##empty", ShowDemoWindowLayout_size)
+            InvisibleButton("##empty", size)
             if IsItemActive() && IsMouseDragging(int(ImGuiMouseButton_ ImGuiMouseButton_Left))
-                ShowDemoWindowLayout_offset.x += GetIO().MouseDelta.x
-                ShowDemoWindowLayout_offset.y += GetIO().MouseDelta.y
+                offset.x += GetIO().MouseDelta.x
+                offset.y += GetIO().MouseDelta.y
             var p0 = GetItemRectMin()
             var p1 = GetItemRectMax()
             let text_str = "Line 1 hello\nLine 2 clip me!";
-            let text_pos = ImVec2(p0.x + ShowDemoWindowLayout_offset.x, p0.y + ShowDemoWindowLayout_offset.y)
+            let text_pos = ImVec2(p0.x + offset.x, p0.y + offset.y)
             var draw_list = GetWindowDrawList()
             if n==0
                 HelpMarker(
