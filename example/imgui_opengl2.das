@@ -2,8 +2,8 @@ require strings
 require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
-
-require safe_addr
+require daslib/safe_addr
+require daslib/static
 
 def imgui_app ( title:string; blk : block )
     if glfwInit()==0
@@ -77,38 +77,69 @@ def DasShowUserGuide()
     BulletText("CTRL+Tab to select a window.")
     Unindent()
 
-var show_app_main_menu_bar = false
-var show_app_documents = false
-var show_app_console = false
-var show_app_log = false
-var show_app_layout = false
-var show_app_property_editor = false
-var show_app_long_text = false
-var show_app_auto_resize = false
-var show_app_constrained_resize = false
-var show_app_simple_overlay = false
-var show_app_window_titles = false
-var show_app_custom_rendering = false
-
-var show_app_metrics = false
-var show_app_style_editor = false
-var show_app_about = false
-
-var no_titlebar = false
-var no_scrollbar = false
-var no_menu = false
-var no_move = false
-var no_resize = false
-var no_collapse = false
-var no_close = false
-var no_nav = false
-var no_background = false
-var no_bring_to_front = false
-
 
 def DasShowDemoWindow ( _p_open : bool? )
 
     var p_open = _p_open
+
+    verify(GetCurrentContext() != null, "Missing dear imgui context. Refer to examples app!")
+
+    static_let <|
+        var show_app_main_menu_bar = false
+        var show_app_documents = false
+        var show_app_console = false
+        var show_app_log = false
+        var show_app_layout = false
+        var show_app_property_editor = false
+        var show_app_long_text = false
+        var show_app_auto_resize = false
+        var show_app_constrained_resize = false
+        var show_app_simple_overlay = false
+        var show_app_window_titles = false
+        var show_app_custom_rendering = false
+
+/*
+    if (show_app_main_menu_bar)       ShowExampleAppMainMenuBar();
+    if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents);
+
+    if (show_app_console)             ShowExampleAppConsole(&show_app_console);
+    if (show_app_log)                 ShowExampleAppLog(&show_app_log);
+    if (show_app_layout)              ShowExampleAppLayout(&show_app_layout);
+    if (show_app_property_editor)     ShowExampleAppPropertyEditor(&show_app_property_editor);
+    if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text);
+    if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize);
+    if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize);
+    if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay);
+    if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles);
+    if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering);
+*/
+
+    static_let <|
+        var show_app_metrics = false
+        var show_app_style_editor = false
+        var show_app_about = false
+
+    /*
+    if (show_app_metrics)       { ImGui::ShowMetricsWindow(&show_app_metrics); }
+    if (show_app_about)         { ImGui::ShowAboutWindow(&show_app_about); }
+    */
+
+    if show_app_style_editor
+        Begin("Dear ImGui Style Editor", safe_addr(show_app_style_editor))
+        ShowStyleEditor()
+        End()
+
+    static_let <|
+        var no_titlebar = false
+        var no_scrollbar = false
+        var no_menu = false
+        var no_move = false
+        var no_resize = false
+        var no_collapse = false
+        var no_close = false
+        var no_nav = false
+        var no_background = false
+        var no_bring_to_front = false
 
     var window_flags : ImGuiWindowFlags
     if no_titlebar
@@ -291,17 +322,6 @@ def DasShowDemoWindow ( _p_open : bool? )
     PopItemWidth()
     End()
 
-var ShowDemoWindowPopups_selected_fish = -1
-var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
-let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
-var ShowDemoWindowPopups_value = 0.5f
-var ShowDemoWindowPopups_name = reserve_string_buffer("Label1", 32)
-var ShowDemoWindowPopups_unused_i = 0
-var ShowDemoWindowPopups_dont_ask_me_next_time = false
-var ShowDemoWindowPopups_item = 1
-var ShowDemoWindowPopups_color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
-var ShowDemoWindowPopups_unused_open = true
-
 def ShowDemoWindowPopups()
     if !CollapsingHeader("Popups & Modal windows")
         return
@@ -310,6 +330,11 @@ def ShowDemoWindowPopups()
         TextWrapped(
             "When a popup is active, it inhibits interacting with windows that are behind the popup. " +
             "Clicking outside the popup closes it.")
+
+        static_let <|
+            var ShowDemoWindowPopups_selected_fish = -1
+            var ShowDemoWindowPopups_toggles <- [{bool[] true; false; false; false; false}]
+            let ShowDemoWindowPopups_names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
 
         if Button("Select..")
             OpenPopup("my_select_popup")
@@ -358,6 +383,8 @@ def ShowDemoWindowPopups()
         TreePop()
 
     if TreeNode("Context menus")
+        static_let <|
+            var ShowDemoWindowPopups_value = 0.5f
         Text("Value = {ShowDemoWindowPopups_value} (<-- right-click here)")
         if BeginPopupContextItem("item context menu")
             if Selectable("Set to zero")
@@ -369,6 +396,8 @@ def ShowDemoWindowPopups()
             EndPopup()
         Text("(You can also right-click me to open the same popup as above.)")
         OpenPopupOnItemClick("item context menu", 1)
+        static_let <|
+            var ShowDemoWindowPopups_name = reserve_string_buffer("Label1", 32)
         var buf = "Button: {ShowDemoWindowPopups_name}"
         Button(buf)
         if BeginPopupContextItem()
@@ -390,7 +419,11 @@ def ShowDemoWindowPopups()
         if BeginPopupModal("Delete?", null, ImGuiWindowFlags AlwaysAutoResize)
             Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n")
             Separator()
+            static_let <|
+                var ShowDemoWindowPopups_unused_i = 0
             Combo("Combo", ShowDemoWindowPopups_unused_i, [[auto "Delete"; "Delete harder"]])
+            static_let <|
+                var ShowDemoWindowPopups_dont_ask_me_next_time = false
             PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f))
             Checkbox("Don't ask me next time", ShowDemoWindowPopups_dont_ask_me_next_time)
             PopStyleVar()
@@ -411,10 +444,15 @@ def ShowDemoWindowPopups()
                     EndMenu()
                 EndMenuBar()
             Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.")
+            static_let <|
+                var ShowDemoWindowPopups_item = 1
+                var ShowDemoWindowPopups_color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
             Combo("Combo", ShowDemoWindowPopups_item, [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
             ColorEdit4("color", ShowDemoWindowPopups_color)
             if Button("Add another modal..")
                 OpenPopup("Stacked 2")
+            static_let <|
+                var ShowDemoWindowPopups_unused_open = true
             if BeginPopupModal("Stacked 2", ShowDemoWindowPopups_unused_open)
                 Text("Hello from Stacked The Second!")
                 if Button("Close")
@@ -436,11 +474,6 @@ def ShowDemoWindowPopups()
         PopID()
         Separator()
         TreePop()
-
-var ShowExampleMenuFile_enabled = true
-var ShowExampleMenuFile_f = 0.5f
-var ShowExampleMenuFile_n = 0
-var ShowExampleMenuFile_b = true
 
 def ShowExampleMenuFile()
     MenuItem("(demo menu)", "", false, false)
@@ -467,11 +500,16 @@ def ShowExampleMenuFile()
 
     Separator()
     if BeginMenu("Options")
+        static_let <|
+            var ShowExampleMenuFile_enabled = true
         imgui_boost::MenuItem("Enabled", "", ShowExampleMenuFile_enabled)
         BeginChild("child", ImVec2(0., 60.), true)
         for i in range(1)
             Text("Scrolling Text {i}")
         EndChild()
+        static_let <|
+            var ShowExampleMenuFile_f = 0.5f
+            var ShowExampleMenuFile_n = 0
         SliderFloat("Value", ShowExampleMenuFile_f, 0.0f, 1.0f)
         InputFloat("Input", ShowExampleMenuFile_f, 0.1f)
         Combo("Combo", ShowExampleMenuFile_n, [[auto "Yes";"No";"Maybe"]])
@@ -491,6 +529,8 @@ def ShowExampleMenuFile()
         EndMenu()
 
     if BeginMenu("Options")
+        static_let <|
+            var ShowExampleMenuFile_b = true
         Checkbox("SomeOption", ShowExampleMenuFile_b)
         EndMenu()
 
@@ -501,15 +541,10 @@ def ShowExampleMenuFile()
     if MenuItem("Quit", "Alt+F4")
         pass
 
-var ShowDemoWindowMisc_filter = new ImGuiTextFilter
-var ShowDemoWindowMisc_lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
-var ShowDemoWindowMisc_mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
-var ShowDemoWindowMisc_buf = reserve_string_buffer("click on a button to set focus", 128)
-var ShowDemoWindowMisc_f3 = [[float[3] 0.0f; 0.0f; 0.0f ]]
-var ShowDemoWindowMisc_buft = reserve_string_buffer("hello", 32)
-
 def ShowDemoWindowMisc()
     if CollapsingHeader("Filtering")
+        static_let <|
+            var ShowDemoWindowMisc_filter = new ImGuiTextFilter
         Text("Filter usage:\n" +
                     "  \"\"         display all lines\n" +
                     "  \"xxx\"      display lines containing \"xxx\"\n" +
@@ -517,6 +552,8 @@ def ShowDemoWindowMisc()
                     "  \"-xxx\"     hide lines containing \"xxx\"")
 
         *ShowDemoWindowMisc_filter |> Draw()
+        static_let <|
+            var ShowDemoWindowMisc_lines = [[string[] "aaa1.c"; "bbb1.c"; "ccc1.c"; "aaa2.cpp"; "bbb2.cpp"; "ccc2.cpp"; "abc.h"; "hello, world"]]
         for ln in ShowDemoWindowMisc_lines
             if *ShowDemoWindowMisc_filter |> PassFilter(ln)
                 BulletText("{ln}")
@@ -608,6 +645,8 @@ def ShowDemoWindowMisc()
             TreePop()
 
         if TreeNode("Tabbing")
+            static_let <|
+                var ShowDemoWindowMisc_buft = reserve_string_buffer("hello", 32)
             Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.")
             InputText("1", ShowDemoWindowMisc_buft, 32)
             InputText("2", ShowDemoWindowMisc_buft, 32)
@@ -625,6 +664,8 @@ def ShowDemoWindowMisc()
             SameLine()
             var focus_3 = Button("Focus on 3")
             var has_focus = 0
+            static_let <|
+                var ShowDemoWindowMisc_buf = reserve_string_buffer("click on a button to set focus", 128)
             if focus_1
                 SetKeyboardFocusHere()
             InputText("1", ShowDemoWindowMisc_buf, 128)
@@ -646,6 +687,8 @@ def ShowDemoWindowMisc()
                 Text("Item with focus: {has_focus}")
             else
                 Text("Item with focus: <none>")
+            static_let <|
+                var ShowDemoWindowMisc_f3 = [[float[3] 0.0f; 0.0f; 0.0f ]]
             var focus_ahead = -1
             if Button("Focus on X")
                 focus_ahead = 0
@@ -685,6 +728,8 @@ def ShowDemoWindowMisc()
             TreePop()
 
         if TreeNode("Mouse cursors")
+            static_let <|
+                var ShowDemoWindowMisc_mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
             let current = GetMouseCursor()
             Text("Current mouse cursor = {current}: {ShowDemoWindowMisc_mouse_cursors_names[current]}")
             Text("Hover to see mouse cursors:")
@@ -1401,21 +1446,21 @@ static void ShowDemoWindowLayout()
 
 */
 
-var ShowDemoWindowLayout_size = ImVec2(100.0f, 100.0f)
-var ShowDemoWindowLayout_offset = ImVec2(30.0f, 30.0f)
-
 def ShowDemoWindowLayout
     if !CollapsingHeader("Layout & Scrolling")
         return
 
     if TreeNode("Clipping")
+        static_let <|
+            var ShowDemoWindowLayout_size = ImVec2(100.0f, 100.0f)
+            var ShowDemoWindowLayout_offset = ImVec2(30.0f, 30.0f)
         DragFloat2("size", safe_addr(ShowDemoWindowLayout_size.x), 0.5f, 1.0f, 200.0f, "%.0f")
         TextWrapped("(Click and drag to scroll)")
         for n in range(3)
             if n > 0
                 SameLine()
             PushID(n)
-            BeginGroup() // Lock X position
+            BeginGroup()
             InvisibleButton("##empty", ShowDemoWindowLayout_size)
             if IsItemActive() && IsMouseDragging(int(ImGuiMouseButton_ ImGuiMouseButton_Left))
                 ShowDemoWindowLayout_offset.x += GetIO().MouseDelta.x
@@ -1448,7 +1493,7 @@ def ShowDemoWindowLayout
                     "Using ImDrawList::AddText() with a fine ClipRect:\n" +
                     "Will alter only this specific ImDrawList::AddText() rendering.\n" +
                     "(this is often used internally to avoid altering the clipping rectangle and minimize draw calls)")
-                var clip_rect = ImVec4(p0.x, p0.y, p1.x, p1.y) // AddText() takes a ImVec4* here so let's convert.
+                var clip_rect = ImVec4(p0.x, p0.y, p1.x, p1.y)
                 *draw_list |> AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255))
                 *draw_list |> AddText(GetFont(), GetFontSize(), text_pos, IM_COL32_WHITE, text_str, 0.0f, safe_addr(clip_rect))
             EndGroup()
