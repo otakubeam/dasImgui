@@ -69,6 +69,15 @@ namespace das {
     bool PassFilter ( ImGuiTextFilter & filter, const char* text ) {
         return filter.PassFilter(text, nullptr);
     }
+
+    void AddText( ImDrawList & drawList, const ImVec2& pos, ImU32 col, const char* text ) {
+        drawList.AddText(pos, col, text);
+    }
+
+    void AddText2( ImDrawList & drawList, const ImFont* font, float font_size, const ImVec2& pos, ImU32 col,
+        const char* text_begin, float wrap_width = 0.0f, const ImVec4* cpu_fine_clip_rect = nullptr) {
+        drawList.AddText(font,font_size,pos,col,text_begin,nullptr,wrap_width,cpu_fine_clip_rect);
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -121,6 +130,12 @@ bool Module_imgui::initDependencies() {
     initFunctions();
     initMethods();
 #if USE_GENERATED
+    // constants
+    addConstant(*this,"IM_COL32_A_MASK",uint32_t(IM_COL32_A_MASK));
+    addConstant(*this,"IM_COL32_R_SHIFT",uint32_t(IM_COL32_R_SHIFT));
+    addConstant(*this,"IM_COL32_G_SHIFT",uint32_t(IM_COL32_G_SHIFT));
+    addConstant(*this,"IM_COL32_B_SHIFT",uint32_t(IM_COL32_B_SHIFT));
+    addConstant(*this,"IM_COL32_A_SHIFT",uint32_t(IM_COL32_A_SHIFT));
     // vector C-tors
     addCtor<ImVec2>(*this,lib,"ImVec2","ImVec2");
     addCtor<ImVec2,float,float>(*this,lib,"ImVec2","ImVec2");
@@ -129,6 +144,14 @@ bool Module_imgui::initDependencies() {
     // imgui text filter
     addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
         SideEffects::worstDefault, "das::PassFilter");
+    // imgui draw list
+    addExtern<DAS_BIND_FUN(das::AddText)>(*this, lib, "AddText",
+        SideEffects::worstDefault, "das::AddText");
+    addExtern<DAS_BIND_FUN(das::AddText2)>(*this, lib, "AddText",
+        SideEffects::worstDefault, "das::AddText2")
+	        ->args({"drawList","font","font_size","pos","col","text","wrap_width","cpu_fine_clip_rect"})
+		        ->arg_init(6,make_smart<ExprConstFloat>(0.0f))
+		        ->arg_init(7,make_smart<ExprConstPtr>());
 #endif
     return true;
 }

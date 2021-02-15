@@ -218,6 +218,15 @@ let
     ImDrawCornerFlags_Right     = ImDrawCornerFlags TopRight | ImDrawCornerFlags BotRight
     ImDrawCornerFlags_All       = bitfield(0xF)
 
+let IM_COL32_WHITE = IM_COL32(255,255,255,255)
+let IM_COL32_BLACK = IM_COL32(0,0,0,255)
+let IM_COL32_BLACK_TRANS = IM_COL32(0,0,0,0)
+
+def IM_COL32(R,G,B,A:uint)
+    return (A<<IM_COL32_A_SHIFT) | (B<<IM_COL32_B_SHIFT) | (G<<IM_COL32_G_SHIFT) | (R<<IM_COL32_R_SHIFT)
+
+def IM_COL32(R,G,B,A:int)
+    return (uint(A)<<IM_COL32_A_SHIFT) | (uint(B)<<IM_COL32_B_SHIFT) | (uint(G)<<IM_COL32_G_SHIFT) | (uint(R)<<IM_COL32_R_SHIFT)
 
 def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags  = bitfield(0))
     return imgui::Begin(name,p_open,int(flags))

@@ -35,3 +35,5 @@ def main
 
     var args <- get_command_line_arguments()
     bindHeaders(args[3], args[4])
+    genDefineConstants(args[5],args[4])
+

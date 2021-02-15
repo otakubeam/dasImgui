@@ -55,6 +55,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		SETUP_CPP11(libDasModuleImGui)
 		# GENERATED IMGUI
 		get_target_property(BIND_INCLUDE_DIRS libDasModuleImGui INCLUDE_DIRECTORIES)
+		FIND_FILE(IMGUI_H "imgui.h")
 		CPP_BIND_AST(
 			IMGUI_GENERATE
 			generate_imgui.das
@@ -62,7 +63,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${DAS_IMGUI_DIR}/src/module_imgui
 			${DAS_IMGUI_DIR}/src
 			${BIND_INCLUDE_DIRS}
-			""
+			${IMGUI_H}
 		)
 		IF(NOT glfw3_FOUND)
 			MESSAGE(STATUS "GLFW3 not found. Not building dasImGuiGLFW.")
