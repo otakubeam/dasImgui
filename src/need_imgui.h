@@ -26,6 +26,7 @@ struct cast_arg<ImVec2> {
 
 MAKE_TYPE_FACTORY(ImGuiContext,ImGuiContext);
 MAKE_TYPE_FACTORY(ImDrawListSharedData,ImDrawListSharedData);
+MAKE_TYPE_FACTORY(ImFontBuilderIO,ImFontBuilderIO);
 
 /*
 template <typename TT>

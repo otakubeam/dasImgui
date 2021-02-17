@@ -103,6 +103,19 @@ public:
 	}
 };
 
+class EnumerationImGuiViewportFlags_ : public das::Enumeration {
+public:
+    EnumerationImGuiViewportFlags_() : das::Enumeration("ImGuiViewportFlags_") {
+        external = true;
+        cppName = "ImGuiViewportFlags_";
+        baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiViewportFlags_ >::type >::type;
+		addI("ImGuiViewportFlags_None", int64_t(ImGuiViewportFlags_::ImGuiViewportFlags_None), das::LineInfo());
+		addI("ImGuiViewportFlags_IsPlatformWindow", int64_t(ImGuiViewportFlags_::ImGuiViewportFlags_IsPlatformWindow), das::LineInfo());
+		addI("ImGuiViewportFlags_IsPlatformMonitor", int64_t(ImGuiViewportFlags_::ImGuiViewportFlags_IsPlatformMonitor), das::LineInfo());
+		addI("ImGuiViewportFlags_OwnedByApp", int64_t(ImGuiViewportFlags_::ImGuiViewportFlags_OwnedByApp), das::LineInfo());
+	}
+};
+
 class EnumerationImGuiDragDropFlags_ : public das::Enumeration {
 public:
     EnumerationImGuiDragDropFlags_() : das::Enumeration("ImGuiDragDropFlags_") {

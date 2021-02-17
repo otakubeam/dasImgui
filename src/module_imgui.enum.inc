@@ -8,6 +8,7 @@ addEnumeration(make_smart<EnumerationImGuiNavInput_>());
 addEnumeration(make_smart<EnumerationImGuiDir_>());
 addEnumeration(make_smart<EnumerationImGuiCond>());
 addEnumFlagOps<ImGuiCond_>(*this,lib,"ImGuiCond_");
+addEnumeration(make_smart<EnumerationImGuiViewportFlags_>());
 addEnumeration(make_smart<EnumerationImGuiDragDropFlags_>());
 addEnumeration(make_smart<EnumerationImGuiColorEditFlags>());
 addEnumFlagOps<ImGuiColorEditFlags_>(*this,lib,"ImGuiColorEditFlags_");

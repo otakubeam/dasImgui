@@ -98,6 +98,8 @@ Module_imgui::Module_imgui() : Module("imgui") {
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
     addAnnotation(make_smart<DummyTypeAnnotation>("ImDrawListSharedData", "ImDrawListSharedData",
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
+    addAnnotation(make_smart<DummyTypeAnnotation>("ImFontBuilderIO", "ImFontBuilderIO",
+        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
     // constants
     addConstant(*this,"IMGUI_VERSION", IMGUI_VERSION);
     addConstant(*this,"IMGUI_VERSION_NUM", IMGUI_VERSION_NUM);
