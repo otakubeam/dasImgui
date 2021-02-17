@@ -142,7 +142,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextItemOpen)>(*this, lib, "SetNextItemOpen",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemClicked)>(*this, lib, "IsItemClicked",SideEffects::worstDefault, "ImGui::IsItemClicked")
 	->args({"mouse_button"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 ;
 addExtern<bool (*)(const char *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
 	->args({"str_id","fmt","args"})
@@ -196,7 +197,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetCursorScreenPos)>(*this, lib, "SetCursorScreenP
 addExtern<DAS_BIND_FUN(ImGui::OpenPopupContextItem)>(*this, lib, "OpenPopupContextItem",SideEffects::worstDefault, "ImGui::OpenPopupContextItem")
 	->args({"str_id","mb"})
 		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_init(1,make_smart<ExprConstInt>(1))
+		->arg_type(1,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiMouseButton_>(lib)))
 ;
 addExtern<void (*)(ImGuiStyleVar, float),ImGui::PushStyleVar>(*this, lib, "PushStyleVar",SideEffects::worstDefault, "ImGui::PushStyleVar")
 	->args({"idx","val"})
@@ -288,6 +290,7 @@ addExtern<void (*)(ImGuiStyleVar, const ImVec2 &),ImGui::PushStyleVar>(*this, li
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseReleased)>(*this, lib, "IsMouseReleased",SideEffects::worstDefault, "ImGui::IsMouseReleased")
 	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginMenuBar)>(*this, lib, "BeginMenuBar",SideEffects::worstDefault, "ImGui::BeginMenuBar")
 	->args({})
@@ -343,6 +346,7 @@ addExtern<DAS_BIND_FUN(ImGui::InputFloat3)>(*this, lib, "InputFloat3",SideEffect
 ;
 addExtern<bool (*)(const char *, ImGuiMouseButton, bool),ImGui::BeginPopupContextWindow>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
 	->args({"str_id","mb","over_items"})
+		->arg_type(1,makeType<ImGuiMouseButton_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginDragDropSource)>(*this, lib, "BeginDragDropSource",SideEffects::worstDefault, "ImGui::BeginDragDropSource")
 	->args({"flags"})
@@ -615,6 +619,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsAnyItemHovered)>(*this, lib, "IsAnyItemHovered",
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseDown)>(*this, lib, "IsMouseDown",SideEffects::worstDefault, "ImGui::IsMouseDown")
 	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromDisk)>(*this, lib, "LoadIniSettingsFromDisk",SideEffects::worstDefault, "ImGui::LoadIniSettingsFromDisk")
 	->args({"ini_filename"})
@@ -677,6 +682,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemVisible)>(*this, lib, "IsItemVisible",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseDoubleClicked)>(*this, lib, "IsMouseDoubleClicked",SideEffects::worstDefault, "ImGui::IsMouseDoubleClicked")
 	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetMouseCursor)>(*this, lib, "SetMouseCursor",SideEffects::worstDefault, "ImGui::SetMouseCursor")
 	->args({"cursor_type"})
@@ -1144,6 +1150,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetItemRectMax), SimNode_ExtFuncCallAndCopyOrMove>
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseDragging)>(*this, lib, "IsMouseDragging",SideEffects::worstDefault, "ImGui::IsMouseDragging")
 	->args({"button","lock_threshold"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(1,make_smart<ExprConstFloat>(-1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetScrollHere)>(*this, lib, "SetScrollHere",SideEffects::worstDefault, "ImGui::SetScrollHere")
@@ -1181,7 +1188,8 @@ addExtern<DAS_BIND_FUN(ImGui::InputScalarN)>(*this, lib, "InputScalarN",SideEffe
 ;
 addExtern<DAS_BIND_FUN(ImGui::ResetMouseDragDelta)>(*this, lib, "ResetMouseDragDelta",SideEffects::worstDefault, "ImGui::ResetMouseDragDelta")
 	->args({"button"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetFrameHeightWithSpacing)>(*this, lib, "GetFrameHeightWithSpacing",SideEffects::worstDefault, "ImGui::GetFrameHeightWithSpacing")
 	->args({})
@@ -1304,7 +1312,8 @@ addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextVoid)>(*this, lib, "BeginPopupCon
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
 	->args({"button","lock_threshold"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 		->arg_init(1,make_smart<ExprConstFloat>(-1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::End)>(*this, lib, "End",SideEffects::worstDefault, "ImGui::End")
@@ -1394,6 +1403,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetVersion)>(*this, lib, "GetVersion",SideEffects:
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseClicked)>(*this, lib, "IsMouseClicked",SideEffects::worstDefault, "ImGui::IsMouseClicked")
 	->args({"button","repeat"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(1,make_smart<ExprConstBool>(false))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetMousePos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")

@@ -23,7 +23,7 @@ addEnumeration(make_smart<EnumerationImDrawCornerFlags>());
 addEnumFlagOps<ImDrawCornerFlags_>(*this,lib,"ImDrawCornerFlags_");
 addEnumeration(make_smart<EnumerationImGuiTableBgTarget_>());
 addEnumeration(make_smart<EnumerationImGuiButtonFlags_>());
-addEnumeration(make_smart<EnumerationImGuiMouseButton_>());
+addEnumeration(make_smart<EnumerationImGuiMouseButton>());
 addEnumeration(make_smart<EnumerationImGuiTabBarFlags_>());
 addEnumeration(make_smart<EnumerationImGuiTreeNodeFlags_>());
 addEnumeration(make_smart<EnumerationImGuiTabItemFlags_>());

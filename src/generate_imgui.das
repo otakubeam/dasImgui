@@ -48,7 +48,8 @@ def main
     // not flags
         "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
         "ImGuiCol_" => [[ExEnum() name = "ImGuiCol"]];
-        "ImGuiKey_" => [[ExEnum() name = "ImGuiKey"]]
+        "ImGuiKey_" => [[ExEnum() name = "ImGuiKey"]];
+        "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]]
     }}
 
     // generate

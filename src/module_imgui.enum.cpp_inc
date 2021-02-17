@@ -406,16 +406,16 @@ public:
 	}
 };
 
-class EnumerationImGuiMouseButton_ : public das::Enumeration {
+class EnumerationImGuiMouseButton : public das::Enumeration {
 public:
-    EnumerationImGuiMouseButton_() : das::Enumeration("ImGuiMouseButton_") {
+    EnumerationImGuiMouseButton() : das::Enumeration("ImGuiMouseButton") {
         external = true;
         cppName = "ImGuiMouseButton_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiMouseButton_ >::type >::type;
-		addI("ImGuiMouseButton_Left", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Left), das::LineInfo());
-		addI("ImGuiMouseButton_Right", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Right), das::LineInfo());
-		addI("ImGuiMouseButton_Middle", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Middle), das::LineInfo());
-		addI("ImGuiMouseButton_COUNT", int64_t(ImGuiMouseButton_::ImGuiMouseButton_COUNT), das::LineInfo());
+		addI("Left", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Left), das::LineInfo());
+		addI("Right", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Right), das::LineInfo());
+		addI("Middle", int64_t(ImGuiMouseButton_::ImGuiMouseButton_Middle), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiMouseButton_::ImGuiMouseButton_COUNT), das::LineInfo());
 	}
 };
 
