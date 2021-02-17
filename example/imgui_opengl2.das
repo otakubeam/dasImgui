@@ -78,6 +78,25 @@ def DasShowUserGuide()
     BulletText("CTRL+Tab to select a window.")
     Unindent()
 
+def ShowExampleAppMainMenuBar()
+    if BeginMainMenuBar()
+        if BeginMenu("File")
+            ShowExampleMenuFile()
+            EndMenu()
+        if BeginMenu("Edit")
+            if MenuItem("Undo", "CTRL+Z")
+                pass
+            if MenuItem("Redo", "CTRL+Y", false, false)
+                pass
+            Separator()
+            if MenuItem("Cut", "CTRL+X")
+                pass
+            if MenuItem("Copy", "CTRL+C")
+                pass
+            if MenuItem("Paste", "CTRL+V")
+                pass
+            EndMenu()
+        EndMainMenuBar()
 
 def DasShowDemoWindow ( _p_open : bool? )
 
@@ -99,8 +118,10 @@ def DasShowDemoWindow ( _p_open : bool? )
         var show_app_window_titles = false
         var show_app_custom_rendering = false
 
+    if show_app_main_menu_bar
+        ShowExampleAppMainMenuBar()
+
 /*
-    if (show_app_main_menu_bar)       ShowExampleAppMainMenuBar();
     if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents);
 
     if (show_app_console)             ShowExampleAppConsole(&show_app_console);
