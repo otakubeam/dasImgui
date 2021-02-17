@@ -18,7 +18,8 @@ def main
         "__security_init_cookie";
         "__security_check_cookie";
         "ImGui::TextUnformatted";
-        "ImGuiTextFilter::PassFilter"
+        "ImGuiTextFilter::PassFilter";
+        "ImGuiTextBuffer::append"
     }]
 
     cmres_functions <- [{auto[]

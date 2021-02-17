@@ -165,8 +165,7 @@ def DasShowAboutWindow(p_open: bool? implicit)
         if ibf && ImGuiBackendFlags RendererHasVtxOffset
             Text(" RendererHasVtxOffset")
         Separator()
-        // TODO: port ImVector
-        //Text("io.Fonts: {io.Fonts.Fonts.Size} fonts, Flags: {io.Fonts.Flags}, TexSize: {io.Fonts.TexWidth},{io.Fonts.TexHeight}")
+        Text("io.Fonts: {io.Fonts.Fonts.length} fonts, Flags: {io.Fonts.Flags}, TexSize: {io.Fonts.TexWidth},{io.Fonts.TexHeight}")
         Text("io.DisplaySize: {io.DisplaySize.x},{io.DisplaySize.y}")
         Text("io.DisplayFramebufferScale: {io.DisplayFramebufferScale.x},{io.DisplayFramebufferScale.y}")
         Separator()
@@ -210,7 +209,10 @@ def DasShowDemoWindow ( _p_open : bool? )
     if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents)
 
     if (show_app_console)             ShowExampleAppConsole(&show_app_console)
-    if (show_app_log)                 ShowExampleAppLog(&show_app_log)
+*/
+    if show_app_log
+        DasShowExampleAppLog(safe_addr(show_app_log))
+/*
     if (show_app_layout)              ShowExampleAppLayout(&show_app_layout)
     if (show_app_property_editor)     ShowExampleAppPropertyEditor(&show_app_property_editor)
     if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text)
@@ -226,9 +228,10 @@ def DasShowDemoWindow ( _p_open : bool? )
         var show_app_style_editor = false
         var show_app_about = false
 
-    /*
-    if (show_app_metrics)       { ShowMetricsWindow(&show_app_metrics) }
-    */
+
+    if show_app_metrics
+        ShowMetricsWindow(safe_addr(show_app_metrics))  // NOTE: this is in imgui.cpp ???
+
     if show_app_about
         DasShowAboutWindow(safe_addr(show_app_about))
 
@@ -1468,13 +1471,103 @@ def DasShowDemoWindowLayout
             PopID()
         TreePop()
 
+class ExampleAppLog
+    Buf:ImGuiTextBuffer? = new ImGuiTextBuffer
+    Filter:ImGuiTextFilter? = new ImGuiTextFilter
+    LineOffsets:array<int>
+    AutoScroll:bool = true
+    def ExampleAppLog()
+        self->Clear()
+    def finalize
+        unsafe
+            delete Buf
+            delete Filter
+    def Clear() : void
+        *Buf |> clear()
+        LineOffsets |> clear()
+        LineOffsets |> push(0)
+    def AddLog(txt:string) : void
+        var old_size = *Buf |> size()
+        *Buf |> append(txt)
+        var new_size = *Buf |> size()
+        while old_size < new_size
+            if *Buf |> at(old_size) == '\n'
+                LineOffsets |> push(old_size + 1)
+            old_size ++
+    def Draw(title:string; p_open:bool? implicit) : void
+        if !Begin(title, p_open)
+            End()
+            return
+        if BeginPopup("Options")
+            Checkbox("Auto-scroll", safe_addr(AutoScroll))
+            EndPopup()
+        if Button("Options")
+            OpenPopup("Options")
+        SameLine()
+        let clear = Button("Clear")
+        SameLine()
+        let copy = Button("Copy")
+        SameLine()
+        *Filter |> Draw("Filter", -100.0f)
+        Separator()
+        BeginChild("scrolling", ImVec2(0., 0.), false, ImGuiWindowFlags HorizontalScrollbar)
+        if clear
+            self->Clear()
+        if copy
+            LogToClipboard()
+        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        if *Filter |> IsActive()
+            var line_no = 0
+            while line_no < length(LineOffsets)
+                var line_start = LineOffsets[line_no]
+                var line_end = (line_no + 1 < length(LineOffsets)) ? (LineOffsets[line_no + 1] - 1) : (*Buf |> size())
+                var ltext = *Buf |> slice(line_start, line_end)
+                if *Filter |> PassFilter(ltext)
+                    TextUnformatted(ltext)
+                line_no++
+        else
+            var clipper = new ImGuiListClipper
+            *clipper |> Begin(length(LineOffsets))
+            while *clipper |> Step()
+                var line_no  = clipper.DisplayStart
+                while line_no < clipper.DisplayEnd
+                    var line_start = LineOffsets[line_no]
+                    var line_end = (line_no + 1 < length(LineOffsets)) ? (LineOffsets[line_no + 1] - 1) : (*Buf |> size())
+                    var ltext = *Buf |> slice(line_start, line_end)
+                    TextUnformatted(ltext)
+                    line_no ++
+            *clipper |> End()
+            unsafe
+                delete clipper
+        PopStyleVar()
+        if AutoScroll && GetScrollY() >= GetScrollMaxY()
+            SetScrollHereY(1.0f)
+        EndChild()
+        End()
+
+def DasShowExampleAppLog(p_open:bool? implicit)
+    static_let <|
+        var log <- ExampleAppLog()
+    SetNextWindowSize(ImVec2(500., 400.), ImGuiCond FirstUseEver)
+    Begin("Example: Log", p_open)
+    if SmallButton("[Debug] Add 5 entries")
+        static_let <|
+            var counter = 0
+            let categories = [[string[] "info"; "warn"; "error"]]
+            let words = [[string [] "Bumfuzzled"; "Cattywampus"; "Snickersnee"; "Abibliophobia"; "Absquatulate"; "Nincompoop"; "Pauciloquent" ]]
+        for n in range(5)
+            let category = categories[counter % length(categories)]
+            let word = words[counter % length(words)]
+            log->AddLog("[{GetFrameCount()}] [{category}] Hello, current time is {GetTime()}, here's a word: '{word}'\n")
+            counter++;
+    End()
+    log->Draw("Example: Log", p_open)
 
 [export]
 def main
 	var f = 0.0
 	imgui_app("Testing IMGUI") <|
         NewFrame()
-        // ShowDemoWindow(null)
         DasShowDemoWindow(null)
         Render()
 
