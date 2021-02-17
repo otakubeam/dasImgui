@@ -431,7 +431,7 @@ def ShowDemoWindowPopups()
             Separator()
             static_let <|
                 var unused_i = 0
-            Combo("Combo", unused_i, [[auto "Delete"; "Delete harder"]])
+            Combo("Combo", safe_addr(unused_i), [[auto "Delete"; "Delete harder"]])
             static_let <|
                 var dont_ask_me_next_time = false
             PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(0.0f, 0.0f))
@@ -457,7 +457,7 @@ def ShowDemoWindowPopups()
             static_let <|
                 var item = 1
                 var color = [[float[4] 0.4f; 0.7f; 0.0f; 0.5f]]
-            Combo("Combo", item, [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
+            Combo("Combo", safe_addr(item), [[auto "aaaa"; "bbbb"; "cccc"; "dddd"; "eeee"]])
             ColorEdit4("color", safe_addr(color[0]))
             if Button("Add another modal..")
                 OpenPopup("Stacked 2")
@@ -522,7 +522,7 @@ def ShowExampleMenuFile()
             var n = 0
         SliderFloat("Value", safe_addr(f), 0.0f, 1.0f)
         InputFloat("Input", safe_addr(f), 0.1f)
-        Combo("Combo", n, [[auto "Yes";"No";"Maybe"]])
+        Combo("Combo", safe_addr(n), [[auto "Yes";"No";"Maybe"]])
         EndMenu()
 
     if BeginMenu("Colors")
@@ -756,429 +756,344 @@ def ShowDemoWindowMisc()
                     SetMouseCursor(i)
             TreePop()
 
-/*
-static void ShowDemoWindowLayout()
-{
+def ShowDemoWindowLayout
+    if !CollapsingHeader("Layout & Scrolling")
+        return
 
-    if (TreeNode("Child windows"))
-    {
+    if TreeNode("Child windows")
         HelpMarker("Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window.")
-        static bool disable_mouse_wheel = false;
-        static bool disable_menu = false;
-        Checkbox("Disable Mouse Wheel", &disable_mouse_wheel)
-        Checkbox("Disable Menu", &disable_menu)
-
-        // Child 1: no border, enable horizontal scrollbar
-        {
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-            if (disable_mouse_wheel)
-                window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
-            BeginChild("ChildL", ImVec2(GetWindowContentRegionWidth() * 0.5f, 260), false, window_flags)
-            for (int i = 0; i < 100; i++)
-                Text("%04d: scrollable region", i)
+        static_let <|
+            var disable_mouse_wheel = false
+            var disable_menu = false
+        Checkbox("Disable Mouse Wheel", safe_addr(disable_mouse_wheel))
+        Checkbox("Disable Menu", safe_addr(disable_menu))
+        if true
+            var window_flags = ImGuiWindowFlags HorizontalScrollbar
+            if disable_mouse_wheel
+                window_flags |= ImGuiWindowFlags NoScrollWithMouse
+            BeginChild("ChildL", ImVec2(GetWindowContentRegionWidth() * 0.5f, 260.), false, window_flags)
+            for i in range(100)
+                Text("{i}: scrollable region")
             EndChild()
-        }
-
         SameLine()
-
-        // Child 2: rounded border
-        {
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-            if (disable_mouse_wheel)
-                window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
-            if (!disable_menu)
-                window_flags |= ImGuiWindowFlags_MenuBar;
+        if true
+            var window_flags = ImGuiWindowFlags None
+            if disable_mouse_wheel
+                window_flags |= ImGuiWindowFlags NoScrollWithMouse
+            if !disable_menu
+                window_flags |= ImGuiWindowFlags MenuBar
             PushStyleVar(ImGuiStyleVar ChildRounding, 5.0f)
-            BeginChild("ChildR", ImVec2(0, 260), true, window_flags)
-            if (!disable_menu && BeginMenuBar())
-            {
-                if (BeginMenu("Menu"))
-                {
+            BeginChild("ChildR", ImVec2(0., 260.), true, window_flags)
+            if !disable_menu && BeginMenuBar()
+                if BeginMenu("Menu")
                     ShowExampleMenuFile()
                     EndMenu()
-                }
                 EndMenuBar()
-            }
-            if (BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    char buf[32];
-                    sprintf(buf, "%03d", i)
+            if BeginTable("split", 2, ImGuiTableFlags Resizable | ImGuiTableFlags NoSavedSettings)
+                for i in range(100)
                     TableNextColumn()
-                    Button(buf, ImVec2(-FLT_MIN, 0.0f))
-                }
+                    Button("{i}", ImVec2(-FLT_MIN, 0.0f))
                 EndTable()
-            }
             EndChild()
             PopStyleVar()
-        }
-
         Separator()
-
-        // Demonstrate a few extra things
-        // - Changing ImGuiCol_ChildBg (which is transparent black in default styles)
-        // - Using SetCursorPos() to position child window (the child window is an item from the POV of parent window)
-        //   You can also call SetNextWindowPos() to position the child window. The parent window will effectively
-        //   layout from this position.
-        // - Using GetItemRectMin/Max() to query the "item" state (because the child window is an item from
-        //   the POV of the parent window). See 'Demo->Querying Status (Active/Focused/Hovered etc.)' for details.
-        {
-            static int offset_x = 0;
-            SetNextItemWidth(100)
-            DragInt("Offset X", &offset_x, 1.0f, -1000, 1000)
-
-            SetCursorPosX(GetCursorPosX() + (float)offset_x)
-            PushStyleColor(ImGuiCol_ChildBg, IM_COL32(255, 0, 0, 100))
-            BeginChild("Red", ImVec2(200, 100), true, ImGuiWindowFlags_None)
-            for (int n = 0; n < 50; n++)
-                Text("Some test %d", n)
+        if true
+            static_let <|
+                var offset_x = 0
+            SetNextItemWidth(100.)
+            DragInt("Offset X", safe_addr(offset_x), 1.0f, -1000, 1000)
+            SetCursorPosX(GetCursorPosX() + float(offset_x))
+            PushStyleColor(ImGuiCol ChildBg, IM_COL32(255, 0, 0, 100))
+            BeginChild("Red", ImVec2(200., 100.), true, ImGuiWindowFlags None)
+            for i in range(50)
+                Text("Some test {i}")
             EndChild()
-            bool child_is_hovered = IsItemHovered()
-            ImVec2 child_rect_min = GetItemRectMin()
-            ImVec2 child_rect_max = GetItemRectMax()
+            let child_is_hovered = IsItemHovered()
+            let child_rect_min = GetItemRectMin()
+            let child_rect_max = GetItemRectMax()
             PopStyleColor()
-            Text("Hovered: %d", child_is_hovered)
-            Text("Rect of child window is: (%.0f,%.0f) (%.0f,%.0f)", child_rect_min.x, child_rect_min.y, child_rect_max.x, child_rect_max.y)
-        }
-
+            Text("Hovered: {child_is_hovered}")
+            Text("Rect of child window is: ({child_rect_min.x},{child_rect_min.y}) ({child_rect_max.x}, {child_rect_max.y})")
         TreePop()
-    }
 
-    if (TreeNode("Widgets Width"))
-    {
-        // Use SetNextItemWidth() to set the width of a single upcoming item.
-        // Use PushItemWidth()/PopItemWidth() to set the width of a group of items.
-        // In real code use you'll probably want to choose width values that are proportional to your font size
-        // e.g. Using '20.0f * GetFontSize()' as width instead of '200.0f', etc.
-
-        static float f = 0.0f;
-        static bool show_indented_items = true;
-        Checkbox("Show indented items", &show_indented_items)
-
+    if TreeNode("Widgets Width")
+        static_let <|
+            var f = 0.0f
+            var show_indented_items = true
+        Checkbox("Show indented items", safe_addr(show_indented_items))
         Text("SetNextItemWidth/PushItemWidth(100)")
-        SameLine() HelpMarker("Fixed width.")
-        PushItemWidth(100)
-        DragFloat("float##1b", &f)
-        if (show_indented_items)
-        {
+        SameLine()
+        HelpMarker("Fixed width.")
+        PushItemWidth(100.)
+        DragFloat("float##1b", safe_addr(f))
+        if show_indented_items
             Indent()
-            DragFloat("float (indented)##1b", &f)
+            DragFloat("float (indented)##1b", safe_addr(f))
             Unindent()
-        }
         PopItemWidth()
-
         Text("SetNextItemWidth/PushItemWidth(-100)")
-        SameLine() HelpMarker("Align to right edge minus 100")
-        PushItemWidth(-100)
-        DragFloat("float##2a", &f)
-        if (show_indented_items)
-        {
+        SameLine()
+        HelpMarker("Align to right edge minus 100")
+        PushItemWidth(-100.)
+        DragFloat("float##2a", safe_addr(f))
+        if show_indented_items
             Indent()
-            DragFloat("float (indented)##2b", &f)
+            DragFloat("float (indented)##2b", safe_addr(f))
             Unindent()
-        }
         PopItemWidth()
-
         Text("SetNextItemWidth/PushItemWidth(GetContentRegionAvail().x * 0.5f)")
-        SameLine() HelpMarker("Half of available width.\n(~ right-cursor_pos)\n(works within a column set)")
+        SameLine()
+        HelpMarker("Half of available width.\n(~ right-cursor_pos)\n(works within a column set)")
         PushItemWidth(GetContentRegionAvail().x * 0.5f)
-        DragFloat("float##3a", &f)
-        if (show_indented_items)
-        {
+        DragFloat("float##3a", safe_addr(f))
+        if show_indented_items
             Indent()
-            DragFloat("float (indented)##3b", &f)
+            DragFloat("float (indented)##3b", safe_addr(f))
             Unindent()
-        }
         PopItemWidth()
-
         Text("SetNextItemWidth/PushItemWidth(-GetContentRegionAvail().x * 0.5f)")
-        SameLine() HelpMarker("Align to right edge minus half")
+        SameLine()
+        HelpMarker("Align to right edge minus half")
         PushItemWidth(-GetContentRegionAvail().x * 0.5f)
-        DragFloat("float##4a", &f)
-        if (show_indented_items)
-        {
+        DragFloat("float##4a", safe_addr(f))
+        if show_indented_items
             Indent()
-            DragFloat("float (indented)##4b", &f)
+            DragFloat("float (indented)##4b", safe_addr(f))
             Unindent()
-        }
         PopItemWidth()
-
-        // Demonstrate using PushItemWidth to surround three items.
-        // Calling SetNextItemWidth() before each of them would have the same effect.
         Text("SetNextItemWidth/PushItemWidth(-FLT_MIN)")
-        SameLine() HelpMarker("Align to right edge")
+        SameLine()
+        HelpMarker("Align to right edge")
         PushItemWidth(-FLT_MIN)
-        DragFloat("##float5a", &f)
-        if (show_indented_items)
-        {
+        DragFloat("##float5a", safe_addr(f))
+        if show_indented_items
             Indent()
-            DragFloat("float (indented)##5b", &f)
+            DragFloat("float (indented)##5b", safe_addr(f))
             Unindent()
-        }
         PopItemWidth()
-
         TreePop()
-    }
 
-    if (TreeNode("Basic Horizontal Layout"))
-    {
+    if TreeNode("Basic Horizontal Layout")
         TextWrapped("(Use SameLine() to keep adding items to the right of the preceding item)")
-
-        // Text
-        Text("Two items: Hello") SameLine()
-        TextColored(ImVec4(1,1,0,1), "Sailor")
-
-        // Adjust spacing
-        Text("More spacing: Hello") SameLine(0, 20)
-        TextColored(ImVec4(1,1,0,1), "Sailor")
-
-        // Button
+        Text("Two items: Hello")
+        SameLine()
+        TextColored(ImVec4(1.,1.,0.,1.), "Sailor")
+        Text("More spacing: Hello")
+        SameLine(0., 20.)
+        TextColored(ImVec4(1.,1.,0.,1.), "Sailor")
         AlignTextToFramePadding()
-        Text("Normal buttons") SameLine()
-        Button("Banana") SameLine()
-        Button("Apple") SameLine()
+        Text("Normal buttons")
+        SameLine()
+        Button("Banana")
+        SameLine()
+        Button("Apple")
+        SameLine()
         Button("Corniflower")
-
-        // Button
-        Text("Small buttons") SameLine()
-        SmallButton("Like this one") SameLine()
+        Text("Small buttons")
+        SameLine()
+        SmallButton("Like this one")
+        SameLine()
         Text("can fit within a text block.")
-
-        // Aligned to arbitrary position. Easy/cheap column.
         Text("Aligned")
-        SameLine(150) Text("x=150")
-        SameLine(300) Text("x=300")
+        SameLine(150.)
+        Text("x=150")
+        SameLine(300.)
+        Text("x=300")
         Text("Aligned")
-        SameLine(150) SmallButton("x=150")
-        SameLine(300) SmallButton("x=300")
-
-        // Checkbox
-        static bool c1 = false, c2 = false, c3 = false, c4 = false;
-        Checkbox("My", &c1) SameLine()
-        Checkbox("Tailor", &c2) SameLine()
-        Checkbox("Is", &c3) SameLine()
-        Checkbox("Rich", &c4)
-
-        // Various
-        static float f0 = 1.0f, f1 = 2.0f, f2 = 3.0f;
-        PushItemWidth(80)
-        const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD" };
-        static int item = -1;
-        Combo("Combo", &item, items, IM_ARRAYSIZE(items)) SameLine()
-        SliderFloat("X", &f0, 0.0f, 5.0f) SameLine()
-        SliderFloat("Y", &f1, 0.0f, 5.0f) SameLine()
-        SliderFloat("Z", &f2, 0.0f, 5.0f)
+        SameLine(150.)
+        SmallButton("x=150")
+        SameLine(300.)
+        SmallButton("x=300")
+        static_let <|
+            var c1 = false
+            var c2 = false
+            var c3 = false
+            var c4 = false
+        Checkbox("My", safe_addr(c1))
+        SameLine()
+        Checkbox("Tailor", safe_addr(c2))
+        SameLine()
+        Checkbox("Is", safe_addr(c3))
+        SameLine()
+        Checkbox("Rich", safe_addr(c4))
+        static_let <|
+            var f0 = 1.0f
+            var f1 = 2.0f
+            var f2 = 3.0f
+        PushItemWidth(80.)
+        static_let <|
+            let items = [[string[] "AAAA"; "BBBB"; "CCCC"; "DDDD" ]]
+            var item = -1
+        Combo("Combo", safe_addr(item), items)
+        SameLine()
+        SliderFloat("X", safe_addr(f0), 0.0f, 5.0f)
+        SameLine()
+        SliderFloat("Y", safe_addr(f1), 0.0f, 5.0f)
+        SameLine()
+        SliderFloat("Z", safe_addr(f2), 0.0f, 5.0f)
         PopItemWidth()
-
-        PushItemWidth(80)
+        PushItemWidth(80.)
         Text("Lists:")
-        static int selection[4] = { 0, 1, 2, 3 };
-        for (int i = 0; i < 4; i++)
-        {
-            if (i > 0) SameLine()
+        static_let <|
+            var selection = [[int[] 0; 1; 2; 3]]
+        for i in range(4)
+            if (i > 0)
+                SameLine()
             PushID(i)
-            ListBox("", &selection[i], items, IM_ARRAYSIZE(items))
+            ListBox("", safe_addr(selection[i]), items)
             PopID()
-            //if (IsItemHovered()) SetTooltip("ListBox %d hovered", i)
-        }
         PopItemWidth()
-
-        // Dummy
-        ImVec2 button_sz(40, 40)
-        Button("A", button_sz) SameLine()
-        Dummy(button_sz) SameLine()
+        let button_sz = ImVec2(40., 40.)
+        Button("A", button_sz)
+        SameLine()
+        Dummy(button_sz)
+        SameLine()
         Button("B", button_sz)
-
-        // Manually wrapping
-        // (we should eventually provide this as an automatic layout feature, but for now you can do it manually)
         Text("Manually wrapping:")
-        ImGuiStyle& style = GetStyle()
-        int buttons_count = 20;
-        float window_visible_x2 = GetWindowPos().x + GetWindowContentRegionMax().x;
-        for (int n = 0; n < buttons_count; n++)
-        {
+        let style & = GetStyle()
+        let buttons_count = 20
+        let window_visible_x2 = GetWindowPos().x + GetWindowContentRegionMax().x
+        for n in range(buttons_count)
             PushID(n)
             Button("Box", button_sz)
-            float last_button_x2 = GetItemRectMax().x;
-            float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
-            if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+            let last_button_x2 = GetItemRectMax().x
+            let next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x
+            if n + 1 < buttons_count && next_button_x2 < window_visible_x2
                 SameLine()
             PopID()
-        }
-
         TreePop()
-    }
 
-    if (TreeNode("Groups"))
-    {
+    if TreeNode("Groups")
         HelpMarker(
-            "BeginGroup() basically locks the horizontal position for new line. "
-            "EndGroup() bundles the whole group so that you can use \"item\" functions such as "
+            "BeginGroup() basically locks the horizontal position for new line. " +
+            "EndGroup() bundles the whole group so that you can use \"item\" functions such as " +
             "IsItemHovered()/IsItemActive() or SameLine() etc. on the whole group.")
         BeginGroup()
-        {
-            BeginGroup()
-            Button("AAA")
-            SameLine()
-            Button("BBB")
-            SameLine()
-            BeginGroup()
-            Button("CCC")
-            Button("DDD")
-            EndGroup()
-            SameLine()
-            Button("EEE")
-            EndGroup()
-            if (IsItemHovered())
-                SetTooltip("First group hovered")
-        }
-        // Capture the group size and create widgets using the same size
-        ImVec2 size = GetItemRectSize()
-        const float values[5] = { 0.5f, 0.20f, 0.80f, 0.60f, 0.25f };
-        PlotHistogram("##values", values, IM_ARRAYSIZE(values), 0, NULL, 0.0f, 1.0f, size)
-
+        BeginGroup()
+        Button("AAA")
+        SameLine()
+        Button("BBB")
+        SameLine()
+        BeginGroup()
+        Button("CCC")
+        Button("DDD")
+        EndGroup()
+        SameLine()
+        Button("EEE")
+        EndGroup()
+        if IsItemHovered()
+            SetTooltip("First group hovered")
+        var size = GetItemRectSize()
+        static_let <|
+            let values = [[float[] 0.5f; 0.20f; 0.80f; 0.60f; 0.25f ]]
+        PlotHistogram("##values", values, 0, "", 0.0f, 1.0f, size)
         Button("ACTION", ImVec2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
         SameLine()
         Button("REACTION", ImVec2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
         EndGroup()
         SameLine()
-
         Button("LEVERAGE\nBUZZWORD", size)
         SameLine()
-
-        if (ListBoxHeader("List", size))
-        {
+        if ListBoxHeader("List", size)
             Selectable("Selected", true)
             Selectable("Not Selected", false)
             ListBoxFooter()
-        }
-
         TreePop()
-    }
 
-    if (TreeNode("Text Baseline Alignment"))
-    {
-        {
-            BulletText("Text baseline:")
-            SameLine() HelpMarker(
-                "This is testing the vertical alignment that gets applied on text to keep it aligned with widgets. "
-                "Lines only composed of text or \"small\" widgets use less vertical space than lines with framed widgets.")
-            Indent()
-
-            Text("KO Blahblah") SameLine()
-            Button("Some framed item") SameLine()
-            HelpMarker("Baseline of button will look misaligned with text..")
-
-            // If your line starts with text, call AlignTextToFramePadding() to align text to upcoming widgets.
-            // (because we don't know what's coming after the Text() statement, we need to move the text baseline
-            // down by FramePadding.y ahead of time)
-            AlignTextToFramePadding()
-            Text("OK Blahblah") SameLine()
-            Button("Some framed item") SameLine()
-            HelpMarker("We call AlignTextToFramePadding() to vertically align the text baseline by +FramePadding.y")
-
-            // SmallButton() uses the same vertical padding as Text
-            Button("TEST##1") SameLine()
-            Text("TEST") SameLine()
-            SmallButton("TEST##2")
-
-            // If your line starts with text, call AlignTextToFramePadding() to align text to upcoming widgets.
-            AlignTextToFramePadding()
-            Text("Text aligned to framed item") SameLine()
-            Button("Item##1") SameLine()
-            Text("Item") SameLine()
-            SmallButton("Item##2") SameLine()
-            Button("Item##3")
-
-            Unindent()
-        }
-
+    if TreeNode("Text Baseline Alignment")
+        BulletText("Text baseline:")
+        SameLine()
+        HelpMarker(
+            "This is testing the vertical alignment that gets applied on text to keep it aligned with widgets. " +
+            "Lines only composed of text or \"small\" widgets use less vertical space than lines with framed widgets.")
+        Indent()
+        Text("KO Blahblah")
+        SameLine()
+        Button("Some framed item")
+        SameLine()
+        HelpMarker("Baseline of button will look misaligned with text..")
+        AlignTextToFramePadding()
+        Text("OK Blahblah")
+        SameLine()
+        Button("Some framed item")
+        SameLine()
+        HelpMarker("We call AlignTextToFramePadding() to vertically align the text baseline by +FramePadding.y")
+        Button("TEST##1")
+        SameLine()
+        Text("TEST")
+        SameLine()
+        SmallButton("TEST##2")
+        AlignTextToFramePadding()
+        Text("Text aligned to framed item")
+        SameLine()
+        Button("Item##1")
+        SameLine()
+        Text("Item")
+        SameLine()
+        SmallButton("Item##2")
+        SameLine()
+        Button("Item##3")
+        Unindent()
         Spacing()
-
-        {
-            BulletText("Multi-line text:")
-            Indent()
-            Text("One\nTwo\nThree") SameLine()
-            Text("Hello\nWorld") SameLine()
-            Text("Banana")
-
-            Text("Banana") SameLine()
-            Text("Hello\nWorld") SameLine()
-            Text("One\nTwo\nThree")
-
-            Button("HOP##1") SameLine()
-            Text("Banana") SameLine()
-            Text("Hello\nWorld") SameLine()
-            Text("Banana")
-
-            Button("HOP##2") SameLine()
-            Text("Hello\nWorld") SameLine()
-            Text("Banana")
-            Unindent()
-        }
-
+        BulletText("Multi-line text:")
+        Indent()
+        Text("One\nTwo\nThree")
+        SameLine()
+        Text("Hello\nWorld")
+        SameLine()
+        Text("Banana")
+        Text("Banana")
+        SameLine()
+        Text("Hello\nWorld")
+        SameLine()
+        Text("One\nTwo\nThree")
+        Button("HOP##1")
+        SameLine()
+        Text("Banana")
+        SameLine()
+        Text("Hello\nWorld")
+        SameLine()
+        Text("Banana")
+        Button("HOP##2")
+        SameLine()
+        Text("Hello\nWorld")
+        SameLine()
+        Text("Banana")
+        Unindent()
         Spacing()
-
-        {
-            BulletText("Misc items:")
-            Indent()
-
-            // SmallButton() sets FramePadding to zero. Text baseline is aligned to match baseline of previous Button.
-            Button("80x80", ImVec2(80, 80))
-            SameLine()
-            Button("50x50", ImVec2(50, 50))
-            SameLine()
-            Button("Button()")
-            SameLine()
-            SmallButton("SmallButton()")
-
-            // Tree
-            const float spacing = GetStyle().ItemInnerSpacing.x;
-            Button("Button##1")
-            SameLine(0.0f, spacing)
-            if (TreeNode("Node##1"))
-            {
-                // Placeholder tree data
-                for (int i = 0; i < 6; i++)
-                    BulletText("Item %d..", i)
-                TreePop()
-            }
-
-            // Vertically align text node a bit lower so it'll be vertically centered with upcoming widget.
-            // Otherwise you can use SmallButton() (smaller fit).
-            AlignTextToFramePadding()
-
-            // Common mistake to avoid: if we want to SameLine after TreeNode we need to do it before we add
-            // other contents below the node.
-            bool node_open = TreeNode("Node##2")
-            SameLine(0.0f, spacing) Button("Button##2")
-            if (node_open)
-            {
-                // Placeholder tree data
-                for (int i = 0; i < 6; i++)
-                    BulletText("Item %d..", i)
-                TreePop()
-            }
-
-            // Bullet
-            Button("Button##3")
-            SameLine(0.0f, spacing)
-            BulletText("Bullet text")
-
-            AlignTextToFramePadding()
-            BulletText("Node")
-            SameLine(0.0f, spacing) Button("Button##4")
-            Unindent()
-        }
-
+        BulletText("Misc items:")
+        Indent()
+        Button("80x80", ImVec2(80., 80.))
+        SameLine()
+        Button("50x50", ImVec2(50., 50.))
+        SameLine()
+        Button("Button()")
+        SameLine()
+        SmallButton("SmallButton()")
+        let spacing = GetStyle().ItemInnerSpacing.x;
+        Button("Button##1")
+        SameLine(0.0f, spacing)
+        if TreeNode("Node##1")
+            for i in range(6)
+                BulletText("Item {i}..")
+            TreePop()
+        AlignTextToFramePadding()
+        let node_open = TreeNode("Node##2")
+        SameLine(0.0f, spacing)
+        Button("Button##2")
+        if node_open
+            for i in range(6)
+                BulletText("Item {i}..")
+            TreePop()
+        Button("Button##3")
+        SameLine(0.0f, spacing)
+        BulletText("Bullet text")
+        AlignTextToFramePadding()
+        BulletText("Node")
+        SameLine(0.0f, spacing)
+        Button("Button##4")
+        Unindent()
         TreePop()
-    }
-*/
-
-def ShowDemoWindowLayout
-    if !CollapsingHeader("Layout & Scrolling")
-        return
 
     if TreeNode("Scrolling")
         HelpMarker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
