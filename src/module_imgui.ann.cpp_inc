@@ -53,6 +53,7 @@ struct ImFontGlyphRangesBuilder_GeneratedAnnotation : ManagedStructureAnnotation
 	ImFontGlyphRangesBuilder_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontGlyphRangesBuilder", ml) {
 	}
 	void init () {
+		addField<DAS_BIND_MANAGED_FIELD(UsedChars)>("UsedChars","UsedChars");
 	}
 };
 struct ImGuiPayload_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiPayload> {
@@ -184,6 +185,7 @@ struct ImGuiIO_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiIO> {
 		addField<DAS_BIND_MANAGED_FIELD(NavInputsDownDurationPrev)>("NavInputsDownDurationPrev","NavInputsDownDurationPrev");
 		addField<DAS_BIND_MANAGED_FIELD(PenPressure)>("PenPressure","PenPressure");
 		addField<DAS_BIND_MANAGED_FIELD(InputQueueSurrogate)>("InputQueueSurrogate","InputQueueSurrogate");
+		addField<DAS_BIND_MANAGED_FIELD(InputQueueCharacters)>("InputQueueCharacters","InputQueueCharacters");
 	}
 };
 struct ImNewWrapper_GeneratedAnnotation : ManagedStructureAnnotation<ImNewWrapper> {
@@ -249,6 +251,9 @@ struct ImFontAtlas_GeneratedAnnotation : ManagedStructureAnnotation<ImFontAtlas>
 		addField<DAS_BIND_MANAGED_FIELD(TexHeight)>("TexHeight","TexHeight");
 		addField<DAS_BIND_MANAGED_FIELD(TexUvScale)>("TexUvScale","TexUvScale");
 		addField<DAS_BIND_MANAGED_FIELD(TexUvWhitePixel)>("TexUvWhitePixel","TexUvWhitePixel");
+		addField<DAS_BIND_MANAGED_FIELD(Fonts)>("Fonts","Fonts");
+		addField<DAS_BIND_MANAGED_FIELD(CustomRects)>("CustomRects","CustomRects");
+		addField<DAS_BIND_MANAGED_FIELD(ConfigData)>("ConfigData","ConfigData");
 		addField<DAS_BIND_MANAGED_FIELD(TexUvLines)>("TexUvLines","TexUvLines");
 		addField<DAS_BIND_MANAGED_FIELD(FontBuilderIO)>("FontBuilderIO","FontBuilderIO");
 		addField<DAS_BIND_MANAGED_FIELD(FontBuilderFlags)>("FontBuilderFlags","FontBuilderFlags");
@@ -268,6 +273,7 @@ struct ImGuiTextFilter_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTex
 	}
 	void init () {
 		addField<DAS_BIND_MANAGED_FIELD(InputBuf)>("InputBuf","InputBuf");
+		addField<DAS_BIND_MANAGED_FIELD(Filters)>("Filters","Filters");
 		addField<DAS_BIND_MANAGED_FIELD(CountGrep)>("CountGrep","CountGrep");
 	}
 };
@@ -318,8 +324,11 @@ struct ImFont_GeneratedAnnotation : ManagedStructureAnnotation<ImFont> {
 	ImFont_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFont", ml) {
 	}
 	void init () {
+		addField<DAS_BIND_MANAGED_FIELD(IndexAdvanceX)>("IndexAdvanceX","IndexAdvanceX");
 		addField<DAS_BIND_MANAGED_FIELD(FallbackAdvanceX)>("FallbackAdvanceX","FallbackAdvanceX");
 		addField<DAS_BIND_MANAGED_FIELD(FontSize)>("FontSize","FontSize");
+		addField<DAS_BIND_MANAGED_FIELD(IndexLookup)>("IndexLookup","IndexLookup");
+		addField<DAS_BIND_MANAGED_FIELD(Glyphs)>("Glyphs","Glyphs");
 		addField<DAS_BIND_MANAGED_FIELD(FallbackGlyph)>("FallbackGlyph","FallbackGlyph");
 		addField<DAS_BIND_MANAGED_FIELD(ContainerAtlas)>("ContainerAtlas","ContainerAtlas");
 		addField<DAS_BIND_MANAGED_FIELD(ConfigData)>("ConfigData","ConfigData");
@@ -338,6 +347,7 @@ struct ImGuiTextBuffer_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiTex
 	ImGuiTextBuffer_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiTextBuffer", ml) {
 	}
 	void init () {
+		addField<DAS_BIND_MANAGED_FIELD(Buf)>("Buf","Buf");
 	}
 };
 struct ImGuiInputTextCallbackData_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiInputTextCallbackData> {
@@ -456,6 +466,7 @@ struct ImDrawListSplitter_GeneratedAnnotation : ManagedStructureAnnotation<ImDra
 	void init () {
 		addField<DAS_BIND_MANAGED_FIELD(_Current)>("_Current","_Current");
 		addField<DAS_BIND_MANAGED_FIELD(_Count)>("_Count","_Count");
+		addField<DAS_BIND_MANAGED_FIELD(_Channels)>("_Channels","_Channels");
 	}
 };
 struct ImGuiStorage_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStorage> {
@@ -485,17 +496,25 @@ struct ImDrawChannel_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawChan
 	ImDrawChannel_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawChannel", ml) {
 	}
 	void init () {
+		addField<DAS_BIND_MANAGED_FIELD(_CmdBuffer)>("_CmdBuffer","_CmdBuffer");
+		addField<DAS_BIND_MANAGED_FIELD(_IdxBuffer)>("_IdxBuffer","_IdxBuffer");
 	}
 };
 struct ImDrawList_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawList> {
 	ImDrawList_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImDrawList", ml) {
 	}
 	void init () {
+		addField<DAS_BIND_MANAGED_FIELD(CmdBuffer)>("CmdBuffer","CmdBuffer");
+		addField<DAS_BIND_MANAGED_FIELD(IdxBuffer)>("IdxBuffer","IdxBuffer");
+		addField<DAS_BIND_MANAGED_FIELD(VtxBuffer)>("VtxBuffer","VtxBuffer");
 		addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
 		addField<DAS_BIND_MANAGED_FIELD(_VtxCurrentIdx)>("_VtxCurrentIdx","_VtxCurrentIdx");
 		addField<DAS_BIND_MANAGED_FIELD(_OwnerName)>("_OwnerName","_OwnerName");
 		addField<DAS_BIND_MANAGED_FIELD(_VtxWritePtr)>("_VtxWritePtr","_VtxWritePtr");
 		addField<DAS_BIND_MANAGED_FIELD(_IdxWritePtr)>("_IdxWritePtr","_IdxWritePtr");
+		addField<DAS_BIND_MANAGED_FIELD(_ClipRectStack)>("_ClipRectStack","_ClipRectStack");
+		addField<DAS_BIND_MANAGED_FIELD(_TextureIdStack)>("_TextureIdStack","_TextureIdStack");
+		addField<DAS_BIND_MANAGED_FIELD(_Path)>("_Path","_Path");
 		addField<DAS_BIND_MANAGED_FIELD(_CmdHeader)>("_CmdHeader","_CmdHeader");
 		addField<DAS_BIND_MANAGED_FIELD(_Splitter)>("_Splitter","_Splitter");
 		addField<DAS_BIND_MANAGED_FIELD(_FringeScale)>("_FringeScale","_FringeScale");

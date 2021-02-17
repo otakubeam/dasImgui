@@ -6,7 +6,7 @@ def main
     // configure
 
     blocked_type_names <- [{auto[]
-        "ImVector";
+        // "ImVector";
         "ImGuiStoragePair";
         "ImDrawListSharedData";
         "ImGuiInputTextCallback"
