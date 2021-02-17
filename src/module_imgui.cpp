@@ -167,6 +167,18 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "InputText",
         SideEffects::worstDefault, "das::InputText")
             ->arg_init(3, make_smart<ExprConstInt>(0));
+    // additional default values
+    findUniqueFunction("AddRectFilled")
+        ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
+    findUniqueFunction("BeginTable")
+        ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+    for ( auto & fn : functionsByName["Selectable"] ) {
+        fn->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+    }
+    findUniqueFunction("SetNextWindowPos")
+        ->arg_init(2, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+    findUniqueFunction("Button")
+        ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
 #endif
     return true;
 }

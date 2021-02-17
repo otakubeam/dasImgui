@@ -33,7 +33,22 @@ def main
     }]
 
     ex_enums <- {{
-        "ImGuiWindowFlags_" => [[ExEnum() name="ImGuiWindowFlags", isFlags=true]]
+    // flags
+        "ImGuiWindowFlags_" => [[ExEnum() name="ImGuiWindowFlags", isFlags=true]];
+        "ImGuiBackendFlags_" => [[ExEnum() name="ImGuiBackendFlags", isFlags=true]];
+        "ImGuiConfigFlags_"  => [[ExEnum() name="ImGuiConfigFlags", isFlags=true]];
+        "ImGuiSliderFlags_" => [[ExEnum() name = "ImGuiSliderFlags", isFlags=true]];
+        "ImGuiCond_" => [[ExEnum() name = "ImGuiCond", isFlags=true]];
+        "ImGuiTableFlags_" => [[ExEnum() name = "ImGuiTableFlags", isFlags=true]];
+        "ImGuiSelectableFlags_" => [[ExEnum() name = "ImGuiSelectableFlags", isFlags=true]];
+        "ImGuiInputTextFlags_" => [[ExEnum() name = "ImGuiInputTextFlags", isFlags=true]];
+        "ImGuiColorEditFlags_" => [[ExEnum() name = "ImGuiColorEditFlags", isFlags=true]];
+        "ImDrawCornerFlags_" => [[ExEnum() name = "ImDrawCornerFlags", isFlags=true]];
+
+    // not flags
+        "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
+        "ImGuiCol_" => [[ExEnum() name = "ImGuiCol"]];
+        "ImGuiKey_" => [[ExEnum() name = "ImGuiKey"]]
     }}
 
     // generate

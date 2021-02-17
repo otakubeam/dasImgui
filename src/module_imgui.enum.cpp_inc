@@ -89,17 +89,17 @@ public:
 	}
 };
 
-class EnumerationImGuiCond_ : public das::Enumeration {
+class EnumerationImGuiCond : public das::Enumeration {
 public:
-    EnumerationImGuiCond_() : das::Enumeration("ImGuiCond_") {
+    EnumerationImGuiCond() : das::Enumeration("ImGuiCond") {
         external = true;
         cppName = "ImGuiCond_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiCond_ >::type >::type;
-		addI("ImGuiCond_None", int64_t(ImGuiCond_::ImGuiCond_None), das::LineInfo());
-		addI("ImGuiCond_Always", int64_t(ImGuiCond_::ImGuiCond_Always), das::LineInfo());
-		addI("ImGuiCond_Once", int64_t(ImGuiCond_::ImGuiCond_Once), das::LineInfo());
-		addI("ImGuiCond_FirstUseEver", int64_t(ImGuiCond_::ImGuiCond_FirstUseEver), das::LineInfo());
-		addI("ImGuiCond_Appearing", int64_t(ImGuiCond_::ImGuiCond_Appearing), das::LineInfo());
+		addI("None", int64_t(ImGuiCond_::ImGuiCond_None), das::LineInfo());
+		addI("Always", int64_t(ImGuiCond_::ImGuiCond_Always), das::LineInfo());
+		addI("Once", int64_t(ImGuiCond_::ImGuiCond_Once), das::LineInfo());
+		addI("FirstUseEver", int64_t(ImGuiCond_::ImGuiCond_FirstUseEver), das::LineInfo());
+		addI("Appearing", int64_t(ImGuiCond_::ImGuiCond_Appearing), das::LineInfo());
 	}
 };
 
@@ -123,44 +123,44 @@ public:
 	}
 };
 
-class EnumerationImGuiColorEditFlags_ : public das::Enumeration {
+class EnumerationImGuiColorEditFlags : public das::Enumeration {
 public:
-    EnumerationImGuiColorEditFlags_() : das::Enumeration("ImGuiColorEditFlags_") {
+    EnumerationImGuiColorEditFlags() : das::Enumeration("ImGuiColorEditFlags") {
         external = true;
         cppName = "ImGuiColorEditFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiColorEditFlags_ >::type >::type;
-		addI("ImGuiColorEditFlags_None", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_None), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoAlpha", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoAlpha), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoPicker", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoPicker), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoOptions", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoOptions), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoSmallPreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoSmallPreview), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoInputs", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoTooltip", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoTooltip), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoLabel", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoLabel), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoSidePreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoSidePreview), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoDragDrop", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoDragDrop), das::LineInfo());
-		addI("ImGuiColorEditFlags_NoBorder", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoBorder), das::LineInfo());
-		addI("ImGuiColorEditFlags_AlphaBar", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar), das::LineInfo());
-		addI("ImGuiColorEditFlags_AlphaPreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaPreview), das::LineInfo());
-		addI("ImGuiColorEditFlags_AlphaPreviewHalf", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaPreviewHalf), das::LineInfo());
-		addI("ImGuiColorEditFlags_HDR", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR), das::LineInfo());
-		addI("ImGuiColorEditFlags_DisplayRGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayRGB), das::LineInfo());
-		addI("ImGuiColorEditFlags_DisplayHSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayHSV), das::LineInfo());
-		addI("ImGuiColorEditFlags_DisplayHex", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayHex), das::LineInfo());
-		addI("ImGuiColorEditFlags_Uint8", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_Uint8), das::LineInfo());
-		addI("ImGuiColorEditFlags_Float", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_Float), das::LineInfo());
-		addI("ImGuiColorEditFlags_PickerHueBar", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_PickerHueBar), das::LineInfo());
-		addI("ImGuiColorEditFlags_PickerHueWheel", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_PickerHueWheel), das::LineInfo());
-		addI("ImGuiColorEditFlags_InputRGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB), das::LineInfo());
-		addI("ImGuiColorEditFlags_InputHSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_InputHSV), das::LineInfo());
-		addI("ImGuiColorEditFlags__OptionsDefault", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__OptionsDefault), das::LineInfo());
-		addI("ImGuiColorEditFlags__DisplayMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__DisplayMask), das::LineInfo());
-		addI("ImGuiColorEditFlags__DataTypeMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__DataTypeMask), das::LineInfo());
-		addI("ImGuiColorEditFlags__PickerMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__PickerMask), das::LineInfo());
-		addI("ImGuiColorEditFlags__InputMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__InputMask), das::LineInfo());
-		addI("ImGuiColorEditFlags_RGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_RGB), das::LineInfo());
-		addI("ImGuiColorEditFlags_HSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HSV), das::LineInfo());
-		addI("ImGuiColorEditFlags_HEX", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HEX), das::LineInfo());
+		addI("None", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_None), das::LineInfo());
+		addI("NoAlpha", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoAlpha), das::LineInfo());
+		addI("NoPicker", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoPicker), das::LineInfo());
+		addI("NoOptions", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoOptions), das::LineInfo());
+		addI("NoSmallPreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoSmallPreview), das::LineInfo());
+		addI("NoInputs", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs), das::LineInfo());
+		addI("NoTooltip", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoTooltip), das::LineInfo());
+		addI("NoLabel", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoLabel), das::LineInfo());
+		addI("NoSidePreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoSidePreview), das::LineInfo());
+		addI("NoDragDrop", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoDragDrop), das::LineInfo());
+		addI("NoBorder", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_NoBorder), das::LineInfo());
+		addI("AlphaBar", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaBar), das::LineInfo());
+		addI("AlphaPreview", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaPreview), das::LineInfo());
+		addI("AlphaPreviewHalf", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_AlphaPreviewHalf), das::LineInfo());
+		addI("HDR", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR), das::LineInfo());
+		addI("DisplayRGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayRGB), das::LineInfo());
+		addI("DisplayHSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayHSV), das::LineInfo());
+		addI("DisplayHex", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_DisplayHex), das::LineInfo());
+		addI("Uint8", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_Uint8), das::LineInfo());
+		addI("Float", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_Float), das::LineInfo());
+		addI("PickerHueBar", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_PickerHueBar), das::LineInfo());
+		addI("PickerHueWheel", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_PickerHueWheel), das::LineInfo());
+		addI("InputRGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB), das::LineInfo());
+		addI("InputHSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_InputHSV), das::LineInfo());
+		addI("_OptionsDefault", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__OptionsDefault), das::LineInfo());
+		addI("_DisplayMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__DisplayMask), das::LineInfo());
+		addI("_DataTypeMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__DataTypeMask), das::LineInfo());
+		addI("_PickerMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__PickerMask), das::LineInfo());
+		addI("_InputMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__InputMask), das::LineInfo());
+		addI("RGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_RGB), das::LineInfo());
+		addI("HSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HSV), das::LineInfo());
+		addI("HEX", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HEX), das::LineInfo());
 	}
 };
 
@@ -203,111 +203,111 @@ public:
 	}
 };
 
-class EnumerationImGuiCol_ : public das::Enumeration {
+class EnumerationImGuiCol : public das::Enumeration {
 public:
-    EnumerationImGuiCol_() : das::Enumeration("ImGuiCol_") {
+    EnumerationImGuiCol() : das::Enumeration("ImGuiCol") {
         external = true;
         cppName = "ImGuiCol_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiCol_ >::type >::type;
-		addI("ImGuiCol_Text", int64_t(ImGuiCol_::ImGuiCol_Text), das::LineInfo());
-		addI("ImGuiCol_TextDisabled", int64_t(ImGuiCol_::ImGuiCol_TextDisabled), das::LineInfo());
-		addI("ImGuiCol_WindowBg", int64_t(ImGuiCol_::ImGuiCol_WindowBg), das::LineInfo());
-		addI("ImGuiCol_ChildBg", int64_t(ImGuiCol_::ImGuiCol_ChildBg), das::LineInfo());
-		addI("ImGuiCol_PopupBg", int64_t(ImGuiCol_::ImGuiCol_PopupBg), das::LineInfo());
-		addI("ImGuiCol_Border", int64_t(ImGuiCol_::ImGuiCol_Border), das::LineInfo());
-		addI("ImGuiCol_BorderShadow", int64_t(ImGuiCol_::ImGuiCol_BorderShadow), das::LineInfo());
-		addI("ImGuiCol_FrameBg", int64_t(ImGuiCol_::ImGuiCol_FrameBg), das::LineInfo());
-		addI("ImGuiCol_FrameBgHovered", int64_t(ImGuiCol_::ImGuiCol_FrameBgHovered), das::LineInfo());
-		addI("ImGuiCol_FrameBgActive", int64_t(ImGuiCol_::ImGuiCol_FrameBgActive), das::LineInfo());
-		addI("ImGuiCol_TitleBg", int64_t(ImGuiCol_::ImGuiCol_TitleBg), das::LineInfo());
-		addI("ImGuiCol_TitleBgActive", int64_t(ImGuiCol_::ImGuiCol_TitleBgActive), das::LineInfo());
-		addI("ImGuiCol_TitleBgCollapsed", int64_t(ImGuiCol_::ImGuiCol_TitleBgCollapsed), das::LineInfo());
-		addI("ImGuiCol_MenuBarBg", int64_t(ImGuiCol_::ImGuiCol_MenuBarBg), das::LineInfo());
-		addI("ImGuiCol_ScrollbarBg", int64_t(ImGuiCol_::ImGuiCol_ScrollbarBg), das::LineInfo());
-		addI("ImGuiCol_ScrollbarGrab", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrab), das::LineInfo());
-		addI("ImGuiCol_ScrollbarGrabHovered", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrabHovered), das::LineInfo());
-		addI("ImGuiCol_ScrollbarGrabActive", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrabActive), das::LineInfo());
-		addI("ImGuiCol_CheckMark", int64_t(ImGuiCol_::ImGuiCol_CheckMark), das::LineInfo());
-		addI("ImGuiCol_SliderGrab", int64_t(ImGuiCol_::ImGuiCol_SliderGrab), das::LineInfo());
-		addI("ImGuiCol_SliderGrabActive", int64_t(ImGuiCol_::ImGuiCol_SliderGrabActive), das::LineInfo());
-		addI("ImGuiCol_Button", int64_t(ImGuiCol_::ImGuiCol_Button), das::LineInfo());
-		addI("ImGuiCol_ButtonHovered", int64_t(ImGuiCol_::ImGuiCol_ButtonHovered), das::LineInfo());
-		addI("ImGuiCol_ButtonActive", int64_t(ImGuiCol_::ImGuiCol_ButtonActive), das::LineInfo());
-		addI("ImGuiCol_Header", int64_t(ImGuiCol_::ImGuiCol_Header), das::LineInfo());
-		addI("ImGuiCol_HeaderHovered", int64_t(ImGuiCol_::ImGuiCol_HeaderHovered), das::LineInfo());
-		addI("ImGuiCol_HeaderActive", int64_t(ImGuiCol_::ImGuiCol_HeaderActive), das::LineInfo());
-		addI("ImGuiCol_Separator", int64_t(ImGuiCol_::ImGuiCol_Separator), das::LineInfo());
-		addI("ImGuiCol_SeparatorHovered", int64_t(ImGuiCol_::ImGuiCol_SeparatorHovered), das::LineInfo());
-		addI("ImGuiCol_SeparatorActive", int64_t(ImGuiCol_::ImGuiCol_SeparatorActive), das::LineInfo());
-		addI("ImGuiCol_ResizeGrip", int64_t(ImGuiCol_::ImGuiCol_ResizeGrip), das::LineInfo());
-		addI("ImGuiCol_ResizeGripHovered", int64_t(ImGuiCol_::ImGuiCol_ResizeGripHovered), das::LineInfo());
-		addI("ImGuiCol_ResizeGripActive", int64_t(ImGuiCol_::ImGuiCol_ResizeGripActive), das::LineInfo());
-		addI("ImGuiCol_Tab", int64_t(ImGuiCol_::ImGuiCol_Tab), das::LineInfo());
-		addI("ImGuiCol_TabHovered", int64_t(ImGuiCol_::ImGuiCol_TabHovered), das::LineInfo());
-		addI("ImGuiCol_TabActive", int64_t(ImGuiCol_::ImGuiCol_TabActive), das::LineInfo());
-		addI("ImGuiCol_TabUnfocused", int64_t(ImGuiCol_::ImGuiCol_TabUnfocused), das::LineInfo());
-		addI("ImGuiCol_TabUnfocusedActive", int64_t(ImGuiCol_::ImGuiCol_TabUnfocusedActive), das::LineInfo());
-		addI("ImGuiCol_PlotLines", int64_t(ImGuiCol_::ImGuiCol_PlotLines), das::LineInfo());
-		addI("ImGuiCol_PlotLinesHovered", int64_t(ImGuiCol_::ImGuiCol_PlotLinesHovered), das::LineInfo());
-		addI("ImGuiCol_PlotHistogram", int64_t(ImGuiCol_::ImGuiCol_PlotHistogram), das::LineInfo());
-		addI("ImGuiCol_PlotHistogramHovered", int64_t(ImGuiCol_::ImGuiCol_PlotHistogramHovered), das::LineInfo());
-		addI("ImGuiCol_TableHeaderBg", int64_t(ImGuiCol_::ImGuiCol_TableHeaderBg), das::LineInfo());
-		addI("ImGuiCol_TableBorderStrong", int64_t(ImGuiCol_::ImGuiCol_TableBorderStrong), das::LineInfo());
-		addI("ImGuiCol_TableBorderLight", int64_t(ImGuiCol_::ImGuiCol_TableBorderLight), das::LineInfo());
-		addI("ImGuiCol_TableRowBg", int64_t(ImGuiCol_::ImGuiCol_TableRowBg), das::LineInfo());
-		addI("ImGuiCol_TableRowBgAlt", int64_t(ImGuiCol_::ImGuiCol_TableRowBgAlt), das::LineInfo());
-		addI("ImGuiCol_TextSelectedBg", int64_t(ImGuiCol_::ImGuiCol_TextSelectedBg), das::LineInfo());
-		addI("ImGuiCol_DragDropTarget", int64_t(ImGuiCol_::ImGuiCol_DragDropTarget), das::LineInfo());
-		addI("ImGuiCol_NavHighlight", int64_t(ImGuiCol_::ImGuiCol_NavHighlight), das::LineInfo());
-		addI("ImGuiCol_NavWindowingHighlight", int64_t(ImGuiCol_::ImGuiCol_NavWindowingHighlight), das::LineInfo());
-		addI("ImGuiCol_NavWindowingDimBg", int64_t(ImGuiCol_::ImGuiCol_NavWindowingDimBg), das::LineInfo());
-		addI("ImGuiCol_ModalWindowDimBg", int64_t(ImGuiCol_::ImGuiCol_ModalWindowDimBg), das::LineInfo());
-		addI("ImGuiCol_COUNT", int64_t(ImGuiCol_::ImGuiCol_COUNT), das::LineInfo());
+		addI("Text", int64_t(ImGuiCol_::ImGuiCol_Text), das::LineInfo());
+		addI("TextDisabled", int64_t(ImGuiCol_::ImGuiCol_TextDisabled), das::LineInfo());
+		addI("WindowBg", int64_t(ImGuiCol_::ImGuiCol_WindowBg), das::LineInfo());
+		addI("ChildBg", int64_t(ImGuiCol_::ImGuiCol_ChildBg), das::LineInfo());
+		addI("PopupBg", int64_t(ImGuiCol_::ImGuiCol_PopupBg), das::LineInfo());
+		addI("Border", int64_t(ImGuiCol_::ImGuiCol_Border), das::LineInfo());
+		addI("BorderShadow", int64_t(ImGuiCol_::ImGuiCol_BorderShadow), das::LineInfo());
+		addI("FrameBg", int64_t(ImGuiCol_::ImGuiCol_FrameBg), das::LineInfo());
+		addI("FrameBgHovered", int64_t(ImGuiCol_::ImGuiCol_FrameBgHovered), das::LineInfo());
+		addI("FrameBgActive", int64_t(ImGuiCol_::ImGuiCol_FrameBgActive), das::LineInfo());
+		addI("TitleBg", int64_t(ImGuiCol_::ImGuiCol_TitleBg), das::LineInfo());
+		addI("TitleBgActive", int64_t(ImGuiCol_::ImGuiCol_TitleBgActive), das::LineInfo());
+		addI("TitleBgCollapsed", int64_t(ImGuiCol_::ImGuiCol_TitleBgCollapsed), das::LineInfo());
+		addI("MenuBarBg", int64_t(ImGuiCol_::ImGuiCol_MenuBarBg), das::LineInfo());
+		addI("ScrollbarBg", int64_t(ImGuiCol_::ImGuiCol_ScrollbarBg), das::LineInfo());
+		addI("ScrollbarGrab", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrab), das::LineInfo());
+		addI("ScrollbarGrabHovered", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrabHovered), das::LineInfo());
+		addI("ScrollbarGrabActive", int64_t(ImGuiCol_::ImGuiCol_ScrollbarGrabActive), das::LineInfo());
+		addI("CheckMark", int64_t(ImGuiCol_::ImGuiCol_CheckMark), das::LineInfo());
+		addI("SliderGrab", int64_t(ImGuiCol_::ImGuiCol_SliderGrab), das::LineInfo());
+		addI("SliderGrabActive", int64_t(ImGuiCol_::ImGuiCol_SliderGrabActive), das::LineInfo());
+		addI("Button", int64_t(ImGuiCol_::ImGuiCol_Button), das::LineInfo());
+		addI("ButtonHovered", int64_t(ImGuiCol_::ImGuiCol_ButtonHovered), das::LineInfo());
+		addI("ButtonActive", int64_t(ImGuiCol_::ImGuiCol_ButtonActive), das::LineInfo());
+		addI("Header", int64_t(ImGuiCol_::ImGuiCol_Header), das::LineInfo());
+		addI("HeaderHovered", int64_t(ImGuiCol_::ImGuiCol_HeaderHovered), das::LineInfo());
+		addI("HeaderActive", int64_t(ImGuiCol_::ImGuiCol_HeaderActive), das::LineInfo());
+		addI("Separator", int64_t(ImGuiCol_::ImGuiCol_Separator), das::LineInfo());
+		addI("SeparatorHovered", int64_t(ImGuiCol_::ImGuiCol_SeparatorHovered), das::LineInfo());
+		addI("SeparatorActive", int64_t(ImGuiCol_::ImGuiCol_SeparatorActive), das::LineInfo());
+		addI("ResizeGrip", int64_t(ImGuiCol_::ImGuiCol_ResizeGrip), das::LineInfo());
+		addI("ResizeGripHovered", int64_t(ImGuiCol_::ImGuiCol_ResizeGripHovered), das::LineInfo());
+		addI("ResizeGripActive", int64_t(ImGuiCol_::ImGuiCol_ResizeGripActive), das::LineInfo());
+		addI("Tab", int64_t(ImGuiCol_::ImGuiCol_Tab), das::LineInfo());
+		addI("TabHovered", int64_t(ImGuiCol_::ImGuiCol_TabHovered), das::LineInfo());
+		addI("TabActive", int64_t(ImGuiCol_::ImGuiCol_TabActive), das::LineInfo());
+		addI("TabUnfocused", int64_t(ImGuiCol_::ImGuiCol_TabUnfocused), das::LineInfo());
+		addI("TabUnfocusedActive", int64_t(ImGuiCol_::ImGuiCol_TabUnfocusedActive), das::LineInfo());
+		addI("PlotLines", int64_t(ImGuiCol_::ImGuiCol_PlotLines), das::LineInfo());
+		addI("PlotLinesHovered", int64_t(ImGuiCol_::ImGuiCol_PlotLinesHovered), das::LineInfo());
+		addI("PlotHistogram", int64_t(ImGuiCol_::ImGuiCol_PlotHistogram), das::LineInfo());
+		addI("PlotHistogramHovered", int64_t(ImGuiCol_::ImGuiCol_PlotHistogramHovered), das::LineInfo());
+		addI("TableHeaderBg", int64_t(ImGuiCol_::ImGuiCol_TableHeaderBg), das::LineInfo());
+		addI("TableBorderStrong", int64_t(ImGuiCol_::ImGuiCol_TableBorderStrong), das::LineInfo());
+		addI("TableBorderLight", int64_t(ImGuiCol_::ImGuiCol_TableBorderLight), das::LineInfo());
+		addI("TableRowBg", int64_t(ImGuiCol_::ImGuiCol_TableRowBg), das::LineInfo());
+		addI("TableRowBgAlt", int64_t(ImGuiCol_::ImGuiCol_TableRowBgAlt), das::LineInfo());
+		addI("TextSelectedBg", int64_t(ImGuiCol_::ImGuiCol_TextSelectedBg), das::LineInfo());
+		addI("DragDropTarget", int64_t(ImGuiCol_::ImGuiCol_DragDropTarget), das::LineInfo());
+		addI("NavHighlight", int64_t(ImGuiCol_::ImGuiCol_NavHighlight), das::LineInfo());
+		addI("NavWindowingHighlight", int64_t(ImGuiCol_::ImGuiCol_NavWindowingHighlight), das::LineInfo());
+		addI("NavWindowingDimBg", int64_t(ImGuiCol_::ImGuiCol_NavWindowingDimBg), das::LineInfo());
+		addI("ModalWindowDimBg", int64_t(ImGuiCol_::ImGuiCol_ModalWindowDimBg), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiCol_::ImGuiCol_COUNT), das::LineInfo());
 	}
 };
 
-class EnumerationImGuiTableFlags_ : public das::Enumeration {
+class EnumerationImGuiTableFlags : public das::Enumeration {
 public:
-    EnumerationImGuiTableFlags_() : das::Enumeration("ImGuiTableFlags_") {
+    EnumerationImGuiTableFlags() : das::Enumeration("ImGuiTableFlags") {
         external = true;
         cppName = "ImGuiTableFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiTableFlags_ >::type >::type;
-		addI("ImGuiTableFlags_None", int64_t(ImGuiTableFlags_::ImGuiTableFlags_None), das::LineInfo());
-		addI("ImGuiTableFlags_Resizable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Resizable), das::LineInfo());
-		addI("ImGuiTableFlags_Reorderable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Reorderable), das::LineInfo());
-		addI("ImGuiTableFlags_Hideable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Hideable), das::LineInfo());
-		addI("ImGuiTableFlags_Sortable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Sortable), das::LineInfo());
-		addI("ImGuiTableFlags_NoSavedSettings", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoSavedSettings), das::LineInfo());
-		addI("ImGuiTableFlags_ContextMenuInBody", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ContextMenuInBody), das::LineInfo());
-		addI("ImGuiTableFlags_RowBg", int64_t(ImGuiTableFlags_::ImGuiTableFlags_RowBg), das::LineInfo());
-		addI("ImGuiTableFlags_BordersInnerH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInnerH), das::LineInfo());
-		addI("ImGuiTableFlags_BordersOuterH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuterH), das::LineInfo());
-		addI("ImGuiTableFlags_BordersInnerV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInnerV), das::LineInfo());
-		addI("ImGuiTableFlags_BordersOuterV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuterV), das::LineInfo());
-		addI("ImGuiTableFlags_BordersH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersH), das::LineInfo());
-		addI("ImGuiTableFlags_BordersV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersV), das::LineInfo());
-		addI("ImGuiTableFlags_BordersInner", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInner), das::LineInfo());
-		addI("ImGuiTableFlags_BordersOuter", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuter), das::LineInfo());
-		addI("ImGuiTableFlags_Borders", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Borders), das::LineInfo());
-		addI("ImGuiTableFlags_NoBordersInBody", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoBordersInBody), das::LineInfo());
-		addI("ImGuiTableFlags_NoBordersInBodyUntilResize", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoBordersInBodyUntilResize), das::LineInfo());
-		addI("ImGuiTableFlags_SizingFixedFit", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingFixedFit), das::LineInfo());
-		addI("ImGuiTableFlags_SizingFixedSame", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingFixedSame), das::LineInfo());
-		addI("ImGuiTableFlags_SizingStretchProp", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingStretchProp), das::LineInfo());
-		addI("ImGuiTableFlags_SizingStretchSame", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingStretchSame), das::LineInfo());
-		addI("ImGuiTableFlags_NoHostExtendX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoHostExtendX), das::LineInfo());
-		addI("ImGuiTableFlags_NoHostExtendY", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoHostExtendY), das::LineInfo());
-		addI("ImGuiTableFlags_NoKeepColumnsVisible", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoKeepColumnsVisible), das::LineInfo());
-		addI("ImGuiTableFlags_PreciseWidths", int64_t(ImGuiTableFlags_::ImGuiTableFlags_PreciseWidths), das::LineInfo());
-		addI("ImGuiTableFlags_NoClip", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoClip), das::LineInfo());
-		addI("ImGuiTableFlags_PadOuterX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_PadOuterX), das::LineInfo());
-		addI("ImGuiTableFlags_NoPadOuterX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoPadOuterX), das::LineInfo());
-		addI("ImGuiTableFlags_NoPadInnerX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoPadInnerX), das::LineInfo());
-		addI("ImGuiTableFlags_ScrollX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ScrollX), das::LineInfo());
-		addI("ImGuiTableFlags_ScrollY", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ScrollY), das::LineInfo());
-		addI("ImGuiTableFlags_SortMulti", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SortMulti), das::LineInfo());
-		addI("ImGuiTableFlags_SortTristate", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SortTristate), das::LineInfo());
-		addI("ImGuiTableFlags_SizingMask_", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingMask_), das::LineInfo());
+		addI("None", int64_t(ImGuiTableFlags_::ImGuiTableFlags_None), das::LineInfo());
+		addI("Resizable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Resizable), das::LineInfo());
+		addI("Reorderable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Reorderable), das::LineInfo());
+		addI("Hideable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Hideable), das::LineInfo());
+		addI("Sortable", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Sortable), das::LineInfo());
+		addI("NoSavedSettings", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoSavedSettings), das::LineInfo());
+		addI("ContextMenuInBody", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ContextMenuInBody), das::LineInfo());
+		addI("RowBg", int64_t(ImGuiTableFlags_::ImGuiTableFlags_RowBg), das::LineInfo());
+		addI("BordersInnerH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInnerH), das::LineInfo());
+		addI("BordersOuterH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuterH), das::LineInfo());
+		addI("BordersInnerV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInnerV), das::LineInfo());
+		addI("BordersOuterV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuterV), das::LineInfo());
+		addI("BordersH", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersH), das::LineInfo());
+		addI("BordersV", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersV), das::LineInfo());
+		addI("BordersInner", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersInner), das::LineInfo());
+		addI("BordersOuter", int64_t(ImGuiTableFlags_::ImGuiTableFlags_BordersOuter), das::LineInfo());
+		addI("Borders", int64_t(ImGuiTableFlags_::ImGuiTableFlags_Borders), das::LineInfo());
+		addI("NoBordersInBody", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoBordersInBody), das::LineInfo());
+		addI("NoBordersInBodyUntilResize", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoBordersInBodyUntilResize), das::LineInfo());
+		addI("SizingFixedFit", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingFixedFit), das::LineInfo());
+		addI("SizingFixedSame", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingFixedSame), das::LineInfo());
+		addI("SizingStretchProp", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingStretchProp), das::LineInfo());
+		addI("SizingStretchSame", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingStretchSame), das::LineInfo());
+		addI("NoHostExtendX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoHostExtendX), das::LineInfo());
+		addI("NoHostExtendY", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoHostExtendY), das::LineInfo());
+		addI("NoKeepColumnsVisible", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoKeepColumnsVisible), das::LineInfo());
+		addI("PreciseWidths", int64_t(ImGuiTableFlags_::ImGuiTableFlags_PreciseWidths), das::LineInfo());
+		addI("NoClip", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoClip), das::LineInfo());
+		addI("PadOuterX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_PadOuterX), das::LineInfo());
+		addI("NoPadOuterX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoPadOuterX), das::LineInfo());
+		addI("NoPadInnerX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_NoPadInnerX), das::LineInfo());
+		addI("ScrollX", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ScrollX), das::LineInfo());
+		addI("ScrollY", int64_t(ImGuiTableFlags_::ImGuiTableFlags_ScrollY), das::LineInfo());
+		addI("SortMulti", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SortMulti), das::LineInfo());
+		addI("SortTristate", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SortTristate), das::LineInfo());
+		addI("SizingMask_", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingMask_), das::LineInfo());
 	}
 };
 
@@ -359,22 +359,22 @@ public:
 	}
 };
 
-class EnumerationImDrawCornerFlags_ : public das::Enumeration {
+class EnumerationImDrawCornerFlags : public das::Enumeration {
 public:
-    EnumerationImDrawCornerFlags_() : das::Enumeration("ImDrawCornerFlags_") {
+    EnumerationImDrawCornerFlags() : das::Enumeration("ImDrawCornerFlags") {
         external = true;
         cppName = "ImDrawCornerFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImDrawCornerFlags_ >::type >::type;
-		addI("ImDrawCornerFlags_None", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_None), das::LineInfo());
-		addI("ImDrawCornerFlags_TopLeft", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_TopLeft), das::LineInfo());
-		addI("ImDrawCornerFlags_TopRight", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_TopRight), das::LineInfo());
-		addI("ImDrawCornerFlags_BotLeft", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_BotLeft), das::LineInfo());
-		addI("ImDrawCornerFlags_BotRight", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_BotRight), das::LineInfo());
-		addI("ImDrawCornerFlags_Top", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Top), das::LineInfo());
-		addI("ImDrawCornerFlags_Bot", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Bot), das::LineInfo());
-		addI("ImDrawCornerFlags_Left", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Left), das::LineInfo());
-		addI("ImDrawCornerFlags_Right", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Right), das::LineInfo());
-		addI("ImDrawCornerFlags_All", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_All), das::LineInfo());
+		addI("None", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_None), das::LineInfo());
+		addI("TopLeft", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_TopLeft), das::LineInfo());
+		addI("TopRight", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_TopRight), das::LineInfo());
+		addI("BotLeft", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_BotLeft), das::LineInfo());
+		addI("BotRight", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_BotRight), das::LineInfo());
+		addI("Top", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Top), das::LineInfo());
+		addI("Bot", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Bot), das::LineInfo());
+		addI("Left", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Left), das::LineInfo());
+		addI("Right", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_Right), das::LineInfo());
+		addI("All", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_All), das::LineInfo());
 	}
 };
 
@@ -496,18 +496,18 @@ public:
 	}
 };
 
-class EnumerationImGuiSelectableFlags_ : public das::Enumeration {
+class EnumerationImGuiSelectableFlags : public das::Enumeration {
 public:
-    EnumerationImGuiSelectableFlags_() : das::Enumeration("ImGuiSelectableFlags_") {
+    EnumerationImGuiSelectableFlags() : das::Enumeration("ImGuiSelectableFlags") {
         external = true;
         cppName = "ImGuiSelectableFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiSelectableFlags_ >::type >::type;
-		addI("ImGuiSelectableFlags_None", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_None), das::LineInfo());
-		addI("ImGuiSelectableFlags_DontClosePopups", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_DontClosePopups), das::LineInfo());
-		addI("ImGuiSelectableFlags_SpanAllColumns", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_SpanAllColumns), das::LineInfo());
-		addI("ImGuiSelectableFlags_AllowDoubleClick", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_AllowDoubleClick), das::LineInfo());
-		addI("ImGuiSelectableFlags_Disabled", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_Disabled), das::LineInfo());
-		addI("ImGuiSelectableFlags_AllowItemOverlap", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_AllowItemOverlap), das::LineInfo());
+		addI("None", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_None), das::LineInfo());
+		addI("DontClosePopups", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_DontClosePopups), das::LineInfo());
+		addI("SpanAllColumns", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_SpanAllColumns), das::LineInfo());
+		addI("AllowDoubleClick", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_AllowDoubleClick), das::LineInfo());
+		addI("Disabled", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_Disabled), das::LineInfo());
+		addI("AllowItemOverlap", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_AllowItemOverlap), das::LineInfo());
 	}
 };
 
@@ -557,49 +557,49 @@ public:
 	}
 };
 
-class EnumerationImGuiInputTextFlags_ : public das::Enumeration {
+class EnumerationImGuiInputTextFlags : public das::Enumeration {
 public:
-    EnumerationImGuiInputTextFlags_() : das::Enumeration("ImGuiInputTextFlags_") {
+    EnumerationImGuiInputTextFlags() : das::Enumeration("ImGuiInputTextFlags") {
         external = true;
         cppName = "ImGuiInputTextFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiInputTextFlags_ >::type >::type;
-		addI("ImGuiInputTextFlags_None", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_None), das::LineInfo());
-		addI("ImGuiInputTextFlags_CharsDecimal", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsDecimal), das::LineInfo());
-		addI("ImGuiInputTextFlags_CharsHexadecimal", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal), das::LineInfo());
-		addI("ImGuiInputTextFlags_CharsUppercase", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsUppercase), das::LineInfo());
-		addI("ImGuiInputTextFlags_CharsNoBlank", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsNoBlank), das::LineInfo());
-		addI("ImGuiInputTextFlags_AutoSelectAll", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AutoSelectAll), das::LineInfo());
-		addI("ImGuiInputTextFlags_EnterReturnsTrue", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackCompletion", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackCompletion), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackHistory", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackHistory), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackAlways", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackAlways), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackCharFilter", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackCharFilter), das::LineInfo());
-		addI("ImGuiInputTextFlags_AllowTabInput", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AllowTabInput), das::LineInfo());
-		addI("ImGuiInputTextFlags_CtrlEnterForNewLine", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CtrlEnterForNewLine), das::LineInfo());
-		addI("ImGuiInputTextFlags_NoHorizontalScroll", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoHorizontalScroll), das::LineInfo());
-		addI("ImGuiInputTextFlags_AlwaysInsertMode", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AlwaysInsertMode), das::LineInfo());
-		addI("ImGuiInputTextFlags_ReadOnly", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly), das::LineInfo());
-		addI("ImGuiInputTextFlags_Password", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_Password), das::LineInfo());
-		addI("ImGuiInputTextFlags_NoUndoRedo", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoUndoRedo), das::LineInfo());
-		addI("ImGuiInputTextFlags_CharsScientific", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsScientific), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackResize", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackResize), das::LineInfo());
-		addI("ImGuiInputTextFlags_CallbackEdit", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackEdit), das::LineInfo());
-		addI("ImGuiInputTextFlags_Multiline", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_Multiline), das::LineInfo());
-		addI("ImGuiInputTextFlags_NoMarkEdited", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoMarkEdited), das::LineInfo());
+		addI("None", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_None), das::LineInfo());
+		addI("CharsDecimal", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsDecimal), das::LineInfo());
+		addI("CharsHexadecimal", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal), das::LineInfo());
+		addI("CharsUppercase", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsUppercase), das::LineInfo());
+		addI("CharsNoBlank", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsNoBlank), das::LineInfo());
+		addI("AutoSelectAll", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AutoSelectAll), das::LineInfo());
+		addI("EnterReturnsTrue", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue), das::LineInfo());
+		addI("CallbackCompletion", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackCompletion), das::LineInfo());
+		addI("CallbackHistory", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackHistory), das::LineInfo());
+		addI("CallbackAlways", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackAlways), das::LineInfo());
+		addI("CallbackCharFilter", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackCharFilter), das::LineInfo());
+		addI("AllowTabInput", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AllowTabInput), das::LineInfo());
+		addI("CtrlEnterForNewLine", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CtrlEnterForNewLine), das::LineInfo());
+		addI("NoHorizontalScroll", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoHorizontalScroll), das::LineInfo());
+		addI("AlwaysInsertMode", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_AlwaysInsertMode), das::LineInfo());
+		addI("ReadOnly", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly), das::LineInfo());
+		addI("Password", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_Password), das::LineInfo());
+		addI("NoUndoRedo", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoUndoRedo), das::LineInfo());
+		addI("CharsScientific", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsScientific), das::LineInfo());
+		addI("CallbackResize", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackResize), das::LineInfo());
+		addI("CallbackEdit", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_CallbackEdit), das::LineInfo());
+		addI("Multiline", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_Multiline), das::LineInfo());
+		addI("NoMarkEdited", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoMarkEdited), das::LineInfo());
 	}
 };
 
-class EnumerationImGuiBackendFlags_ : public das::Enumeration {
+class EnumerationImGuiBackendFlags : public das::Enumeration {
 public:
-    EnumerationImGuiBackendFlags_() : das::Enumeration("ImGuiBackendFlags_") {
+    EnumerationImGuiBackendFlags() : das::Enumeration("ImGuiBackendFlags") {
         external = true;
         cppName = "ImGuiBackendFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiBackendFlags_ >::type >::type;
-		addI("ImGuiBackendFlags_None", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_None), das::LineInfo());
-		addI("ImGuiBackendFlags_HasGamepad", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasGamepad), das::LineInfo());
-		addI("ImGuiBackendFlags_HasMouseCursors", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasMouseCursors), das::LineInfo());
-		addI("ImGuiBackendFlags_HasSetMousePos", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasSetMousePos), das::LineInfo());
-		addI("ImGuiBackendFlags_RendererHasVtxOffset", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_RendererHasVtxOffset), das::LineInfo());
+		addI("None", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_None), das::LineInfo());
+		addI("HasGamepad", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasGamepad), das::LineInfo());
+		addI("HasMouseCursors", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasMouseCursors), das::LineInfo());
+		addI("HasSetMousePos", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_HasSetMousePos), das::LineInfo());
+		addI("RendererHasVtxOffset", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_RendererHasVtxOffset), das::LineInfo());
 	}
 };
 
@@ -641,103 +641,103 @@ public:
 	}
 };
 
-class EnumerationImGuiKey_ : public das::Enumeration {
+class EnumerationImGuiKey : public das::Enumeration {
 public:
-    EnumerationImGuiKey_() : das::Enumeration("ImGuiKey_") {
+    EnumerationImGuiKey() : das::Enumeration("ImGuiKey") {
         external = true;
         cppName = "ImGuiKey_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiKey_ >::type >::type;
-		addI("ImGuiKey_Tab", int64_t(ImGuiKey_::ImGuiKey_Tab), das::LineInfo());
-		addI("ImGuiKey_LeftArrow", int64_t(ImGuiKey_::ImGuiKey_LeftArrow), das::LineInfo());
-		addI("ImGuiKey_RightArrow", int64_t(ImGuiKey_::ImGuiKey_RightArrow), das::LineInfo());
-		addI("ImGuiKey_UpArrow", int64_t(ImGuiKey_::ImGuiKey_UpArrow), das::LineInfo());
-		addI("ImGuiKey_DownArrow", int64_t(ImGuiKey_::ImGuiKey_DownArrow), das::LineInfo());
-		addI("ImGuiKey_PageUp", int64_t(ImGuiKey_::ImGuiKey_PageUp), das::LineInfo());
-		addI("ImGuiKey_PageDown", int64_t(ImGuiKey_::ImGuiKey_PageDown), das::LineInfo());
-		addI("ImGuiKey_Home", int64_t(ImGuiKey_::ImGuiKey_Home), das::LineInfo());
-		addI("ImGuiKey_End", int64_t(ImGuiKey_::ImGuiKey_End), das::LineInfo());
-		addI("ImGuiKey_Insert", int64_t(ImGuiKey_::ImGuiKey_Insert), das::LineInfo());
-		addI("ImGuiKey_Delete", int64_t(ImGuiKey_::ImGuiKey_Delete), das::LineInfo());
-		addI("ImGuiKey_Backspace", int64_t(ImGuiKey_::ImGuiKey_Backspace), das::LineInfo());
-		addI("ImGuiKey_Space", int64_t(ImGuiKey_::ImGuiKey_Space), das::LineInfo());
-		addI("ImGuiKey_Enter", int64_t(ImGuiKey_::ImGuiKey_Enter), das::LineInfo());
-		addI("ImGuiKey_Escape", int64_t(ImGuiKey_::ImGuiKey_Escape), das::LineInfo());
-		addI("ImGuiKey_KeyPadEnter", int64_t(ImGuiKey_::ImGuiKey_KeyPadEnter), das::LineInfo());
-		addI("ImGuiKey_A", int64_t(ImGuiKey_::ImGuiKey_A), das::LineInfo());
-		addI("ImGuiKey_C", int64_t(ImGuiKey_::ImGuiKey_C), das::LineInfo());
-		addI("ImGuiKey_V", int64_t(ImGuiKey_::ImGuiKey_V), das::LineInfo());
-		addI("ImGuiKey_X", int64_t(ImGuiKey_::ImGuiKey_X), das::LineInfo());
-		addI("ImGuiKey_Y", int64_t(ImGuiKey_::ImGuiKey_Y), das::LineInfo());
-		addI("ImGuiKey_Z", int64_t(ImGuiKey_::ImGuiKey_Z), das::LineInfo());
-		addI("ImGuiKey_COUNT", int64_t(ImGuiKey_::ImGuiKey_COUNT), das::LineInfo());
+		addI("Tab", int64_t(ImGuiKey_::ImGuiKey_Tab), das::LineInfo());
+		addI("LeftArrow", int64_t(ImGuiKey_::ImGuiKey_LeftArrow), das::LineInfo());
+		addI("RightArrow", int64_t(ImGuiKey_::ImGuiKey_RightArrow), das::LineInfo());
+		addI("UpArrow", int64_t(ImGuiKey_::ImGuiKey_UpArrow), das::LineInfo());
+		addI("DownArrow", int64_t(ImGuiKey_::ImGuiKey_DownArrow), das::LineInfo());
+		addI("PageUp", int64_t(ImGuiKey_::ImGuiKey_PageUp), das::LineInfo());
+		addI("PageDown", int64_t(ImGuiKey_::ImGuiKey_PageDown), das::LineInfo());
+		addI("Home", int64_t(ImGuiKey_::ImGuiKey_Home), das::LineInfo());
+		addI("End", int64_t(ImGuiKey_::ImGuiKey_End), das::LineInfo());
+		addI("Insert", int64_t(ImGuiKey_::ImGuiKey_Insert), das::LineInfo());
+		addI("Delete", int64_t(ImGuiKey_::ImGuiKey_Delete), das::LineInfo());
+		addI("Backspace", int64_t(ImGuiKey_::ImGuiKey_Backspace), das::LineInfo());
+		addI("Space", int64_t(ImGuiKey_::ImGuiKey_Space), das::LineInfo());
+		addI("Enter", int64_t(ImGuiKey_::ImGuiKey_Enter), das::LineInfo());
+		addI("Escape", int64_t(ImGuiKey_::ImGuiKey_Escape), das::LineInfo());
+		addI("KeyPadEnter", int64_t(ImGuiKey_::ImGuiKey_KeyPadEnter), das::LineInfo());
+		addI("A", int64_t(ImGuiKey_::ImGuiKey_A), das::LineInfo());
+		addI("C", int64_t(ImGuiKey_::ImGuiKey_C), das::LineInfo());
+		addI("V", int64_t(ImGuiKey_::ImGuiKey_V), das::LineInfo());
+		addI("X", int64_t(ImGuiKey_::ImGuiKey_X), das::LineInfo());
+		addI("Y", int64_t(ImGuiKey_::ImGuiKey_Y), das::LineInfo());
+		addI("Z", int64_t(ImGuiKey_::ImGuiKey_Z), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiKey_::ImGuiKey_COUNT), das::LineInfo());
 	}
 };
 
-class EnumerationImGuiStyleVar_ : public das::Enumeration {
+class EnumerationImGuiStyleVar : public das::Enumeration {
 public:
-    EnumerationImGuiStyleVar_() : das::Enumeration("ImGuiStyleVar_") {
+    EnumerationImGuiStyleVar() : das::Enumeration("ImGuiStyleVar") {
         external = true;
         cppName = "ImGuiStyleVar_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiStyleVar_ >::type >::type;
-		addI("ImGuiStyleVar_Alpha", int64_t(ImGuiStyleVar_::ImGuiStyleVar_Alpha), das::LineInfo());
-		addI("ImGuiStyleVar_WindowPadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding), das::LineInfo());
-		addI("ImGuiStyleVar_WindowRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowRounding), das::LineInfo());
-		addI("ImGuiStyleVar_WindowBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowBorderSize), das::LineInfo());
-		addI("ImGuiStyleVar_WindowMinSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowMinSize), das::LineInfo());
-		addI("ImGuiStyleVar_WindowTitleAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowTitleAlign), das::LineInfo());
-		addI("ImGuiStyleVar_ChildRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ChildRounding), das::LineInfo());
-		addI("ImGuiStyleVar_ChildBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ChildBorderSize), das::LineInfo());
-		addI("ImGuiStyleVar_PopupRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_PopupRounding), das::LineInfo());
-		addI("ImGuiStyleVar_PopupBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_PopupBorderSize), das::LineInfo());
-		addI("ImGuiStyleVar_FramePadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FramePadding), das::LineInfo());
-		addI("ImGuiStyleVar_FrameRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FrameRounding), das::LineInfo());
-		addI("ImGuiStyleVar_FrameBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FrameBorderSize), das::LineInfo());
-		addI("ImGuiStyleVar_ItemSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ItemSpacing), das::LineInfo());
-		addI("ImGuiStyleVar_ItemInnerSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ItemInnerSpacing), das::LineInfo());
-		addI("ImGuiStyleVar_IndentSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_IndentSpacing), das::LineInfo());
-		addI("ImGuiStyleVar_CellPadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_CellPadding), das::LineInfo());
-		addI("ImGuiStyleVar_ScrollbarSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ScrollbarSize), das::LineInfo());
-		addI("ImGuiStyleVar_ScrollbarRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ScrollbarRounding), das::LineInfo());
-		addI("ImGuiStyleVar_GrabMinSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_GrabMinSize), das::LineInfo());
-		addI("ImGuiStyleVar_GrabRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_GrabRounding), das::LineInfo());
-		addI("ImGuiStyleVar_TabRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_TabRounding), das::LineInfo());
-		addI("ImGuiStyleVar_ButtonTextAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ButtonTextAlign), das::LineInfo());
-		addI("ImGuiStyleVar_SelectableTextAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_SelectableTextAlign), das::LineInfo());
-		addI("ImGuiStyleVar_COUNT", int64_t(ImGuiStyleVar_::ImGuiStyleVar_COUNT), das::LineInfo());
+		addI("Alpha", int64_t(ImGuiStyleVar_::ImGuiStyleVar_Alpha), das::LineInfo());
+		addI("WindowPadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding), das::LineInfo());
+		addI("WindowRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowRounding), das::LineInfo());
+		addI("WindowBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowBorderSize), das::LineInfo());
+		addI("WindowMinSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowMinSize), das::LineInfo());
+		addI("WindowTitleAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_WindowTitleAlign), das::LineInfo());
+		addI("ChildRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ChildRounding), das::LineInfo());
+		addI("ChildBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ChildBorderSize), das::LineInfo());
+		addI("PopupRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_PopupRounding), das::LineInfo());
+		addI("PopupBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_PopupBorderSize), das::LineInfo());
+		addI("FramePadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FramePadding), das::LineInfo());
+		addI("FrameRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FrameRounding), das::LineInfo());
+		addI("FrameBorderSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_FrameBorderSize), das::LineInfo());
+		addI("ItemSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ItemSpacing), das::LineInfo());
+		addI("ItemInnerSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ItemInnerSpacing), das::LineInfo());
+		addI("IndentSpacing", int64_t(ImGuiStyleVar_::ImGuiStyleVar_IndentSpacing), das::LineInfo());
+		addI("CellPadding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_CellPadding), das::LineInfo());
+		addI("ScrollbarSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ScrollbarSize), das::LineInfo());
+		addI("ScrollbarRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ScrollbarRounding), das::LineInfo());
+		addI("GrabMinSize", int64_t(ImGuiStyleVar_::ImGuiStyleVar_GrabMinSize), das::LineInfo());
+		addI("GrabRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_GrabRounding), das::LineInfo());
+		addI("TabRounding", int64_t(ImGuiStyleVar_::ImGuiStyleVar_TabRounding), das::LineInfo());
+		addI("ButtonTextAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_ButtonTextAlign), das::LineInfo());
+		addI("SelectableTextAlign", int64_t(ImGuiStyleVar_::ImGuiStyleVar_SelectableTextAlign), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiStyleVar_::ImGuiStyleVar_COUNT), das::LineInfo());
 	}
 };
 
-class EnumerationImGuiConfigFlags_ : public das::Enumeration {
+class EnumerationImGuiConfigFlags : public das::Enumeration {
 public:
-    EnumerationImGuiConfigFlags_() : das::Enumeration("ImGuiConfigFlags_") {
+    EnumerationImGuiConfigFlags() : das::Enumeration("ImGuiConfigFlags") {
         external = true;
         cppName = "ImGuiConfigFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiConfigFlags_ >::type >::type;
-		addI("ImGuiConfigFlags_None", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_None), das::LineInfo());
-		addI("ImGuiConfigFlags_NavEnableKeyboard", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableKeyboard), das::LineInfo());
-		addI("ImGuiConfigFlags_NavEnableGamepad", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableGamepad), das::LineInfo());
-		addI("ImGuiConfigFlags_NavEnableSetMousePos", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableSetMousePos), das::LineInfo());
-		addI("ImGuiConfigFlags_NavNoCaptureKeyboard", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavNoCaptureKeyboard), das::LineInfo());
-		addI("ImGuiConfigFlags_NoMouse", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NoMouse), das::LineInfo());
-		addI("ImGuiConfigFlags_NoMouseCursorChange", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NoMouseCursorChange), das::LineInfo());
-		addI("ImGuiConfigFlags_IsSRGB", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_IsSRGB), das::LineInfo());
-		addI("ImGuiConfigFlags_IsTouchScreen", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_IsTouchScreen), das::LineInfo());
+		addI("None", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_None), das::LineInfo());
+		addI("NavEnableKeyboard", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableKeyboard), das::LineInfo());
+		addI("NavEnableGamepad", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableGamepad), das::LineInfo());
+		addI("NavEnableSetMousePos", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavEnableSetMousePos), das::LineInfo());
+		addI("NavNoCaptureKeyboard", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NavNoCaptureKeyboard), das::LineInfo());
+		addI("NoMouse", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NoMouse), das::LineInfo());
+		addI("NoMouseCursorChange", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_NoMouseCursorChange), das::LineInfo());
+		addI("IsSRGB", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_IsSRGB), das::LineInfo());
+		addI("IsTouchScreen", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_IsTouchScreen), das::LineInfo());
 	}
 };
 
-class EnumerationImGuiSliderFlags_ : public das::Enumeration {
+class EnumerationImGuiSliderFlags : public das::Enumeration {
 public:
-    EnumerationImGuiSliderFlags_() : das::Enumeration("ImGuiSliderFlags_") {
+    EnumerationImGuiSliderFlags() : das::Enumeration("ImGuiSliderFlags") {
         external = true;
         cppName = "ImGuiSliderFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiSliderFlags_ >::type >::type;
-		addI("ImGuiSliderFlags_None", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_None), das::LineInfo());
-		addI("ImGuiSliderFlags_AlwaysClamp", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_AlwaysClamp), das::LineInfo());
-		addI("ImGuiSliderFlags_Logarithmic", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic), das::LineInfo());
-		addI("ImGuiSliderFlags_NoRoundToFormat", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoRoundToFormat), das::LineInfo());
-		addI("ImGuiSliderFlags_NoInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoInput), das::LineInfo());
-		addI("ImGuiSliderFlags_InvalidMask_", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_InvalidMask_), das::LineInfo());
-		addI("ImGuiSliderFlags_ClampOnInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_ClampOnInput), das::LineInfo());
+		addI("None", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_None), das::LineInfo());
+		addI("AlwaysClamp", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_AlwaysClamp), das::LineInfo());
+		addI("Logarithmic", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic), das::LineInfo());
+		addI("NoRoundToFormat", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoRoundToFormat), das::LineInfo());
+		addI("NoInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoInput), das::LineInfo());
+		addI("InvalidMask_", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_InvalidMask_), das::LineInfo());
+		addI("ClampOnInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_ClampOnInput), das::LineInfo());
 	}
 };
 

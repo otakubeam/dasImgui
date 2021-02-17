@@ -65,12 +65,14 @@ using _AddRect_method_15 = DAS_CALL_MEMBER(ImDrawList::AddRect);
 addExtern<DAS_CALL_METHOD(_AddRect_method_15)>(*this, lib, "AddRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddRect))
 	->args({"self","p_min","p_max","col","rounding","rounding_corners","thickness"})
 		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_type(5,makeType<ImDrawCornerFlags_>(lib))
 		->arg_init(6,make_smart<ExprConstFloat>(1))
 ;
 using _AddRectFilled_method_16 = DAS_CALL_MEMBER(ImDrawList::AddRectFilled);
 addExtern<DAS_CALL_METHOD(_AddRectFilled_method_16)>(*this, lib, "AddRectFilled",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddRectFilled))
 	->args({"self","p_min","p_max","col","rounding","rounding_corners"})
 		->arg_init(4,make_smart<ExprConstFloat>(0))
+		->arg_type(5,makeType<ImDrawCornerFlags_>(lib))
 ;
 using _AddRectFilledMultiColor_method_17 = DAS_CALL_MEMBER(ImDrawList::AddRectFilledMultiColor);
 addExtern<DAS_CALL_METHOD(_AddRectFilledMultiColor_method_17)>(*this, lib, "AddRectFilledMultiColor",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddRectFilledMultiColor))
@@ -143,6 +145,7 @@ addExtern<DAS_CALL_METHOD(_AddImageQuad_method_31)>(*this, lib, "AddImageQuad",S
 using _AddImageRounded_method_32 = DAS_CALL_MEMBER(ImDrawList::AddImageRounded);
 addExtern<DAS_CALL_METHOD(_AddImageRounded_method_32)>(*this, lib, "AddImageRounded",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddImageRounded))
 	->args({"self","user_texture_id","p_min","p_max","uv_min","uv_max","col","rounding","rounding_corners"})
+		->arg_type(8,makeType<ImDrawCornerFlags_>(lib))
 ;
 using _PathClear_method_33 = DAS_CALL_MEMBER(ImDrawList::PathClear);
 addExtern<DAS_CALL_METHOD(_PathClear_method_33)>(*this, lib, "PathClear",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathClear))
@@ -188,6 +191,7 @@ using _PathRect_method_42 = DAS_CALL_MEMBER(ImDrawList::PathRect);
 addExtern<DAS_CALL_METHOD(_PathRect_method_42)>(*this, lib, "PathRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathRect))
 	->args({"self","rect_min","rect_max","rounding","rounding_corners"})
 		->arg_init(3,make_smart<ExprConstFloat>(0))
+		->arg_type(4,makeType<ImDrawCornerFlags_>(lib))
 ;
 using _AddCallback_method_43 = DAS_CALL_MEMBER(ImDrawList::AddCallback);
 addExtern<DAS_CALL_METHOD(_AddCallback_method_43)>(*this, lib, "AddCallback",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddCallback))
