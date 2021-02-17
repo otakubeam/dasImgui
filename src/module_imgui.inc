@@ -13,7 +13,8 @@ addExtern<DAS_BIND_FUN(ImGui::ListBoxFooter)>(*this, lib, "ListBoxFooter",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginPopup)>(*this, lib, "BeginPopup",SideEffects::worstDefault, "ImGui::BeginPopup")
 	->args({"str_id","flags"})
-		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_type(1,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndDragDropTarget)>(*this, lib, "EndDragDropTarget",SideEffects::worstDefault, "ImGui::EndDragDropTarget")
 	->args({})
@@ -27,7 +28,8 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",Si
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupModal)>(*this, lib, "BeginPopupModal",SideEffects::worstDefault, "ImGui::BeginPopupModal")
 	->args({"name","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFocusHere",SideEffects::worstDefault, "ImGui::SetKeyboardFocusHere")
 	->args({"offset"})
@@ -739,7 +741,8 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTabItem)>(*this, lib, "BeginTabItem",SideEffe
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginChildFrame)>(*this, lib, "BeginChildFrame",SideEffects::worstDefault, "ImGui::BeginChildFrame")
 	->args({"id","size","flags"})
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableSetupColumn)>(*this, lib, "TableSetupColumn",SideEffects::worstDefault, "ImGui::TableSetupColumn")
 	->args({"label","flags","init_width_or_weight","user_id"})
@@ -828,12 +831,14 @@ addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void
 addExtern<bool (*)(const char *, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
 	->args({"str_id","size","border","flags"})
 		->arg_init(2,make_smart<ExprConstBool>(false))
-		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::Begin)>(*this, lib, "Begin",SideEffects::worstDefault, "ImGui::Begin")
 	->args({"name","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeight)>(*this, lib, "GetTextLineHeight",SideEffects::worstDefault, "ImGui::GetTextLineHeight")
 	->args({})
@@ -1212,7 +1217,8 @@ addExtern<DAS_BIND_FUN(ImGui::TableNextRow)>(*this, lib, "TableNextRow",SideEffe
 addExtern<bool (*)(ImGuiID, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
 	->args({"id","size","border","flags"})
 		->arg_init(2,make_smart<ExprConstBool>(false))
-		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetFont)>(*this, lib, "GetFont",SideEffects::worstDefault, "ImGui::GetFont")
 	->args({})

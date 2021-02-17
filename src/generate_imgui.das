@@ -32,6 +32,10 @@ def main
         "ImColor"
     }]
 
+    ex_enums <- {{
+        "ImGuiWindowFlags_" => [[ExEnum() name="ImGuiWindowFlags", isFlags=true]]
+    }}
+
     // generate
 
     var args <- get_command_line_arguments()

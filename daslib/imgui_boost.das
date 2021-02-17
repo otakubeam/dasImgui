@@ -56,42 +56,6 @@ bitfield ImGuiSliderFlags
     NoRoundToFormat
     NoInput
 
-bitfield ImGuiWindowFlags
-    NoTitleBar
-    NoResize
-    NoMove
-    NoScrollbar
-    NoScrollWithMouse
-    NoCollapse
-    AlwaysAutoResize
-    NoBackground
-    NoSavedSettings
-    NoMouseInputs
-    MenuBar
-    HorizontalScrollbar
-    NoFocusOnAppearing
-    NoBringToFrontOnFocus
-    AlwaysVerticalScrollbar
-    AlwaysHorizontalScrollbar
-    AlwaysUseWindowPadding
-    _bit17
-    NoNavInputs
-    NoNavFocus
-    UnsavedDocument
-    _bit21
-    _bit22
-    NavFlattened
-    ChildWindow
-    Tooltip
-    Popup
-    Modal
-    ChildMenu
-
-let
-    ImGuiWindowFlags_NoNav        = ImGuiWindowFlags NoNavInputs | ImGuiWindowFlags NoNavFocus
-    ImGuiWindowFlags_NoDecoration = ImGuiWindowFlags NoTitleBar | ImGuiWindowFlags NoResize | ImGuiWindowFlags NoScrollbar | ImGuiWindowFlags NoCollapse
-    ImGuiWindowFlags_NoInputs     = ImGuiWindowFlags NoMouseInputs | ImGuiWindowFlags NoNavInputs | ImGuiWindowFlags NoNavFocus
-
 bitfield ImGuiCond
     Always
     Once
@@ -230,16 +194,6 @@ def IM_COL32(R,G,B,A:int)
 
 def ImVec4 ( col:ImColor )
     return col.Value
-
-def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags  = bitfield(0))
-    return imgui::Begin(name,p_open,int(flags))
-
-def BeginPopupModal(name:string; p_open:bool?; flags:ImGuiWindowFlags = bitfield(0))
-    return imgui::BeginPopupModal(name, p_open, int(flags))
-
-def BeginPopupModal(name:string; var p_open:bool&; flags:ImGuiWindowFlags = bitfield(0))
-    unsafe
-        return imgui::BeginPopupModal(name, addr(p_open), int(flags))
 
 def GetKeyIndex(key:ImGuiKey_)
     return imgui::GetKeyIndex(int(key))

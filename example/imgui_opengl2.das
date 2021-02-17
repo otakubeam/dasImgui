@@ -144,23 +144,23 @@ def DasShowDemoWindow ( _p_open : bool? )
 
     var window_flags : ImGuiWindowFlags
     if no_titlebar
-        window_flags |= ImGuiWindowFlags NoTitleBar
+        window_flags = window_flags | ImGuiWindowFlags NoTitleBar
     if no_scrollbar
-        window_flags |= ImGuiWindowFlags NoScrollbar
+        window_flags = window_flags | ImGuiWindowFlags NoScrollbar
     if !no_menu
-        window_flags |= ImGuiWindowFlags MenuBar
+        window_flags = window_flags | ImGuiWindowFlags MenuBar
     if no_move
-        window_flags |= ImGuiWindowFlags NoMove
+        window_flags = window_flags | ImGuiWindowFlags NoMove
     if no_resize
-        window_flags |= ImGuiWindowFlags NoResize
+        window_flags = window_flags | ImGuiWindowFlags NoResize
     if no_collapse
-        window_flags |= ImGuiWindowFlags NoCollapse
+        window_flags = window_flags | ImGuiWindowFlags NoCollapse
     if no_nav
-        window_flags |= imgui_boost::ImGuiWindowFlags_NoNav
+        window_flags = window_flags | ImGuiWindowFlags NoNav
     if no_background
-        window_flags |= ImGuiWindowFlags NoBackground
+        window_flags = window_flags | ImGuiWindowFlags NoBackground
     if no_bring_to_front
-        window_flags |= ImGuiWindowFlags NoBringToFrontOnFocus
+        window_flags = window_flags | ImGuiWindowFlags NoBringToFrontOnFocus
     if no_close
         p_open = null
 
@@ -454,7 +454,7 @@ def ShowDemoWindowPopups()
                 OpenPopup("Stacked 2")
             static_let <|
                 var unused_open = true
-            if BeginPopupModal("Stacked 2", unused_open)
+            if BeginPopupModal("Stacked 2", safe_addr(unused_open))
                 Text("Hello from Stacked The Second!")
                 if Button("Close")
                     CloseCurrentPopup()
@@ -1205,11 +1205,11 @@ def ShowDemoWindowLayout
             static_let <|
                 let names_v = [[string[] "Top"; "25%"; "Center"; "75%"; "Bottom" ]]
             TextUnformatted(names_v[i])
-            let child_flags = enable_extra_decorations ? ImGuiWindowFlags MenuBar : bitfield(0)
+            let child_flags = enable_extra_decorations ? ImGuiWindowFlags MenuBar : ImGuiWindowFlags None
             var child_id : uint
             unsafe
                 child_id = GetID(reinterpret<void?> i)
-            let child_is_visible = BeginChild(child_id, ImVec2(child_w, 200.0f), true, int(child_flags))
+            let child_is_visible = BeginChild(child_id, ImVec2(child_w, 200.0f), true, child_flags)
             if BeginMenuBar()
                 TextUnformatted("abc")
                 EndMenuBar()
@@ -1239,11 +1239,11 @@ def ShowDemoWindowLayout
         PushID("##HorizontalScrolling")
         for i in range(5)
             let child_height = GetTextLineHeight() + style.ScrollbarSize + style.WindowPadding.y * 2.0f
-            let child_flags = ImGuiWindowFlags HorizontalScrollbar | (enable_extra_decorations ? ImGuiWindowFlags AlwaysVerticalScrollbar : bitfield(0))
+            let child_flags = ImGuiWindowFlags HorizontalScrollbar | (enable_extra_decorations ? ImGuiWindowFlags AlwaysVerticalScrollbar : ImGuiWindowFlags None)
             var child_id : uint
             unsafe
                 child_id = GetID(reinterpret<void?> i)
-            let child_is_visible = BeginChild(child_id, ImVec2(-100., child_height), true, int(child_flags))
+            let child_is_visible = BeginChild(child_id, ImVec2(-100., child_height), true, child_flags)
             if scroll_to_off
                 SetScrollX(scroll_to_off_px)
             if scroll_to_pos
@@ -1274,7 +1274,7 @@ def ShowDemoWindowLayout
         PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FrameRounding, 3.0f)
         PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(2.0f, 1.0f))
         let scrolling_child_size = ImVec2(0., GetFrameHeightWithSpacing() * 7.0 + 30.0)
-        BeginChild("scrolling", scrolling_child_size, true, int(ImGuiWindowFlags_ ImGuiWindowFlags_HorizontalScrollbar))
+        BeginChild("scrolling", scrolling_child_size, true, ImGuiWindowFlags HorizontalScrollbar)
         for line in range(lines)
             let num_buttons = 10 + ((line & 1)!=0 ? line * 9 : line * 3)
             for n in range(num_buttons)
@@ -1328,7 +1328,7 @@ def ShowDemoWindowLayout
             if explicit_content_size
                 SetNextWindowContentSize(ImVec2(contents_size_x, 0.0f))
             Begin("Horizontal contents size demo window", safe_addr(show_horizontal_contents_size_demo_window),
-                int(show_h_scrollbar ? ImGuiWindowFlags HorizontalScrollbar : bitfield(0)))
+                show_h_scrollbar ? ImGuiWindowFlags HorizontalScrollbar : ImGuiWindowFlags None)
             PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_ItemSpacing, ImVec2(2., 0.))
             PushStyleVar(ImGuiStyleVar_ ImGuiStyleVar_FramePadding, ImVec2(2., 0.))
             HelpMarker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
