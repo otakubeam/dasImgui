@@ -144,23 +144,23 @@ def DasShowDemoWindow ( _p_open : bool? )
 
     var window_flags : ImGuiWindowFlags
     if no_titlebar
-        window_flags = window_flags | ImGuiWindowFlags NoTitleBar
+        window_flags |= ImGuiWindowFlags NoTitleBar
     if no_scrollbar
-        window_flags = window_flags | ImGuiWindowFlags NoScrollbar
+        window_flags |= ImGuiWindowFlags NoScrollbar
     if !no_menu
-        window_flags = window_flags | ImGuiWindowFlags MenuBar
+        window_flags |= ImGuiWindowFlags MenuBar
     if no_move
-        window_flags = window_flags | ImGuiWindowFlags NoMove
+        window_flags |= ImGuiWindowFlags NoMove
     if no_resize
-        window_flags = window_flags | ImGuiWindowFlags NoResize
+        window_flags |= ImGuiWindowFlags NoResize
     if no_collapse
-        window_flags = window_flags | ImGuiWindowFlags NoCollapse
+        window_flags |= ImGuiWindowFlags NoCollapse
     if no_nav
-        window_flags = window_flags | ImGuiWindowFlags NoNav
+        window_flags |= ImGuiWindowFlags NoNav
     if no_background
-        window_flags = window_flags | ImGuiWindowFlags NoBackground
+        window_flags |= ImGuiWindowFlags NoBackground
     if no_bring_to_front
-        window_flags = window_flags | ImGuiWindowFlags NoBringToFrontOnFocus
+        window_flags |= ImGuiWindowFlags NoBringToFrontOnFocus
     if no_close
         p_open = null
 
