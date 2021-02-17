@@ -527,7 +527,8 @@ addExtern<DAS_BIND_FUN(ImGui::EndListBox)>(*this, lib, "EndListBox",SideEffects:
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginTabBar)>(*this, lib, "BeginTabBar",SideEffects::worstDefault, "ImGui::BeginTabBar")
 	->args({"str_id","flags"})
-		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_type(1,makeType<ImGuiTabBarFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTabBarFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TextV)>(*this, lib, "TextV",SideEffects::worstDefault, "ImGui::TextV")
 	->args({"fmt","args"})

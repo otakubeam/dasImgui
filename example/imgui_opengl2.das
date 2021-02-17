@@ -212,8 +212,9 @@ def DasShowDemoWindow ( _p_open : bool? )
 */
     if show_app_log
         DasShowExampleAppLog(safe_addr(show_app_log))
+    if show_app_layout
+        DasShowExampleAppLayout(safe_addr(show_app_layout))
 /*
-    if (show_app_layout)              ShowExampleAppLayout(&show_app_layout)
     if (show_app_property_editor)     ShowExampleAppPropertyEditor(&show_app_property_editor)
     if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text)
     if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize)
@@ -1562,6 +1563,44 @@ def DasShowExampleAppLog(p_open:bool? implicit)
             counter++;
     End()
     log->Draw("Example: Log", p_open)
+
+def DasShowExampleAppLayout(var p_open:bool? implicit)
+    SetNextWindowSize(ImVec2(500.0, 440.0), ImGuiCond FirstUseEver)
+    if Begin("Example: Simple layout", p_open, ImGuiWindowFlags MenuBar)
+        if BeginMenuBar()
+            if BeginMenu("File")
+                if MenuItem("Close")
+                    *p_open = false
+                EndMenu()
+            EndMenuBar()
+        static_let <|
+            var selected = 0
+        BeginChild("left pane", ImVec2(150., 0.), true)
+        for i in range(100)
+            if Selectable("MyObject {i}", selected == i)
+                selected = i
+        EndChild()
+        SameLine()
+        BeginGroup()
+        BeginChild("item view", ImVec2(0., -GetFrameHeightWithSpacing())) // Leave room for 1 line below us
+        Text("MyObject: {selected}")
+        Separator()
+        if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
+            if BeginTabItem("Description")
+                TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ")
+                EndTabItem()
+            if BeginTabItem("Details")
+                Text("ID: 0123456789")
+                EndTabItem()
+            EndTabBar()
+        EndChild()
+        if Button("Revert")
+            pass
+        SameLine()
+        if Button("Save")
+            pass
+        EndGroup()
+    End()
 
 [export]
 def main

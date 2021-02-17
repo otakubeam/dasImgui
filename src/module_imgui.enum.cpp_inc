@@ -432,23 +432,23 @@ public:
 	}
 };
 
-class EnumerationImGuiTabBarFlags_ : public das::Enumeration {
+class EnumerationImGuiTabBarFlags : public das::Enumeration {
 public:
-    EnumerationImGuiTabBarFlags_() : das::Enumeration("ImGuiTabBarFlags_") {
+    EnumerationImGuiTabBarFlags() : das::Enumeration("ImGuiTabBarFlags") {
         external = true;
         cppName = "ImGuiTabBarFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiTabBarFlags_ >::type >::type;
-		addI("ImGuiTabBarFlags_None", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_None), das::LineInfo());
-		addI("ImGuiTabBarFlags_Reorderable", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_Reorderable), das::LineInfo());
-		addI("ImGuiTabBarFlags_AutoSelectNewTabs", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_AutoSelectNewTabs), das::LineInfo());
-		addI("ImGuiTabBarFlags_TabListPopupButton", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_TabListPopupButton), das::LineInfo());
-		addI("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoCloseWithMiddleMouseButton), das::LineInfo());
-		addI("ImGuiTabBarFlags_NoTabListScrollingButtons", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoTabListScrollingButtons), das::LineInfo());
-		addI("ImGuiTabBarFlags_NoTooltip", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoTooltip), das::LineInfo());
-		addI("ImGuiTabBarFlags_FittingPolicyResizeDown", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyResizeDown), das::LineInfo());
-		addI("ImGuiTabBarFlags_FittingPolicyScroll", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyScroll), das::LineInfo());
-		addI("ImGuiTabBarFlags_FittingPolicyMask_", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyMask_), das::LineInfo());
-		addI("ImGuiTabBarFlags_FittingPolicyDefault_", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyDefault_), das::LineInfo());
+		addI("None", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_None), das::LineInfo());
+		addI("Reorderable", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_Reorderable), das::LineInfo());
+		addI("AutoSelectNewTabs", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_AutoSelectNewTabs), das::LineInfo());
+		addI("TabListPopupButton", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_TabListPopupButton), das::LineInfo());
+		addI("NoCloseWithMiddleMouseButton", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoCloseWithMiddleMouseButton), das::LineInfo());
+		addI("NoTabListScrollingButtons", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoTabListScrollingButtons), das::LineInfo());
+		addI("NoTooltip", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_NoTooltip), das::LineInfo());
+		addI("FittingPolicyResizeDown", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyResizeDown), das::LineInfo());
+		addI("FittingPolicyScroll", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyScroll), das::LineInfo());
+		addI("FittingPolicyMask_", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyMask_), das::LineInfo());
+		addI("FittingPolicyDefault_", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyDefault_), das::LineInfo());
 	}
 };
 
