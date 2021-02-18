@@ -1,5 +1,6 @@
 require math
 require strings
+require daslib/strings_boost
 require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
@@ -207,9 +208,10 @@ def DasShowDemoWindow ( _p_open : bool? )
 
 /*
     if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents)
-
-    if (show_app_console)             ShowExampleAppConsole(&show_app_console)
 */
+
+    if show_app_console
+        DasShowExampleAppConsole(safe_addr(show_app_console))
     if show_app_log
         DasShowExampleAppLog(safe_addr(show_app_log))
     if show_app_layout
@@ -228,7 +230,6 @@ def DasShowDemoWindow ( _p_open : bool? )
         var show_app_metrics = false
         var show_app_style_editor = false
         var show_app_about = false
-
 
     if show_app_metrics
         ShowMetricsWindow(safe_addr(show_app_metrics))  // NOTE: this is in imgui.cpp ???
@@ -518,12 +519,12 @@ def DasShowDemoWindowPopups()
         Text("(You can also right-click me to open the same popup as above.)")
         OpenPopupOnItemClick("item context menu", 1)
         static_let <|
-            var name = reserve_string_buffer("Label1", 32)
-        var buf = "Button: {name}"
+            var name <- ImGuiInputTextBuffer("Label1", 32)
+        var buf = "Button: {name |> to_string}"
         Button(buf)
         if BeginPopupContextItem()
             Text("Edit name:")
-            InputText("##edit", name, 32)
+            InputText("##edit", name)
             if Button("Close")
                 CloseCurrentPopup()
             EndPopup()
@@ -762,15 +763,15 @@ def DasShowDemoWindowMisc()
 
         if TreeNode("Tabbing")
             static_let <|
-                var buft = reserve_string_buffer("hello", 32)
+                var buft <- ImGuiInputTextBuffer("hello", 32)
             Text("Use TAB/SHIFT+TAB to cycle through keyboard editable fields.")
-            InputText("1", buft, 32)
-            InputText("2", buft, 32)
-            InputText("3", buft, 32)
+            InputText("1", buft)
+            InputText("2", buft)
+            InputText("3", buft)
             PushAllowKeyboardFocus(false)
-            InputText("4 (tab skip)", buft, 32)
+            InputText("4 (tab skip)", buft)
             PopAllowKeyboardFocus()
-            InputText("5", buft, 32)
+            InputText("5", buft)
             TreePop()
 
         if TreeNode("Focus from code")
@@ -781,21 +782,21 @@ def DasShowDemoWindowMisc()
             var focus_3 = Button("Focus on 3")
             var has_focus = 0
             static_let <|
-                var buf = reserve_string_buffer("click on a button to set focus", 128)
+                var buf <- ImGuiInputTextBuffer("click on a button to set focus", 128)
             if focus_1
                 SetKeyboardFocusHere()
-            InputText("1", buf, 128)
+            InputText("1", buf)
             if IsItemActive()
                 has_focus = 1
             if focus_2
                 SetKeyboardFocusHere()
-            InputText("2", buf, 128)
+            InputText("2", buf)
             if IsItemActive()
                 has_focus = 2
             PushAllowKeyboardFocus(false)
             if focus_3
                 SetKeyboardFocusHere()
-            InputText("3 (tab skip)", buf, 128)
+            InputText("3 (tab skip)", buf)
             if IsItemActive()
                 has_focus = 3
             PopAllowKeyboardFocus()
@@ -823,10 +824,11 @@ def DasShowDemoWindowMisc()
         if TreeNode("Dragging")
             TextWrapped("You can use GetMouseDragDelta(0) to query for the dragged amount on any widget.")
             for button in each_enum(type<ImGuiMouseButton>)
-                Text("IsMouseDragging({button}):")
-                Text("  w/ default threshold: {IsMouseDragging(button)},")
-                Text("  w/ zero threshold: {IsMouseDragging(button, 0.0f)},")
-                Text("  w/ large threshold: {IsMouseDragging(button, 20.0f)},")
+                if button!=ImGuiMouseButton COUNT
+                    Text("IsMouseDragging({button}):")
+                    Text("  w/ default threshold: {IsMouseDragging(button)},")
+                    Text("  w/ zero threshold: {IsMouseDragging(button, 0.0f)},")
+                    Text("  w/ large threshold: {IsMouseDragging(button, 20.0f)},")
             Button("Drag Me")
             if IsItemActive()
                 *GetForegroundDrawList() |> AddLine(
@@ -1601,6 +1603,203 @@ def DasShowExampleAppLayout(var p_open:bool? implicit)
             pass
         EndGroup()
     End()
+
+
+class ExampleAppConsole
+    InputBuf:ImGuiInputTextBuffer <- ImGuiInputTextBuffer("",256)
+    Items:array<string>
+    Commands:array<string>
+    History:array<string>
+    HistoryPos:int = -1
+    Filter:ImGuiTextFilter? = new ImGuiTextFilter
+    AutoScroll:bool = true
+    ScrollToBottom:bool = false
+    def ExampleAppConsole()
+        self->ClearLog()
+        Commands |> push("HELP")
+        Commands |> push("HISTORY")
+        Commands |> push("CLEAR")
+        Commands |> push("CLASSIFY")
+        self->AddLog("Welcome to Dear ImGui!")
+        unsafe
+            var console  = addr(self)
+            InputBuf.callback <- @ <| ( var it:ImGuiInputTextBuffer; var itc:ImGuiInputTextCallbackData ) : int
+                (*console)->TextEditCallback(itc)
+                return 0
+
+    def finalize
+        self->ClearLog()
+        unsafe
+            delete Filter
+    def ClearLog()
+        delete Items
+    def AddLog(txt:string)
+        Items |> push(txt)
+    def Draw(title:string;var p_open:bool? implicit)
+        SetNextWindowSize(ImVec2(520., 600.), ImGuiCond FirstUseEver)
+        if !Begin(title, p_open)
+            End()
+            return
+        if BeginPopupContextItem()
+            if MenuItem("Close Console")
+                *p_open = false
+            EndPopup()
+        TextWrapped(
+            "This example implements a console with basic coloring, completion (TAB key) and history (Up/Down keys). A more elaborate "+
+            "implementation may want to store entries along with extra data such as timestamp, emitter, etc.")
+        TextWrapped("Enter 'HELP' for help.")
+        if SmallButton("Add Debug Text")
+            self->AddLog("{length(Items)} some text")
+            self->AddLog("some more text")
+            self->AddLog("display very important message here!")
+        SameLine()
+        if SmallButton("Add Debug Error")
+            self->AddLog("[error] something went wrong")
+        SameLine()
+        if SmallButton("Clear")
+            self->ClearLog()
+        SameLine()
+        let copy_to_clipboard = SmallButton("Copy")
+        Separator()
+        if BeginPopup("Options")
+            Checkbox("Auto-scroll", safe_addr(AutoScroll))
+            EndPopup()
+        if Button("Options")
+            OpenPopup("Options")
+        SameLine()
+        *Filter |> Draw("Filter (\"incl,-excl\") (\"error\")", 180.)
+        Separator()
+        let footer_height_to_reserve = GetStyle().ItemSpacing.y + GetFrameHeightWithSpacing()
+        BeginChild("ScrollingRegion", ImVec2(0., -footer_height_to_reserve), false, ImGuiWindowFlags HorizontalScrollbar)
+        if BeginPopupContextWindow()
+            if Selectable("Clear")
+                self->ClearLog()
+            EndPopup()
+        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(4., 1.))
+        if copy_to_clipboard
+            LogToClipboard()
+        for item in Items
+            if !(*Filter |> PassFilter(item))
+                continue
+            var color = ImVec4()
+            var has_color = false
+            if find(item, "[error]") != -1
+                color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
+                has_color = true
+            elif starts_with(item, "# ")
+                color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f)
+                has_color = true
+            if has_color
+                PushStyleColor(ImGuiCol Text, color)
+            TextUnformatted(item)
+            if has_color
+                PopStyleColor()
+        if copy_to_clipboard
+            LogFinish()
+        if ScrollToBottom || (AutoScroll && GetScrollY() >= GetScrollMaxY())
+            SetScrollHereY(1.0f)
+        ScrollToBottom = false
+        PopStyleVar()
+        EndChild()
+        Separator()
+        var reclaim_focus = false
+        let input_text_flags = ImGuiInputTextFlags EnterReturnsTrue | ImGuiInputTextFlags CallbackCompletion | ImGuiInputTextFlags CallbackHistory
+        if InputText("Input", InputBuf, input_text_flags)
+            let s = rtrim(InputBuf |> to_string)
+            if !empty(s)
+                self->ExecCommand(s)
+            InputBuf |> clear()
+            reclaim_focus = true
+        SetItemDefaultFocus()
+        if reclaim_focus
+            SetKeyboardFocusHere(-1)
+        End()
+    def ExecCommand(command_line:string)
+        self->AddLog("# {command_line}\n")
+        HistoryPos = -1
+        let index = History |> find_index(command_line)
+        if index != -1
+            History |> erase(index)
+        History |> push(command_line)
+        if command_line=="CLEAR"
+            self->ClearLog()
+        elif command_line=="HELP"
+            self->AddLog("Commands:\n")
+            for cmd in Commands
+                self->AddLog("- {cmd}\n")
+        elif command_line=="HISTORY"
+            let first = length(History) - 10
+            for i in range(max(0,first),length(History))
+                self->AddLog("{i}: {History[i]}\n")
+        else
+            self->AddLog("Unknown command: '{command_line}'\n")
+        ScrollToBottom = true
+    def TextEditCallback(var data:ImGuiInputTextCallbackData)
+        if data.EventFlag==int(ImGuiInputTextFlags CallbackCompletion)  // TODO: remap field types
+            let word_end = data.CursorPos
+            var word_start = word_end
+            while word_start > 0
+                var c : int
+                unsafe
+                    c = character_uat(data.Buf, word_start - 1)
+                if c==' ' || c=='\t' || c==',' || c==';'
+                    break
+                word_start--
+            let word = data.Buf |> slice(word_start,word_end)
+            var match_len = word_end - word_start
+            var candidates : array<string>
+            for cmd in Commands
+                if cmd |> starts_with(word)
+                    candidates |> push(cmd)
+            if length(candidates)==0
+                self->AddLog("No match for \"{word}\"!\n")
+            elif length(candidates) == 1
+                data |> DeleteChars(word_start, match_len)
+                data |> InsertChars(data.CursorPos, candidates[0])
+                data |> InsertChars(data.CursorPos, " ")
+            else
+                while true
+                    var c = 0
+                    var all_candidates_matches = true
+                    var ucandidates <- [{for cn in candidates; to_upper(cn)}]
+                    for cnn,i in ucandidates,range(100500)
+                        var tc : int
+                        unsafe
+                            tc = cnn|>character_uat(match_len)
+                        if i == 0
+                            c = tc
+                        elif c == 0 || c != tc
+                            all_candidates_matches = false
+                            break
+                    if !all_candidates_matches
+                        break
+                    match_len++
+                if match_len > 0
+                    data |> DeleteChars(word_start, word_end - word_start)
+                    data |> InsertChars(data.CursorPos, candidates[0] |> slice(0,match_len))
+                self->AddLog("Possible matches:\n")
+                for cn in candidates
+                    self->AddLog("- {cn}\n")
+        elif data.EventFlag==int(ImGuiInputTextFlags CallbackHistory)
+            let prev_history_pos = HistoryPos;
+            if data.EventKey == int(ImGuiKey UpArrow)
+                if HistoryPos == -1
+                    HistoryPos = length(History) - 1
+                elif HistoryPos > 0
+                    HistoryPos--
+            elif data.EventKey == int(ImGuiKey DownArrow)
+                if HistoryPos != -1
+                    if ++HistoryPos >= length(History)
+                        HistoryPos = -1
+            if prev_history_pos != HistoryPos
+                let history_str = (HistoryPos >= 0) ? History[HistoryPos] : ""
+                data |> DeleteChars(0, data.BufTextLen)
+                data |> InsertChars(0, history_str)
+
+def DasShowExampleAppConsole(var p_open:bool? implicit)
+    static_let <|
+        var console <- ExampleAppConsole()
+    console->Draw("Example: Console", p_open)
 
 [export]
 def main

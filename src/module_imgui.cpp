@@ -62,8 +62,41 @@ namespace das {
     IMGUI_API bool          InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
     */
 
-    bool InputText ( const char* label, char* buf, int32_t buf_size, ImGuiInputTextFlags flags ) {
-        return ImGui::InputText(label,buf,buf_size,flags);
+    struct DasImguiInputText {
+        Context *  context;
+        TLambda<void,DasImguiInputText *,ImGuiInputTextCallbackData *>    callback;
+        TArray<uint8_t> buffer;
+        LineInfo        at;
+    };
+
+    int InputTextCallback (ImGuiInputTextCallbackData* data) {
+        auto diit = (DasImguiInputText *) data->UserData;
+        DAS_VERIFY(diit->context && "context is always specified");
+        if ( !diit->callback.capture ) {
+            diit->context->throw_error("ImguiTextCallback: missing capture");
+        }
+        return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, diit->callback, diit, data);
+    }
+
+    bool InputText(vec4f vdiit, const char * label, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
+        auto diit = cast<DasImguiInputText *>::to(vdiit);
+        if ( diit->buffer.size==0 ) {
+            builtin_array_resize(diit->buffer, 256, 1, context);
+        }
+        if ( diit->callback.capture ) {
+            diit->context = context;
+            diit->at = *at;
+            return ImGui::InputText(
+                label,
+                diit->buffer.data,
+                diit->buffer.size,
+                flags,
+                &InputTextCallback,
+                diit
+            );
+        } else {
+            return ImGui::InputText(label, diit->buffer.data, diit->buffer.size, flags);
+        }
     }
 
     // ImGui::ImGuiTextFilter::PassFilter
@@ -106,6 +139,12 @@ namespace das {
             context->throw_error_at(*at, "can't get slice of ImGuiTextBuffer, slice too big");
         }
         return context->stringHeap->allocateString(buf.begin() + head,len+1);
+    }
+
+    // ImGuiInputTextCallbackData
+
+    void InsertChars(ImGuiInputTextCallbackData & data, int pos, const char* text ) {
+        data.InsertChars(pos, text);
     }
 }
 
@@ -187,9 +226,8 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault, "das::TextUnformatted")
         ->arg("text");
     // input text
-    addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "InputText",
-        SideEffects::worstDefault, "das::InputText")
-            ->arg_init(3, make_smart<ExprConstInt>(0));
+    addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "_builtin_InputText",
+        SideEffects::worstDefault, "das::InputText");
     // imgui text buffer
     addExtern<DAS_BIND_FUN(das::ImGTB_Append)>(*this,lib,"append",
         SideEffects::worstDefault,"das::ImGTB_Append");
@@ -197,6 +235,9 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault,"das::ImGTB_At");
     addExtern<DAS_BIND_FUN(das::ImGTB_Slice)>(*this,lib,"slice",
         SideEffects::worstDefault,"das::ImGTB_Slice");
+    // ImGuiInputTextCallbackData
+    addExtern<DAS_BIND_FUN(das::InsertChars)>(*this,lib,"InsertChars",
+        SideEffects::worstDefault,"das::InsertChars");
     // additional default values
     findUniqueFunction("AddRectFilled")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
