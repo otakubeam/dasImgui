@@ -43,7 +43,7 @@ def imgui_app ( title:string; blk : block )
     glfwDestroyWindow(window)
     glfwTerminate()
 
-def DasHelpMaker(desc:string)
+def DasHelpMarker(desc:string)
     TextDisabled("(?)")
     if IsItemHovered()
         BeginTooltip()
@@ -215,8 +215,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppLog(safe_addr(show_app_log))
     if show_app_layout
         DasShowExampleAppLayout(safe_addr(show_app_layout))
+    if show_app_property_editor
+        DasShowExampleAppPropertyEditor(safe_addr(show_app_property_editor))
 /*
-    if (show_app_property_editor)     ShowExampleAppPropertyEditor(&show_app_property_editor)
     if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text)
     if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize)
     if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize)
@@ -335,15 +336,15 @@ def DasShowDemoWindow ( _p_open : bool? )
             unsafe
                 CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", addr(io.ConfigFlags), int(ImGuiConfigFlags NavEnableKeyboard))
             SameLine()
-            DasHelpMaker("Enable keyboard controls.")
+            DasHelpMarker("Enable keyboard controls.")
             unsafe
                 CheckboxFlags("io.ConfigFlags: NavEnableGamepad", addr(io.ConfigFlags), int(ImGuiConfigFlags NavEnableGamepad))
             SameLine()
-            DasHelpMaker("Enable gamepad controls. Require backend to set io.BackendFlags |= ImGuiBackendFlags HasGamepad.\n\nRead instructions in imgui.cpp for details.")
+            DasHelpMarker("Enable gamepad controls. Require backend to set io.BackendFlags |= ImGuiBackendFlags HasGamepad.\n\nRead instructions in imgui.cpp for details.")
             unsafe
                 CheckboxFlags("io.ConfigFlags: NavEnableSetMousePos", addr(io.ConfigFlags), int(ImGuiConfigFlags NavEnableSetMousePos))
             SameLine()
-            DasHelpMaker("Instruct navigation to move the mouse cursor. See comment for ImGuiConfigFlagsNavEnableSetMousePos.")
+            DasHelpMarker("Instruct navigation to move the mouse cursor. See comment for ImGuiConfigFlagsNavEnableSetMousePos.")
             unsafe
                 CheckboxFlags("io.ConfigFlags: NoMouse", addr(io.ConfigFlags), int(ImGuiConfigFlags NoMouse))
             if (io.ConfigFlags & int(ImGuiConfigFlags NoMouse)) != 0
@@ -355,30 +356,30 @@ def DasShowDemoWindow ( _p_open : bool? )
             unsafe
                 CheckboxFlags("io.ConfigFlags: NoMouseCursorChange", addr(io.ConfigFlags), int(ImGuiConfigFlags NoMouseCursorChange))
             SameLine()
-            DasHelpMaker("Instruct backend to not alter mouse cursor shape and visibility.")
+            DasHelpMarker("Instruct backend to not alter mouse cursor shape and visibility.")
             unsafe
                 Checkbox("io.ConfigInputTextCursorBlink", addr(io.ConfigInputTextCursorBlink))
             SameLine()
-            DasHelpMaker("Enable blinking cursor (optional as some users consider it to be distracting)")
+            DasHelpMarker("Enable blinking cursor (optional as some users consider it to be distracting)")
             unsafe
                 Checkbox("io.ConfigDragClickToInputText", addr(io.ConfigDragClickToInputText))
             SameLine()
-            DasHelpMaker("Enable turning DragXXX widgets into text input with a simple mouse click-release (without moving).")
+            DasHelpMarker("Enable turning DragXXX widgets into text input with a simple mouse click-release (without moving).")
             unsafe
                 Checkbox("io.ConfigWindowsResizeFromEdges", addr(io.ConfigWindowsResizeFromEdges))
             SameLine()
-            DasHelpMaker("Enable resizing of windows from their edges and from the lower-left corner.\nThis requires (io.BackendFlags & ImGuiBackendFlags HasMouseCursors) because it needs mouse cursor feedback.")
+            DasHelpMarker("Enable resizing of windows from their edges and from the lower-left corner.\nThis requires (io.BackendFlags & ImGuiBackendFlags HasMouseCursors) because it needs mouse cursor feedback.")
             unsafe
                 Checkbox("io.ConfigWindowsMoveFromTitleBarOnly", addr(io.ConfigWindowsMoveFromTitleBarOnly))
             unsafe
                 Checkbox("io.MouseDrawCursor", addr(io.MouseDrawCursor))
             SameLine()
-            DasHelpMaker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your application GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop applications may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).")
+            DasHelpMarker("Instruct Dear ImGui to render a mouse cursor itself. Note that a mouse cursor rendered via your application GPU rendering path will feel more laggy than hardware cursor, but will be more in sync with your other visuals.\n\nSome desktop applications may use both kinds of cursors (e.g. enable software cursor only when resizing/dragging something).")
             Text("Also see Style->Rendering for rendering options.")
             TreePop()
             Separator()
         if TreeNode("Backend Flags")
-            DasHelpMaker(
+            DasHelpMarker(
                 "Those flags are set by the backends (imgui_impl_xxx files) to specify their capabilities.\n" +
                 "Here we expose then as read-only fields to avoid breaking interactions with your backend.")
             // Make a local copy to avoid modifying actual backend flags.
@@ -390,17 +391,17 @@ def DasShowDemoWindow ( _p_open : bool? )
             TreePop()
             Separator()
         if TreeNode("Style")
-            DasHelpMaker("The same contents can be accessed in 'Tools->Style Editor' or by calling the ShowStyleEditor() function.")
+            DasHelpMarker("The same contents can be accessed in 'Tools->Style Editor' or by calling the ShowStyleEditor() function.")
             ShowStyleEditor()
             TreePop()
             Separator()
         if TreeNode("Capture/Logging")
-            DasHelpMaker(
+            DasHelpMarker(
                 "The logging API redirects all text output so you can easily capture the content of " +
                 "a window or a block. Tree nodes can be automatically expanded.\n" +
                 "Try opening any of the contents below in this window and then click one of the \"Log To\" button.")
             LogButtons()
-            DasHelpMaker("You can also call LogText() to output directly to the log without a visual output.")
+            DasHelpMarker("You can also call LogText() to output directly to the log without a visual output.")
             if Button("Copy \"Hello, world!\" to clipboard")
                 LogToClipboard()
                 LogText("Hello, world!")
@@ -851,7 +852,7 @@ def DasShowDemoWindowMisc()
             Text("Current mouse cursor = {current}: {mouse_cursors_names[current]}")
             Text("Hover to see mouse cursors:")
             SameLine()
-            DasHelpMaker(
+            DasHelpMarker(
                 "Your application can render a different mouse cursor based on what GetMouseCursor() returns. " +
                 "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, " +
                 "otherwise your backend needs to handle it.")
@@ -868,7 +869,7 @@ def DasShowDemoWindowLayout
         return
 
     if TreeNode("Child windows")
-        DasHelpMaker("Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window.")
+        DasHelpMarker("Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window.")
         static_let <|
             var disable_mouse_wheel = false
             var disable_menu = false
@@ -930,7 +931,7 @@ def DasShowDemoWindowLayout
         Checkbox("Show indented items", safe_addr(show_indented_items))
         Text("SetNextItemWidth/PushItemWidth(100)")
         SameLine()
-        DasHelpMaker("Fixed width.")
+        DasHelpMarker("Fixed width.")
         PushItemWidth(100.)
         DragFloat("float##1b", safe_addr(f))
         if show_indented_items
@@ -940,7 +941,7 @@ def DasShowDemoWindowLayout
         PopItemWidth()
         Text("SetNextItemWidth/PushItemWidth(-100)")
         SameLine()
-        DasHelpMaker("Align to right edge minus 100")
+        DasHelpMarker("Align to right edge minus 100")
         PushItemWidth(-100.)
         DragFloat("float##2a", safe_addr(f))
         if show_indented_items
@@ -950,7 +951,7 @@ def DasShowDemoWindowLayout
         PopItemWidth()
         Text("SetNextItemWidth/PushItemWidth(GetContentRegionAvail().x * 0.5f)")
         SameLine()
-        DasHelpMaker("Half of available width.\n(~ right-cursor_pos)\n(works within a column set)")
+        DasHelpMarker("Half of available width.\n(~ right-cursor_pos)\n(works within a column set)")
         PushItemWidth(GetContentRegionAvail().x * 0.5f)
         DragFloat("float##3a", safe_addr(f))
         if show_indented_items
@@ -960,7 +961,7 @@ def DasShowDemoWindowLayout
         PopItemWidth()
         Text("SetNextItemWidth/PushItemWidth(-GetContentRegionAvail().x * 0.5f)")
         SameLine()
-        DasHelpMaker("Align to right edge minus half")
+        DasHelpMarker("Align to right edge minus half")
         PushItemWidth(-GetContentRegionAvail().x * 0.5f)
         DragFloat("float##4a", safe_addr(f))
         if show_indented_items
@@ -970,7 +971,7 @@ def DasShowDemoWindowLayout
         PopItemWidth()
         Text("SetNextItemWidth/PushItemWidth(-FLT_MIN)")
         SameLine()
-        DasHelpMaker("Align to right edge")
+        DasHelpMarker("Align to right edge")
         PushItemWidth(-FLT_MIN)
         DragFloat("##float5a", safe_addr(f))
         if show_indented_items
@@ -1071,7 +1072,7 @@ def DasShowDemoWindowLayout
         TreePop()
 
     if TreeNode("Groups")
-        DasHelpMaker(
+        DasHelpMarker(
             "BeginGroup() basically locks the horizontal position for new line. " +
             "EndGroup() bundles the whole group so that you can use \"item\" functions such as " +
             "IsItemHovered()/IsItemActive() or SameLine() etc. on the whole group.")
@@ -1110,7 +1111,7 @@ def DasShowDemoWindowLayout
     if TreeNode("Text Baseline Alignment")
         BulletText("Text baseline:")
         SameLine()
-        DasHelpMaker(
+        DasHelpMarker(
             "This is testing the vertical alignment that gets applied on text to keep it aligned with widgets. " +
             "Lines only composed of text or \"small\" widgets use less vertical space than lines with framed widgets.")
         Indent()
@@ -1118,13 +1119,13 @@ def DasShowDemoWindowLayout
         SameLine()
         Button("Some framed item")
         SameLine()
-        DasHelpMaker("Baseline of button will look misaligned with text..")
+        DasHelpMarker("Baseline of button will look misaligned with text..")
         AlignTextToFramePadding()
         Text("OK Blahblah")
         SameLine()
         Button("Some framed item")
         SameLine()
-        DasHelpMaker("We call AlignTextToFramePadding() to vertically align the text baseline by +FramePadding.y")
+        DasHelpMarker("We call AlignTextToFramePadding() to vertically align the text baseline by +FramePadding.y")
         Button("TEST##1")
         SameLine()
         Text("TEST")
@@ -1203,7 +1204,7 @@ def DasShowDemoWindowLayout
         TreePop()
 
     if TreeNode("Scrolling")
-        DasHelpMaker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
+        DasHelpMarker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
         static_let <|
             var track_item = 50
             var enable_track = true
@@ -1262,7 +1263,7 @@ def DasShowDemoWindowLayout
             EndGroup()
         PopID()
         Spacing()
-        DasHelpMaker(
+        DasHelpMarker(
             "Use SetScrollHereX() or SetScrollFromPosX() to scroll to a given horizontal position.\n\n"+
             "Because the clipping rectangle of most window hides half worth of WindowPadding on the "+
             "left/right, using SetScrollFromPosX(+1) will usually result in clipped text whereas the "+
@@ -1296,7 +1297,7 @@ def DasShowDemoWindowLayout
             Text("{names_h[i]}\n{scroll_x}/{scroll_max_x}")
             Spacing()
         PopID()
-        DasHelpMaker(
+        DasHelpMarker(
             "Horizontal scrolling for a window is enabled via the ImGuiWindowFlags HorizontalScrollbar flag.\n\n"+
             "You may want to also explicitly specify content width by using SetNextWindowContentWidth() before Begin().")
         static_let <|
@@ -1362,7 +1363,7 @@ def DasShowDemoWindowLayout
                 show_h_scrollbar ? ImGuiWindowFlags HorizontalScrollbar : ImGuiWindowFlags None)
             PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(2., 0.))
             PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(2., 0.))
-            DasHelpMaker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
+            DasHelpMarker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
             Checkbox("H-scrollbar", safe_addr(show_h_scrollbar))
             Checkbox("Button", safe_addr(show_button))
             Checkbox("Tree nodes", safe_addr(show_tree_nodes))
@@ -1444,7 +1445,7 @@ def DasShowDemoWindowLayout
             let text_pos = ImVec2(p0.x + offset.x, p0.y + offset.y)
             var draw_list = GetWindowDrawList()
             if n==0
-                DasHelpMaker(
+                DasHelpMarker(
                     "Using PushClipRect():\n" +
                     "Will alter ImGui hit-testing logic + ImDrawList rendering.\n" +
                     "(use this if you want your clipping rectangle to affect interactions)")
@@ -1453,7 +1454,7 @@ def DasShowDemoWindowLayout
                 *draw_list |> AddText(text_pos, IM_COL32_WHITE, text_str)
                 PopClipRect()
             elif n==1
-                DasHelpMaker(
+                DasHelpMarker(
                     "Using ImDrawList::PushClipRect():\n" +
                     "Will alter ImDrawList rendering only.\n" +
                     "(use this as a shortcut if you are only using ImDrawList calls)")
@@ -1462,7 +1463,7 @@ def DasShowDemoWindowLayout
                 *draw_list |> AddText(text_pos, IM_COL32_WHITE, text_str)
                 *draw_list |> PopClipRect()
             elif n==2
-                DasHelpMaker(
+                DasHelpMarker(
                     "Using ImDrawList::AddText() with a fine ClipRect:\n" +
                     "Will alter only this specific ImDrawList::AddText() rendering.\n" +
                     "(this is often used internally to avoid altering the clipping rectangle and minimize draw calls)")
@@ -1971,6 +1972,56 @@ def DasShowExampleAppDocuments(p_open:bool? implicit)
                     close_queue |> clear()
                     CloseCurrentPopup()
                 EndPopup()
+    End()
+
+def ShowPlaceholderObject(prefix:string;uid:int)
+    PushID(uid)
+    TableNextRow()
+    TableSetColumnIndex(0)
+    AlignTextToFramePadding()
+    let node_open = TreeNode("Object", "{prefix}_{uid}")
+    TableSetColumnIndex(1)
+    Text("my sailor is rich")
+    if (node_open)
+        static_let <|
+            var placeholder_members = [[float[8] 0.0f; 0.0f; 1.0f; 3.1416f; 100.0f; 999.0f; 0.0f; 0.0f]]
+        for i in range(8)
+            PushID(i)
+            if i < 2
+                ShowPlaceholderObject("Child", 424242)
+            else
+                TableNextRow()
+                TableSetColumnIndex(0)
+                AlignTextToFramePadding()
+                let flags = ImGuiTreeNodeFlags Leaf | ImGuiTreeNodeFlags NoTreePushOnOpen | ImGuiTreeNodeFlags Bullet
+                TreeNodeEx("Field", flags, "Field_{i}")
+                TableSetColumnIndex(1)
+                SetNextItemWidth(-FLT_MIN)
+                if i >= 5
+                    InputFloat("##value", safe_addr(placeholder_members[i]), 1.0f)
+                else
+                    DragFloat("##value", safe_addr(placeholder_members[i]), 0.01f)
+                NextColumn()
+            PopID()
+        TreePop()
+    PopID()
+
+def DasShowExampleAppPropertyEditor(p_open:bool? implicit)
+    SetNextWindowSize(ImVec2(430., 450.), ImGuiCond FirstUseEver)
+    if !Begin("Example: Property editor", p_open)
+        End()
+        return
+    DasHelpMarker(
+        "This example shows how you may implement a property editor using two columns.\n" +
+        "All objects/fields data are dummies here.\n" +
+        "Remember that in many simple cases, you can use SameLine(xxx) to position\n" +
+        "your cursor horizontally instead of using the Columns() API.")
+    PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(2., 2.))
+    if BeginTable("split", 2, ImGuiTableFlags BordersOuter | ImGuiTableFlags Resizable)
+        for obj_i in range(4)
+            ShowPlaceholderObject("Object", obj_i)
+        EndTable()
+    PopStyleVar()
     End()
 
 [export]

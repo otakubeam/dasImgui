@@ -37,14 +37,14 @@ namespace das {
     void LogText ( const char * txt ) {
         ImGui::LogText(txt);
     }
-    void TreeNode ( const char * id, const char * txt ) {
-        ImGui::TreeNode(id,txt);
+    bool TreeNode ( const char * id, const char * txt ) {
+        return ImGui::TreeNode(id,txt);
     }
-    void TreeNodeEx ( const char * id, ImGuiTreeNodeFlags flags, const char * txt ) {
-        ImGui::TreeNodeEx(id, flags, txt);
+    bool TreeNodeEx ( const char * id, ImGuiTreeNodeFlags_ flags, const char * txt ) {
+        return ImGui::TreeNodeEx(id, flags, txt);
     }
-    void TreeNodeEx2 ( const void * id, ImGuiTreeNodeFlags flags, const char * txt ) {
-        ImGui::TreeNodeEx(id, flags, txt);
+    bool TreeNodeEx2 ( const void * id, ImGuiTreeNodeFlags_ flags, const char * txt ) {
+        return ImGui::TreeNodeEx(id, flags, txt);
     }
     void TextUnformatted ( const char * txt ) {
         ImGui::TextUnformatted(txt, nullptr);
