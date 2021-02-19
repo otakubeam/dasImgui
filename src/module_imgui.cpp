@@ -238,6 +238,8 @@ bool Module_imgui::initDependencies() {
     // ImGuiInputTextCallbackData
     addExtern<DAS_BIND_FUN(das::InsertChars)>(*this,lib,"InsertChars",
         SideEffects::worstDefault,"das::InsertChars");
+    // clipper
+    addUsing<ImGuiListClipper>(*this,lib,"ImGuiListClipper");
     // additional default values
     findUniqueFunction("AddRectFilled")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));

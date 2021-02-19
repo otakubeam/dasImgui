@@ -217,8 +217,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppLayout(safe_addr(show_app_layout))
     if show_app_property_editor
         DasShowExampleAppPropertyEditor(safe_addr(show_app_property_editor))
+    if show_app_long_text
+        DasShowExampleAppLongText(safe_addr(show_app_long_text))
 /*
-    if (show_app_long_text)           ShowExampleAppLongText(&show_app_long_text)
     if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize)
     if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize)
     if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay)
@@ -1529,19 +1530,15 @@ class ExampleAppLog
                     TextUnformatted(ltext)
                 line_no++
         else
-            var clipper = new ImGuiListClipper
-            *clipper |> Begin(length(LineOffsets))
-            while *clipper |> Step()
-                var line_no  = clipper.DisplayStart
-                while line_no < clipper.DisplayEnd
-                    var line_start = LineOffsets[line_no]
-                    var line_end = (line_no + 1 < length(LineOffsets)) ? (LineOffsets[line_no + 1] - 1) : (*Buf |> size())
-                    var ltext = *Buf |> slice(line_start, line_end)
-                    TextUnformatted(ltext)
-                    line_no ++
-            *clipper |> End()
-            unsafe
-                delete clipper
+            using() <| $ ( var clipper : ImGuiListClipper# )
+                clipper |> Begin(length(LineOffsets))
+                while clipper |> Step()
+                    for line_no in range(clipper.DisplayStart,clipper.DisplayEnd)
+                        var line_start = LineOffsets[line_no]
+                        var line_end = (line_no + 1 < length(LineOffsets)) ? (LineOffsets[line_no + 1] - 1) : (*Buf |> size())
+                        var ltext = *Buf |> slice(line_start, line_end)
+                        TextUnformatted(ltext)
+                clipper |> End()
         PopStyleVar()
         if AutoScroll && GetScrollY() >= GetScrollMaxY()
             SetScrollHereY(1.0f)
@@ -2023,6 +2020,50 @@ def DasShowExampleAppPropertyEditor(p_open:bool? implicit)
         EndTable()
     PopStyleVar()
     End()
+
+def DasShowExampleAppLongText(p_open:bool? implicit)
+    SetNextWindowSize(ImVec2(520., 600.), ImGuiCond FirstUseEver)
+    if !Begin("Example: Long text display", p_open)
+        End()
+        return
+    static_let <|
+        var test_type = 0
+        var log = new ImGuiTextBuffer
+        var lines = 0
+    Text("Printing unusually long amount of text.")
+    Combo("Test type", safe_addr(test_type),
+        [[auto "Single call to TextUnformatted()";
+        "Multiple calls to Text(), clipped";
+        "Multiple calls to Text(), not clipped (slow)"]])
+    Text("Buffer contents: {lines} lines, {*log |> size} bytes")
+    if Button("Clear")
+        *log |> clear()
+        lines = 0
+    SameLine()
+    if Button("Add 1000 lines")
+        for i in range(1000)
+            *log |> append("{lines+i} The quick brown fox jumps over the lazy dog\n")
+        lines += 1000
+    BeginChild("Log", ImVec2())
+    if test_type==0
+        TextUnformatted(*log |> c_str())
+    elif test_type==1
+        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        using() <| $ ( var clipper : ImGuiListClipper# )
+            clipper |> Begin(lines)
+            while clipper |> Step()
+                for i in range(clipper.DisplayStart,clipper.DisplayEnd)
+                    Text("{i} The quick brown fox jumps over the lazy dog")
+            clipper |> End()
+            PopStyleVar()
+    elif test_type==2
+        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        for i in range(lines)
+            Text("{i} The quick brown fox jumps over the lazy dog")
+        PopStyleVar()
+    EndChild()
+    End()
+
 
 [export]
 def main
