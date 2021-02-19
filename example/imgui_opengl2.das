@@ -1735,7 +1735,7 @@ class ExampleAppConsole
             self->AddLog("Unknown command: '{command_line}'\n")
         ScrollToBottom = true
     def TextEditCallback(var data:ImGuiInputTextCallbackData)
-        if data.EventFlag==int(ImGuiInputTextFlags CallbackCompletion)  // TODO: remap field types
+        if data.EventFlag==ImGuiInputTextFlags CallbackCompletion
             let word_end = data.CursorPos
             var word_start = word_end
             while word_start > 0
@@ -1780,14 +1780,14 @@ class ExampleAppConsole
                 self->AddLog("Possible matches:\n")
                 for cn in candidates
                     self->AddLog("- {cn}\n")
-        elif data.EventFlag==int(ImGuiInputTextFlags CallbackHistory)
+        elif data.EventFlag==ImGuiInputTextFlags CallbackHistory
             let prev_history_pos = HistoryPos;
-            if data.EventKey == int(ImGuiKey UpArrow)
+            if data.EventKey == ImGuiKey UpArrow
                 if HistoryPos == -1
                     HistoryPos = length(History) - 1
                 elif HistoryPos > 0
                     HistoryPos--
-            elif data.EventKey == int(ImGuiKey DownArrow)
+            elif data.EventKey == ImGuiKey DownArrow
                 if HistoryPos != -1
                     if ++HistoryPos >= length(History)
                         HistoryPos = -1

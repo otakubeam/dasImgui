@@ -354,11 +354,11 @@ struct ImGuiInputTextCallbackData_GeneratedAnnotation : ManagedStructureAnnotati
 	ImGuiInputTextCallbackData_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiInputTextCallbackData", ml) {
 	}
 	void init () {
-		addField<DAS_BIND_MANAGED_FIELD(EventFlag)>("EventFlag","EventFlag");
-		addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
+		addField<ImGuiInputTextFlags_,offsetof(ManagedType,EventFlag)>("EventFlag","EventFlag");
+		addField<ImGuiInputTextFlags_,offsetof(ManagedType,Flags)>("Flags","Flags");
 		addField<DAS_BIND_MANAGED_FIELD(UserData)>("UserData","UserData");
 		addField<DAS_BIND_MANAGED_FIELD(EventChar)>("EventChar","EventChar");
-		addField<DAS_BIND_MANAGED_FIELD(EventKey)>("EventKey","EventKey");
+		addField<ImGuiKey_,offsetof(ManagedType,EventKey)>("EventKey","EventKey");
 		addField<DAS_BIND_MANAGED_FIELD(Buf)>("Buf","Buf");
 		addField<DAS_BIND_MANAGED_FIELD(BufTextLen)>("BufTextLen","BufTextLen");
 		addField<DAS_BIND_MANAGED_FIELD(BufSize)>("BufSize","BufSize");

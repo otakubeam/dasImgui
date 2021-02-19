@@ -55,6 +55,12 @@ def main
         "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]]
     }}
 
+    substitute_field_types <- {{
+        "ImGuiInputTextCallbackData::EventFlag" => "ImGuiInputTextFlags_";
+        "ImGuiInputTextCallbackData::Flags" => "ImGuiInputTextFlags_";
+        "ImGuiInputTextCallbackData::EventKey" => "ImGuiKey_"
+    }}
+
     // generate
 
     var args <- get_command_line_arguments()
