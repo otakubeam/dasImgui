@@ -219,8 +219,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppPropertyEditor(safe_addr(show_app_property_editor))
     if show_app_long_text
         DasShowExampleAppLongText(safe_addr(show_app_long_text))
+    if show_app_auto_resize
+        DasShowExampleAppAutoResize(safe_addr(show_app_auto_resize))
 /*
-    if (show_app_auto_resize)         ShowExampleAppAutoResize(&show_app_auto_resize)
     if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize)
     if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay)
     if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles)
@@ -2064,6 +2065,20 @@ def DasShowExampleAppLongText(p_open:bool? implicit)
     EndChild()
     End()
 
+def DasShowExampleAppAutoResize(p_open:bool? implicit)
+    if !Begin("Example: Auto-resizing window", p_open, ImGuiWindowFlags AlwaysAutoResize)
+        End()
+        return
+    static_let <|
+        var lines = 10
+    TextUnformatted(
+        "Window will resize every-frame to the size of its content.\n" +
+        "Note that you probably don't want to query the window size to\n" +
+        "output your content because that would create a feedback loop.");
+    SliderInt("Number of lines", safe_addr(lines), 1, 20);
+    for i in range(lines)
+        Text("This is line {i}")
+    End()
 
 [export]
 def main
