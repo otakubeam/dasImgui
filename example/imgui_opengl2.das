@@ -1,3 +1,5 @@
+options persistent_string_heap = true
+
 require math
 require strings
 require daslib/strings_boost
@@ -205,11 +207,8 @@ def DasShowDemoWindow ( _p_open : bool? )
 
     if show_app_main_menu_bar
         DasShowExampleAppMainMenuBar()
-
-/*
-    if (show_app_documents)           ShowExampleAppDocuments(&show_app_documents)
-*/
-
+    if show_app_documents
+        DasShowExampleAppDocuments(safe_addr(show_app_documents))
     if show_app_console
         DasShowExampleAppConsole(safe_addr(show_app_console))
     if show_app_log
@@ -1604,7 +1603,6 @@ def DasShowExampleAppLayout(var p_open:bool? implicit)
         EndGroup()
     End()
 
-
 class ExampleAppConsole
     InputBuf:ImGuiInputTextBuffer <- ImGuiInputTextBuffer("",256)
     Items:array<string>
@@ -1751,7 +1749,7 @@ class ExampleAppConsole
             for cmd in Commands
                 if cmd |> starts_with(word)
                     candidates |> push(cmd)
-            if length(candidates)==0
+            if candidates |> empty
                 self->AddLog("No match for \"{word}\"!\n")
             elif length(candidates) == 1
                 data |> DeleteChars(word_start, match_len)
@@ -1800,6 +1798,180 @@ def DasShowExampleAppConsole(var p_open:bool? implicit)
     static_let <|
         var console <- ExampleAppConsole()
     console->Draw("Example: Console", p_open)
+
+struct MyDocument
+    Name:string
+    Open:bool
+    OpenPrev:bool
+    Dirty:bool = false
+    WantClose:bool = false
+    Color:ImVec4 = ImVec4()
+
+def MyDocument(name:string; open:bool = true; color:ImVec4 = ImVec4(1.0f, 1.0f, 1.0f, 1.0f))
+    var self : MyDocument
+    self.Name = name
+    self.Open = open
+    self.OpenPrev = open
+    self.Color = color
+    return self
+
+def DoOpen(var self:MyDocument)
+    self.Open = true
+
+def DoQueueClose(var self:MyDocument)
+    self.WantClose = true
+
+def DoForceClose(var self:MyDocument)
+    self.Open = false
+    self.Dirty = false
+
+def DoSave(var self:MyDocument)
+    self.Dirty = false
+
+def DisplayContents(var doc:MyDocument)
+    PushID(safe_addr(doc))
+    Text("Document \"{doc.Name}\"")
+    PushStyleColor(ImGuiCol Text, doc.Color)
+    TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+    PopStyleColor()
+    if Button("Modify", ImVec2(100., 0.))
+        doc.Dirty = true
+    SameLine()
+    if Button("Save", ImVec2(100., 0.))
+        doc |> DoSave()
+    ColorEdit3("color", safe_addr(doc.Color.x))
+    PopID()
+
+def DisplayContextMenu(var doc:MyDocument)
+    if !BeginPopupContextItem()
+        return
+    if MenuItem("Save {doc.Name}", "CTRL+S", false, doc.Open)
+        doc |> DoSave()
+    if MenuItem("Close", "CTRL+W", false, doc.Open)
+        doc |> DoQueueClose()
+    EndPopup()
+
+struct ExampleAppDocuments
+    Documents:array<MyDocument>
+
+def ExampleAppDocuments()
+    var self : ExampleAppDocuments
+    self.Documents |> push(MyDocument("Lettuce",             true,  ImVec4(0.4f, 0.8f, 0.4f, 1.0f)))
+    self.Documents |> push(MyDocument("Eggplant",            true,  ImVec4(0.8f, 0.5f, 1.0f, 1.0f)))
+    self.Documents |> push(MyDocument("Carrot",              true,  ImVec4(1.0f, 0.8f, 0.5f, 1.0f)))
+    self.Documents |> push(MyDocument("Tomato",              false, ImVec4(1.0f, 0.3f, 0.4f, 1.0f)))
+    self.Documents |> push(MyDocument("A Rather Long Title", false))
+    self.Documents |> push(MyDocument("Some Document",       false))
+    return <- self
+
+def NotifyOfDocumentsClosedElsewhere(var app:ExampleAppDocuments)
+    for doc in app.Documents
+        if !doc.Open && doc.OpenPrev
+            SetTabItemClosed(doc.Name)
+        doc.OpenPrev = doc.Open
+
+def DasShowExampleAppDocuments(p_open:bool? implicit)
+    static_let <|
+        var app <- ExampleAppDocuments()
+    static_let <|
+        var opt_reorderable = true
+        var opt_fitting_flags = ImGuiTabBarFlags FittingPolicyDefault_
+    let window_contents_visible = Begin("Example: Documents", p_open, ImGuiWindowFlags MenuBar)
+    if !window_contents_visible
+        End()
+        return
+    if BeginMenuBar()
+        if BeginMenu("File")
+            var open_count = 0
+            for doc in app.Documents
+                open_count += doc.Open ? 1 : 0;
+            if BeginMenu("Open", open_count < length(app.Documents))
+                for doc in app.Documents
+                    if !doc.Open
+                        if MenuItem(doc.Name)
+                            doc |> DoOpen()
+                EndMenu()
+            if MenuItem("Close All Documents", "", false, open_count > 0)
+                for doc in app.Documents
+                    doc |> DoQueueClose()
+            if MenuItem("Exit", "Alt+F4")
+                pass
+            EndMenu()
+        EndMenuBar()
+    for doc,doc_n in app.Documents,range(100500)
+        if doc_n > 0
+            SameLine()
+        PushID(safe_addr(doc))
+        if Checkbox(doc.Name, safe_addr(doc.Open))
+            if !doc.Open
+                doc |> DoForceClose()
+        PopID()
+    Separator()
+    let tab_bar_flags = (opt_fitting_flags) | (opt_reorderable ? ImGuiTabBarFlags Reorderable : ImGuiTabBarFlags None)
+    if BeginTabBar("##tabs", tab_bar_flags)
+        if opt_reorderable
+            NotifyOfDocumentsClosedElsewhere(app)
+        for doc in app.Documents
+            if !doc.Open
+                continue
+            let tab_flags = (doc.Dirty ? ImGuiTabItemFlags UnsavedDocument : ImGuiTabItemFlags None)
+            let visible = BeginTabItem(doc.Name, safe_addr(doc.Open), tab_flags)
+            if !doc.Open && doc.Dirty
+                doc.Open = true
+                doc |> DoQueueClose()
+            DisplayContextMenu(doc)
+            if visible
+                DisplayContents(doc)
+                EndTabItem()
+        EndTabBar()
+    static_let <|
+        var close_queue : array<MyDocument?>
+    if close_queue |> empty()
+        for doc in app.Documents
+            if doc.WantClose
+                doc.WantClose = false
+                unsafe
+                    close_queue |> push(addr(doc))
+    if !(close_queue |> empty())
+        var close_queue_unsaved_documents = 0
+        for qq in close_queue
+            if qq.Dirty
+                close_queue_unsaved_documents++
+        if close_queue_unsaved_documents == 0
+            for qq in close_queue
+                (*qq) |> DoForceClose()
+            close_queue |> clear()
+        else
+            if !IsPopupOpen("Save?")
+                OpenPopup("Save?")
+            if BeginPopupModal("Save?", null, ImGuiWindowFlags AlwaysAutoResize)
+                Text("Save change to the following items?")
+                let item_height = GetTextLineHeightWithSpacing()
+                if BeginChildFrame(GetID("frame"), ImVec2(-FLT_MIN, 6.25f * item_height))
+                    for qq in close_queue
+                        if qq.Dirty
+                            Text("{qq.Name}")
+                    EndChildFrame()
+                var button_size = ImVec2(GetFontSize() * 7.0f, 0.0f)
+                if Button("Yes", button_size)
+                    for qq in close_queue
+                        if qq.Dirty
+                            (*qq) |> DoSave()
+                        (*qq) |> DoForceClose()
+                    close_queue |> clear()
+                    CloseCurrentPopup()
+                SameLine()
+                if Button("No", button_size)
+                    for qq in close_queue
+                        (*qq) |> DoForceClose()
+                    close_queue |> clear()
+                    CloseCurrentPopup()
+                SameLine()
+                if Button("Cancel", button_size)
+                    close_queue |> clear()
+                    CloseCurrentPopup()
+                EndPopup()
+    End()
 
 [export]
 def main

@@ -494,7 +494,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetCursorPosX)>(*this, lib, "GetCursorPosX",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::TabItemButton)>(*this, lib, "TabItemButton",SideEffects::worstDefault, "ImGui::TabItemButton")
 	->args({"label","flags"})
-		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_type(1,makeType<ImGuiTabItemFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTabItemFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::EndTooltip)>(*this, lib, "EndTooltip",SideEffects::worstDefault, "ImGui::EndTooltip")
 	->args({})
@@ -783,7 +784,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetStyle), SimNode_ExtFuncCallRef>(*this, lib, "Ge
 addExtern<DAS_BIND_FUN(ImGui::BeginTabItem)>(*this, lib, "BeginTabItem",SideEffects::worstDefault, "ImGui::BeginTabItem")
 	->args({"label","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiTabItemFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTabItemFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginChildFrame)>(*this, lib, "BeginChildFrame",SideEffects::worstDefault, "ImGui::BeginChildFrame")
 	->args({"id","size","flags"})

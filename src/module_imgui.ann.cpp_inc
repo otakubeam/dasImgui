@@ -302,6 +302,7 @@ struct ImGuiListClipper_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiLi
 };
 struct ImVec2_GeneratedAnnotation : ManagedStructureAnnotation<ImVec2> {
 	virtual bool isLocal() const override { return true; }
+	virtual bool canBePlacedInContainer() const override { return true; }
 	ImVec2_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec2", ml) {
 	}
 	void init () {
@@ -311,6 +312,7 @@ struct ImVec2_GeneratedAnnotation : ManagedStructureAnnotation<ImVec2> {
 };
 struct ImVec4_GeneratedAnnotation : ManagedStructureAnnotation<ImVec4> {
 	virtual bool isLocal() const override { return true; }
+	virtual bool canBePlacedInContainer() const override { return true; }
 	ImVec4_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec4", ml) {
 	}
 	void init () {
@@ -454,6 +456,7 @@ struct ImGuiStyle_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStyle> {
 };
 struct ImColor_GeneratedAnnotation : ManagedStructureAnnotation<ImColor> {
 	virtual bool isLocal() const override { return true; }
+	virtual bool canBePlacedInContainer() const override { return true; }
 	ImColor_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImColor", ml) {
 	}
 	void init () {
