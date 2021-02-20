@@ -225,8 +225,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppConstrainedResize(safe_addr(show_app_constrained_resize))
     if show_app_simple_overlay
         DasShowExampleAppSimpleOverlay(safe_addr(show_app_simple_overlay))
+    if show_app_window_titles
+        DasShowExampleAppWindowTitles(safe_addr(show_app_window_titles))
 /*
-    if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles)
     if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering)
 */
 
@@ -2179,6 +2180,25 @@ def DasShowExampleAppSimpleOverlay(var p_open:bool? implicit)
             if p_open!=null && MenuItem("Close")
                 *p_open = false
             EndPopup()
+    End()
+
+def DasShowExampleAppWindowTitles(p_open:bool? implicit)
+    let viewport = GetMainViewport()
+    let base_pos = viewport.Pos
+    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 100.), ImGuiCond FirstUseEver)
+    Begin("Same title as another window##1")
+    Text("This is window 1.\nMy title is the same as window 2, but my identifier is unique.")
+    End()
+    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 200.), ImGuiCond FirstUseEver)
+    Begin("Same title as another window##2")
+    Text("This is window 2.\nMy title is the same as window 1, but my identifier is unique.")
+    End()
+    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 300.), ImGuiCond FirstUseEver)
+    static_let <|
+        let crot = [[int '|'; '/'; '-'; '\\']]
+    let ch = crot[ int(GetTime() / 0.25lf) & 3 ]
+    Begin("Animated title {to_char(ch)} {GetFrameCount()}###AnimatedTitle")
+    Text("This window has a changing title.")
     End()
 
 [export]
