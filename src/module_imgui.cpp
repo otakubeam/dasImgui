@@ -146,6 +146,29 @@ namespace das {
     void InsertChars(ImGuiInputTextCallbackData & data, int pos, const char* text ) {
         data.InsertChars(pos, text);
     }
+
+    // SetNextWindowSizeConstraints
+
+    struct SNWSCC {
+        Context *   context;
+        Lambda      lambda;
+        LineInfo    at;
+    };
+
+    void SetNextWindowSizeConstraintsCallback ( ImGuiSizeCallbackData* data ) {
+        SNWSCC * temp = (SNWSCC *) data->UserData;
+        if ( !temp->lambda.capture ) {
+            temp->context->throw_error_at(temp->at, "expecting lambda");
+        }
+        das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,temp->lambda,data);
+    }
+
+    void SetNextWindowSizeConstraints(vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at ) {
+        SNWSCC * temp = cast<SNWSCC *>::to(snwscc);
+        temp->context = context;
+        temp->at = *at;
+        ImGui::SetNextWindowSizeConstraints(size_min, size_max, &SetNextWindowSizeConstraintsCallback, temp);
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -240,6 +263,9 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault,"das::InsertChars");
     // clipper
     addUsing<ImGuiListClipper>(*this,lib,"ImGuiListClipper");
+    // SetNextWindowSizeConstraints
+    addExtern<DAS_BIND_FUN(das::SetNextWindowSizeConstraints)>(*this,lib,"_builtin_SetNextWindowSizeConstraints",
+        SideEffects::worstDefault,"das::SetNextWindowSizeConstraints");
     // additional default values
     findUniqueFunction("AddRectFilled")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));

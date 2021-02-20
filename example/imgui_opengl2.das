@@ -221,8 +221,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppLongText(safe_addr(show_app_long_text))
     if show_app_auto_resize
         DasShowExampleAppAutoResize(safe_addr(show_app_auto_resize))
+    if show_app_constrained_resize
+        DasShowExampleAppConstrainedResize(safe_addr(show_app_constrained_resize))
 /*
-    if (show_app_constrained_resize)  ShowExampleAppConstrainedResize(&show_app_constrained_resize)
     if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay)
     if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles)
     if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering)
@@ -2074,10 +2075,67 @@ def DasShowExampleAppAutoResize(p_open:bool? implicit)
     TextUnformatted(
         "Window will resize every-frame to the size of its content.\n" +
         "Note that you probably don't want to query the window size to\n" +
-        "output your content because that would create a feedback loop.");
-    SliderInt("Number of lines", safe_addr(lines), 1, 20);
+        "output your content because that would create a feedback loop.")
+    SliderInt("Number of lines", safe_addr(lines), 1, 20)
     for i in range(lines)
         Text("This is line {i}")
+    End()
+
+def DasShowExampleAppConstrainedResize(p_open:bool? implicit)
+    static_let <|
+        let test_desc =[[auto
+            "Resize vertical only";
+            "Resize horizontal only";
+            "Width > 100, Height > 100";
+            "Width 400-500";
+            "Height 400-500";
+            "Custom: Always Square";
+            "Custom: Fixed Steps (100)"
+        ]]
+        var auto_resize = false
+        var con_type = 0
+        var display_lines = 10
+        var ccs_square <- ImGuiSizeConstraints() <| @(var data:ImGuiSizeCallbackData)
+            let t = max(data.DesiredSize.x, data.DesiredSize.y)
+            data.DesiredSize.x = t
+            data.DesiredSize.y = t
+        var ccs_step <- ImGuiSizeConstraints() <| @(var data:ImGuiSizeCallbackData)
+            let step = 100.f
+            data.DesiredSize = ImVec2(
+                floor(data.DesiredSize.x / step + 0.5f) * step,
+                floor(data.DesiredSize.y / step + 0.5f) * step
+            )
+    if con_type == 0
+        SetNextWindowSizeConstraints(ImVec2(-1., 0.),    ImVec2(-1., FLT_MAX))
+    elif con_type == 1
+        SetNextWindowSizeConstraints(ImVec2(0., -1.),    ImVec2(FLT_MAX, -1.))
+    elif con_type == 2
+        SetNextWindowSizeConstraints(ImVec2(100., 100.), ImVec2(FLT_MAX, FLT_MAX))
+    elif con_type == 3
+        SetNextWindowSizeConstraints(ImVec2(400., -1.),  ImVec2(500., -1.))
+    elif con_type == 4
+        SetNextWindowSizeConstraints(ImVec2(-1., 400.),  ImVec2(-1., 500.))
+    elif con_type == 5
+        SetNextWindowSizeConstraints(ImVec2(0., 0.),     ImVec2(FLT_MAX, FLT_MAX), ccs_square)
+    elif con_type == 6
+        SetNextWindowSizeConstraints(ImVec2(0., 0.),     ImVec2(FLT_MAX, FLT_MAX), ccs_step)
+    let flags = auto_resize ? ImGuiWindowFlags AlwaysAutoResize : ImGuiWindowFlags None
+    if Begin("Example: Constrained Resize", p_open, flags)
+        if Button("200x200")
+            SetWindowSize(ImVec2(200., 200.))
+        SameLine()
+        if Button("500x500")
+            SetWindowSize(ImVec2(500., 500.))
+        SameLine()
+        if Button("800x200")
+            SetWindowSize(ImVec2(800., 200.))
+        SetNextItemWidth(200.)
+        Combo("Constraint", safe_addr(con_type), test_desc)
+        SetNextItemWidth(200.)
+        DragInt("Lines", safe_addr(display_lines), 0.2f, 1, 100)
+        Checkbox("Auto-resize", safe_addr(auto_resize))
+        for i in range(display_lines)
+            Text("{i} Hello, sailor! Making this line long enough for the example.")
     End()
 
 [export]

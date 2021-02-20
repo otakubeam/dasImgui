@@ -46,6 +46,21 @@ def clear ( var buf : ImGuiInputTextBuffer )
 def InputText ( lab:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
     return _builtin_InputText(buf, lab, flags)
 
+// note - this needs to correspond to C++ structure
+
+struct ImGuiSizeConstraints
+    context: Context?
+    callback: lambda<(var data:ImGuiSizeCallbackData):void>
+    at: LineInfo
+
+def ImGuiSizeConstraints(var lmb:lambda<(var data:ImGuiSizeCallbackData):void>)
+    var self : ImGuiSizeConstraints
+    self.callback <- lmb
+    return <- self
+
+def SetNextWindowSizeConstraints(size_min,size_max:ImVec2; var cn:ImGuiSizeConstraints)
+    _builtin_SetNextWindowSizeConstraints(cn,size_min,size_max)
+
 let IM_COL32_WHITE = IM_COL32(255,255,255,255)
 let IM_COL32_BLACK = IM_COL32(0,0,0,255)
 let IM_COL32_BLACK_TRANS = IM_COL32(0,0,0,0)
