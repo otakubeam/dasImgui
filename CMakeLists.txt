@@ -69,6 +69,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_glfw.h
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl2.cpp
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl2.h
+			${DAS_IMGUI_DIR}/example/imgui_demo.das
 			${DAS_IMGUI_DIR}/example/imgui_opengl2.das
 		)
 		ADD_MODULE_LIB(libDasModuleImGuiApp)
@@ -89,6 +90,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 				${DAS_IMGUI_DIR}/src/module_imgui_vulkan.cpp
 				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.cpp
 				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
+				${DAS_IMGUI_DIR}/example/imgui_demo.das
 				${DAS_IMGUI_DIR}/example/imgui_vulkan.das
 			)
 			ADD_MODULE_LIB(libDasModuleImGuiVulkan)
@@ -106,7 +108,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			CPP_BIND_AST(
 				VULKAN_GENERATE
 				generate_vulkan.das
-				${DAS_IMGUI_DIR}/src/imgui_vulkan_headers.h
+				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
 				${DAS_IMGUI_DIR}/src/module_imgui_vulkan
 				${DAS_IMGUI_DIR}/src
 				"${Vulkan_INCLUDE_DIR};${imgui_INCLUDE_DIR}"
