@@ -165,7 +165,8 @@ addExtern<DAS_BIND_FUN(ImGui::InputInt4)>(*this, lib, "InputInt4",SideEffects::w
 ;
 addExtern<DAS_BIND_FUN(ImGui::InvisibleButton)>(*this, lib, "InvisibleButton",SideEffects::worstDefault, "ImGui::InvisibleButton")
 	->args({"str_id","size","flags"})
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiButtonFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiButtonFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::CreateContext)>(*this, lib, "CreateContext",SideEffects::worstDefault, "ImGui::CreateContext")
 	->args({"shared_font_atlas"})

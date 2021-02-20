@@ -211,6 +211,8 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
         SideEffects::worstDefault, "das::PassFilter");
     // imcolor
+    addCtor<ImColor>(*this,lib,"ImColor","ImColor");
+    addCtor<ImColor,const ImVec4 &>(*this,lib,"ImColor","ImColor");
     addExtern<DAS_BIND_FUN(das::HSV),SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "HSV",
         SideEffects::worstDefault, "das::HSV")
             ->args({"h","s","v","a"})
@@ -267,6 +269,8 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::SetNextWindowSizeConstraints)>(*this,lib,"_builtin_SetNextWindowSizeConstraints",
         SideEffects::worstDefault,"das::SetNextWindowSizeConstraints");
     // additional default values
+    findUniqueFunction("AddRect")
+        ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
     findUniqueFunction("AddRectFilled")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
     findUniqueFunction("BeginTable")

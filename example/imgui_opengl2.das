@@ -227,9 +227,8 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppSimpleOverlay(safe_addr(show_app_simple_overlay))
     if show_app_window_titles
         DasShowExampleAppWindowTitles(safe_addr(show_app_window_titles))
-/*
-    if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering)
-*/
+    if show_app_custom_rendering
+        DasShowExampleAppCustomRendering(safe_addr(show_app_custom_rendering))
 
     static_let <|
         var show_app_metrics = false
@@ -2199,6 +2198,212 @@ def DasShowExampleAppWindowTitles(p_open:bool? implicit)
     let ch = crot[ int(GetTime() / 0.25lf) & 3 ]
     Begin("Animated title {to_char(ch)} {GetFrameCount()}###AnimatedTitle")
     Text("This window has a changing title.")
+    End()
+
+def DasShowExampleAppCustomRendering(p_open:bool? implicit)
+    if !Begin("Example: Custom rendering", p_open)
+        End()
+        return
+
+    if BeginTabBar("##TabBar")
+        if BeginTabItem("Primitives")
+            PushItemWidth(-GetFontSize() * 15.)
+            var draw_list = GetWindowDrawList()
+            Text("Gradients")
+            var gradient_size = ImVec2(CalcItemWidth(), GetFrameHeight())
+            if true
+                let p0 = GetCursorScreenPos()
+                let p1 = ImVec2(p0.x + gradient_size.x, p0.y + gradient_size.y)
+                let col_a = GetColorU32(IM_COL32(0, 0, 0, 255))
+                let col_b = GetColorU32(IM_COL32(255, 255, 255, 255))
+                *draw_list |> AddRectFilledMultiColor(p0, p1, col_a, col_b, col_b, col_a)
+                InvisibleButton("##gradient1", gradient_size)
+            if true
+                let p0 = GetCursorScreenPos()
+                let p1 = ImVec2(p0.x + gradient_size.x, p0.y + gradient_size.y)
+                let col_a = GetColorU32(IM_COL32(0, 255, 0, 255))
+                let col_b = GetColorU32(IM_COL32(255, 0, 0, 255))
+                *draw_list |> AddRectFilledMultiColor(p0, p1, col_a, col_b, col_b, col_a)
+                InvisibleButton("##gradient2", gradient_size)
+
+            Text("All primitives")
+            static_let <|
+                var sz = 36.0f
+                var thickness = 3.0f
+                var ngon_sides = 6
+                var circle_segments_override = false
+                var circle_segments_override_v = 12
+                var curve_segments_override = false
+                var curve_segments_override_v = 8
+                var colf = ImVec4(1.0f, 1.0f, 0.4f, 1.0f)
+            DragFloat("Size", safe_addr(sz), 0.2f, 2.0f, 100.0f, "%.0f")
+            DragFloat("Thickness", safe_addr(thickness), 0.05f, 1.0f, 8.0f, "%.02f")
+            SliderInt("N-gon sides", safe_addr(ngon_sides), 3, 12)
+            Checkbox("##circlesegmentoverride", safe_addr(circle_segments_override))
+            SameLine(0.0f, GetStyle().ItemInnerSpacing.x)
+            circle_segments_override = SliderInt("Circle segments override", safe_addr(circle_segments_override_v), 3, 40) || circle_segments_override
+            Checkbox("##curvessegmentoverride", safe_addr(curve_segments_override))
+            SameLine(0.0f, GetStyle().ItemInnerSpacing.x)
+            curve_segments_override = SliderInt("Curves segments override", safe_addr(curve_segments_override_v), 3, 40) || curve_segments_override
+            ColorEdit4("Color", safe_addr(colf.x))
+
+            let p = GetCursorScreenPos()
+            let col = ColorConvertFloat4ToU32(colf)
+            let spacing = 10.0f
+            let corners_none = ImDrawCornerFlags None
+            let corners_all = ImDrawCornerFlags All
+            let corners_tl_br = ImDrawCornerFlags TopLeft | ImDrawCornerFlags BotRight
+            let rounding = sz / 5.0f
+            let circle_segments = circle_segments_override ? circle_segments_override_v : 0
+            let curve_segments = curve_segments_override ? curve_segments_override_v : 0
+            var x = p.x + 4.0f
+            var y = p.y + 4.0f
+            for n in range(2)
+                let th = (n == 0) ? 1.0f : thickness
+                *draw_list |> AddNgon(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, ngon_sides, th)
+                x += sz + spacing
+                *draw_list |> AddCircle(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments, th)
+                x += sz + spacing
+                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 0.0f,  corners_none, th)
+                x += sz + spacing
+                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, rounding, corners_all, th)
+                x += sz + spacing
+                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, rounding, corners_tl_br, th)
+                x += sz + spacing
+                *draw_list |> AddTriangle(ImVec2(x+sz*0.5f,y), ImVec2(x+sz, y+sz-0.5f), ImVec2(x, y+sz-0.5f), col, th)
+                x += sz + spacing
+                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x + sz, y), col, th)
+                x += sz + spacing
+                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x, y + sz), col, th)
+                x += spacing
+                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x + sz, y + sz), col, th)
+                x += sz + spacing
+                var cp3 = [[ImVec2[3] ImVec2(x, y + sz * 0.6f); ImVec2(x + sz * 0.5f, y - sz * 0.4f); ImVec2(x + sz, y + sz) ]]
+                *draw_list |> AddBezierQuadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
+                x += sz + spacing;
+                var cp4 = [[ImVec2[4] ImVec2(x, y); ImVec2(x + sz * 1.3f, y + sz * 0.3f); ImVec2(x + sz - sz * 1.3f, y + sz - sz * 0.3f); ImVec2(x + sz, y + sz) ]]
+                *draw_list |> AddBezierCubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
+                x = p.x + 4.
+                y += sz + spacing
+
+            *draw_list |> AddNgonFilled(ImVec2(x + sz * 0.5f, y + sz * 0.5f), sz*0.5f, col, ngon_sides)
+            x += sz + spacing
+            *draw_list |> AddCircleFilled(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments)
+            x += sz + spacing
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col)
+            x += sz + spacing
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 10.0f)
+            x += sz + spacing
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 10.0f, corners_tl_br)
+            x += sz + spacing
+            *draw_list |> AddTriangleFilled(ImVec2(x+sz*0.5f,y), ImVec2(x+sz, y+sz-0.5f), ImVec2(x, y+sz-0.5f), col)
+            x += sz + spacing
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + thickness), col)
+            x += sz + spacing
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + thickness, y + sz), col)
+            x += spacing * 2.0f
+            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + 1., y + 1.), col)
+            x += sz
+            *draw_list |> AddRectFilledMultiColor(ImVec2(x, y), ImVec2(x + sz, y + sz), IM_COL32(0, 0, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(255, 255, 0, 255), IM_COL32(0, 255, 0, 255))
+
+            Dummy(ImVec2((sz + spacing) * 10.2f, (sz + spacing) * 3.0f))
+            PopItemWidth()
+            EndTabItem()
+
+        if (BeginTabItem("Canvas"))
+            static_let <|
+                var points:array<float2>
+                var scrolling = ImVec2(0.0f, 0.0f)
+                var opt_enable_grid = true
+                var opt_enable_context_menu = true
+                var adding_line = false;
+            Checkbox("Enable grid", safe_addr(opt_enable_grid))
+            Checkbox("Enable context menu", safe_addr(opt_enable_context_menu))
+            Text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.")
+
+            var canvas_p0 = GetCursorScreenPos()
+            var canvas_sz = GetContentRegionAvail()
+            if canvas_sz.x < 50.0f
+                canvas_sz.x = 50.0f
+            if canvas_sz.y < 50.0f
+                canvas_sz.y = 50.0f
+            var canvas_p1 = ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y)
+
+            var io & = GetIO()
+            var draw_list = GetWindowDrawList()
+            *draw_list |> AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255))
+            *draw_list |> AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255))
+
+            InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags MouseButtonLeft | ImGuiButtonFlags MouseButtonRight)
+            let is_hovered = IsItemHovered()
+            let is_active = IsItemActive()
+            let origin = ImVec2(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y)
+            let mouse_pos_in_canvas = float2(io.MousePos.x - origin.x, io.MousePos.y - origin.y)
+
+            if is_hovered && !adding_line && IsMouseClicked(ImGuiMouseButton Left)
+                points |> push(mouse_pos_in_canvas)
+                points |> push(mouse_pos_in_canvas)
+                adding_line = true
+            if adding_line
+                points [ points |> length() - 1 ] = mouse_pos_in_canvas
+                if !IsMouseDown(ImGuiMouseButton Left)
+                    adding_line = false
+
+            let mouse_threshold_for_pan = opt_enable_context_menu ? -1.0f : 0.0f
+            if is_active && IsMouseDragging(ImGuiMouseButton Right, mouse_threshold_for_pan)
+                scrolling.x += io.MouseDelta.x
+                scrolling.y += io.MouseDelta.y
+
+            let drag_delta = GetMouseDragDelta(ImGuiMouseButton Right)
+            if opt_enable_context_menu && IsMouseReleased(ImGuiMouseButton Right) && drag_delta.x == 0.0f && drag_delta.y == 0.0f
+                OpenPopupOnItemClick("context")
+            if BeginPopup("context")
+                if adding_line
+                    points |> resize(points |> length() - 2)
+                adding_line = false
+                if MenuItem("Remove one", "", false, points |> length() > 0)
+                    points |> resize(points |> length() - 2)
+                if MenuItem("Remove all", "", false, points |> length() > 0)
+                    points |> clear()
+                EndPopup()
+
+            *draw_list |> PushClipRect(canvas_p0, canvas_p1, true)
+            if opt_enable_grid
+                let GRID_STEP = 64.0f;
+                var x = scrolling.x % GRID_STEP
+                while x < canvas_sz.x
+                    *draw_list |> AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40))
+                    x += GRID_STEP
+                var y = scrolling.y % GRID_STEP
+                while y < canvas_sz.y
+                    *draw_list |> AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40))
+                    y += GRID_STEP
+            var n = 0
+            while n < points |> length()
+                *draw_list |> AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f)
+                n += 2
+            *draw_list |> PopClipRect()
+            EndTabItem()
+
+        if BeginTabItem("BG/FG draw lists")
+            static_let <|
+                var draw_bg = true
+                var draw_fg = true
+            Checkbox("Draw in Background draw list", safe_addr(draw_bg))
+            SameLine()
+            DasHelpMarker("The Background draw list will be rendered below every Dear ImGui windows.")
+            Checkbox("Draw in Foreground draw list", safe_addr(draw_fg))
+            SameLine()
+            DasHelpMarker("The Foreground draw list will be rendered over every Dear ImGui windows.")
+            let window_pos = GetWindowPos()
+            let window_size = GetWindowSize()
+            let window_center = ImVec2(window_pos.x + window_size.x * 0.5f, window_pos.y + window_size.y * 0.5f)
+            if draw_bg
+                *GetBackgroundDrawList() |> AddCircle(window_center, window_size.x * 0.6f, IM_COL32(255, 0, 0, 200), 0, 10. + 4.)
+            if draw_fg
+                *GetForegroundDrawList() |> AddCircle(window_center, window_size.y * 0.6f, IM_COL32(0, 255, 0, 200), 0, 10.)
+            EndTabItem()
+        EndTabBar()
     End()
 
 [export]

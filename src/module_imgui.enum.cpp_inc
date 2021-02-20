@@ -404,18 +404,18 @@ public:
 	}
 };
 
-class EnumerationImGuiButtonFlags_ : public das::Enumeration {
+class EnumerationImGuiButtonFlags : public das::Enumeration {
 public:
-    EnumerationImGuiButtonFlags_() : das::Enumeration("ImGuiButtonFlags_") {
+    EnumerationImGuiButtonFlags() : das::Enumeration("ImGuiButtonFlags") {
         external = true;
         cppName = "ImGuiButtonFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiButtonFlags_ >::type >::type;
-		addI("ImGuiButtonFlags_None", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_None), das::LineInfo());
-		addI("ImGuiButtonFlags_MouseButtonLeft", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonLeft), das::LineInfo());
-		addI("ImGuiButtonFlags_MouseButtonRight", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonRight), das::LineInfo());
-		addI("ImGuiButtonFlags_MouseButtonMiddle", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonMiddle), das::LineInfo());
-		addI("ImGuiButtonFlags_MouseButtonMask_", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonMask_), das::LineInfo());
-		addI("ImGuiButtonFlags_MouseButtonDefault_", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonDefault_), das::LineInfo());
+		addI("None", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_None), das::LineInfo());
+		addI("MouseButtonLeft", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonLeft), das::LineInfo());
+		addI("MouseButtonRight", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonRight), das::LineInfo());
+		addI("MouseButtonMiddle", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonMiddle), das::LineInfo());
+		addI("MouseButtonMask_", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonMask_), das::LineInfo());
+		addI("MouseButtonDefault_", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonDefault_), das::LineInfo());
 	}
 };
 
