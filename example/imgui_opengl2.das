@@ -223,8 +223,9 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowExampleAppAutoResize(safe_addr(show_app_auto_resize))
     if show_app_constrained_resize
         DasShowExampleAppConstrainedResize(safe_addr(show_app_constrained_resize))
+    if show_app_simple_overlay
+        DasShowExampleAppSimpleOverlay(safe_addr(show_app_simple_overlay))
 /*
-    if (show_app_simple_overlay)      ShowExampleAppSimpleOverlay(&show_app_simple_overlay)
     if (show_app_window_titles)       ShowExampleAppWindowTitles(&show_app_window_titles)
     if (show_app_custom_rendering)    ShowExampleAppCustomRendering(&show_app_custom_rendering)
 */
@@ -2136,6 +2137,48 @@ def DasShowExampleAppConstrainedResize(p_open:bool? implicit)
         Checkbox("Auto-resize", safe_addr(auto_resize))
         for i in range(display_lines)
             Text("{i} Hello, sailor! Making this line long enough for the example.")
+    End()
+
+def DasShowExampleAppSimpleOverlay(var p_open:bool? implicit)
+    let PAD = 10.0f
+    static_let <|
+        var corner = 0
+    var io & = GetIO()
+    var window_flags = ImGuiWindowFlags NoDecoration | ImGuiWindowFlags AlwaysAutoResize | ImGuiWindowFlags NoSavedSettings | ImGuiWindowFlags NoFocusOnAppearing | ImGuiWindowFlags NoNav
+    if corner != -1
+        let viewport = GetMainViewport()
+        var work_pos = viewport.WorkPos
+        var work_size = viewport.WorkSize
+        var window_pos = ImVec2()
+        var window_pos_pivot = ImVec2()
+        window_pos.x = (corner & 1)!=0 ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD)
+        window_pos.y = (corner & 2)!=0 ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD)
+        window_pos_pivot.x = (corner & 1)!=0 ? 1.0f : 0.0f
+        window_pos_pivot.y = (corner & 2)!=0 ? 1.0f : 0.0f
+        SetNextWindowPos(window_pos, ImGuiCond Always, window_pos_pivot)
+        window_flags |= ImGuiWindowFlags NoMove
+    SetNextWindowBgAlpha(0.35f)
+    if Begin("Example: Simple overlay", p_open, window_flags)
+        Text("Simple overlay\nin the corner of the screen.\n(right-click to change position)")
+        Separator()
+        if IsMousePosValid()
+            Text("Mouse Position: ({io.MousePos.x},{io.MousePos.y})")
+        else
+            Text("Mouse Position: <invalid>")
+        if BeginPopupContextWindow()
+            if MenuItem("Custom",       "", corner == -1)
+                corner = -1
+            if MenuItem("Top-left",     "", corner == 0)
+                corner = 0
+            if MenuItem("Top-right",    "", corner == 1)
+                corner = 1
+            if MenuItem("Bottom-left",  "", corner == 2)
+                corner = 2
+            if MenuItem("Bottom-right", "", corner == 3)
+                corner = 3
+            if p_open!=null && MenuItem("Close")
+                *p_open = false
+            EndPopup()
     End()
 
 [export]
