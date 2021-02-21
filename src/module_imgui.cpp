@@ -173,6 +173,10 @@ namespace das {
     ImGuiSortDirection_ SortDirection ( const ImGuiTableColumnSortSpecs & specs ) {
         return ImGuiSortDirection_(specs.SortDirection);
     }
+
+    ImVec2 CalcTextSize(const char* text,bool hide_text_after_double_hash, float wrap_width) {
+        return ImGui::CalcTextSize(text,nullptr,hide_text_after_double_hash,wrap_width);
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -275,6 +279,11 @@ bool Module_imgui::initDependencies() {
     // ImGuiTableColumnSortSpecs
     addExtern<DAS_BIND_FUN(das::SortDirection)>(*this,lib,"SortDirection",
         SideEffects::none,"das::SortDirection");
+    // CalcTextSize
+    addExtern<DAS_BIND_FUN(das::CalcTextSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
+	->args({"text","hide_text_after_double_hash","wrap_width"})
+		->arg_init(1,make_smart<ExprConstBool>(false))
+		->arg_init(2,make_smart<ExprConstFloat>(-1.0f));
     // additional default values
     findUniqueFunction("AddRect")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));

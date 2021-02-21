@@ -506,12 +506,6 @@ addExtern<DAS_BIND_FUN(ImGui::EndTooltip)>(*this, lib, "EndTooltip",SideEffects:
 addExtern<bool (*)(const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
 	->args({"size"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::CalcTextSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
-	->args({"text","text_end","hide_text_after_double_hash","wrap_width"})
-		->arg_init(1,make_smart<ExprConstString>(""))
-		->arg_init(2,make_smart<ExprConstBool>(false))
-		->arg_init(3,make_smart<ExprConstFloat>(-1))
-;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
 	->args({"label","v","v_speed","v_min","v_max","format","power"})
 ;

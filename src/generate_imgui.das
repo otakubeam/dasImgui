@@ -20,7 +20,8 @@ def main
         "ImGui::TextUnformatted";
         "ImGuiTextFilter::PassFilter";
         "ImGuiTextBuffer::append";
-        "ImGuiInputTextCallbackData::InsertChars"
+        "ImGuiInputTextCallbackData::InsertChars";
+        "ImGui::CalcTextSize"
     }]
 
     cmres_functions <- [{auto[]

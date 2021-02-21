@@ -2418,7 +2418,7 @@ struct EnumDesc
     Name:string
     Tooltip:string
 
-def EditTableSizingFlags(var p_flags:ImGuiTableFlags?)
+def EditTableSizingFlags(var p_flags:ImGuiTableFlags? implicit)
     static_let <|
         var policies = [[EnumDesc
             Value=ImGuiTableFlags None,                 Name="Default",
@@ -2495,8 +2495,12 @@ def ShowTableColumnsStatusFlags(var flags:ImGuiTableColumnFlags)
     CheckboxFlags("_IsHovered", safe_addr(flags), ImGuiTableColumnFlags IsHovered)
 
 enum ContentsType
-    CT_Text
+    CT_ShowWidth
+    CT_ShortText
+    CT_LongText
+    CT_Button
     CT_FillButton
+    CT_InputText
 
 def DasShowDemoWindowTables()
     if !CollapsingHeader("Tables & Columns")
@@ -2560,7 +2564,7 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags = ImGuiTableFlags Borders | ImGuiTableFlags RowBg
             var display_headers = false
-            var contents_type = ContentsType CT_Text
+            var contents_type = ContentsType CT_ShortText
         PushStyleCompact()
         CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
         CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags), ImGuiTableFlags Borders)
@@ -2583,7 +2587,7 @@ def DasShowDemoWindowTables()
         AlignTextToFramePadding()
         Text("Cell contents:")
         SameLine()
-        RadioButton("Text", safe_addr(contents_type), ContentsType CT_Text)
+        RadioButton("Text", safe_addr(contents_type), ContentsType CT_ShortText)
         SameLine()
         RadioButton("FillButton", safe_addr(contents_type), ContentsType CT_FillButton)
         Checkbox("Display headers", safe_addr(display_headers))
@@ -2602,7 +2606,7 @@ def DasShowDemoWindowTables()
                 for column in range(3)
                     TableSetColumnIndex(column)
                     let buf = "Hello {column},{row}"
-                    if contents_type == ContentsType CT_Text
+                    if contents_type == ContentsType CT_ShortText
                         TextUnformatted(buf)
                     elif contents_type == ContentsType CT_FillButton
                         Button(buf, ImVec2(-FLT_MIN, 0.0f))
@@ -2808,109 +2812,98 @@ def DasShowDemoWindowTables()
         PopStyleVar()
         TreePop()
 
-/*
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Sizing policies"))
-    {
-        static ImGuiTableFlags flags1 = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_RowBg | ImGuiTableFlags_ContextMenuInBody;
+    if TreeNode("Sizing policies")
+        static_let <|
+            var flags1 = ImGuiTableFlags BordersV | ImGuiTableFlags BordersOuterH | ImGuiTableFlags RowBg | ImGuiTableFlags ContextMenuInBody
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags1, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", &flags1, ImGuiTableFlags_NoHostExtendX)
+        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags1), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags1), ImGuiTableFlags NoHostExtendX)
         PopStyleCompact()
-
-        static ImGuiTableFlags sizing_policy_flags[4] = { ImGuiTableFlags_SizingFixedFit, ImGuiTableFlags_SizingFixedSame, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_SizingStretchSame };
-        for (int table_n = 0; table_n < 4; table_n++)
-        {
+        static_let <|
+            var sizing_policy_flags = [[ImGuiTableFlags ImGuiTableFlags SizingFixedFit; ImGuiTableFlags SizingFixedSame; ImGuiTableFlags SizingStretchProp; ImGuiTableFlags SizingStretchSame]]
+        for table_n in range(4)
             PushID(table_n)
-            SetNextItemWidth(TEXT_BASE_WIDTH * 30)
-            EditTableSizingFlags(&sizing_policy_flags[table_n])
-
-            // To make it easier to understand the different sizing policy,
-            // For each policy: we display one table where the columns have equal contents width, and one where the columns have different contents width.
-            if (BeginTable("table1", 3, sizing_policy_flags[table_n] | flags1))
-            {
-                for (int row = 0; row < 3; row++)
-                {
+            SetNextItemWidth(TEXT_BASE_WIDTH * 30.0)
+            EditTableSizingFlags(safe_addr(sizing_policy_flags[table_n]))
+            if BeginTable("table1", 3, sizing_policy_flags[table_n] | flags1)
+                for row in range(3)
                     TableNextRow()
-                    TableNextColumn() Text("Oh dear")
-                    TableNextColumn() Text("Oh dear")
-                    TableNextColumn() Text("Oh dear")
-                }
+                    TableNextColumn()
+                    Text("Oh dear")
+                    TableNextColumn()
+                    Text("Oh dear")
+                    TableNextColumn()
+                    Text("Oh dear")
                 EndTable()
-            }
-            if (BeginTable("table2", 3, sizing_policy_flags[table_n] | flags1))
-            {
-                for (int row = 0; row < 3; row++)
-                {
+            if BeginTable("table2", 3, sizing_policy_flags[table_n] | flags1)
+                for row in range(3)
                     TableNextRow()
-                    TableNextColumn() Text("AAAA")
-                    TableNextColumn() Text("BBBBBBBB")
-                    TableNextColumn() Text("CCCCCCCCCCCC")
-                }
+                    TableNextColumn()
+                    Text("AAAA")
+                    TableNextColumn()
+                    Text("BBBBBBBB")
+                    TableNextColumn()
+                    Text("CCCCCCCCCCCC")
                 EndTable()
-            }
             PopID()
-        }
-
         Spacing()
         TextUnformatted("Advanced")
         SameLine()
-        HelpMarker("This section allows you to interact and see the effect of various sizing policies depending on whether Scroll is enabled and the contents of your columns.")
-
-        enum ContentsType { CT_ShowWidth, CT_ShortText, CT_LongText, CT_Button, CT_FillButton, CT_InputText };
-        static ImGuiTableFlags flags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable;
-        static int contents_type = CT_ShowWidth;
-        static int column_count = 3;
-
+        DasHelpMarker("This section allows you to interact and see the effect of various sizing policies depending on whether Scroll is enabled and the contents of your columns.")
+        static_let <|
+            var flags = ImGuiTableFlags ScrollY | ImGuiTableFlags Borders | ImGuiTableFlags RowBg | ImGuiTableFlags Resizable
+            var contents_type = ContentsType CT_ShowWidth
+            var column_count = 3
         PushStyleCompact()
         PushID("Advanced")
-        PushItemWidth(TEXT_BASE_WIDTH * 30)
-        EditTableSizingFlags(&flags)
-        Combo("Contents", &contents_type, "Show width\0Short Text\0Long Text\0Button\0Fill Button\0InputText\0")
-        if (contents_type == CT_FillButton)
-        {
+        PushItemWidth(TEXT_BASE_WIDTH * 30.0)
+        EditTableSizingFlags(safe_addr(flags))
+        unsafe
+            Combo("Contents", reinterpret<int?>(addr(contents_type)), [[auto "Show width"; "Short Text"; "Long Text"; "Button"; "Fill Button"; "InputText"]])
+        if contents_type == ContentsType CT_FillButton
             SameLine()
-            HelpMarker("Be mindful that using right-alignment (e.g. size.x = -FLT_MIN) creates a feedback loop where contents width can feed into auto-column width can feed into contents width.")
-        }
-        DragInt("Columns", &column_count, 0.1f, 1, 64, "%d", ImGuiSliderFlags_AlwaysClamp)
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_PreciseWidths", &flags, ImGuiTableFlags_PreciseWidths)
-        SameLine() HelpMarker("Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.")
-        CheckboxFlags("ImGuiTableFlags_ScrollX", &flags, ImGuiTableFlags_ScrollX)
-        CheckboxFlags("ImGuiTableFlags_ScrollY", &flags, ImGuiTableFlags_ScrollY)
-        CheckboxFlags("ImGuiTableFlags_NoClip", &flags, ImGuiTableFlags_NoClip)
+            DasHelpMarker("Be mindful that using right-alignment (e.g. size.x = -FLT_MIN) creates a feedback loop where contents width can feed into auto-column width can feed into contents width.")
+        DragInt("Columns", safe_addr(column_count), 0.1f, 1, 64, "%d", ImGuiSliderFlags AlwaysClamp)
+        CheckboxFlags("ImGuiTableFlagsResizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags PreciseWidths", safe_addr(flags), ImGuiTableFlags PreciseWidths)
+        SameLine()
+        DasHelpMarker("Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33)." +
+            " With larger number of columns, resizing will appear to be less smooth.")
+        CheckboxFlags("ImGuiTableFlags ScrollX", safe_addr(flags), ImGuiTableFlags ScrollX)
+        CheckboxFlags("ImGuiTableFlags ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
+        CheckboxFlags("ImGuiTableFlags NoClip", safe_addr(flags), ImGuiTableFlags NoClip)
         PopItemWidth()
         PopID()
         PopStyleCompact()
-
-        if (BeginTable("table2", column_count, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 7)))
-        {
-            for (int cell = 0; cell < 10 * column_count; cell++)
-            {
+        if BeginTable("table2", column_count, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 7.))
+            for cell in range(10 * column_count)
                 TableNextColumn()
-                int column = TableGetColumnIndex()
-                int row = TableGetRowIndex()
-
+                let column = TableGetColumnIndex()
+                let row = TableGetRowIndex()
                 PushID(cell)
-                char label[32];
-                static char text_buf[32] = "";
-                sprintf(label, "Hello %d,%d", column, row)
-                switch (contents_type)
-                {
-                case CT_ShortText:  TextUnformatted(label) break;
-                case CT_LongText:   Text("Some %s text %d,%d\nOver two lines..", column == 0 ? "long" : "longeeer", column, row) break;
-                case CT_ShowWidth:  Text("W: %.1f", GetContentRegionAvail().x) break;
-                case CT_Button:     Button(label) break;
-                case CT_FillButton: Button(label, ImVec2(-FLT_MIN, 0.0f)) break;
-                case CT_InputText:  SetNextItemWidth(-FLT_MIN) InputText("##", text_buf, IM_ARRAYSIZE(text_buf)) break;
-                }
+                let lab = "Hello {column},{row}"
+                if contents_type==ContentsType CT_ShortText
+                    TextUnformatted(lab)
+                elif contents_type==ContentsType CT_LongText
+                    Text("Some {column == 0 ? "long" : "longeeer"} text {column},{row}\nOver two lines..")
+                elif contents_type==ContentsType CT_ShowWidth
+                    Text("W: {GetContentRegionAvail().x}")
+                elif contents_type==ContentsType CT_Button
+                    Button(lab)
+                elif contents_type==ContentsType CT_FillButton
+                    Button(lab, ImVec2(-FLT_MIN, 0.0f))
+                elif contents_type==ContentsType CT_InputText
+                    SetNextItemWidth(-FLT_MIN)
+                    static_let <|
+                        var text_buf <- ImGuiInputTextBuffer("", 32)
+                    InputText("##", text_buf)
                 PopID()
-            }
             EndTable()
-        }
         TreePop()
-    }
+
+/*
 
     if (open_action != -1)
         SetNextItemOpen(open_action != 0)
@@ -3756,7 +3749,7 @@ def DasShowDemoWindowTables()
             | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
             | ImGuiTableFlags_SizingFixedFit;
 
-        enum ContentsType { CT_Text, CT_Button, CT_SmallButton, CT_FillButton, CT_Selectable, CT_SelectableSpanRow };
+        enum ContentsType { CT_ShortText, CT_Button, CT_SmallButton, CT_FillButton, CT_Selectable, CT_SelectableSpanRow };
         static int contents_type = CT_SelectableSpanRow;
         const char* contents_type_names[] = { "Text", "Button", "SmallButton", "FillButton", "Selectable", "Selectable (span row)" };
         static int freeze_cols = 1;
@@ -3967,7 +3960,7 @@ def DasShowDemoWindowTables()
                     // For the demo purpose we can select among different type of items submitted in the first column
                     char label[32];
                     sprintf(label, "%04d", item->ID)
-                    if (contents_type == CT_Text)
+                    if (contents_type == CT_ShortText)
                         TextUnformatted(label)
                     else if (contents_type == CT_Button)
                         Button(label)
