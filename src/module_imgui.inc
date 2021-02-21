@@ -49,6 +49,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionWidth)>(*this, lib, "GetWind
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableGetColumnFlags)>(*this, lib, "TableGetColumnFlags",SideEffects::worstDefault, "ImGui::TableGetColumnFlags")
 	->args({"column_n"})
+		->res_type(makeType<ImGuiTableColumnFlags_>(lib))
 		->arg_init(0,make_smart<ExprConstInt>(-1))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ColorPicker3)>(*this, lib, "ColorPicker3",SideEffects::worstDefault, "ImGui::ColorPicker3")

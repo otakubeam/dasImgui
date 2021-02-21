@@ -2449,7 +2449,6 @@ def EditTableSizingFlags(var p_flags:ImGuiTableFlags? implicit)
             if Selectable(pol.Name, idx == n)
                 *p_flags = (*p_flags & ~ImGuiTableFlags SizingMask_) | pol.Value // TODO: add & and ~ to flags
         EndCombo()
-
     SameLine()
     TextDisabled("(?)")
     if IsItemHovered()
@@ -2464,7 +2463,7 @@ def EditTableSizingFlags(var p_flags:ImGuiTableFlags? implicit)
         PopTextWrapPos()
         EndTooltip()
 
-def EditTableColumnsFlags(var p_flags:ImGuiTableColumnFlags?)
+def EditTableColumnsFlags(var p_flags:ImGuiTableColumnFlags? implicit)
     CheckboxFlags("_DefaultHide", p_flags, ImGuiTableColumnFlags DefaultHide)
     CheckboxFlags("_DefaultSort", p_flags, ImGuiTableColumnFlags DefaultSort)
     if CheckboxFlags("_WidthStretch", p_flags, ImGuiTableColumnFlags WidthStretch)
@@ -2903,80 +2902,62 @@ def DasShowDemoWindowTables()
             EndTable()
         TreePop()
 
-/*
-
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Vertical scrolling, with clipping"))
-    {
-        HelpMarker("Here we activate ScrollY, which will create a child window container to allow hosting scrollable contents.\n\nWe also demonstrate using ImGuiListClipper to virtualize the submission of many items.")
-        static ImGuiTableFlags flags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
-
+    if TreeNode("Vertical scrolling, with clipping")
+        DasHelpMarker("Here we activate ScrollY, which will create a child window container to allow hosting scrollable contents.\n" +
+            "\nWe also demonstrate using ImGuiListClipper to virtualize the submission of many items.")
+        static_let <|
+            var flags = ( ImGuiTableFlags ScrollY | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter |
+            ImGuiTableFlags BordersV | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable )
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_ScrollY", &flags, ImGuiTableFlags_ScrollY)
+        CheckboxFlags("ImGuiTableFlags_ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
         PopStyleCompact()
-
-        // When using ScrollX or ScrollY we need to specify a size for our table container!
-        // Otherwise by default the table will fit all available space, like a BeginChild() call.
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8)
-        if (BeginTable("table_scrolly", 3, flags, outer_size))
-        {
-            TableSetupScrollFreeze(0, 1) // Make top row always visible
-            TableSetupColumn("One", ImGuiTableColumnFlags_None)
-            TableSetupColumn("Two", ImGuiTableColumnFlags_None)
-            TableSetupColumn("Three", ImGuiTableColumnFlags_None)
+        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8.)
+        if BeginTable("table_scrolly", 3, flags, outer_size)
+            TableSetupScrollFreeze(0, 1)
+            TableSetupColumn("One", ImGuiTableColumnFlags None)
+            TableSetupColumn("Two", ImGuiTableColumnFlags None)
+            TableSetupColumn("Three", ImGuiTableColumnFlags None)
             TableHeadersRow()
-
-            // Demonstrate using clipper for large vertical lists
-            ImGuiListClipper clipper;
-            clipper.Begin(1000)
-            while (clipper.Step())
-            {
-                for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
-                {
-                    TableNextRow()
-                    for (int column = 0; column < 3; column++)
-                    {
-                        TableSetColumnIndex(column)
-                        Text("Hello %d,%d", column, row)
-                    }
-                }
-            }
+            using() <| $ ( var clipper : ImGuiListClipper# )
+                clipper |> Begin(1000)
+                while clipper |> Step()
+                    for row in range(clipper.DisplayStart,clipper.DisplayEnd)
+                        TableNextRow()
+                        for column in range(3)
+                            TableSetColumnIndex(column)
+                            Text("Hello {column},{row}")
+                clipper |> End()
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Horizontal scrolling"))
-    {
-        HelpMarker(
-            "When ScrollX is enabled, the default sizing policy becomes ImGuiTableFlags_SizingFixedFit, "
-            "as automatically stretching columns doesn't make much sense with horizontal scrolling.\n\n"
-            "Also note that as of the current version, you will almost always want to enable ScrollY along with ScrollX,"
+    if TreeNode("Horizontal scrolling")
+        DasHelpMarker(
+            "When ScrollX is enabled, the default sizing policy becomes ImGuiTableFlags_SizingFixedFit, " +
+            "as automatically stretching columns doesn't make much sense with horizontal scrolling.\n\n" +
+            "Also note that as of the current version, you will almost always want to enable ScrollY along with ScrollX," +
             "because the container window won't automatically extend vertically to fix contents (this may be improved in future versions).")
-        static ImGuiTableFlags flags = ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
-        static int freeze_cols = 1;
-        static int freeze_rows = 1;
-
+        static_let  <|
+            var flags = ( ImGuiTableFlags ScrollX | ImGuiTableFlags ScrollY | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter |
+                ImGuiTableFlags BordersV | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable )
+            var freeze_cols = 1
+            var freeze_rows = 1
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_ScrollX", &flags, ImGuiTableFlags_ScrollX)
-        CheckboxFlags("ImGuiTableFlags_ScrollY", &flags, ImGuiTableFlags_ScrollY)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags ScrollX", safe_addr(flags), ImGuiTableFlags ScrollX)
+        CheckboxFlags("ImGuiTableFlags ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
         SetNextItemWidth(GetFrameHeight())
-        DragInt("freeze_cols", &freeze_cols, 0.2f, 0, 9, NULL, ImGuiSliderFlags_NoInput)
+        DragInt("freeze_cols", safe_addr(freeze_cols), 0.2f, 0, 9, "", ImGuiSliderFlags NoInput)
         SetNextItemWidth(GetFrameHeight())
-        DragInt("freeze_rows", &freeze_rows, 0.2f, 0, 9, NULL, ImGuiSliderFlags_NoInput)
+        DragInt("freeze_rows", safe_addr(freeze_rows), 0.2f, 0, 9, "", ImGuiSliderFlags NoInput)
         PopStyleCompact()
-
-        // When using ScrollX or ScrollY we need to specify a size for our table container!
-        // Otherwise by default the table will fit all available space, like a BeginChild() call.
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8)
-        if (BeginTable("table_scrollx", 7, flags, outer_size))
-        {
+        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8.)
+        if BeginTable("table_scrollx", 7, flags, outer_size)
             TableSetupScrollFreeze(freeze_cols, freeze_rows)
-            TableSetupColumn("Line #", ImGuiTableColumnFlags_NoHide) // Make the first column not hideable to match our use of TableSetupScrollFreeze()
+            TableSetupColumn("Line #", ImGuiTableColumnFlags NoHide)
             TableSetupColumn("One")
             TableSetupColumn("Two")
             TableSetupColumn("Three")
@@ -2984,120 +2965,89 @@ def DasShowDemoWindowTables()
             TableSetupColumn("Five")
             TableSetupColumn("Six")
             TableHeadersRow()
-            for (int row = 0; row < 20; row++)
-            {
+            for row in range(20)
                 TableNextRow()
-                for (int column = 0; column < 7; column++)
-                {
-                    // Both TableNextColumn() and TableSetColumnIndex() return true when a column is visible or performing width measurement.
-                    // Because here we know that:
-                    // - A) all our columns are contributing the same to row height
-                    // - B) column 0 is always visible,
-                    // We only always submit this one column and can skip others.
-                    // More advanced per-column clipping behaviors may benefit from polling the status flags via TableGetColumnFlags().
-                    if (!TableSetColumnIndex(column) && column > 0)
-                        continue;
-                    if (column == 0)
-                        Text("Line %d", row)
+                for column in range(7)
+                    if !TableSetColumnIndex(column) && column>0
+                        continue
+                    if column == 0
+                        Text("Line {row}")
                     else
-                        Text("Hello world %d,%d", column, row)
-                }
-            }
+                        Text("Hello world {column},{row}")
             EndTable()
-        }
-
         Spacing()
         TextUnformatted("Stretch + ScrollX")
         SameLine()
-        HelpMarker(
-            "Showcase using Stretch columns + ScrollX together: "
-            "this is rather unusual and only makes sense when specifying an 'inner_width' for the table!\n"
+        DasHelpMarker(
+            "Showcase using Stretch columns + ScrollX together: " +
+            "this is rather unusual and only makes sense when specifying an 'inner_width' for the table!\n" +
             "Without an explicit value, inner_width is == outer_size.x and therefore using Stretch columns + ScrollX together doesn't make sense.")
-        static ImGuiTableFlags flags2 = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_RowBg | ImGuiTableFlags_ContextMenuInBody;
-        static float inner_width = 1000.0f;
+        static_let <|
+            var flags2 = ( ImGuiTableFlags SizingStretchSame | ImGuiTableFlags ScrollX | ImGuiTableFlags ScrollY | ImGuiTableFlags BordersOuter
+                | ImGuiTableFlags RowBg | ImGuiTableFlags ContextMenuInBody )
+            var inner_width = 1000.0f
         PushStyleCompact()
         PushID("flags3")
-        PushItemWidth(TEXT_BASE_WIDTH * 30)
-        CheckboxFlags("ImGuiTableFlags_ScrollX", &flags2, ImGuiTableFlags_ScrollX)
-        DragFloat("inner_width", &inner_width, 1.0f, 0.0f, FLT_MAX, "%.1f")
+        PushItemWidth(TEXT_BASE_WIDTH * 30.)
+        CheckboxFlags("ImGuiTableFlags_ScrollX", safe_addr(flags2), ImGuiTableFlags ScrollX)
+        DragFloat("inner_width", safe_addr(inner_width), 1.0f, 0.0f, FLT_MAX, "%.1f")
         PopItemWidth()
         PopID()
         PopStyleCompact()
-        if (BeginTable("table2", 7, flags2, outer_size, inner_width))
-        {
-            for (int cell = 0; cell < 20 * 7; cell++)
-            {
+        if BeginTable("table2", 7, flags2, outer_size, inner_width)
+            for cell in range(20 * 7)
                 TableNextColumn()
-                Text("Hello world %d,%d", TableGetColumnIndex(), TableGetRowIndex())
-            }
+                Text("Hello world {TableGetColumnIndex()},{TableGetRowIndex()}")
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Columns flags"))
-    {
-        // Create a first table just to show all the options/flags we want to make visible in our example!
-        const int column_count = 3;
-        const char* column_names[column_count] = { "One", "Two", "Three" };
-        static ImGuiTableColumnFlags column_flags[column_count] = { ImGuiTableColumnFlags_DefaultSort, ImGuiTableColumnFlags_None, ImGuiTableColumnFlags_DefaultHide };
-        static ImGuiTableColumnFlags column_flags_out[column_count] = { 0, 0, 0 }; // Output from TableGetColumnFlags()
-
-        if (BeginTable("table_columns_flags_checkboxes", column_count, ImGuiTableFlags_None))
-        {
+    if TreeNode("Columns flags")
+        let column_count = 3
+        let column_names= [[string "One"; "Two"; "Three"]]
+        static_let <|
+            var column_flags = [[ImGuiTableColumnFlags ImGuiTableColumnFlags DefaultSort; ImGuiTableColumnFlags None; ImGuiTableColumnFlags DefaultHide]]
+            var column_flags_out = [[ImGuiTableColumnFlags  ImGuiTableColumnFlags None; ImGuiTableColumnFlags None; ImGuiTableColumnFlags None]]
+        if BeginTable("table_columns_flags_checkboxes", column_count, ImGuiTableFlags None)
             PushStyleCompact()
-            for (int column = 0; column < column_count; column++)
-            {
+            for column in range(column_count)
                 TableNextColumn()
                 PushID(column)
-                AlignTextToFramePadding() // FIXME-TABLE: Workaround for wrong text baseline propagation
-                Text("'%s'", column_names[column])
+                AlignTextToFramePadding()
+                Text("'{column_names[column]}'")
                 Spacing()
                 Text("Input flags:")
-                EditTableColumnsFlags(&column_flags[column])
+                EditTableColumnsFlags(safe_addr(column_flags[column]))
                 Spacing()
                 Text("Output flags:")
                 ShowTableColumnsStatusFlags(column_flags_out[column])
                 PopID()
-            }
             PopStyleCompact()
             EndTable()
-        }
-
-        // Create the real table we care about for the example!
-        // We use a scrolling table to be able to showcase the difference between the _IsEnabled and _IsVisible flags above, otherwise in
-        // a non-scrolling table columns are always visible (unless using ImGuiTableFlags_NoKeepColumnsVisible + resizing the parent window down)
-        const ImGuiTableFlags flags
-            = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY
-            | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV
-            | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable;
-        ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 9)
-        if (BeginTable("table_columns_flags", column_count, flags, outer_size))
-        {
-            for (int column = 0; column < column_count; column++)
+        let flags = (
+              ImGuiTableFlags SizingFixedFit | ImGuiTableFlags ScrollX | ImGuiTableFlags ScrollY
+            | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV
+            | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable | ImGuiTableFlags Sortable )
+        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 9.)
+        if BeginTable("table_columns_flags", column_count, flags, outer_size)
+            for column in range(column_count)
                 TableSetupColumn(column_names[column], column_flags[column])
             TableHeadersRow()
-            for (int column = 0; column < column_count; column++)
+            for column in range(column_count)
                 column_flags_out[column] = TableGetColumnFlags(column)
-            float indent_step = (float)((int)TEXT_BASE_WIDTH / 2)
-            for (int row = 0; row < 8; row++)
-            {
-                Indent(indent_step) // Add some indentation to demonstrate usage of per-column IndentEnable/IndentDisable flags.
+            let indent_step = floor(TEXT_BASE_WIDTH / 2.)
+            for row in range(8)
+                Indent(indent_step)
                 TableNextRow()
-                for (int column = 0; column < column_count; column++)
-                {
+                for column in range(column_count)
                     TableSetColumnIndex(column)
-                    Text("%s %s", (column == 0) ? "Indented" : "Hello", TableGetColumnName(column))
-                }
-            }
+                    Text("{(column == 0) ? "Indented" : "Hello"} {TableGetColumnName(column)}")
             Unindent(indent_step * 8.0f)
-
             EndTable()
-        }
         TreePop()
-    }
+
+/*
 
     if (open_action != -1)
         SetNextItemOpen(open_action != 0)
