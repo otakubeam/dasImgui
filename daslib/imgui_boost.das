@@ -117,3 +117,9 @@ def PlotHistogram(
     var gsize = graph_size
     unsafe
         imgui::PlotHistogram(lab, addr(values[0]), length(values), values_offset, overlay_text, scale_min, scale_max, gsize, stride)
+
+def CheckboxFlags(lab:string; var p_flags:auto(FLAGT)? implicit; flags:FLAGT )
+    unsafe
+        return imgui::CheckboxFlags(lab,
+            reinterpret<int?> p_flags,
+            int(flags))

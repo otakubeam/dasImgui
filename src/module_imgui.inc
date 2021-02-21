@@ -800,7 +800,8 @@ addExtern<DAS_BIND_FUN(ImGui::BeginChildFrame)>(*this, lib, "BeginChildFrame",Si
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableSetupColumn)>(*this, lib, "TableSetupColumn",SideEffects::worstDefault, "ImGui::TableSetupColumn")
 	->args({"label","flags","init_width_or_weight","user_id"})
-		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_type(1,makeType<ImGuiTableColumnFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableColumnFlags_>(lib)))
 		->arg_init(2,make_smart<ExprConstFloat>(0))
 ;
 addExtern<DAS_BIND_FUN(ImGui::ProgressBar)>(*this, lib, "ProgressBar",SideEffects::worstDefault, "ImGui::ProgressBar")

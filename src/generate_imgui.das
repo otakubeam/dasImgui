@@ -31,7 +31,8 @@ def main
         "ImVec2";
         "ImVec3";
         "ImVec4";
-        "ImColor"
+        "ImColor";
+        "ImGuiTableColumnSortSpecs"
     }]
 
     ex_enums <- {{
@@ -50,18 +51,24 @@ def main
         "ImGuiTabItemFlags_" => [[ExEnum() name = "ImGuiTabItemFlags", isFlags=true]];
         "ImGuiTreeNodeFlags_" => [[ExEnum() name = "ImGuiTreeNodeFlags", isFlags=true]];
         "ImGuiButtonFlags_"  => [[ExEnum() name = "ImGuiButtonFlags", isFlags=true]];
+        "ImGuiTableColumnFlags_"  => [[ExEnum() name = "ImGuiTableColumnFlags", isFlags=true]];
+        "ImGuiKeyModFlags_"  => [[ExEnum() name = "ImGuiKeyModFlags", isFlags=true]];
 
     // not flags
         "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
         "ImGuiCol_" => [[ExEnum() name = "ImGuiCol"]];
         "ImGuiKey_" => [[ExEnum() name = "ImGuiKey"]];
+        "ImGuiSortDirection_" => [[ExEnum() name = "ImGuiSortDirection"]];
         "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]]
     }}
 
     substitute_field_types <- {{
         "ImGuiInputTextCallbackData::EventFlag" => "ImGuiInputTextFlags_";
         "ImGuiInputTextCallbackData::Flags" => "ImGuiInputTextFlags_";
-        "ImGuiInputTextCallbackData::EventKey" => "ImGuiKey_"
+        "ImGuiInputTextCallbackData::EventKey" => "ImGuiKey_";
+        "ImGuiIO::ConfigFlags" => "ImGuiConfigFlags_";
+        "ImGuiIO::BackendFlags" => "ImGuiBackendFlags_";
+        "ImGuiIO::ImGuiKeyModFlags" => "ImGuiKeyModFlags_"
     }}
 
     // generate
