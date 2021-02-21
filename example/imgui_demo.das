@@ -2609,283 +2609,206 @@ def DasShowDemoWindowTables()
             EndTable()
         TreePop()
 
-/*
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Resizable, stretch"))
-    {
-        // By default, if we don't enable ScrollX the sizing policy for each columns is "Stretch"
-        // Each columns maintain a sizing weight, and they will occupy all available width.
-        static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
+    if TreeNode("Resizable, stretch")
+        static_let <|
+            var flags = ImGuiTableFlags SizingStretchSame | ImGuiTableFlags Resizable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV | ImGuiTableFlags ContextMenuInBody
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_BordersV", &flags, ImGuiTableFlags_BordersV)
-        SameLine() HelpMarker("Using the _Resizable flag automatically enables the _BordersInnerV flag as well, this is why the resize borders are still showing when unchecking this.")
+        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags_BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
+        SameLine()
+        DasHelpMarker("Using the _Resizable flag automatically enables the _BordersInnerV flag as well, this is why the resize borders are still showing when unchecking this.")
         PopStyleCompact()
-
-        if (BeginTable("table1", 3, flags))
-        {
-            for (int row = 0; row < 5; row++)
-            {
+        if BeginTable("table1", 3, flags)
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("Hello %d,%d", column, row)
-                }
-            }
+                    Text("Hello {column},{row}")
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Resizable, fixed"))
-    {
-        // Here we use ImGuiTableFlags_SizingFixedFit (even though _ScrollX is not set)
-        // So columns will adopt the "Fixed" policy and will maintain a fixed width regardless of the whole available width (unless table is small)
-        // If there is not enough available width to fit all columns, they will however be resized down.
-        // FIXME-TABLE: Providing a stretch-on-init would make sense especially for tables which don't have saved settings
-        HelpMarker(
-            "Using _Resizable + _SizingFixedFit flags.\n"
-            "Fixed-width columns generally makes more sense if you want to use horizontal scrolling.\n\n"
+    if TreeNode("Resizable, fixed")
+        DasHelpMarker(
+            "Using _Resizable + _SizingFixedFit flags.\n" +
+            "Fixed-width columns generally makes more sense if you want to use horizontal scrolling.\n\n" +
             "Double-click a column border to auto-fit the column to its contents.")
         PushStyleCompact()
-        static ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", &flags, ImGuiTableFlags_NoHostExtendX)
+        static_let <|
+            var flags = ImGuiTableFlags SizingFixedFit | ImGuiTableFlags Resizable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV | ImGuiTableFlags ContextMenuInBody
+        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
         PopStyleCompact()
-
-        if (BeginTable("table1", 3, flags))
-        {
-            for (int row = 0; row < 5; row++)
-            {
+        if BeginTable("table1", 3, flags)
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("Hello %d,%d", column, row)
-                }
-            }
+                    Text("Hello {column},{row}")
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Resizable, mixed"))
-    {
-        HelpMarker(
-            "Using TableSetupColumn() to alter resizing policy on a per-column basis.\n\n"
+    if TreeNode("Resizable, mixed")
+        DasHelpMarker(
+            "Using TableSetupColumn() to alter resizing policy on a per-column basis.\n\n" +
             "When combining Fixed and Stretch columns, generally you only want one, maybe two trailing columns to use _WidthStretch.")
-        static ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
-
-        if (BeginTable("table1", 3, flags))
-        {
-            TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed)
-            TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthFixed)
-            TableSetupColumn("CCC", ImGuiTableColumnFlags_WidthStretch)
+        static_let <|
+            var flags = ImGuiTableFlags SizingFixedFit | ImGuiTableFlags RowBg | ImGuiTableFlags Borders | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable
+        if BeginTable("table1", 3, flags)
+            TableSetupColumn("AAA", ImGuiTableColumnFlags WidthFixed)
+            TableSetupColumn("BBB", ImGuiTableColumnFlags WidthFixed)
+            TableSetupColumn("CCC", ImGuiTableColumnFlags WidthStretch)
             TableHeadersRow()
-            for (int row = 0; row < 5; row++)
-            {
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("%s %d,%d", (column == 2) ? "Stretch" : "Fixed", column, row)
-                }
-            }
+                    Text("{(column == 2) ? "Stretch" : "Fixed"} {column},{row}")
             EndTable()
-        }
-        if (BeginTable("table2", 6, flags))
-        {
-            TableSetupColumn("AAA", ImGuiTableColumnFlags_WidthFixed)
-            TableSetupColumn("BBB", ImGuiTableColumnFlags_WidthFixed)
-            TableSetupColumn("CCC", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide)
-            TableSetupColumn("DDD", ImGuiTableColumnFlags_WidthStretch)
-            TableSetupColumn("EEE", ImGuiTableColumnFlags_WidthStretch)
-            TableSetupColumn("FFF", ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultHide)
+        if BeginTable("table2", 6, flags)
+            TableSetupColumn("AAA", ImGuiTableColumnFlags WidthFixed)
+            TableSetupColumn("BBB", ImGuiTableColumnFlags WidthFixed)
+            TableSetupColumn("CCC", ImGuiTableColumnFlags WidthFixed | ImGuiTableColumnFlags DefaultHide)
+            TableSetupColumn("DDD", ImGuiTableColumnFlags WidthStretch)
+            TableSetupColumn("EEE", ImGuiTableColumnFlags WidthStretch)
+            TableSetupColumn("FFF", ImGuiTableColumnFlags WidthStretch | ImGuiTableColumnFlags DefaultHide)
             TableHeadersRow()
-            for (int row = 0; row < 5; row++)
-            {
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 6; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("%s %d,%d", (column >= 3) ? "Stretch" : "Fixed", column, row)
-                }
-            }
+                    Text("{(column == 2) ? "Stretch" : "Fixed"} {column},{row}")
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Reorderable, hideable, with headers"))
-    {
-        HelpMarker(
-            "Click and drag column headers to reorder columns.\n\n"
+    if TreeNode("Reorderable, hideable, with headers")
+        DasHelpMarker(
+            "Click and drag column headers to reorder columns.\n\n" +
             "Right-click on a header to open a context menu.")
-        static ImGuiTableFlags flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV;
+        static_let <|
+            var flags = ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_Reorderable", &flags, ImGuiTableFlags_Reorderable)
-        CheckboxFlags("ImGuiTableFlags_Hideable", &flags, ImGuiTableFlags_Hideable)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", &flags, ImGuiTableFlags_NoBordersInBody)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBodyUntilResize", &flags, ImGuiTableFlags_NoBordersInBodyUntilResize) SameLine() HelpMarker("Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers)")
+        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags_Reorderable", safe_addr(flags), ImGuiTableFlags Reorderable)
+        CheckboxFlags("ImGuiTableFlags_Hideable", safe_addr(flags), ImGuiTableFlags Hideable)
+        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
+        CheckboxFlags("ImGuiTableFlags_NoBordersInBodyUntilResize", safe_addr(flags), ImGuiTableFlags NoBordersInBodyUntilResize)
+        SameLine()
+        DasHelpMarker("Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers)")
         PopStyleCompact()
-
-        if (BeginTable("table1", 3, flags))
-        {
-            // Submit columns name with TableSetupColumn() and call TableHeadersRow() to create a row with a header in each column.
-            // (Later we will show how TableSetupColumn() has other uses, optional flags, sizing weight etc.)
+        if BeginTable("table1", 3, flags)
             TableSetupColumn("One")
             TableSetupColumn("Two")
             TableSetupColumn("Three")
             TableHeadersRow()
-            for (int row = 0; row < 6; row++)
-            {
+            for row in range(6)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("Hello %d,%d", column, row)
-                }
-            }
+                    Text("Hello {column},{row}")
             EndTable()
-        }
-
-        // Use outer_size.x == 0.0f instead of default to make the table as tight as possible (only valid when no scrolling and no stretch column)
-        if (BeginTable("table2", 3, flags | ImGuiTableFlags_SizingFixedFit, ImVec2(0.0f, 0.0f)))
-        {
+        if BeginTable("table2", 3, flags | ImGuiTableFlags SizingFixedFit, ImVec2(0.0f, 0.0f))
             TableSetupColumn("One")
             TableSetupColumn("Two")
             TableSetupColumn("Three")
             TableHeadersRow()
-            for (int row = 0; row < 6; row++)
-            {
+            for row in range(6)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("Fixed %d,%d", column, row)
-                }
-            }
+                    Text("Fixed {column},{row}")
             EndTable()
-        }
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Padding"))
-    {
-        // First example: showcase use of padding flags and effect of BorderOuterV/BorderInnerV on X padding.
-        // We don't expose BorderOuterH/BorderInnerH here because they have no effect on X padding.
-        HelpMarker(
-            "We often want outer padding activated when any using features which makes the edges of a column visible:\n"
-            "e.g.:\n"
-            "- BorderOuterV\n"
-            "- any form of row selection\n"
-            "Because of this, activating BorderOuterV sets the default to PadOuterX. Using PadOuterX or NoPadOuterX you can override the default.\n\n"
-            "Actual padding values are using style.CellPadding.\n\n"
+    if TreeNode("Padding")
+        DasHelpMarker(
+            "We often want outer padding activated when any using features which makes the edges of a column visible:\n" +
+            "e.g.:\n" +
+            "- BorderOuterV\n" +
+            "- any form of row selection\n" +
+            "Because of this, activating BorderOuterV sets the default to PadOuterX. Using PadOuterX or NoPadOuterX you can override the default.\n\n" +
+            "Actual padding values are using style.CellPadding.\n\n" +
             "In this demo we don't show horizontal borders to emphasis how they don't affect default horizontal padding.")
-
-        static ImGuiTableFlags flags1 = ImGuiTableFlags_BordersV;
+        static_let <|
+            var flags1 = ImGuiTableFlags BordersV
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_PadOuterX", &flags1, ImGuiTableFlags_PadOuterX)
-        SameLine() HelpMarker("Enable outer-most padding (default if ImGuiTableFlags_BordersOuterV is set)")
-        CheckboxFlags("ImGuiTableFlags_NoPadOuterX", &flags1, ImGuiTableFlags_NoPadOuterX)
-        SameLine() HelpMarker("Disable outer-most padding (default if ImGuiTableFlags_BordersOuterV is not set)")
-        CheckboxFlags("ImGuiTableFlags_NoPadInnerX", &flags1, ImGuiTableFlags_NoPadInnerX)
-        SameLine() HelpMarker("Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off)")
-        CheckboxFlags("ImGuiTableFlags_BordersOuterV", &flags1, ImGuiTableFlags_BordersOuterV)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerV", &flags1, ImGuiTableFlags_BordersInnerV)
-        static bool show_headers = false;
-        Checkbox("show_headers", &show_headers)
+        CheckboxFlags("ImGuiTableFlags_PadOuterX", safe_addr(flags1), ImGuiTableFlags PadOuterX)
+        SameLine()
+        DasHelpMarker("Enable outer-most padding (default if ImGuiTableFlags_BordersOuterV is set)")
+        CheckboxFlags("ImGuiTableFlags_NoPadOuterX", safe_addr(flags1), ImGuiTableFlags NoPadOuterX)
+        SameLine()
+        DasHelpMarker("Disable outer-most padding (default if ImGuiTableFlags_BordersOuterV is not set)")
+        CheckboxFlags("ImGuiTableFlags_NoPadInnerX", safe_addr(flags1), ImGuiTableFlags NoPadInnerX)
+        SameLine()
+        DasHelpMarker("Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off)")
+        CheckboxFlags("ImGuiTableFlags_BordersOuterV", safe_addr(flags1), ImGuiTableFlags BordersOuterV)
+        CheckboxFlags("ImGuiTableFlags_BordersInnerV", safe_addr(flags1), ImGuiTableFlags BordersInnerV)
+        static_let <|
+            var show_headers = false
+        Checkbox("show_headers", safe_addr(show_headers))
         PopStyleCompact()
-
-        if (BeginTable("table_padding", 3, flags1))
-        {
-            if (show_headers)
-            {
+        if BeginTable("table_padding", 3, flags1)
+            if show_headers
                 TableSetupColumn("One")
                 TableSetupColumn("Two")
                 TableSetupColumn("Three")
                 TableHeadersRow()
-            }
-
-            for (int row = 0; row < 5; row++)
-            {
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    if (row == 0)
-                    {
-                        Text("Avail %.2f", GetContentRegionAvail().x)
-                    }
+                    if row == 0
+                        Text("Avail {GetContentRegionAvail().x}")
                     else
-                    {
-                        char buf[32];
-                        sprintf(buf, "Hello %d,%d", column, row)
-                        Button(buf, ImVec2(-FLT_MIN, 0.0f))
-                    }
-                    //if (TableGetColumnFlags() & ImGuiTableColumnFlags_IsHovered)
-                    //    TableSetBgColor(ImGuiTableBgTarget_CellBg, IM_COL32(0, 100, 0, 255))
-                }
-            }
+                        Button("Hello {column},{row}", ImVec2(-FLT_MIN, 0.0f))
             EndTable()
-        }
-
-        // Second example: set style.CellPadding to (0.0) or a custom value.
-        // FIXME-TABLE: Vertical border effectively not displayed the same way as horizontal one...
-        HelpMarker("Setting style.CellPadding to (0,0) or a custom value.")
-        static ImGuiTableFlags flags2 = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
-        static ImVec2 cell_padding(0.0f, 0.0f)
-        static bool show_widget_frame_bg = true;
-
+        DasHelpMarker("Setting style.CellPadding to (0,0) or a custom value.")
+        static_let <|
+            var flags2 = ImGuiTableFlags Borders | ImGuiTableFlags RowBg
+            var cell_padding =  ImVec2(0.0f, 0.0f)
+            var show_widget_frame_bg = true
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Borders", &flags2, ImGuiTableFlags_Borders)
-        CheckboxFlags("ImGuiTableFlags_BordersH", &flags2, ImGuiTableFlags_BordersH)
-        CheckboxFlags("ImGuiTableFlags_BordersV", &flags2, ImGuiTableFlags_BordersV)
-        CheckboxFlags("ImGuiTableFlags_BordersInner", &flags2, ImGuiTableFlags_BordersInner)
-        CheckboxFlags("ImGuiTableFlags_BordersOuter", &flags2, ImGuiTableFlags_BordersOuter)
-        CheckboxFlags("ImGuiTableFlags_RowBg", &flags2, ImGuiTableFlags_RowBg)
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags2, ImGuiTableFlags_Resizable)
-        Checkbox("show_widget_frame_bg", &show_widget_frame_bg)
-        SliderFloat2("CellPadding", &cell_padding.x, 0.0f, 10.0f, "%.0f")
+        CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags2), ImGuiTableFlags Borders)
+        CheckboxFlags("ImGuiTableFlags_BordersH", safe_addr(flags2), ImGuiTableFlags BordersH)
+        CheckboxFlags("ImGuiTableFlags_BordersV", safe_addr(flags2), ImGuiTableFlags BordersV)
+        CheckboxFlags("ImGuiTableFlags_BordersInner", safe_addr(flags2), ImGuiTableFlags BordersInner)
+        CheckboxFlags("ImGuiTableFlags_BordersOuter", safe_addr(flags2), ImGuiTableFlags BordersOuter)
+        CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags2), ImGuiTableFlags RowBg)
+        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags2), ImGuiTableFlags Resizable)
+        Checkbox("show_widget_frame_bg", safe_addr(show_widget_frame_bg))
+        SliderFloat2("CellPadding", safe_addr(cell_padding.x), 0.0f, 10.0f, "%.0f")
         PopStyleCompact()
-
-        PushStyleVar(ImGuiStyleVar_CellPadding, cell_padding)
-        if (BeginTable("table_padding_2", 3, flags2))
-        {
-            static char text_bufs[3 * 5][16]; // Mini text storage for 3x5 cells
-            static bool init = true;
-            if (!show_widget_frame_bg)
-                PushStyleColor(ImGuiCol_FrameBg, 0)
-            for (int cell = 0; cell < 3 * 5; cell++)
-            {
+        PushStyleVar(ImGuiStyleVar CellPadding, cell_padding)
+        if BeginTable("table_padding_2", 3, flags2)
+            static_let <|
+                var text_bufs : array<ImGuiInputTextBuffer?>
+                var init = true
+            if !show_widget_frame_bg
+                PushStyleColor(ImGuiCol FrameBg, 0u)
+            for cell in range(3*5)
                 TableNextColumn()
-                if (init)
-                    strcpy(text_bufs[cell], "edit me")
+                if init
+                    text_bufs |> emplace(new ImGuiInputTextBuffer("edit me",16))
                 SetNextItemWidth(-FLT_MIN)
                 PushID(cell)
-                InputText("##cell", text_bufs[cell], IM_ARRAYSIZE(text_bufs[cell]))
+                InputText("##cell", *(text_bufs[cell]))
                 PopID()
-            }
-            if (!show_widget_frame_bg)
+            if !show_widget_frame_bg
                 PopStyleColor()
-            init = false;
+            init = false
             EndTable()
-        }
         PopStyleVar()
-
         TreePop()
-    }
 
+/*
     if (open_action != -1)
         SetNextItemOpen(open_action != 0)
     if (TreeNode("Sizing policies"))

@@ -20,7 +20,7 @@ struct ImGuiInputTextBuffer
 
 def make_input_buffer ( var buf : ImGuiInputTextBuffer; txt:string; len:int )
     buf.buffer |> resize(len)
-    let bytes = clamp ( length(txt)-1, 0, len-1 )
+    let bytes = clamp ( length(txt), 0, len-1 )
     unsafe
         memcpy ( addr(buf.buffer[0]), reinterpret<void?> txt, bytes )
 
