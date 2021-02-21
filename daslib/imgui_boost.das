@@ -123,3 +123,10 @@ def CheckboxFlags(lab:string; var p_flags:auto(FLAGT)? implicit; flags:FLAGT )
         return imgui::CheckboxFlags(lab,
             reinterpret<int?> p_flags,
             int(flags))
+
+def RadioButton(lab:string; var p_flags:auto(FLAGT)? implicit; flags:FLAGT)
+    unsafe
+        return imgui::RadioButton(lab,
+            reinterpret<int?> p_flags,
+            int(flags))
+

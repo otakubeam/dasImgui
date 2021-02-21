@@ -295,6 +295,8 @@ bool Module_imgui::initDependencies() {
             fn->arg_init(8, make_smart<ExprConstInt>(int32_t(sizeof(float))));
         }
     }
+    findUniqueFunction("TableSetupColumn")
+        ->arg_init(3, make_smart<ExprConstUInt>(uint32_t(0)));
 #endif
     return true;
 }

@@ -408,9 +408,7 @@ def DasShowDemoWindow ( _p_open : bool? )
     */
     DasShowDemoWindowLayout()
     DasShowDemoWindowPopups()
-    /*
-    ShowDemoWindowTables()
-    */
+    DasShowDemoWindowTables()
     DasShowDemoWindowMisc()
     PopItemWidth()
     End()
@@ -2496,178 +2494,122 @@ def ShowTableColumnsStatusFlags(var flags:ImGuiTableColumnFlags)
     CheckboxFlags("_IsSorted", safe_addr(flags), ImGuiTableColumnFlags IsSorted)
     CheckboxFlags("_IsHovered", safe_addr(flags), ImGuiTableColumnFlags IsHovered)
 
-/*
-static void ShowDemoWindowTables()
-{
-    //SetNextItemOpen(true, ImGuiCond_Once)
-    if (!CollapsingHeader("Tables & Columns"))
-        return;
+enum ContentsType
+    CT_Text
+    CT_FillButton
 
-    // Using those as a base value to create width/height that are factor of the size of our font
-    const float TEXT_BASE_WIDTH = CalcTextSize("A").x;
-    const float TEXT_BASE_HEIGHT = GetTextLineHeightWithSpacing()
-
+def DasShowDemoWindowTables()
+    if !CollapsingHeader("Tables & Columns")
+        return
+    let TEXT_BASE_WIDTH = CalcTextSize("A").x;
+    let TEXT_BASE_HEIGHT = GetTextLineHeightWithSpacing()
     PushID("Tables")
 
-    int open_action = -1;
-    if (Button("Open all"))
-        open_action = 1;
+    var open_action = -1
+    if Button("Open all")
+        open_action = 1
     SameLine()
-    if (Button("Close all"))
-        open_action = 0;
+    if Button("Close all")
+        open_action = 0
     SameLine()
 
-    // Options
-    static bool disable_indent = false;
-    Checkbox("Disable tree indentation", &disable_indent)
+    static_let <|
+        var disable_indent = false
+    Checkbox("Disable tree indentation", safe_addr(disable_indent))
     SameLine()
-    HelpMarker("Disable the indenting of tree nodes so demo tables can use the full window width.")
+    DasHelpMarker("Disable the indenting of tree nodes so demo tables can use the full window width.")
     Separator()
-    if (disable_indent)
-        PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f)
+    if disable_indent
+        PushStyleVar(ImGuiStyleVar IndentSpacing, 0.0f)
 
-    // About Styling of tables
-    // Most settings are configured on a per-table basis via the flags passed to BeginTable() and TableSetupColumns APIs.
-    // There are however a few settings that a shared and part of the ImGuiStyle structure:
-    //   style.CellPadding                          // Padding within each cell
-    //   style.Colors[ImGuiCol_TableHeaderBg]       // Table header background
-    //   style.Colors[ImGuiCol_TableBorderStrong]   // Table outer and header borders
-    //   style.Colors[ImGuiCol_TableBorderLight]    // Table inner borders
-    //   style.Colors[ImGuiCol_TableRowBg]          // Table row background when ImGuiTableFlags_RowBg is enabled (even rows)
-    //   style.Colors[ImGuiCol_TableRowBgAlt]       // Table row background when ImGuiTableFlags_RowBg is enabled (odds rows)
-
-    // Demos
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Basic"))
-    {
-        // Here we will showcase three different ways to output a table.
-        // They are very simple variations of a same thing!
-
-        // [Method 1] Using TableNextRow() to create a new row, and TableSetColumnIndex() to select the column.
-        // In many situations, this is the most flexible and easy to use pattern.
-        HelpMarker("Using TableNextRow() + calling TableSetColumnIndex() _before_ each cell, in a loop.")
-        if (BeginTable("table1", 3))
-        {
-            for (int row = 0; row < 4; row++)
-            {
+    if TreeNode("Basic")
+        DasHelpMarker("Using TableNextRow() + calling TableSetColumnIndex() _before_ each cell, in a loop.")
+        if BeginTable("table1", 3)
+            for row in range(4)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    Text("Row %d Column %d", row, column)
-                }
-            }
+                    Text("Row {row} Column {column}")
             EndTable()
-        }
-
-        // [Method 2] Using TableNextColumn() called multiple times, instead of using a for loop + TableSetColumnIndex().
-        // This is generally more convenient when you have code manually submitting the contents of each columns.
-        HelpMarker("Using TableNextRow() + calling TableNextColumn() _before_ each cell, manually.")
-        if (BeginTable("table2", 3))
-        {
-            for (int row = 0; row < 4; row++)
-            {
+        DasHelpMarker("Using TableNextRow() + calling TableNextColumn() _before_ each cell, manually.")
+        if BeginTable("table2", 3)
+            for row in range(4)
                 TableNextRow()
                 TableNextColumn()
-                Text("Row %d", row)
+                Text("Row {row}")
                 TableNextColumn()
                 Text("Some contents")
                 TableNextColumn()
                 Text("123.456")
-            }
             EndTable()
-        }
-
-        // [Method 3] We call TableNextColumn() _before_ each cell. We never call TableNextRow(),
-        // as TableNextColumn() will automatically wrap around and create new roes as needed.
-        // This is generally more convenient when your cells all contains the same type of data.
-        HelpMarker(
-            "Only using TableNextColumn(), which tends to be convenient for tables where every cells contains the same type of contents.\n"
+        DasHelpMarker(
+            "Only using TableNextColumn(), which tends to be convenient for tables where every cells contains the same type of contents.\n" +
             "This is also more similar to the old NextColumn() function of the Columns API, and provided to facilitate the Columns->Tables API transition.")
-        if (BeginTable("table3", 3))
-        {
-            for (int item = 0; item < 14; item++)
-            {
+        if BeginTable("table3", 3)
+            for item in range(14)
                 TableNextColumn()
-                Text("Item %d", item)
-            }
+                Text("Item {item}")
             EndTable()
-        }
-
         TreePop()
-    }
 
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Borders, background"))
-    {
-        // Expose a few Borders related flags interactively
-        enum ContentsType { CT_Text, CT_FillButton };
-        static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
-        static bool display_headers = false;
-        static int contents_type = CT_Text;
-
+    if TreeNode("Borders, background")
+        static_let <|
+            var flags = ImGuiTableFlags Borders | ImGuiTableFlags RowBg
+            var display_headers = false
+            var contents_type = ContentsType CT_Text
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_RowBg", &flags, ImGuiTableFlags_RowBg)
-        CheckboxFlags("ImGuiTableFlags_Borders", &flags, ImGuiTableFlags_Borders)
-        SameLine() HelpMarker("ImGuiTableFlags_Borders\n = ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterV\n | ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterH")
+        CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
+        CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags), ImGuiTableFlags Borders)
+        SameLine()
+        DasHelpMarker("ImGuiTableFlags Borders\n = ImGuiTableFlags BordersInnerV\n | ImGuiTableFlags BordersOuterV\n | ImGuiTableFlags BordersInnerV\n | ImGuiTableFlags BordersOuterH")
         Indent()
-
-        CheckboxFlags("ImGuiTableFlags_BordersH", &flags, ImGuiTableFlags_BordersH)
+        CheckboxFlags("ImGuiTableFlags BordersH", safe_addr(flags), ImGuiTableFlags BordersH)
         Indent()
-        CheckboxFlags("ImGuiTableFlags_BordersOuterH", &flags, ImGuiTableFlags_BordersOuterH)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerH", &flags, ImGuiTableFlags_BordersInnerH)
+        CheckboxFlags("ImGuiTableFlags BordersOuterH", safe_addr(flags), ImGuiTableFlags BordersOuterH)
+        CheckboxFlags("ImGuiTableFlags BordersInnerH", safe_addr(flags), ImGuiTableFlags BordersInnerH)
         Unindent()
-
-        CheckboxFlags("ImGuiTableFlags_BordersV", &flags, ImGuiTableFlags_BordersV)
+        CheckboxFlags("ImGuiTableFlags BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
         Indent()
-        CheckboxFlags("ImGuiTableFlags_BordersOuterV", &flags, ImGuiTableFlags_BordersOuterV)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerV", &flags, ImGuiTableFlags_BordersInnerV)
+        CheckboxFlags("ImGuiTableFlags BordersOuterV", safe_addr(flags), ImGuiTableFlags BordersOuterV)
+        CheckboxFlags("ImGuiTableFlags BordersInnerV", safe_addr(flags), ImGuiTableFlags BordersInnerV)
         Unindent()
-
-        CheckboxFlags("ImGuiTableFlags_BordersOuter", &flags, ImGuiTableFlags_BordersOuter)
-        CheckboxFlags("ImGuiTableFlags_BordersInner", &flags, ImGuiTableFlags_BordersInner)
+        CheckboxFlags("ImGuiTableFlags BordersOuter", safe_addr(flags), ImGuiTableFlags BordersOuter)
+        CheckboxFlags("ImGuiTableFlags BordersInner", safe_addr(flags), ImGuiTableFlags BordersInner)
         Unindent()
-
-        AlignTextToFramePadding() Text("Cell contents:")
-        SameLine() RadioButton("Text", &contents_type, CT_Text)
-        SameLine() RadioButton("FillButton", &contents_type, CT_FillButton)
-        Checkbox("Display headers", &display_headers)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", &flags, ImGuiTableFlags_NoBordersInBody) SameLine() HelpMarker("Disable vertical borders in columns Body (borders will always appears in Headers")
+        AlignTextToFramePadding()
+        Text("Cell contents:")
+        SameLine()
+        RadioButton("Text", safe_addr(contents_type), ContentsType CT_Text)
+        SameLine()
+        RadioButton("FillButton", safe_addr(contents_type), ContentsType CT_FillButton)
+        Checkbox("Display headers", safe_addr(display_headers))
+        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
+        SameLine()
+        DasHelpMarker("Disable vertical borders in columns Body (borders will always appears in Headers")
         PopStyleCompact()
-
-        if (BeginTable("table1", 3, flags))
-        {
-            // Display headers so we can inspect their interaction with borders.
-            // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
-            if (display_headers)
-            {
+        if BeginTable("table1", 3, flags)
+            if display_headers
                 TableSetupColumn("One")
                 TableSetupColumn("Two")
                 TableSetupColumn("Three")
                 TableHeadersRow()
-            }
-
-            for (int row = 0; row < 5; row++)
-            {
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    char buf[32];
-                    sprintf(buf, "Hello %d,%d", column, row)
-                    if (contents_type == CT_Text)
+                    let buf = "Hello {column},{row}"
+                    if contents_type == ContentsType CT_Text
                         TextUnformatted(buf)
-                    else if (contents_type)
+                    elif contents_type == ContentsType CT_FillButton
                         Button(buf, ImVec2(-FLT_MIN, 0.0f))
-                }
-            }
             EndTable()
-        }
         TreePop()
-    }
 
+/*
     if (open_action != -1)
         SetNextItemOpen(open_action != 0)
     if (TreeNode("Resizable, stretch"))
@@ -4185,12 +4127,10 @@ static void ShowDemoWindowTables()
         TreePop()
     }
 
-    PopID()
-
-    ShowDemoWindowColumns()
-
-    if (disable_indent)
-        PopStyleVar()
-}
-
 */
+
+    PopID()
+    // ShowDemoWindowColumns()
+    if disable_indent
+        PopStyleVar()
+
