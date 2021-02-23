@@ -4132,111 +4132,81 @@ def DasShowDemoWindowWidgets()
             TreePop()
         TreePop()
 
-/*
-
-    if (TreeNode("Collapsing Headers"))
-    {
-        static bool closable_group = true;
-        Checkbox("Show 2nd header", &closable_group)
-        if (CollapsingHeader("Header", ImGuiTreeNodeFlags_None))
-        {
-            Text("IsItemHovered: %d", IsItemHovered())
-            for (int i = 0; i < 5; i++)
-                Text("Some content %d", i)
-        }
-        if (CollapsingHeader("Header with a close button", &closable_group))
-        {
-            Text("IsItemHovered: %d", IsItemHovered())
-            for (int i = 0; i < 5; i++)
-                Text("More content %d", i)
-        }
+    if TreeNode("Collapsing Headers")
+        static_let <|
+            var closable_group = true
+        Checkbox("Show 2nd header", safe_addr(closable_group))
+        if CollapsingHeader("Header", ImGuiTreeNodeFlags None)
+            Text("IsItemHovered: {IsItemHovered()}")
+            for i in range(5)
+                Text("Some content {i}")
+        if CollapsingHeader("Header with a close button", safe_addr(closable_group))
+            Text("IsItemHovered: {IsItemHovered()}")
+            for i in range(5)
+                Text("More content {i}")
         TreePop()
-    }
 
-    if (TreeNode("Bullets"))
-    {
+    if TreeNode("Bullets")
         BulletText("Bullet point 1")
         BulletText("Bullet point 2\nOn multiple lines")
-        if (TreeNode("Tree node"))
-        {
+        if TreeNode("Tree node")
             BulletText("Another bullet point")
             TreePop()
-        }
-        Bullet() Text("Bullet point 3 (two calls)")
-        Bullet() SmallButton("Button")
+        Bullet()
+        Text("Bullet point 3 (two calls)")
+        Bullet()
+        SmallButton("Button")
         TreePop()
-    }
 
-    if (TreeNode("Text"))
-    {
-        if (TreeNode("Colorful Text"))
-        {
-            // Using shortcut. You can use PushStyleColor()/PopStyleColor() for more flexibility.
+    if TreeNode("Text")
+        if TreeNode("Colorful Text")
             TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Pink")
             TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow")
             TextDisabled("Disabled")
-            SameLine() HelpMarker("The TextDisabled color is stored in ImGuiStyle.")
+            SameLine()
+            DasHelpMarker("The TextDisabled color is stored in ImGuiStyle.")
             TreePop()
-        }
-
-        if (TreeNode("Word Wrapping"))
-        {
-            // Using shortcut. You can use PushTextWrapPos()/PopTextWrapPos() for more flexibility.
+        if TreeNode("Word Wrapping")
             TextWrapped(
-                "This text should automatically wrap on the edge of the window. The current implementation "
+                "This text should automatically wrap on the edge of the window. The current implementation " +
                 "for text wrapping follows simple rules suitable for English and possibly other languages.")
             Spacing()
-
-            static float wrap_width = 200.0f;
-            SliderFloat("Wrap width", &wrap_width, -20, 600, "%.0f")
-
-            ImDrawList* draw_list = GetWindowDrawList()
-            for (int n = 0; n < 2; n++)
-            {
-                Text("Test paragraph %d:", n)
-                ImVec2 pos = GetCursorScreenPos()
-                ImVec2 marker_min = ImVec2(pos.x + wrap_width, pos.y)
-                ImVec2 marker_max = ImVec2(pos.x + wrap_width + 10, pos.y + GetTextLineHeight())
+            static_let <|
+                var wrap_width = 200.0f
+            SliderFloat("Wrap width", safe_addr(wrap_width), -20., 600., "%.0f")
+            var draw_list = GetWindowDrawList()
+            for n in range(2)
+                Text("Test paragraph {n}:")
+                var pos = GetCursorScreenPos()
+                var marker_min = ImVec2(pos.x + wrap_width, pos.y)
+                var marker_max = ImVec2(pos.x + wrap_width + 10., pos.y + GetTextLineHeight())
                 PushTextWrapPos(GetCursorPos().x + wrap_width)
-                if (n == 0)
-                    Text("The lazy dog is a good dog. This paragraph should fit within %.0f pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.", wrap_width)
+                if n == 0
+                    Text("The lazy dog is a good dog. This paragraph should fit within {wrap_width} pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.")
                 else
                     Text("aaaaaaaa bbbbbbbb, c cccccccc,dddddddd. d eeeeeeee   ffffffff. gggggggg!hhhhhhhh")
-
-                // Draw actual text bounding box, following by marker of our expected limit (should not overlap!)
-                draw_list->AddRect(GetItemRectMin(), GetItemRectMax(), IM_COL32(255, 255, 0, 255))
-                draw_list->AddRectFilled(marker_min, marker_max, IM_COL32(255, 0, 255, 255))
+                *draw_list |> AddRect(GetItemRectMin(), GetItemRectMax(), IM_COL32(255, 255, 0, 255))
+                *draw_list |> AddRectFilled(marker_min, marker_max, IM_COL32(255, 0, 255, 255))
                 PopTextWrapPos()
-            }
-
             TreePop()
-        }
 
         if (TreeNode("UTF-8 Text"))
-        {
-            // UTF-8 test with Japanese characters
-            // (Needs a suitable font? Try "Google Noto" or "Arial Unicode". See docs/FONTS.md for details.)
-            // - From C++11 you can use the u8"my text" syntax to encode literal strings as UTF-8
-            // - For earlier compiler, you may be able to encode your sources as UTF-8 (e.g. in Visual Studio, you
-            //   can save your source files as 'UTF-8 without signature').
-            // - FOR THIS DEMO FILE ONLY, BECAUSE WE WANT TO SUPPORT OLD COMPILERS, WE ARE *NOT* INCLUDING RAW UTF-8
-            //   CHARACTERS IN THIS SOURCE FILE. Instead we are encoding a few strings with hexadecimal constants.
-            //   Don't do this in your application! Please use u8"text in any language" in your application!
-            // Note that characters values are preserved even by InputText() if the font cannot be displayed,
-            // so you can safely copy & paste garbled characters into another application.
             TextWrapped(
-                "CJK text will only appears if the font was loaded with the appropriate CJK character ranges. "
-                "Call io.Font->AddFontFromFileTTF() manually to load extra character ranges. "
+                "CJK text will only appears if the font was loaded with the appropriate CJK character ranges. " +
+                "Call io.Font->AddFontFromFileTTF() manually to load extra character ranges. " +
                 "Read docs/FONTS.md for details.")
-            Text("Hiragana: \xe3\x81\x8b\xe3\x81\x8d\xe3\x81\x8f\xe3\x81\x91\xe3\x81\x93 (kakikukeko)") // Normally we would use u8"blah blah" with the proper characters directly in the string.
+            Text("Hiragana: \xe3\x81\x8b\xe3\x81\x8d\xe3\x81\x8f\xe3\x81\x91\xe3\x81\x93 (kakikukeko)")
             Text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)")
-            static char buf[32] = "\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e";
-            //static char buf[32] = u8"NIHONGO"; // <- this is how you would write it with C++11, using real kanjis
-            InputText("UTF-8 input", buf, IM_ARRAYSIZE(buf))
+            static_let <|
+                var buf <- ImGuiInputTextBuffer("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
+            InputText("UTF-8 input", buf)
             TreePop()
-        }
         TreePop()
-    }
+
+/*
+
+
+
 
     if (TreeNode("Images"))
     {
