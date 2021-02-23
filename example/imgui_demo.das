@@ -2243,10 +2243,10 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
                 x += spacing
                 *draw_list |> AddLine(ImVec2(x, y), ImVec2(x + sz, y + sz), col, th)
                 x += sz + spacing
-                var cp3 = [[ImVec2[3] ImVec2(x, y + sz * 0.6f); ImVec2(x + sz * 0.5f, y - sz * 0.4f); ImVec2(x + sz, y + sz) ]]
+                var cp3 = [[ImVec2[3] ImVec2(x, y + sz * 0.6f) ; ImVec2(x + sz * 0.5f, y - sz * 0.4f) ; ImVec2(x + sz, y + sz) ]]
                 *draw_list |> AddBezierQuadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
                 x += sz + spacing;
-                var cp4 = [[ImVec2[4] ImVec2(x, y); ImVec2(x + sz * 1.3f, y + sz * 0.3f); ImVec2(x + sz - sz * 1.3f, y + sz - sz * 0.3f); ImVec2(x + sz, y + sz) ]]
+                var cp4 = [[ImVec2[4] ImVec2(x, y) ; ImVec2(x + sz * 1.3f, y + sz * 0.3f) ; ImVec2(x + sz - sz * 1.3f, y + sz - sz * 0.3f) ; ImVec2(x + sz, y + sz) ]]
                 *draw_list |> AddBezierCubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
                 x = p.x + 4.
                 y += sz + spacing
@@ -3683,6 +3683,7 @@ def DasShowDemoWindowTables()
                         if TableNextColumn()
                             Text("1234")
                         PopID()
+                clipper |> End()
             PopButtonRepeat()
             table_scroll_cur = ImVec2(GetScrollX(), GetScrollY())
             table_scroll_max = ImVec2(GetScrollMaxX(), GetScrollMaxY())
@@ -3700,7 +3701,7 @@ def DasShowDemoWindowTables()
                 Text(": DrawCmd: +{table_draw_list_draw_cmd_count - 1} (in child window), Scroll: ({table_scroll_cur.x}/{table_scroll_max.x}) ({table_scroll_cur.y}/{table_scroll_max.y})")
         TreePop()
     PopID()
-    // ShowDemoWindowColumns()
+    DasShowDemoWindowColumns()
     if disable_indent
         PopStyleVar()
 
@@ -3734,4 +3735,164 @@ def DisplayNode(node:MyTreeNode const?; all_nodes:MyTreeNode const?)
         Text("{node.Size}")
         TableNextColumn()
         TextUnformatted(node.Type)
+
+def DasShowDemoWindowColumns()
+    var open = TreeNode("Legacy Columns API")
+    SameLine()
+    DasHelpMarker("Columns() is an old API! Prefer using the more flexible and powerful BeginTable() API!")
+    if !open
+        return
+    if TreeNode("Basic")
+        Text("Without border:")
+        Columns(3, "mycolumns3", false)
+        Separator()
+        for n in range(14)
+
+            if (Selectable("Item {n}"))
+                pass
+            NextColumn()
+        Columns(1)
+        Separator()
+        Text("With border:")
+        Columns(4, "mycolumns")
+        Separator()
+        Text("ID")
+        NextColumn()
+        Text("Name")
+        NextColumn()
+        Text("Path")
+        NextColumn()
+        Text("Hovered")
+        NextColumn()
+        Separator()
+        let names = [[string "One"; "Two"; "Three" ]]
+        let paths = [[string "/path/one"; "/path/two"; "/path/three" ]]
+        static_let <|
+            var selected = -1
+        for i in range(3)
+            if Selectable( "{i}", selected == i, ImGuiSelectableFlags SpanAllColumns)
+                selected = i
+            let hovered = IsItemHovered()
+            NextColumn()
+            Text(names[i])
+            NextColumn()
+            Text(paths[i])
+            NextColumn()
+            Text("{hovered}")
+            NextColumn()
+        Columns(1)
+        Separator()
+        TreePop()
+    if TreeNode("Borders")
+        static_let <|
+            var h_borders = true
+            var v_borders = true
+            var columns_count = 4
+        let lines_count = 3
+        SetNextItemWidth(GetFontSize() * 8.)
+        DragInt("##columns_count", safe_addr(columns_count), 0.1f, 2, 10, "%d columns")
+        if columns_count < 2
+            columns_count = 2
+        SameLine()
+        Checkbox("horizontal", safe_addr(h_borders))
+        SameLine()
+        Checkbox("vertical", safe_addr(v_borders))
+        Columns(columns_count, "", v_borders)
+        for i in range(columns_count * lines_count)
+            if h_borders && GetColumnIndex() == 0
+                Separator()
+            Text("{to_char('a' + i)}{to_char('a' + i)}{to_char('a' + i)}")
+            Text("Width {GetColumnWidth()}")
+            Text("Avail {GetContentRegionAvail().x}")
+            Text("Offset {GetColumnOffset()}")
+            Text("Long text that is likely to clip")
+            Button("Button", ImVec2(-FLT_MIN, 0.0f))
+            NextColumn()
+        Columns(1)
+        if h_borders
+            Separator()
+        TreePop()
+    if TreeNode("Mixed items")
+        Columns(3, "mixed")
+        Separator()
+        Text("Hello")
+        Button("Banana")
+        NextColumn()
+        Text("ImGui")
+        Button("Apple")
+        static_let <|
+            var foo = 1.0f
+        InputFloat("red", safe_addr(foo), 0.05f, 0., "%.3f")
+        Text("An extra line here.")
+        NextColumn()
+        Text("Sailor")
+        Button("Corniflower")
+        static_let <|
+            var bar = 1.0f
+        InputFloat("blue", safe_addr(bar), 0.05f, 0., "%.3f")
+        NextColumn()
+        if CollapsingHeader("Category A")
+            Text("Blah blah blah")
+            NextColumn()
+        if CollapsingHeader("Category B")
+            Text("Blah blah blah")
+            NextColumn()
+        if CollapsingHeader("Category C")
+            Text("Blah blah blah")
+            NextColumn()
+        Columns(1)
+        Separator()
+        TreePop()
+    if TreeNode("Word-wrapping")
+        Columns(2, "word-wrapping")
+        Separator()
+        TextWrapped("The quick brown fox jumps over the lazy dog.")
+        TextWrapped("Hello Left")
+        NextColumn()
+        TextWrapped("The quick brown fox jumps over the lazy dog.")
+        TextWrapped("Hello Right")
+        Columns(1)
+        Separator()
+        TreePop()
+    if TreeNode("Horizontal Scrolling")
+        SetNextWindowContentSize(ImVec2(1500.0f, 0.0f))
+        var child_size = ImVec2(0., GetFontSize() * 20.0f)
+        BeginChild("##ScrollingRegion", child_size, false, ImGuiWindowFlags HorizontalScrollbar)
+        Columns(10)
+        let ITEMS_COUNT = 2000
+        using() <| $ ( var clipper : ImGuiListClipper# )
+            clipper |> Begin(ITEMS_COUNT)
+            while clipper |> Step()
+                for i in range(clipper.DisplayStart,clipper.DisplayEnd)
+                    for j in range(10)
+                        Text("Line {i} Column {j}...")
+                        NextColumn()
+            clipper |> End()
+        Columns(1)
+        EndChild()
+        TreePop()
+    if TreeNode("Tree")
+        Columns(2, "tree", true)
+        for x in range(3)
+            let open1 = TreeNode("{x}", "Node{x}")
+            NextColumn()
+            Text("Node contents")
+            NextColumn()
+            if open1
+                for y in range(3)
+                    let open2 = TreeNode("{y}", "Node{x}.{y}")
+                    NextColumn()
+                    Text("Node contents")
+                    if open2
+                        Text("Even more contents")
+                        if TreeNode("Tree in column")
+                            Text("The quick brown fox jumps over the lazy dog")
+                            TreePop()
+                    NextColumn()
+                    if open2
+                        TreePop()
+                TreePop()
+        Columns(1)
+        TreePop()
+    TreePop()
 
