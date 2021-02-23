@@ -13,13 +13,6 @@ using namespace das;
 
 #endif
 
-/*
-[build] EXEC : warning : variadic function BulletText aka ImGui::BulletText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
-[build] EXEC : warning : variadic function SetTooltip aka ImGui::SetTooltip [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
-[build] EXEC : warning : variadic function TextWrapped aka ImGui::TextWrapped [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
-[build] EXEC : warning : variadic function TreeNode aka ImGui::TreeNode [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
-*/
-
 namespace das {
     void Text ( const char * txt ) {
         ImGui::Text(txt);
@@ -58,10 +51,6 @@ namespace das {
         ImGui::SetTooltip(txt);
     }
 
-    /*
-    IMGUI_API bool          InputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
-    */
-
     struct DasImguiInputText {
         Context *  context;
         TLambda<void,DasImguiInputText *,ImGuiInputTextCallbackData *>    callback;
@@ -76,6 +65,28 @@ namespace das {
             diit->context->throw_error("ImguiTextCallback: missing capture");
         }
         return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, diit->callback, diit, data);
+    }
+
+    bool InputTextMultiline(vec4f vdiit, const char* label, const ImVec2& size, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
+        auto diit = cast<DasImguiInputText *>::to(vdiit);
+        if ( diit->buffer.size==0 ) {
+            builtin_array_resize(diit->buffer, 256, 1, context);
+        }
+        if ( diit->callback.capture ) {
+            diit->context = context;
+            diit->at = *at;
+            return ImGui::InputTextMultiline(
+                label,
+                diit->buffer.data,
+                diit->buffer.size,
+                size,
+                flags,
+                &InputTextCallback,
+                diit
+            );
+        } else {
+            return ImGui::InputTextMultiline(label, diit->buffer.data, diit->buffer.size, size, flags);
+        }
     }
 
     bool InputText(vec4f vdiit, const char * label, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
@@ -150,6 +161,10 @@ namespace das {
 
     int ImGTB_At ( ImGuiTextBuffer & buf, int32_t index ) {
         return buf[index];
+    }
+
+    void ImGTB_SetAt ( ImGuiTextBuffer & buf, int32_t index, int32_t value ) {
+        buf.Buf[index] = (char) value;
     }
 
     char * ImGTB_Slice ( ImGuiTextBuffer & buf, int32_t head, int32_t tail, Context * context, LineInfoArg * at ) {
@@ -312,11 +327,15 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault, "das::InputText");
     addExtern<DAS_BIND_FUN(das::InputTextWithHint)>(*this, lib, "_builtin_InputTextWithHint",
         SideEffects::worstDefault, "das::InputTextWithHint");
+    addExtern<DAS_BIND_FUN(das::InputTextMultiline)>(*this, lib, "_builtin_InputTextMultiline",
+        SideEffects::worstDefault, "das::InputTextMultiline");
     // imgui text buffer
     addExtern<DAS_BIND_FUN(das::ImGTB_Append)>(*this,lib,"append",
         SideEffects::worstDefault,"das::ImGTB_Append");
-    addExtern<DAS_BIND_FUN(das::ImGTB_At)>(*this,lib,"at",      // TODO: do we need to learn to map operator []?
+    addExtern<DAS_BIND_FUN(das::ImGTB_At)>(*this,lib,"at",          // TODO: do we need to learn to map operator []?
         SideEffects::worstDefault,"das::ImGTB_At");
+    addExtern<DAS_BIND_FUN(das::ImGTB_SetAt)>(*this,lib,"set_at",   // TODO: do we need to learn to map operator []?
+        SideEffects::worstDefault,"das::ImGTB_SetAt");
     addExtern<DAS_BIND_FUN(das::ImGTB_Slice)>(*this,lib,"slice",
         SideEffects::worstDefault,"das::ImGTB_Slice");
     // ImGuiInputTextCallbackData

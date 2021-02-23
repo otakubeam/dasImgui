@@ -4423,124 +4423,85 @@ def DasShowDemoWindowWidgets()
             TreePop()
         TreePop()
 
-/*
-    // To wire InputText() with std::string or any other custom string type,
-    // see the "Text Input > Resize Callback" section of this demo, and the misc/cpp/imgui_stdlib.h file.
-    if (TreeNode("Text Input"))
-    {
-        if (TreeNode("Multi-line Text Input"))
-        {
-            // Note: we are using a fixed-sized buffer for simplicity here. See ImGuiInputTextFlags_CallbackResize
-            // and the code in misc/cpp/imgui_stdlib.h for how to setup InputText() for dynamically resizing strings.
-            static char text[1024 * 16] =
-                "///\n"
-                " The Pentium F00F bug, shorthand for F0 0F C7 C8,\n"
-                " the hexadecimal encoding of one offending instruction,\n"
-                " more formally, the invalid operand with locked CMPXCHG8B\n"
-                " instruction bug, is a design flaw in the majority of\n"
-                " Intel Pentium, Pentium MMX, and Pentium OverDrive\n"
-                " processors (all in the P5 microarchitecture).\n"
-                "\n\n"
-                "label:\n"
-                "\tlock cmpxchg8b eax\n";
-
-            static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-            HelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline() to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. (This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)")
-            CheckboxFlags("ImGuiInputTextFlags_ReadOnly", &flags, ImGuiInputTextFlags_ReadOnly)
-            CheckboxFlags("ImGuiInputTextFlags_AllowTabInput", &flags, ImGuiInputTextFlags_AllowTabInput)
-            CheckboxFlags("ImGuiInputTextFlags_CtrlEnterForNewLine", &flags, ImGuiInputTextFlags_CtrlEnterForNewLine)
-            InputTextMultiline("##source", text, IM_ARRAYSIZE(text), ImVec2(-FLT_MIN, GetTextLineHeight() * 16), flags)
+    if TreeNode("Text Input")
+        if TreeNode("Multi-line Text Input")
+            static_let <|
+                var text <-ImGuiInputTextBuffer(
+                    "///\n" +
+                    " The Pentium F00F bug, shorthand for F0 0F C7 C8,\n" +
+                    " the hexadecimal encoding of one offending instruction,\n" +
+                    " more formally, the invalid operand with locked CMPXCHG8B\n" +
+                    " instruction bug, is a design flaw in the majority of\n" +
+                    " Intel Pentium, Pentium MMX, and Pentium OverDrive\n" +
+                    " processors (all in the P5 microarchitecture).\n" +
+                    "\n\n" +
+                    "label:\n" +
+                    "\tlock cmpxchg8b eax\n",
+                    1024*16)
+                var flags = ImGuiInputTextFlags AllowTabInput
+            DasHelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline()"+
+                " to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. "+
+                "(This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)")
+            CheckboxFlags("ImGuiInputTextFlags ReadOnly", safe_addr(flags), ImGuiInputTextFlags ReadOnly)
+            CheckboxFlags("ImGuiInputTextFlags AllowTabInput", safe_addr(flags), ImGuiInputTextFlags AllowTabInput)
+            CheckboxFlags("ImGuiInputTextFlags CtrlEnterForNewLine", safe_addr(flags), ImGuiInputTextFlags CtrlEnterForNewLine)
+            InputTextMultiline("##source", text, ImVec2(-FLT_MIN, GetTextLineHeight() * 16.), flags)
             TreePop()
-        }
-
-        if (TreeNode("Filtered Text Input"))
-        {
-            struct TextFilters
-            {
-                // Return 0 (pass) if the character is 'i' or 'm' or 'g' or 'u' or 'i'
-                static int FilterImGuiLetters(ImGuiInputTextCallbackData* data)
-                {
-                    if (data->EventChar < 256 && strchr("imgui", (char)data->EventChar))
-                        return 0;
-                    return 1;
-                }
-            };
-
-            static char buf1[64] = ""; InputText("default",     buf1, 64)
-            static char buf2[64] = ""; InputText("decimal",     buf2, 64, ImGuiInputTextFlags_CharsDecimal)
-            static char buf3[64] = ""; InputText("hexadecimal", buf3, 64, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase)
-            static char buf4[64] = ""; InputText("uppercase",   buf4, 64, ImGuiInputTextFlags_CharsUppercase)
-            static char buf5[64] = ""; InputText("no blank",    buf5, 64, ImGuiInputTextFlags_CharsNoBlank)
-            static char buf6[64] = ""; InputText("\"imgui\" letters", buf6, 64, ImGuiInputTextFlags_CallbackCharFilter, TextFilters::FilterImGuiLetters)
+        if TreeNode("Filtered Text Input")
+            static_let <|
+                var buf1 <- ImGuiInputTextBuffer("",64)
+            InputText("default",     buf1)
+            static_let <|
+                var buf2 <- ImGuiInputTextBuffer("",64)
+            InputText("decimal",     buf2, ImGuiInputTextFlags CharsDecimal)
+            static_let <|
+                var buf3 <- ImGuiInputTextBuffer("",64)
+            InputText("hexadecimal", buf3, ImGuiInputTextFlags CharsHexadecimal | ImGuiInputTextFlags CharsUppercase)
+            static_let <|
+                var buf4 <- ImGuiInputTextBuffer("",64)
+            InputText("uppercase",   buf4, ImGuiInputTextFlags CharsUppercase)
+            static_let <|
+                var buf5 <- ImGuiInputTextBuffer("",64)
+            InputText("no blank",    buf5, ImGuiInputTextFlags CharsNoBlank)
+            static_let <|
+                var buf6 <- ImGuiInputTextBuffer("",64) <| @ ( it,data )
+                    let ch = int(data.EventChar)
+                    if ch=='i' || ch=='m' || ch=='g' || ch=='u'
+                        return 0
+                    return 1
+            InputText("\"imgui\" letters", buf6, ImGuiInputTextFlags CallbackCharFilter)
             TreePop()
-        }
-
         if (TreeNode("Password Input"))
-        {
-            static char password[64] = "password123";
-            InputText("password", password, IM_ARRAYSIZE(password), ImGuiInputTextFlags_Password)
-            SameLine() HelpMarker("Display all characters as '*'.\nDisable clipboard cut and copy.\nDisable logging.\n")
-            InputTextWithHint("password (w/ hint)", "<password>", password, IM_ARRAYSIZE(password), ImGuiInputTextFlags_Password)
-            InputText("password (clear)", password, IM_ARRAYSIZE(password))
+            static_let <|
+                var password <- ImGuiInputTextBuffer("password123",64)
+            InputText("password", password, ImGuiInputTextFlags Password)
+            SameLine()
+            DasHelpMarker("Display all characters as '*'.\nDisable clipboard cut and copy.\nDisable logging.\n")
+            InputTextWithHint("password (w/ hint)", "<password>", password, ImGuiInputTextFlags Password)
+            InputText("password (clear)", password)
             TreePop()
-        }
 
-        if (TreeNode("Completion, History, Edit Callbacks"))
-        {
-            struct Funcs
-            {
-                static int MyCallback(ImGuiInputTextCallbackData* data)
-                {
-                    if (data->EventFlag == ImGuiInputTextFlags_CallbackCompletion)
-                    {
-                        data->InsertChars(data->CursorPos, "..")
-                    }
-                    else if (data->EventFlag == ImGuiInputTextFlags_CallbackHistory)
-                    {
-                        if (data->EventKey == ImGuiKey_UpArrow)
-                        {
-                            data->DeleteChars(0, data->BufTextLen)
-                            data->InsertChars(0, "Pressed Up!")
-                            data->SelectAll()
-                        }
-                        else if (data->EventKey == ImGuiKey_DownArrow)
-                        {
-                            data->DeleteChars(0, data->BufTextLen)
-                            data->InsertChars(0, "Pressed Down!")
-                            data->SelectAll()
-                        }
-                    }
-                    else if (data->EventFlag == ImGuiInputTextFlags_CallbackEdit)
-                    {
-                        // Toggle casing of first character
-                        char c = data->Buf[0];
-                        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) data->Buf[0] ^= 32;
-                        data->BufDirty = true;
-
-                        // Increment a counter
-                        int* p_int = (int*)data->UserData;
-                        *p_int = *p_int + 1;
-                    }
-                    return 0;
-                }
-            };
-            static char buf1[64];
-            InputText("Completion", buf1, 64, ImGuiInputTextFlags_CallbackCompletion, Funcs::MyCallback)
-            SameLine() HelpMarker("Here we append \"..\" each time Tab is pressed. See 'Examples>Console' for a more meaningful demonstration of using this callback.")
-
-            static char buf2[64];
-            InputText("History", buf2, 64, ImGuiInputTextFlags_CallbackHistory, Funcs::MyCallback)
-            SameLine() HelpMarker("Here we replace and select text each time Up/Down are pressed. See 'Examples>Console' for a more meaningful demonstration of using this callback.")
-
-            static char buf3[64];
-            static int edit_count = 0;
-            InputText("Edit", buf3, 64, ImGuiInputTextFlags_CallbackEdit, Funcs::MyCallback, (void*)&edit_count)
-            SameLine() HelpMarker("Here we toggle the casing of the first character on every edits + count edits.")
-            SameLine() Text("(%d)", edit_count)
-
+        if TreeNode("Completion, History, Edit Callbacks")
+            static_let <|
+                var buf1 <- ImGuiInputTextBuffer("",64) <| MakeMyCallback()
+            InputText("Completion", buf1, ImGuiInputTextFlags CallbackCompletion)
+            SameLine()
+            DasHelpMarker("Here we append \"..\" each time Tab is pressed. See 'Examples>Console' for a more meaningful demonstration of using this callback.")
+            static_let <|
+                var buf2 <- ImGuiInputTextBuffer("",64) <| MakeMyCallback()
+            InputText("History", buf2, ImGuiInputTextFlags CallbackHistory)
+            SameLine()
+            DasHelpMarker("Here we replace and select text each time Up/Down are pressed. See 'Examples>Console' for a more meaningful demonstration of using this callback.")
+            static_let <|
+                var buf3 <- ImGuiInputTextBuffer("",64) <| MakeMyCallback()
+            InputText("Edit", buf3, ImGuiInputTextFlags CallbackEdit)
+            SameLine()
+            DasHelpMarker("Here we toggle the casing of the first character on every edits + count edits.")
+            SameLine()
+            Text("({g_edit_count})")
             TreePop()
-        }
 
+/*
         if (TreeNode("Resize Callback"))
         {
             // To wire InputText() with std::string or any other custom string type,
@@ -4583,9 +4544,11 @@ def DasShowDemoWindowWidgets()
             TreePop()
         }
 
-        TreePop()
-    }
+*/
 
+        TreePop()
+
+/*
     // Tabs
     if (TreeNode("Tabs"))
     {
@@ -5498,3 +5461,30 @@ def DasShowDemoWindowWidgets()
 }
 
 */
+
+var g_edit_count = 0
+
+def MakeMyCallback()
+    return @ <| ( var it:ImGuiInputTextBuffer; var data:ImGuiInputTextCallbackData ) : int
+        if data.EventFlag == ImGuiInputTextFlags CallbackCompletion
+            data |> InsertChars(data.CursorPos, "..")
+        elif data.EventFlag == ImGuiInputTextFlags CallbackHistory
+            if data.EventKey == ImGuiKey UpArrow
+                data |> DeleteChars(0, data.BufTextLen)
+                data |> InsertChars(0, "Pressed Up!")
+                data |> SelectAll()
+            elif data.EventKey == ImGuiKey DownArrow
+                data |> DeleteChars(0, data.BufTextLen)
+                data |> InsertChars(0, "Pressed Down!")
+                data |> SelectAll()
+        elif data.EventFlag == ImGuiInputTextFlags CallbackEdit
+            // note - this is mutable imgui string
+            var pc : uint8?
+            unsafe
+                pc = reinterpret<uint8?> data.Buf
+            let c = int(*pc)
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+                *pc = uint8(c ^ 32)
+            data.BufDirty = true
+            g_edit_count ++
+        return 0

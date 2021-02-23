@@ -29,6 +29,12 @@ def ImGuiInputTextBuffer ( txt:string; len:int )
     make_input_buffer(buf, txt, len)
     return <- buf
 
+def ImGuiInputTextBuffer ( txt:string; len:int; var cb:lambda<(var it:ImGuiInputTextBuffer; var itc:ImGuiInputTextCallbackData):int> )
+    var buf : ImGuiInputTextBuffer
+    make_input_buffer(buf, txt, len)
+    buf.callback <- cb
+    return <- buf
+
 def lock ( buf : ImGuiInputTextBuffer; blk : block < ( st:string# ) : void > )
     unsafe
         let pbuf = addr(buf.buffer[0])
@@ -48,6 +54,9 @@ def InputText ( lab:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags 
 
 def InputTextWithHint ( lab,hint:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
     return _builtin_InputTextWithHint(buf, lab, hint, flags)
+
+def InputTextMultiline ( lab:string; buf:ImGuiInputTextBuffer; siz:ImVec2 = ImVec2(0.0f,0.0f); flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
+    return _builtin_InputTextMultiline(buf, lab, siz, flags)
 
 // note - this needs to correspond to C++ structure
 struct ImGuiSizeConstraints
