@@ -50,7 +50,6 @@ def InputTextWithHint ( lab,hint:string; buf:ImGuiInputTextBuffer; flags:ImGuiIn
     return _builtin_InputTextWithHint(buf, lab, hint, flags)
 
 // note - this needs to correspond to C++ structure
-
 struct ImGuiSizeConstraints
     context: Context?
     callback: lambda<(var data:ImGuiSizeCallbackData):void>
@@ -63,6 +62,20 @@ def ImGuiSizeConstraints(var lmb:lambda<(var data:ImGuiSizeCallbackData):void>)
 
 def SetNextWindowSizeConstraints(size_min,size_max:ImVec2; var cn:ImGuiSizeConstraints)
     _builtin_SetNextWindowSizeConstraints(cn,size_min,size_max)
+
+// note - this needs to correspond to C++ structure
+struct ImGuiComboGetter
+    context : Context?
+    callback : lambda<(idx:int;var result:string&):bool>
+    at : LineInfo
+
+def ImGuiComboGetter(var lmb:lambda<(idx:int;var result:string&):bool>)
+    var self : ImGuiComboGetter
+    self.callback <- lmb
+    return <-self
+
+def Combo ( lab:string; current_item:int? implicit; getter:ImGuiComboGetter; items_count:int; popup_max_height_in_items:int = -1 )
+    return _builtin_Combo(getter, lab, current_item, items_count, popup_max_height_in_items)
 
 let IM_COL32_WHITE = IM_COL32(255,255,255,255)
 let IM_COL32_BLACK = IM_COL32(0,0,0,255)

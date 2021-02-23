@@ -4203,133 +4203,99 @@ def DasShowDemoWindowWidgets()
             TreePop()
         TreePop()
 
-/*
-
-
-
-
-    if (TreeNode("Images"))
-    {
-        ImGuiIO& io = GetIO()
+    if TreeNode("Images")
+        var io & = GetIO()
         TextWrapped(
-            "Below we are displaying the font texture (which is the only texture we have access to in this demo). "
-            "Use the 'ImTextureID' type as storage to pass pointers or identifier to your own texture data. "
+            "Below we are displaying the font texture (which is the only texture we have access to in this demo). " +
+            "Use the 'ImTextureID' type as storage to pass pointers or identifier to your own texture data. " +
             "Hover the texture for a zoomed view!")
-
-        // Below we are displaying the font texture because it is the only texture we have access to inside the demo!
-        // Remember that ImTextureID is just storage for whatever you want it to be. It is essentially a value that
-        // will be passed to the rendering backend via the ImDrawCmd structure.
-        // If you use one of the default imgui_impl_XXXX.cpp rendering backend, they all have comments at the top
-        // of their respective source file to specify what they expect to be stored in ImTextureID, for example:
-        // - The imgui_impl_dx11.cpp renderer expect a 'ID3D11ShaderResourceView*' pointer
-        // - The imgui_impl_opengl3.cpp renderer expect a GLuint OpenGL texture identifier, etc.
-        // More:
-        // - If you decided that ImTextureID = MyEngineTexture*, then you can pass your MyEngineTexture* pointers
-        //   to Image(), and gather width/height through your own functions, etc.
-        // - You can use ShowMetricsWindow() to inspect the draw data that are being passed to your renderer,
-        //   it will help you debug issues if you are confused about it.
-        // - Consider using the lower-level ImDrawList::AddImage() API, via GetWindowDrawList()->AddImage().
-        // - Read https://github.com/ocornut/imgui/blob/master/docs/FAQ.md
-        // - Read https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-        ImTextureID my_tex_id = io.Fonts->TexID;
-        float my_tex_w = (float)io.Fonts->TexWidth;
-        float my_tex_h = (float)io.Fonts->TexHeight;
-        {
-            Text("%.0fx%.0f", my_tex_w, my_tex_h)
-            ImVec2 pos = GetCursorScreenPos()
-            ImVec2 uv_min = ImVec2(0.0f, 0.0f)                 // Top-left
-            ImVec2 uv_max = ImVec2(1.0f, 1.0f)                 // Lower-right
-            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)   // No tint
-            ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f) // 50% opaque white
+        var my_tex_id = io.Fonts.TexID
+        let my_tex_w = float(io.Fonts.TexWidth)
+        let my_tex_h = float(io.Fonts.TexHeight)
+        if true
+            Text("{my_tex_w}x{my_tex_h}")
+            var pos = GetCursorScreenPos()
+            var uv_min = ImVec2(0.0f, 0.0f)
+            var uv_max = ImVec2(1.0f, 1.0f)
+            var tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
+            var border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f)
             Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col)
-            if (IsItemHovered())
-            {
+            if IsItemHovered()
                 BeginTooltip()
-                float region_sz = 32.0f;
-                float region_x = io.MousePos.x - pos.x - region_sz * 0.5f;
-                float region_y = io.MousePos.y - pos.y - region_sz * 0.5f;
-                float zoom = 4.0f;
-                if (region_x < 0.0f) { region_x = 0.0f; }
-                else if (region_x > my_tex_w - region_sz) { region_x = my_tex_w - region_sz; }
-                if (region_y < 0.0f) { region_y = 0.0f; }
-                else if (region_y > my_tex_h - region_sz) { region_y = my_tex_h - region_sz; }
-                Text("Min: (%.2f, %.2f)", region_x, region_y)
-                Text("Max: (%.2f, %.2f)", region_x + region_sz, region_y + region_sz)
-                ImVec2 uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h)
-                ImVec2 uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h)
+                var region_sz = 32.0f
+                var region_x = io.MousePos.x - pos.x - region_sz * 0.5f
+                var region_y = io.MousePos.y - pos.y - region_sz * 0.5f
+                var zoom = 4.0f
+                if region_x < 0.0f
+                    region_x = 0.0f
+                elif region_x > my_tex_w - region_sz
+                    region_x = my_tex_w - region_sz
+                if region_y < 0.0f
+                    region_y = 0.0f
+                elif region_y > my_tex_h - region_sz
+                    region_y = my_tex_h - region_sz
+                Text("Min: ({region_x}, {region_y})")
+                Text("Max: ({region_x + region_sz}, region_y + region_sz)")
+                var uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h)
+                var uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h)
                 Image(my_tex_id, ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col)
                 EndTooltip()
-            }
-        }
         TextWrapped("And now some textured buttons..")
-        static int pressed_count = 0;
-        for (int i = 0; i < 8; i++)
-        {
+        static_let <|
+            var pressed_count = 0
+        for i in range(8)
             PushID(i)
-            int frame_padding = -1 + i;                             // -1 == uses default padding (style.FramePadding)
-            ImVec2 size = ImVec2(32.0f, 32.0f)                     // Size of the image we want to make visible
-            ImVec2 uv0 = ImVec2(0.0f, 0.0f)                        // UV coordinates for lower-left
-            ImVec2 uv1 = ImVec2(32.0f / my_tex_w, 32.0f / my_tex_h)// UV coordinates for (32,32) in our texture
-            ImVec4 bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f)         // Black background
-            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)       // No tint
-            if (ImageButton(my_tex_id, size, uv0, uv1, frame_padding, bg_col, tint_col))
+            var frame_padding = -1 + i
+            var size = ImVec2(32.0f, 32.0f)
+            var uv0 = ImVec2(0.0f, 0.0f)
+            var uv1 = ImVec2(32.0f / my_tex_w, 32.0f / my_tex_h)
+            var bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f)
+            var tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
+            if ImageButton(my_tex_id, size, uv0, uv1, frame_padding, bg_col, tint_col)
                 pressed_count += 1;
             PopID()
             SameLine()
-        }
         NewLine()
-        Text("Pressed %d times.", pressed_count)
+        Text("Pressed {pressed_count} times.")
         TreePop()
-    }
 
-    if (TreeNode("Combo"))
-    {
-        // Expose flags as checkbox for the demo
-        static ImGuiComboFlags flags = 0;
-        CheckboxFlags("ImGuiComboFlags_PopupAlignLeft", &flags, ImGuiComboFlags_PopupAlignLeft)
-        SameLine() HelpMarker("Only makes a difference if the popup is larger than the combo")
-        if (CheckboxFlags("ImGuiComboFlags_NoArrowButton", &flags, ImGuiComboFlags_NoArrowButton))
-            flags &= ~ImGuiComboFlags_NoPreview;     // Clear the other flag, as we cannot combine both
-        if (CheckboxFlags("ImGuiComboFlags_NoPreview", &flags, ImGuiComboFlags_NoPreview))
-            flags &= ~ImGuiComboFlags_NoArrowButton; // Clear the other flag, as we cannot combine both
-
-        // Using the generic BeginCombo() API, you have full control over how to display the combo contents.
-        // (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
-        // stored in the object itself, etc.)
-        const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
-        static int item_current_idx = 0; // Here we store our selection data as an index.
-        const char* combo_label = items[item_current_idx];  // Label to preview before opening the combo (technically it could be anything)
-        if (BeginCombo("combo 1", combo_label, flags))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(items) n++)
-            {
-                const bool is_selected = (item_current_idx == n)
-                if (Selectable(items[n], is_selected))
-                    item_current_idx = n;
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+    if TreeNode("Combo")
+        static_let <|
+            var flags = ImGuiComboFlags None
+        CheckboxFlags("ImGuiComboFlags PopupAlignLeft", safe_addr(flags), ImGuiComboFlags PopupAlignLeft)
+        SameLine()
+        DasHelpMarker("Only makes a difference if the popup is larger than the combo")
+        if CheckboxFlags("ImGuiComboFlags NoArrowButton", safe_addr(flags), ImGuiComboFlags NoArrowButton)
+            flags &= ~ImGuiComboFlags NoPreview
+        if CheckboxFlags("ImGuiComboFlags NoPreview", safe_addr(flags), ImGuiComboFlags NoPreview)
+            flags &= ~ImGuiComboFlags NoArrowButton
+        static_let <|
+            let items = [[string "AAAA"; "BBBB"; "CCCC"; "DDDD"; "EEEE"; "FFFF"; "GGGG"; "HHHH"; "IIII"; "JJJJ"; "KKKK"; "LLLLLLL"; "MMMM"; "OOOOOOO" ]]
+            var item_current_idx = 0
+        let combo_label = items[item_current_idx]
+        if BeginCombo("combo 1", combo_label, flags)
+            for n in range(length(items))
+                let is_selected = item_current_idx == n
+                if Selectable(items[n], is_selected)
+                    item_current_idx = n
                 if (is_selected)
                     SetItemDefaultFocus()
-            }
             EndCombo()
-        }
-
-        // Simplified one-liner Combo() API, using values packed in a single constant string
-        static int item_current_2 = 0;
-        Combo("combo 2 (one-liner)", &item_current_2, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0")
-
-        // Simplified one-liner Combo() using an array of const char*
-        static int item_current_3 = -1; // If the selection isn't within 0..count, Combo won't display a preview
-        Combo("combo 3 (array)", &item_current_3, items, IM_ARRAYSIZE(items))
-
-        // Simplified one-liner Combo() using an accessor function
-        struct Funcs { static bool ItemGetter(void* data, int n, const char** out_str) { *out_str = ((const char**)data)[n]; return true; } };
-        static int item_current_4 = 0;
-        Combo("combo 4 (function)", &item_current_4, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items))
-
+        static_let <|
+            var item_current_2 = 0
+        Combo("combo 2 (one-liner)", safe_addr(item_current_2), [[string "aaaa";"bbbb";"cccc";"dddd"; "eeee"]])
+        static_let <|
+            var item_current_3 = -1
+        Combo("combo 3 (array)", safe_addr(item_current_3), items)
+        static_let <|
+            var func_getter <- ImGuiComboGetter() <| @ ( index:int; var output:string& )
+                output = "fun[{index}] = {items[index]}"
+                return true
+            var item_current_4 = 0
+        Combo("combo 4 (function)", safe_addr(item_current_4), func_getter, length(items))
         TreePop()
-    }
 
+/*
     if (TreeNode("List boxes"))
     {
         // Using the generic BeginListBox() API, you have full control over how to display the combo contents.

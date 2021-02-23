@@ -775,7 +775,8 @@ addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromMemory)>(*this, lib, "LoadIniSe
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginCombo)>(*this, lib, "BeginCombo",SideEffects::worstDefault, "ImGui::BeginCombo")
 	->args({"label","preview_value","flags"})
-		->arg_init(2,make_smart<ExprConstInt>(0))
+		->arg_type(2,makeType<ImGuiComboFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiComboFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetContentRegionMax), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetContentRegionMax",SideEffects::worstDefault, "ImGui::GetContentRegionMax")
 	->args({})

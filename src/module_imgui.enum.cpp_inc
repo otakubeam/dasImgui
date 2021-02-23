@@ -636,21 +636,21 @@ public:
 	}
 };
 
-class EnumerationImGuiComboFlags_ : public das::Enumeration {
+class EnumerationImGuiComboFlags : public das::Enumeration {
 public:
-    EnumerationImGuiComboFlags_() : das::Enumeration("ImGuiComboFlags_") {
+    EnumerationImGuiComboFlags() : das::Enumeration("ImGuiComboFlags") {
         external = true;
         cppName = "ImGuiComboFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiComboFlags_ >::type >::type;
-		addI("ImGuiComboFlags_None", int64_t(ImGuiComboFlags_::ImGuiComboFlags_None), das::LineInfo());
-		addI("ImGuiComboFlags_PopupAlignLeft", int64_t(ImGuiComboFlags_::ImGuiComboFlags_PopupAlignLeft), das::LineInfo());
-		addI("ImGuiComboFlags_HeightSmall", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightSmall), das::LineInfo());
-		addI("ImGuiComboFlags_HeightRegular", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightRegular), das::LineInfo());
-		addI("ImGuiComboFlags_HeightLarge", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightLarge), das::LineInfo());
-		addI("ImGuiComboFlags_HeightLargest", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightLargest), das::LineInfo());
-		addI("ImGuiComboFlags_NoArrowButton", int64_t(ImGuiComboFlags_::ImGuiComboFlags_NoArrowButton), das::LineInfo());
-		addI("ImGuiComboFlags_NoPreview", int64_t(ImGuiComboFlags_::ImGuiComboFlags_NoPreview), das::LineInfo());
-		addI("ImGuiComboFlags_HeightMask_", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightMask_), das::LineInfo());
+		addI("None", int64_t(ImGuiComboFlags_::ImGuiComboFlags_None), das::LineInfo());
+		addI("PopupAlignLeft", int64_t(ImGuiComboFlags_::ImGuiComboFlags_PopupAlignLeft), das::LineInfo());
+		addI("HeightSmall", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightSmall), das::LineInfo());
+		addI("HeightRegular", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightRegular), das::LineInfo());
+		addI("HeightLarge", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightLarge), das::LineInfo());
+		addI("HeightLargest", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightLargest), das::LineInfo());
+		addI("NoArrowButton", int64_t(ImGuiComboFlags_::ImGuiComboFlags_NoArrowButton), das::LineInfo());
+		addI("NoPreview", int64_t(ImGuiComboFlags_::ImGuiComboFlags_NoPreview), das::LineInfo());
+		addI("HeightMask_", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightMask_), das::LineInfo());
 	}
 };
 

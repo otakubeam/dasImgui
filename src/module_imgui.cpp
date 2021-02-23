@@ -199,6 +199,31 @@ namespace das {
     ImVec2 CalcTextSize(const char* text,bool hide_text_after_double_hash, float wrap_width) {
         return ImGui::CalcTextSize(text,nullptr,hide_text_after_double_hash,wrap_width);
     }
+
+    // Combo with accessor
+    struct ImGuiComboGetter {
+        Context *   context;
+        Lambda      lambda;
+        LineInfo    at;
+    };
+
+    bool ComboGetterCallback ( void* data, int idx, const char** out_text ) {
+        ImGuiComboGetter * getter = (ImGuiComboGetter *) data;
+        if ( !getter->lambda.capture ) {
+            getter->context->throw_error_at(getter->at, "expecting lambda");
+        }
+        *out_text = nullptr;
+        auto res = das_invoke_lambda<bool>::invoke<int,char **>(getter->context,getter->lambda,idx,(char **)out_text);
+        if ( *out_text==nullptr ) *out_text = "";
+        return res;
+    }
+
+    bool Combo ( vec4f cg, const char * label, int * current_item, int items_count, int popup_max_height_in_items, Context * ctx, LineInfoArg * at ) {
+        ImGuiComboGetter * getter = cast<ImGuiComboGetter *>::to(cg);
+        getter->context = ctx;
+        getter->at = *at;
+        return ImGui::Combo(label,current_item,&ComboGetterCallback,getter,items_count,popup_max_height_in_items);
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -310,6 +335,9 @@ bool Module_imgui::initDependencies() {
 	->args({"text","hide_text_after_double_hash","wrap_width"})
 		->arg_init(1,make_smart<ExprConstBool>(false))
 		->arg_init(2,make_smart<ExprConstFloat>(-1.0f));
+    // combo
+    addExtern<DAS_BIND_FUN(das::Combo)>(*this, lib, "_builtin_Combo",
+        SideEffects::worstDefault, "das::Combo");
     // additional default values
     findUniqueFunction("AddRect")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));

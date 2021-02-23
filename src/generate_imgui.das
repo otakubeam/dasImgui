@@ -55,6 +55,7 @@ def main
         "ImGuiTableColumnFlags_"  => [[ExEnum() name = "ImGuiTableColumnFlags", isFlags=true]];
         "ImGuiKeyModFlags_"  => [[ExEnum() name = "ImGuiKeyModFlags", isFlags=true]];
         "ImGuiTableRowFlags_"  => [[ExEnum() name = "ImGuiTableRowFlags", isFlags=true]];
+        "ImGuiComboFlags_" => [[ExEnum() name = "ImGuiComboFlags", isFlags=true]];
 
     // not flags
         "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
