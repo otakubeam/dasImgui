@@ -3047,73 +3047,55 @@ def DasShowDemoWindowTables()
             EndTable()
         TreePop()
 
-/*
-
-    if (open_action != -1)
+    if open_action != -1
         SetNextItemOpen(open_action != 0)
-    if (TreeNode("Columns widths"))
-    {
-        HelpMarker("Using TableSetupColumn() to setup default width.")
-
-        static ImGuiTableFlags flags1 = ImGuiTableFlags_Borders | ImGuiTableFlags_NoBordersInBodyUntilResize;
+    if TreeNode("Columns widths")
+        DasHelpMarker("Using TableSetupColumn() to setup default width.")
+        static_let <|
+            var flags1 = ImGuiTableFlags Borders | ImGuiTableFlags NoBordersInBodyUntilResize
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", &flags1, ImGuiTableFlags_Resizable)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBodyUntilResize", &flags1, ImGuiTableFlags_NoBordersInBodyUntilResize)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags1), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags NoBordersInBodyUntilResize", safe_addr(flags1), ImGuiTableFlags NoBordersInBodyUntilResize)
         PopStyleCompact()
-        if (BeginTable("table1", 3, flags1))
-        {
-            // We could also set ImGuiTableFlags_SizingFixedFit on the table and all columns will default to ImGuiTableColumnFlags_WidthFixed.
-            TableSetupColumn("one", ImGuiTableColumnFlags_WidthFixed, 100.0f) // Default to 100.0f
-            TableSetupColumn("two", ImGuiTableColumnFlags_WidthFixed, 200.0f) // Default to 200.0f
-            TableSetupColumn("three", ImGuiTableColumnFlags_WidthFixed)       // Default to auto
+        if BeginTable("table1", 3, flags1)
+            TableSetupColumn("one", ImGuiTableColumnFlags WidthFixed, 100.0f)
+            TableSetupColumn("two", ImGuiTableColumnFlags WidthFixed, 200.0f)
+            TableSetupColumn("three", ImGuiTableColumnFlags WidthFixed)
             TableHeadersRow()
-            for (int row = 0; row < 4; row++)
-            {
+            for row in range(4)
                 TableNextRow()
-                for (int column = 0; column < 3; column++)
-                {
+                for column in range(3)
                     TableSetColumnIndex(column)
-                    if (row == 0)
-                        Text("(w: %5.1f)", GetContentRegionAvail().x)
+                    if row == 0
+                        Text("(w: {GetContentRegionAvail().x})")
                     else
-                        Text("Hello %d,%d", column, row)
-                }
-            }
+                        Text("Hello {column},{row}")
             EndTable()
-        }
-
-        HelpMarker("Using TableSetupColumn() to setup explicit width.\n\nUnless _NoKeepColumnsVisible is set, fixed columns with set width may still be shrunk down if there's not enough space in the host.")
-
-        static ImGuiTableFlags flags2 = ImGuiTableFlags_None;
+        DasHelpMarker("Using TableSetupColumn() to setup explicit width.\n\nUnless _NoKeepColumnsVisible is set, fixed columns with set width may still be shrunk down if there's not enough space in the host.")
+        static_let <|
+            var flags2 = ImGuiTableFlags None
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_NoKeepColumnsVisible", &flags2, ImGuiTableFlags_NoKeepColumnsVisible)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerV", &flags2, ImGuiTableFlags_BordersInnerV)
-        CheckboxFlags("ImGuiTableFlags_BordersOuterV", &flags2, ImGuiTableFlags_BordersOuterV)
+        CheckboxFlags("ImGuiTableFlags_NoKeepColumnsVisible", safe_addr(flags2), ImGuiTableFlags NoKeepColumnsVisible)
+        CheckboxFlags("ImGuiTableFlags_BordersInnerV", safe_addr(flags2), ImGuiTableFlags BordersInnerV)
+        CheckboxFlags("ImGuiTableFlags_BordersOuterV", safe_addr(flags2), ImGuiTableFlags BordersOuterV)
         PopStyleCompact()
-        if (BeginTable("table2", 4, flags2))
-        {
-            // We could also set ImGuiTableFlags_SizingFixedFit on the table and all columns will default to ImGuiTableColumnFlags_WidthFixed.
-            TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, 100.0f)
-            TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 15.0f)
-            TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 30.0f)
-            TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 15.0f)
-            for (int row = 0; row < 5; row++)
-            {
+        if BeginTable("table2", 4, flags2)
+            TableSetupColumn("", ImGuiTableColumnFlags WidthFixed, 100.0f)
+            TableSetupColumn("", ImGuiTableColumnFlags WidthFixed, TEXT_BASE_WIDTH * 15.0f)
+            TableSetupColumn("", ImGuiTableColumnFlags WidthFixed, TEXT_BASE_WIDTH * 30.0f)
+            TableSetupColumn("", ImGuiTableColumnFlags WidthFixed, TEXT_BASE_WIDTH * 15.0f)
+            for row in range(5)
                 TableNextRow()
-                for (int column = 0; column < 4; column++)
-                {
+                for column in range(4)
                     TableSetColumnIndex(column)
-                    if (row == 0)
-                        Text("(w: %5.1f)", GetContentRegionAvail().x)
+                    if row == 0
+                        Text("(w: GetContentRegionAvail().x)")
                     else
-                        Text("Hello %d,%d", column, row)
-                }
-            }
+                        Text("Hello {column},{row}")
             EndTable()
-        }
         TreePop()
-    }
 
+/*
     if (open_action != -1)
         SetNextItemOpen(open_action != 0)
     if (TreeNode("Nested tables"))
