@@ -697,6 +697,7 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetSortSpecs)>(*this, lib, "TableGetSortSpecs
 ;
 addExtern<DAS_BIND_FUN(ImGui::ArrowButton)>(*this, lib, "ArrowButton",SideEffects::worstDefault, "ImGui::ArrowButton")
 	->args({"str_id","dir"})
+		->arg_type(1,makeType<ImGuiDir_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::TreePop)>(*this, lib, "TreePop",SideEffects::worstDefault, "ImGui::TreePop")
 	->args({})

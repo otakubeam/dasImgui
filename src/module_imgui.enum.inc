@@ -5,7 +5,7 @@
 addEnumeration(make_smart<EnumerationImGuiDataType_>());
 addEnumeration(make_smart<EnumerationImGuiHoveredFlags_>());
 addEnumeration(make_smart<EnumerationImGuiNavInput_>());
-addEnumeration(make_smart<EnumerationImGuiDir_>());
+addEnumeration(make_smart<EnumerationImGuiDir>());
 addEnumeration(make_smart<EnumerationImGuiCond>());
 addEnumFlagOps<ImGuiCond_>(*this,lib,"ImGuiCond_");
 addEnumeration(make_smart<EnumerationImGuiViewportFlags_>());

@@ -46,6 +46,9 @@ def clear ( var buf : ImGuiInputTextBuffer )
 def InputText ( lab:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
     return _builtin_InputText(buf, lab, flags)
 
+def InputTextWithHint ( lab,hint:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
+    return _builtin_InputTextWithHint(buf, lab, hint, flags)
+
 // note - this needs to correspond to C++ structure
 
 struct ImGuiSizeConstraints
@@ -97,6 +100,26 @@ def ListBox ( lab:string; current_item:int? implicit; items:array<string>; heigh
 def ListBox ( lab:string; current_item:int? implicit; items:string[]; height_in_items:int = -1 )
     unsafe
         return imgui::ListBox(lab,current_item,addr(items[0]),length(items),height_in_items)
+
+def PlotLines(
+    lab:string; values:float[]; values_offset:int = 0;
+    overlay_text:string = "";
+    scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
+    graph_size : ImVec2 = ImVec2();
+    stride : int = typeinfo(sizeof type<float>))
+    var gsize = graph_size
+    unsafe
+        imgui::PlotLines(lab, addr(values[0]), length(values), values_offset, overlay_text, scale_min, scale_max, gsize, stride)
+
+def PlotLines(
+    lab:string; values:array<float>; values_offset:int = 0;
+    overlay_text:string = "";
+    scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
+    graph_size : ImVec2 = ImVec2();
+    stride : int = typeinfo(sizeof type<float>))
+    var gsize = graph_size
+    unsafe
+        imgui::PlotLines(lab, addr(values[0]), length(values), values_offset, overlay_text, scale_min, scale_max, gsize, stride)
 
 def PlotHistogram(
     lab:string; values:float[]; values_offset:int = 0;

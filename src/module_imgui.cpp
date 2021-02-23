@@ -14,7 +14,6 @@ using namespace das;
 #endif
 
 /*
-[build] EXEC : warning : variadic function LabelText aka ImGui::LabelText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function BulletText aka ImGui::BulletText [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function SetTooltip aka ImGui::SetTooltip [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
 [build] EXEC : warning : variadic function TextWrapped aka ImGui::TextWrapped [C:\Users\Boris\Work\yzg\build\IMGUI_GENERATE.vcxproj]
@@ -24,6 +23,9 @@ using namespace das;
 namespace das {
     void Text ( const char * txt ) {
         ImGui::Text(txt);
+    }
+    void LabelText ( const char * lab, const char * txt ) {
+        ImGui::LabelText(lab, txt);
     }
     void TextWrapped ( const char * txt ) {
         ImGui::TextWrapped(txt);
@@ -57,9 +59,7 @@ namespace das {
     }
 
     /*
-    IMGUI_API bool          InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
     IMGUI_API bool          InputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
-    IMGUI_API bool          InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
     */
 
     struct DasImguiInputText {
@@ -96,6 +96,28 @@ namespace das {
             );
         } else {
             return ImGui::InputText(label, diit->buffer.data, diit->buffer.size, flags);
+        }
+    }
+
+    bool InputTextWithHint(vec4f vdiit, const char * label, const char * hint, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
+        auto diit = cast<DasImguiInputText *>::to(vdiit);
+        if ( diit->buffer.size==0 ) {
+            builtin_array_resize(diit->buffer, 256, 1, context);
+        }
+        if ( diit->callback.capture ) {
+            diit->context = context;
+            diit->at = *at;
+            return ImGui::InputTextWithHint(
+                label,
+                hint,
+                diit->buffer.data,
+                diit->buffer.size,
+                flags,
+                &InputTextCallback,
+                diit
+            );
+        } else {
+            return ImGui::InputTextWithHint(label, hint, diit->buffer.data, diit->buffer.size, flags);
         }
     }
 
@@ -242,6 +264,8 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault,"das::TextDisabled");
     addExtern<DAS_BIND_FUN(das::TextColored)>(*this,lib,"TextColored",
         SideEffects::worstDefault,"das::TextColored");
+    addExtern<DAS_BIND_FUN(das::LabelText)>(*this,lib,"LabelText",
+        SideEffects::worstDefault,"das::LabelText");
     addExtern<DAS_BIND_FUN(das::LogText)>(*this,lib,"LogText",
         SideEffects::worstDefault,"das::LogText");
     addExtern<DAS_BIND_FUN(das::TreeNode)>(*this,lib,"TreeNode",
@@ -261,6 +285,8 @@ bool Module_imgui::initDependencies() {
     // input text
     addExtern<DAS_BIND_FUN(das::InputText)>(*this, lib, "_builtin_InputText",
         SideEffects::worstDefault, "das::InputText");
+    addExtern<DAS_BIND_FUN(das::InputTextWithHint)>(*this, lib, "_builtin_InputTextWithHint",
+        SideEffects::worstDefault, "das::InputTextWithHint");
     // imgui text buffer
     addExtern<DAS_BIND_FUN(das::ImGTB_Append)>(*this,lib,"append",
         SideEffects::worstDefault,"das::ImGTB_Append");

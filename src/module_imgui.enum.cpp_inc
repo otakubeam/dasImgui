@@ -74,18 +74,18 @@ public:
 	}
 };
 
-class EnumerationImGuiDir_ : public das::Enumeration {
+class EnumerationImGuiDir : public das::Enumeration {
 public:
-    EnumerationImGuiDir_() : das::Enumeration("ImGuiDir_") {
+    EnumerationImGuiDir() : das::Enumeration("ImGuiDir") {
         external = true;
         cppName = "ImGuiDir_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiDir_ >::type >::type;
-		addI("ImGuiDir_None", int64_t(ImGuiDir_::ImGuiDir_None), das::LineInfo());
-		addI("ImGuiDir_Left", int64_t(ImGuiDir_::ImGuiDir_Left), das::LineInfo());
-		addI("ImGuiDir_Right", int64_t(ImGuiDir_::ImGuiDir_Right), das::LineInfo());
-		addI("ImGuiDir_Up", int64_t(ImGuiDir_::ImGuiDir_Up), das::LineInfo());
-		addI("ImGuiDir_Down", int64_t(ImGuiDir_::ImGuiDir_Down), das::LineInfo());
-		addI("ImGuiDir_COUNT", int64_t(ImGuiDir_::ImGuiDir_COUNT), das::LineInfo());
+		addI("None", int64_t(ImGuiDir_::ImGuiDir_None), das::LineInfo());
+		addI("Left", int64_t(ImGuiDir_::ImGuiDir_Left), das::LineInfo());
+		addI("Right", int64_t(ImGuiDir_::ImGuiDir_Right), das::LineInfo());
+		addI("Up", int64_t(ImGuiDir_::ImGuiDir_Up), das::LineInfo());
+		addI("Down", int64_t(ImGuiDir_::ImGuiDir_Down), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiDir_::ImGuiDir_COUNT), das::LineInfo());
 	}
 };
 
