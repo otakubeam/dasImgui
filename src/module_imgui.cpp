@@ -360,6 +360,9 @@ bool Module_imgui::initDependencies() {
     }
     findUniqueFunction("TableSetupColumn")
         ->arg_init(3, make_smart<ExprConstUInt>(uint32_t(0)));
+    findUniqueFunction("BeginListBox")
+        ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+
 #endif
     return true;
 }

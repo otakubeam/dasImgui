@@ -4295,199 +4295,135 @@ def DasShowDemoWindowWidgets()
         Combo("combo 4 (function)", safe_addr(item_current_4), func_getter, length(items))
         TreePop()
 
-/*
-    if (TreeNode("List boxes"))
-    {
-        // Using the generic BeginListBox() API, you have full control over how to display the combo contents.
-        // (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
-        // stored in the object itself, etc.)
-        const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
-        static int item_current_idx = 0; // Here we store our selection data as an index.
-        if (BeginListBox("listbox 1"))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(items) n++)
-            {
-                const bool is_selected = (item_current_idx == n)
-                if (Selectable(items[n], is_selected))
-                    item_current_idx = n;
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
+    if TreeNode("List boxes")
+        static_let <|
+            let items = [[string "AAAA"; "BBBB"; "CCCC"; "DDDD"; "EEEE"; "FFFF"; "GGGG"; "HHHH"; "IIII"; "JJJJ"; "KKKK"; "LLLLLLL"; "MMMM"; "OOOOOOO" ]]
+            var item_current_idx = 0
+        if BeginListBox("listbox 1")
+            for n in range(length(items))
+                let is_selected = (item_current_idx == n)
+                if Selectable(items[n], is_selected)
+                    item_current_idx = n
+                if is_selected
                     SetItemDefaultFocus()
-            }
             EndListBox()
-        }
-
-        // Custom size: use all width, 5 items tall
         Text("Full-width:")
-        if (BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5 * GetTextLineHeightWithSpacing())))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(items) n++)
-            {
-                const bool is_selected = (item_current_idx == n)
-                if (Selectable(items[n], is_selected))
-                    item_current_idx = n;
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
+        if BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5. * GetTextLineHeightWithSpacing()))
+            for n in range(length(items))
+                let is_selected = (item_current_idx == n)
+                if Selectable(items[n], is_selected)
+                    item_current_idx = n
+                if is_selected
                     SetItemDefaultFocus()
-            }
             EndListBox()
-        }
-
         TreePop()
-    }
 
-    if (TreeNode("Selectables"))
-    {
-        // Selectable() has 2 overloads:
-        // - The one taking "bool selected" as a read-only selection information.
-        //   When Selectable() has been clicked it returns true and you can alter selection state accordingly.
-        // - The one taking "bool* p_selected" as a read-write selection information (convenient in some cases)
-        // The earlier is more flexible, as in real application your selection may be stored in many different ways
-        // and not necessarily inside a bool value (e.g. in flags within objects, as an external list, etc).
-        if (TreeNode("Basic"))
-        {
-            static bool selection[5] = { false, true, false, false, false };
-            Selectable("1. I am selectable", &selection[0])
-            Selectable("2. I am selectable", &selection[1])
+    if TreeNode("Selectables")
+        if TreeNode("Basic")
+            static_let <|
+                var selection = [[bool false; true; false; false; false ]]
+            Selectable("1. I am selectable", safe_addr(selection[0]))
+            Selectable("2. I am selectable", safe_addr(selection[1]))
             Text("3. I am not selectable")
-            Selectable("4. I am selectable", &selection[3])
-            if (Selectable("5. I am double clickable", selection[4], ImGuiSelectableFlags_AllowDoubleClick))
-                if (IsMouseDoubleClicked(0))
-                    selection[4] = !selection[4];
+            Selectable("4. I am selectable", safe_addr(selection[3]))
+            if Selectable("5. I am double clickable", selection[4], ImGuiSelectableFlags AllowDoubleClick)
+                if IsMouseDoubleClicked(ImGuiMouseButton Left)
+                    selection[4] = !selection[4]
             TreePop()
-        }
-        if (TreeNode("Selection State: Single Selection"))
-        {
-            static int selected = -1;
-            for (int n = 0; n < 5; n++)
-            {
-                char buf[32];
-                sprintf(buf, "Object %d", n)
-                if (Selectable(buf, selected == n))
-                    selected = n;
-            }
+        if TreeNode("Selection State: Single Selection")
+            static_let <|
+                var selected = -1
+            for n in range(5)
+                if Selectable("Object {n}", selected == n)
+                    selected = n
             TreePop()
-        }
-        if (TreeNode("Selection State: Multiple Selection"))
-        {
-            HelpMarker("Hold CTRL and click to select multiple items.")
-            static bool selection[5] = { false, false, false, false, false };
-            for (int n = 0; n < 5; n++)
-            {
-                char buf[32];
-                sprintf(buf, "Object %d", n)
-                if (Selectable(buf, selection[n]))
-                {
-                    if (!GetIO().KeyCtrl)    // Clear selection when CTRL is not held
-                        memset(selection, 0, sizeof(selection))
-                    selection[n] ^= 1;
-                }
-            }
+        if TreeNode("Selection State: Multiple Selection")
+            DasHelpMarker("Hold CTRL and click to select multiple items.")
+            static_let <|
+                var selection : bool[5]
+            for n in range(5)
+                if Selectable("Object {n}", selection[n])
+                    if !GetIO().KeyCtrl
+                        memzero(selection)
+                    selection[n] ^^= true
             TreePop()
-        }
-        if (TreeNode("Rendering more text into the same line"))
-        {
-            // Using the Selectable() override that takes "bool* p_selected" parameter,
-            // this function toggle your bool value automatically.
-            static bool selected[3] = { false, false, false };
-            Selectable("main.c",    &selected[0]) SameLine(300) Text(" 2,345 bytes")
-            Selectable("Hello.cpp", &selected[1]) SameLine(300) Text("12,345 bytes")
-            Selectable("Hello.h",   &selected[2]) SameLine(300) Text(" 2,345 bytes")
+        if TreeNode("Rendering more text into the same line")
+            static_let <|
+                var selected : bool[3]
+            Selectable("main.c",    safe_addr(selected[0]))
+            SameLine(300.)
+            Text(" 2,345 bytes")
+            Selectable("Hello.cpp", safe_addr(selected[1]))
+            SameLine(300.)
+            Text("12,345 bytes")
+            Selectable("Hello.h",   safe_addr(selected[2]))
+            SameLine(300.)
+            Text(" 2,345 bytes")
             TreePop()
-        }
-        if (TreeNode("In columns"))
-        {
-            static bool selected[10] = {};
-
-            if (BeginTable("split1", 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    char label[32];
-                    sprintf(label, "Item %d", i)
-                    TableNextColumn()
-                    Selectable(label, &selected[i]) // FIXME-TABLE: Selection overlap
-                }
+        if TreeNode("In columns")
+            static_let <|
+                var selected : bool[10]
+            if BeginTable("split1", 3, ImGuiTableFlags Resizable | ImGuiTableFlags NoSavedSettings)
+                for i in range(10)
+                    Selectable("Item {i}", safe_addr(selected[i]))
                 EndTable()
-            }
             Separator()
-            if (BeginTable("split2", 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    char label[32];
-                    sprintf(label, "Item %d", i)
+            if BeginTable("split2", 3, ImGuiTableFlags Resizable | ImGuiTableFlags NoSavedSettings)
+                for i in range(10)
                     TableNextRow()
                     TableNextColumn()
-                    Selectable(label, &selected[i], ImGuiSelectableFlags_SpanAllColumns)
+                    Selectable( "Item {i}", safe_addr(selected[i]), ImGuiSelectableFlags SpanAllColumns)
                     TableNextColumn()
                     Text("Some other contents")
                     TableNextColumn()
                     Text("123456")
-                }
                 EndTable()
-            }
             TreePop()
-        }
-        if (TreeNode("Grid"))
-        {
-            static char selected[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
-
-            // Add in a bit of silly fun...
-            const float time = (float)GetTime()
-            const bool winning_state = memchr(selected, 0, sizeof(selected)) == NULL; // If all cells are selected...
-            if (winning_state)
-                PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f + 0.5f * cosf(time * 2.0f), 0.5f + 0.5f * sinf(time * 3.0f)))
-
-            for (int y = 0; y < 4; y++)
-                for (int x = 0; x < 4; x++)
-                {
-                    if (x > 0)
+        if TreeNode("Grid")
+            static_let <|
+                var selected = [[int[4*4] 1; 0; 0; 0; 0; 1; 0; 0; 0; 0; 1; 0; 0; 0; 0; 1]]
+            let time = float(GetTime())
+            let winning_state = find_index(selected,0)==0
+            if winning_state
+                PushStyleVar(ImGuiStyleVar SelectableTextAlign, ImVec2(0.5f + 0.5f * cos(time * 2.0f), 0.5f + 0.5f * sin(time * 3.0f)))
+            for y in range(4)
+                for x in range(4)
+                    if x > 0
                         SameLine()
                     PushID(y * 4 + x)
-                    if (Selectable("Sailor", selected[y][x] != 0, 0, ImVec2(50, 50)))
-                    {
-                        // Toggle clicked cell + toggle neighbors
-                        selected[y][x] ^= 1;
-                        if (x > 0) { selected[y][x - 1] ^= 1; }
-                        if (x < 3) { selected[y][x + 1] ^= 1; }
-                        if (y > 0) { selected[y - 1][x] ^= 1; }
-                        if (y < 3) { selected[y + 1][x] ^= 1; }
-                    }
+                    if Selectable("Sailor", selected[y*4+x] != 0, ImGuiSelectableFlags None, ImVec2(50., 50.))
+                        selected[y*4+x] ^= 1
+                        if x > 0
+                            selected[y*4 + x - 1] ^= 1
+                        if x < 3
+                            selected[y*4 + x + 1] ^= 1
+                        if y > 0
+                            selected[(y-1)*4 + x] ^= 1
+                        if y < 3
+                            selected[(y+1)*4 + x] ^= 1
                     PopID()
-                }
-
-            if (winning_state)
+            if winning_state
                 PopStyleVar()
             TreePop()
-        }
-        if (TreeNode("Alignment"))
-        {
-            HelpMarker(
-                "By default, Selectables uses style.SelectableTextAlign but it can be overridden on a per-item "
-                "basis using PushStyleVar(). You'll probably want to always keep your default situation to "
+        if TreeNode("Alignment")
+            DasHelpMarker(
+                "By default, Selectables uses style.SelectableTextAlign but it can be overridden on a per-item " +
+                "basis using PushStyleVar(). You'll probably want to always keep your default situation to " +
                 "left-align otherwise it becomes difficult to layout multiple items on a same line")
-            static bool selected[3 * 3] = { true, false, true, false, true, false, true, false, true };
-            for (int y = 0; y < 3; y++)
-            {
-                for (int x = 0; x < 3; x++)
-                {
-                    ImVec2 alignment = ImVec2((float)x / 2.0f, (float)y / 2.0f)
-                    char name[32];
-                    sprintf(name, "(%.1f,%.1f)", alignment.x, alignment.y)
-                    if (x > 0) SameLine()
-                    PushStyleVar(ImGuiStyleVar_SelectableTextAlign, alignment)
-                    Selectable(name, &selected[3 * y + x], ImGuiSelectableFlags_None, ImVec2(80, 80))
+            static_let <|
+                var selected = [[bool[3*3] true; false; true; false; true; false; true; false; true ]]
+            for y in range(3)
+                for x in range(3)
+                    var alignment = ImVec2(float(x) / 2.0f, float(y) / 2.0f)
+                    if x > 0
+                        SameLine()
+                    PushStyleVar(ImGuiStyleVar SelectableTextAlign, alignment)
+                    Selectable("({alignment.x},{alignment.y})", safe_addr(selected[3 * y + x]), ImGuiSelectableFlags None, ImVec2(80., 80.))
                     PopStyleVar()
-                }
-            }
             TreePop()
-        }
         TreePop()
-    }
 
+/*
     // To wire InputText() with std::string or any other custom string type,
     // see the "Text Input > Resize Callback" section of this demo, and the misc/cpp/imgui_stdlib.h file.
     if (TreeNode("Text Input"))
