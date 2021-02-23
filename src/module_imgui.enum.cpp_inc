@@ -391,16 +391,16 @@ public:
 	}
 };
 
-class EnumerationImGuiTableBgTarget_ : public das::Enumeration {
+class EnumerationImGuiTableBgTarget : public das::Enumeration {
 public:
-    EnumerationImGuiTableBgTarget_() : das::Enumeration("ImGuiTableBgTarget_") {
+    EnumerationImGuiTableBgTarget() : das::Enumeration("ImGuiTableBgTarget") {
         external = true;
         cppName = "ImGuiTableBgTarget_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiTableBgTarget_ >::type >::type;
-		addI("ImGuiTableBgTarget_None", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_None), das::LineInfo());
-		addI("ImGuiTableBgTarget_RowBg0", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_RowBg0), das::LineInfo());
-		addI("ImGuiTableBgTarget_RowBg1", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_RowBg1), das::LineInfo());
-		addI("ImGuiTableBgTarget_CellBg", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg), das::LineInfo());
+		addI("None", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_None), das::LineInfo());
+		addI("RowBg0", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_RowBg0), das::LineInfo());
+		addI("RowBg1", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_RowBg1), das::LineInfo());
+		addI("CellBg", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg), das::LineInfo());
 	}
 };
 
@@ -754,14 +754,14 @@ public:
 	}
 };
 
-class EnumerationImGuiTableRowFlags_ : public das::Enumeration {
+class EnumerationImGuiTableRowFlags : public das::Enumeration {
 public:
-    EnumerationImGuiTableRowFlags_() : das::Enumeration("ImGuiTableRowFlags_") {
+    EnumerationImGuiTableRowFlags() : das::Enumeration("ImGuiTableRowFlags") {
         external = true;
         cppName = "ImGuiTableRowFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiTableRowFlags_ >::type >::type;
-		addI("ImGuiTableRowFlags_None", int64_t(ImGuiTableRowFlags_::ImGuiTableRowFlags_None), das::LineInfo());
-		addI("ImGuiTableRowFlags_Headers", int64_t(ImGuiTableRowFlags_::ImGuiTableRowFlags_Headers), das::LineInfo());
+		addI("None", int64_t(ImGuiTableRowFlags_::ImGuiTableRowFlags_None), das::LineInfo());
+		addI("Headers", int64_t(ImGuiTableRowFlags_::ImGuiTableRowFlags_Headers), das::LineInfo());
 	}
 };
 

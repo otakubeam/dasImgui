@@ -54,13 +54,15 @@ def main
         "ImGuiButtonFlags_"  => [[ExEnum() name = "ImGuiButtonFlags", isFlags=true]];
         "ImGuiTableColumnFlags_"  => [[ExEnum() name = "ImGuiTableColumnFlags", isFlags=true]];
         "ImGuiKeyModFlags_"  => [[ExEnum() name = "ImGuiKeyModFlags", isFlags=true]];
+        "ImGuiTableRowFlags_"  => [[ExEnum() name = "ImGuiTableRowFlags", isFlags=true]];
 
     // not flags
         "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
         "ImGuiCol_" => [[ExEnum() name = "ImGuiCol"]];
         "ImGuiKey_" => [[ExEnum() name = "ImGuiKey"]];
         "ImGuiSortDirection_" => [[ExEnum() name = "ImGuiSortDirection"]];
-        "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]]
+        "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]];
+        "ImGuiTableBgTarget_" => [[ExEnum() name = "ImGuiTableBgTarget"]]
     }}
 
     substitute_field_types <- {{

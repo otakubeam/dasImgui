@@ -23,7 +23,7 @@ addEnumeration(make_smart<EnumerationImGuiFocusedFlags_>());
 addEnumeration(make_smart<EnumerationImGuiMouseCursor_>());
 addEnumeration(make_smart<EnumerationImDrawCornerFlags>());
 addEnumFlagOps<ImDrawCornerFlags_>(*this,lib,"ImDrawCornerFlags_");
-addEnumeration(make_smart<EnumerationImGuiTableBgTarget_>());
+addEnumeration(make_smart<EnumerationImGuiTableBgTarget>());
 addEnumeration(make_smart<EnumerationImGuiButtonFlags>());
 addEnumFlagOps<ImGuiButtonFlags_>(*this,lib,"ImGuiButtonFlags_");
 addEnumeration(make_smart<EnumerationImGuiMouseButton>());
@@ -51,6 +51,7 @@ addEnumeration(make_smart<EnumerationImGuiConfigFlags>());
 addEnumFlagOps<ImGuiConfigFlags_>(*this,lib,"ImGuiConfigFlags_");
 addEnumeration(make_smart<EnumerationImGuiSliderFlags>());
 addEnumFlagOps<ImGuiSliderFlags_>(*this,lib,"ImGuiSliderFlags_");
-addEnumeration(make_smart<EnumerationImGuiTableRowFlags_>());
+addEnumeration(make_smart<EnumerationImGuiTableRowFlags>());
+addEnumFlagOps<ImGuiTableRowFlags_>(*this,lib,"ImGuiTableRowFlags_");
 addEnumeration(make_smart<EnumerationImFontAtlasFlags_>());
 

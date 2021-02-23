@@ -813,6 +813,7 @@ addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffe
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableSetBgColor)>(*this, lib, "TableSetBgColor",SideEffects::worstDefault, "ImGui::TableSetBgColor")
 	->args({"target","color","column_n"})
+		->arg_type(0,makeType<ImGuiTableBgTarget_>(lib))
 		->arg_init(2,make_smart<ExprConstInt>(-1))
 ;
 addExtern<void (*)(ImGuiCol, ImU32),ImGui::PushStyleColor>(*this, lib, "PushStyleColor",SideEffects::worstDefault, "ImGui::PushStyleColor")
@@ -1287,7 +1288,8 @@ addExtern<DAS_BIND_FUN(ImGui::CloseCurrentPopup)>(*this, lib, "CloseCurrentPopup
 ;
 addExtern<DAS_BIND_FUN(ImGui::TableNextRow)>(*this, lib, "TableNextRow",SideEffects::worstDefault, "ImGui::TableNextRow")
 	->args({"row_flags","min_row_height"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiTableRowFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableRowFlags_>(lib)))
 		->arg_init(1,make_smart<ExprConstFloat>(0))
 ;
 addExtern<bool (*)(ImGuiID, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
