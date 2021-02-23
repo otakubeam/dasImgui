@@ -4063,117 +4063,76 @@ def DasShowDemoWindowWidgets()
                     " for an explanation of how to use the more flexible and general BeginListBox/EndListBox API.")
         TreePop()
 
-/*
-
-    // Testing ImGuiOnceUponAFrame helper.
-    //static ImGuiOnceUponAFrame once;
-    //for (int i = 0; i < 5; i++)
-    //    if (once)
-    //        Text("This will be displayed only once.")
-
-    if (TreeNode("Trees"))
-    {
-        if (TreeNode("Basic trees"))
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                // Use SetNextItemOpen() so set the default state of a node to be open. We could
-                // also use TreeNodeEx() with the ImGuiTreeNodeFlags_DefaultOpen flag to achieve the same thing!
-                if (i == 0)
-                    SetNextItemOpen(true, ImGuiCond_Once)
-
-                if (TreeNode((void*)(intptr_t)i, "Child %d", i))
-                {
+    if TreeNode("Trees")
+        if TreeNode("Basic trees")
+            for i in range(5)
+                if i == 0
+                    SetNextItemOpen(true, ImGuiCond Once)
+                if TreeNode("{i}", "Child {i}")
                     Text("blah blah")
                     SameLine()
-                    if (SmallButton("button")) {}
+                    if SmallButton("button")
+                        pass
                     TreePop()
-                }
-            }
             TreePop()
-        }
-
-        if (TreeNode("Advanced, with Selectable nodes"))
-        {
-            HelpMarker(
-                "This is a more typical looking tree with selectable nodes.\n"
+        if TreeNode("Advanced, with Selectable nodes")
+            DasHelpMarker(
+                "This is a more typical looking tree with selectable nodes.\n" +
                 "Click to select, CTRL+Click to toggle, click on arrows or double-click to open.")
-            static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-            static bool align_label_with_current_x_position = false;
-            static bool test_drag_and_drop = false;
-            CheckboxFlags("ImGuiTreeNodeFlags_OpenOnArrow",       &base_flags, ImGuiTreeNodeFlags_OpenOnArrow)
-            CheckboxFlags("ImGuiTreeNodeFlags_OpenOnDoubleClick", &base_flags, ImGuiTreeNodeFlags_OpenOnDoubleClick)
-            CheckboxFlags("ImGuiTreeNodeFlags_SpanAvailWidth",    &base_flags, ImGuiTreeNodeFlags_SpanAvailWidth) SameLine() HelpMarker("Extend hit area to all available width instead of allowing more items to be laid out after the node.")
-            CheckboxFlags("ImGuiTreeNodeFlags_SpanFullWidth",     &base_flags, ImGuiTreeNodeFlags_SpanFullWidth)
-            Checkbox("Align label with current X position", &align_label_with_current_x_position)
-            Checkbox("Test tree node as drag source", &test_drag_and_drop)
+            static_let <|
+                var base_flags = ImGuiTreeNodeFlags OpenOnArrow | ImGuiTreeNodeFlags OpenOnDoubleClick | ImGuiTreeNodeFlags SpanAvailWidth
+                var align_label_with_current_x_position = false
+                var test_drag_and_drop = false
+            CheckboxFlags("ImGuiTreeNodeFlags OpenOnArrow",       safe_addr(base_flags), ImGuiTreeNodeFlags OpenOnArrow)
+            CheckboxFlags("ImGuiTreeNodeFlags OpenOnDoubleClick", safe_addr(base_flags), ImGuiTreeNodeFlags OpenOnDoubleClick)
+            CheckboxFlags("ImGuiTreeNodeFlags SpanAvailWidth",    safe_addr(base_flags), ImGuiTreeNodeFlags SpanAvailWidth)
+            SameLine()
+            DasHelpMarker("Extend hit area to all available width instead of allowing more items to be laid out after the node.")
+            CheckboxFlags("ImGuiTreeNodeFlags SpanFullWidth",     safe_addr(base_flags), ImGuiTreeNodeFlags SpanFullWidth)
+            Checkbox("Align label with current X position", safe_addr(align_label_with_current_x_position))
+            Checkbox("Test tree node as drag source", safe_addr(test_drag_and_drop))
             Text("Hello!")
-            if (align_label_with_current_x_position)
+            if align_label_with_current_x_position
                 Unindent(GetTreeNodeToLabelSpacing())
-
-            // 'selection_mask' is dumb representation of what may be user-side selection state.
-            //  You may retain selection state inside or outside your objects in whatever format you see fit.
-            // 'node_clicked' is temporary storage of what node we have clicked to process selection at the end
-            /// of the loop. May be a pointer to your own node type, etc.
-            static int selection_mask = (1 << 2)
-            int node_clicked = -1;
-            for (int i = 0; i < 6; i++)
-            {
-                // Disable the default "open on single-click behavior" + set Selected flag according to our selection.
-                ImGuiTreeNodeFlags node_flags = base_flags;
-                const bool is_selected = (selection_mask & (1 << i)) != 0;
-                if (is_selected)
-                    node_flags |= ImGuiTreeNodeFlags_Selected;
-                if (i < 3)
-                {
-                    // Items 0..2 are Tree Node
-                    bool node_open = TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i)
-                    if (IsItemClicked())
-                        node_clicked = i;
-                    if (test_drag_and_drop && BeginDragDropSource())
-                    {
-                        SetDragDropPayload("_TREENODE", NULL, 0)
+            static_let <|
+                var selection_mask = 1 << 2
+            var node_clicked = -1
+            for i in range(6)
+                var node_flags = base_flags
+                let is_selected = (selection_mask & (1 << i)) != 0
+                if is_selected
+                    node_flags |= ImGuiTreeNodeFlags Selected
+                if i < 3
+                    let node_open = TreeNodeEx("{i}", node_flags, "Selectable Node {i}")
+                    if IsItemClicked()
+                        node_clicked = i
+                    if test_drag_and_drop && BeginDragDropSource()
+                        SetDragDropPayload("_TREENODE", null, 0ul)
                         Text("This is a drag and drop source")
                         EndDragDropSource()
-                    }
-                    if (node_open)
-                    {
+                    if node_open
                         BulletText("Blah blah\nBlah Blah")
                         TreePop()
-                    }
-                }
                 else
-                {
-                    // Items 3..5 are Tree Leaves
-                    // The only reason we use TreeNode at all is to allow selection of the leaf. Otherwise we can
-                    // use BulletText() or advance the cursor by GetTreeNodeToLabelSpacing() and call Text().
-                    node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
-                    TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Leaf %d", i)
-                    if (IsItemClicked())
-                        node_clicked = i;
-                    if (test_drag_and_drop && BeginDragDropSource())
-                    {
-                        SetDragDropPayload("_TREENODE", NULL, 0)
+                    node_flags |= ImGuiTreeNodeFlags Leaf | ImGuiTreeNodeFlags NoTreePushOnOpen
+                    TreeNodeEx("{i}", node_flags, "Selectable Leaf {i}")
+                    if IsItemClicked()
+                        node_clicked = i
+                    if test_drag_and_drop && BeginDragDropSource()
+                        SetDragDropPayload("_TREENODE", null, 0ul)
                         Text("This is a drag and drop source")
                         EndDragDropSource()
-                    }
-                }
-            }
-            if (node_clicked != -1)
-            {
-                // Update selection state
-                // (process outside of tree loop to avoid visual inconsistencies during the clicking frame)
-                if (GetIO().KeyCtrl)
-                    selection_mask ^= (1 << node_clicked)          // CTRL+click to toggle
-                else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, may want to preserve selection when clicking on item that is part of the selection
-                    selection_mask = (1 << node_clicked)           // Click to single-select
-            }
-            if (align_label_with_current_x_position)
+            if node_clicked != -1
+                if GetIO().KeyCtrl
+                    selection_mask ^= (1 << node_clicked)
+                else
+                    selection_mask = (1 << node_clicked)
+            if align_label_with_current_x_position
                 Indent(GetTreeNodeToLabelSpacing())
             TreePop()
-        }
         TreePop()
-    }
+
+/*
 
     if (TreeNode("Collapsing Headers"))
     {
