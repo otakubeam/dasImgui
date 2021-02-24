@@ -5021,102 +5021,89 @@ def DasShowDemoWindowWidgets()
         InputScalar("input double",  ImGuiDataType Double, safe_addr(f64_v), inputs_step ? safe_addr(f64_one) : null)
         TreePop()
 
-/*
-    if (TreeNode("Multi-component Widgets"))
-    {
-        static float vec4f[4] = { 0.10f, 0.20f, 0.30f, 0.44f };
-        static int vec4i[4] = { 1, 5, 100, 255 };
-
-        InputFloat2("input float2", vec4f)
-        DragFloat2("drag float2", vec4f, 0.01f, 0.0f, 1.0f)
-        SliderFloat2("slider float2", vec4f, 0.0f, 1.0f)
-        InputInt2("input int2", vec4i)
-        DragInt2("drag int2", vec4i, 1, 0, 255)
-        SliderInt2("slider int2", vec4i, 0, 255)
+    if TreeNode("Multi-component Widgets")
+        static_let <|
+            var vec4f = [[float 0.10f; 0.20f; 0.30f; 0.44f]]
+            var vec4i = [[int  1; 5; 100; 255]]
+        InputFloat2("input float2", safe_addr(vec4f))
+        DragFloat2("drag float2", safe_addr(vec4f), 0.01f, 0.0f, 1.0f)
+        SliderFloat2("slider float2", safe_addr(vec4f), 0.0f, 1.0f)
+        InputInt2("input int2", safe_addr(vec4i))
+        DragInt2("drag int2", safe_addr(vec4i), 1., 0, 255)
+        SliderInt2("slider int2", safe_addr(vec4i), 0, 255)
         Spacing()
-
-        InputFloat3("input float3", vec4f)
-        DragFloat3("drag float3", vec4f, 0.01f, 0.0f, 1.0f)
-        SliderFloat3("slider float3", vec4f, 0.0f, 1.0f)
-        InputInt3("input int3", vec4i)
-        DragInt3("drag int3", vec4i, 1, 0, 255)
-        SliderInt3("slider int3", vec4i, 0, 255)
+        InputFloat3("input float3", safe_addr(vec4f))
+        DragFloat3("drag float3", safe_addr(vec4f), 0.01f, 0.0f, 1.0f)
+        SliderFloat3("slider float3", safe_addr(vec4f), 0.0f, 1.0f)
+        InputInt3("input int3", safe_addr(vec4i))
+        DragInt3("drag int3", safe_addr(vec4i), 1., 0, 255)
+        SliderInt3("slider int3", safe_addr(vec4i), 0, 255)
         Spacing()
-
-        InputFloat4("input float4", vec4f)
-        DragFloat4("drag float4", vec4f, 0.01f, 0.0f, 1.0f)
-        SliderFloat4("slider float4", vec4f, 0.0f, 1.0f)
-        InputInt4("input int4", vec4i)
-        DragInt4("drag int4", vec4i, 1, 0, 255)
-        SliderInt4("slider int4", vec4i, 0, 255)
-
+        InputFloat4("input float4", safe_addr(vec4f))
+        DragFloat4("drag float4", safe_addr(vec4f), 0.01f, 0.0f, 1.0f)
+        SliderFloat4("slider float4", safe_addr(vec4f), 0.0f, 1.0f)
+        InputInt4("input int4", safe_addr(vec4i))
+        DragInt4("drag int4", safe_addr(vec4i), 1., 0, 255)
+        SliderInt4("slider int4", safe_addr(vec4i), 0, 255)
         TreePop()
-    }
 
-    if (TreeNode("Vertical Sliders"))
-    {
-        const float spacing = 4;
-        PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(spacing, spacing))
-
-        static int int_value = 0;
-        VSliderInt("##int", ImVec2(18, 160), &int_value, 0, 5)
+    if TreeNode("Vertical Sliders")
+        let spacing = 4.
+        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(spacing, spacing))
+        static_let <|
+            var int_value = 0
+        VSliderInt("##int", ImVec2(18., 160.), safe_addr(int_value), 0, 5)
         SameLine()
-
-        static float values[7] = { 0.0f, 0.60f, 0.35f, 0.9f, 0.70f, 0.20f, 0.0f };
+        static_let <|
+            var values = [[float 0.0f; 0.60f; 0.35f; 0.9f; 0.70f; 0.20f; 0.0f ]]
         PushID("set1")
-        for (int i = 0; i < 7; i++)
-        {
-            if (i > 0) SameLine()
+        for i in range(7)
+            if i > 0
+                SameLine()
             PushID(i)
-            PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(i / 7.0f, 0.5f, 0.5f))
-            PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(i / 7.0f, 0.6f, 0.5f))
-            PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(i / 7.0f, 0.7f, 0.5f))
-            PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor::HSV(i / 7.0f, 0.9f, 0.9f))
-            VSliderFloat("##v", ImVec2(18, 160), &values[i], 0.0f, 1.0f, "")
-            if (IsItemActive() || IsItemHovered())
-                SetTooltip("%.3f", values[i])
+            PushStyleColor(ImGuiCol FrameBg, ImVec4(HSV(float(i) / 7.0f, 0.5f, 0.5f)))
+            PushStyleColor(ImGuiCol FrameBgHovered, ImVec4(HSV(float(i) / 7.0f, 0.6f, 0.5f)))
+            PushStyleColor(ImGuiCol FrameBgActive, ImVec4(HSV(float(i) / 7.0f, 0.7f, 0.5f)))
+            PushStyleColor(ImGuiCol SliderGrab, ImVec4(HSV(float(i) / 7.0f, 0.9f, 0.9f)))
+            VSliderFloat("##v", ImVec2(18., 160.), safe_addr(values[i]), 0.0f, 1.0f, "")
+            if IsItemActive() || IsItemHovered()
+                SetTooltip("{values[i]}")
             PopStyleColor(4)
             PopID()
-        }
         PopID()
-
         SameLine()
         PushID("set2")
-        static float values2[4] = { 0.20f, 0.80f, 0.40f, 0.25f };
-        const int rows = 3;
-        const ImVec2 small_slider_size(18, (float)(int)((160.0f - (rows - 1) * spacing) / rows))
-        for (int nx = 0; nx < 4; nx++)
-        {
-            if (nx > 0) SameLine()
+        static_let <|
+            var values2 = [[float 0.20f; 0.80f; 0.40f; 0.25f]]
+        let rows = 3
+        let small_slider_size = ImVec2(18., floor((160.0f - float(rows - 1) * spacing) / float(rows)))
+        for nx in range(4)
+            if nx > 0
+                SameLine()
             BeginGroup()
-            for (int ny = 0; ny < rows; ny++)
-            {
+            for ny in range(rows)
                 PushID(nx * rows + ny)
-                VSliderFloat("##v", small_slider_size, &values2[nx], 0.0f, 1.0f, "")
-                if (IsItemActive() || IsItemHovered())
-                    SetTooltip("%.3f", values2[nx])
+                VSliderFloat("##v", small_slider_size, safe_addr(values2[nx]), 0.0f, 1.0f, "")
+                if IsItemActive() || IsItemHovered()
+                    SetTooltip("{values2[nx]}")
                 PopID()
-            }
             EndGroup()
-        }
         PopID()
-
         SameLine()
         PushID("set3")
-        for (int i = 0; i < 4; i++)
-        {
-            if (i > 0) SameLine()
+        for i in range(4)
+            if i > 0
+                SameLine()
             PushID(i)
-            PushStyleVar(ImGuiStyleVar_GrabMinSize, 40)
-            VSliderFloat("##v", ImVec2(40, 160), &values[i], 0.0f, 1.0f, "%.2f\nsec")
+            PushStyleVar(ImGuiStyleVar GrabMinSize, 40.)
+            VSliderFloat("##v", ImVec2(40., 160.), safe_addr(values[i]), 0.0f, 1.0f, "%.2f\nsec")
             PopStyleVar()
             PopID()
-        }
         PopID()
         PopStyleVar()
         TreePop()
-    }
 
+/*
     if (TreeNode("Drag and Drop"))
     {
         if (TreeNode("Drag and drop in standard widgets"))
