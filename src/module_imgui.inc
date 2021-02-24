@@ -254,7 +254,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetColorEditOptions)>(*this, lib, "SetColorEditOpt
 addExtern<DAS_BIND_FUN(ImGui::ShowFontSelector)>(*this, lib, "ShowFontSelector",SideEffects::worstDefault, "ImGui::ShowFontSelector")
 	->args({"label"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetWindowSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetWindowSize",SideEffects::worstDefault, "ImGui::GetWindowSize")
+addExtern<DAS_BIND_FUN(ImGui::GetWindowSize)>(*this, lib, "GetWindowSize",SideEffects::worstDefault, "ImGui::GetWindowSize")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::SmallButton)>(*this, lib, "SmallButton",SideEffects::worstDefault, "ImGui::SmallButton")
@@ -278,7 +278,7 @@ addExtern<DAS_BIND_FUN(ImGui::ColorConvertRGBtoHSV)>(*this, lib, "ColorConvertRG
 addExtern<DAS_BIND_FUN(ImGui::SetNextItemWidth)>(*this, lib, "SetNextItemWidth",SideEffects::worstDefault, "ImGui::SetNextItemWidth")
 	->args({"item_width"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetItemRectMin), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetItemRectMin",SideEffects::worstDefault, "ImGui::GetItemRectMin")
+addExtern<DAS_BIND_FUN(ImGui::GetItemRectMin)>(*this, lib, "GetItemRectMin",SideEffects::worstDefault, "ImGui::GetItemRectMin")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::SetColumnOffset)>(*this, lib, "SetColumnOffset",SideEffects::worstDefault, "ImGui::SetColumnOffset")
@@ -302,7 +302,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseReleased)>(*this, lib, "IsMouseReleased",Si
 addExtern<DAS_BIND_FUN(ImGui::BeginMenuBar)>(*this, lib, "BeginMenuBar",SideEffects::worstDefault, "ImGui::BeginMenuBar")
 	->args({})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetCursorStartPos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetCursorStartPos",SideEffects::worstDefault, "ImGui::GetCursorStartPos")
+addExtern<DAS_BIND_FUN(ImGui::GetCursorStartPos)>(*this, lib, "GetCursorStartPos",SideEffects::worstDefault, "ImGui::GetCursorStartPos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::PushTextWrapPos)>(*this, lib, "PushTextWrapPos",SideEffects::worstDefault, "ImGui::PushTextWrapPos")
@@ -470,7 +470,7 @@ addExtern<DAS_BIND_FUN(ImGui::Spacing)>(*this, lib, "Spacing",SideEffects::worst
 addExtern<DAS_BIND_FUN(ImGui::SetColumnWidth)>(*this, lib, "SetColumnWidth",SideEffects::worstDefault, "ImGui::SetColumnWidth")
 	->args({"column_index","width"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
+addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4)>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
 	->args({"in"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
@@ -603,7 +603,7 @@ addExtern<bool (*)(const char *, bool),ImGui::RadioButton>(*this, lib, "RadioBut
 addExtern<ImGuiID (*)(const char *, const char *),ImGui::GetID>(*this, lib, "GetID",SideEffects::worstDefault, "ImGui::GetID")
 	->args({"str_id_begin","str_id_end"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMax), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetWindowContentRegionMax",SideEffects::worstDefault, "ImGui::GetWindowContentRegionMax")
+addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMax)>(*this, lib, "GetWindowContentRegionMax",SideEffects::worstDefault, "ImGui::GetWindowContentRegionMax")
 	->args({})
 ;
 addExtern<bool (*)(const char *, ImGuiTreeNodeFlags),ImGui::CollapsingHeader>(*this, lib, "CollapsingHeader",SideEffects::worstDefault, "ImGui::CollapsingHeader")
@@ -621,7 +621,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetCursorPosY)>(*this, lib, "GetCursorPosY",SideEf
 addExtern<DAS_BIND_FUN(ImGui::PopTextWrapPos)>(*this, lib, "PopTextWrapPos",SideEffects::worstDefault, "ImGui::PopTextWrapPos")
 	->args({})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvail), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetContentRegionAvail",SideEffects::worstDefault, "ImGui::GetContentRegionAvail")
+addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvail)>(*this, lib, "GetContentRegionAvail",SideEffects::worstDefault, "ImGui::GetContentRegionAvail")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopItemWidth)>(*this, lib, "PopItemWidth",SideEffects::worstDefault, "ImGui::PopItemWidth")
@@ -788,7 +788,7 @@ addExtern<DAS_BIND_FUN(ImGui::BeginCombo)>(*this, lib, "BeginCombo",SideEffects:
 		->arg_type(2,makeType<ImGuiComboFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiComboFlags_>(lib)))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetContentRegionMax), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetContentRegionMax",SideEffects::worstDefault, "ImGui::GetContentRegionMax")
+addExtern<DAS_BIND_FUN(ImGui::GetContentRegionMax)>(*this, lib, "GetContentRegionMax",SideEffects::worstDefault, "ImGui::GetContentRegionMax")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetStyle), SimNode_ExtFuncCallRef>(*this, lib, "GetStyle",SideEffects::worstDefault, "ImGui::GetStyle")
@@ -917,7 +917,7 @@ addExtern<void (*)(const char *, float, const char *),ImGui::Value>(*this, lib, 
 	->args({"prefix","v","float_format"})
 		->arg_init(2,make_smart<ExprConstString>(""))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMin), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetWindowContentRegionMin",SideEffects::worstDefault, "ImGui::GetWindowContentRegionMin")
+addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMin)>(*this, lib, "GetWindowContentRegionMin",SideEffects::worstDefault, "ImGui::GetWindowContentRegionMin")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeightWithSpacing)>(*this, lib, "GetTextLineHeightWithSpacing",SideEffects::worstDefault, "ImGui::GetTextLineHeightWithSpacing")
@@ -990,7 +990,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseHoveringRect)>(*this, lib, "IsMouseHovering
 	->args({"r_min","r_max","clip"})
 		->arg_init(2,make_smart<ExprConstBool>(true))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetItemRectSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetItemRectSize",SideEffects::worstDefault, "ImGui::GetItemRectSize")
+addExtern<DAS_BIND_FUN(ImGui::GetItemRectSize)>(*this, lib, "GetItemRectSize",SideEffects::worstDefault, "ImGui::GetItemRectSize")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputDouble)>(*this, lib, "InputDouble",SideEffects::worstDefault, "ImGui::InputDouble")
@@ -1001,7 +1001,7 @@ addExtern<DAS_BIND_FUN(ImGui::InputDouble)>(*this, lib, "InputDouble",SideEffect
 		->arg_type(5,makeType<ImGuiInputTextFlags_>(lib))
 		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
+addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup)>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::PushFont)>(*this, lib, "PushFont",SideEffects::worstDefault, "ImGui::PushFont")
@@ -1136,7 +1136,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextWindowSize)>(*this, lib, "SetNextWindowSize
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetCursorPos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetCursorPos",SideEffects::worstDefault, "ImGui::GetCursorPos")
+addExtern<DAS_BIND_FUN(ImGui::GetCursorPos)>(*this, lib, "GetCursorPos",SideEffects::worstDefault, "ImGui::GetCursorPos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputInt3)>(*this, lib, "InputInt3",SideEffects::worstDefault, "ImGui::InputInt3")
@@ -1174,7 +1174,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemEdited)>(*this, lib, "IsItemEdited",SideEffe
 addExtern<DAS_BIND_FUN(ImGui::EndTabBar)>(*this, lib, "EndTabBar",SideEffects::worstDefault, "ImGui::EndTabBar")
 	->args({})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetItemRectMax), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetItemRectMax",SideEffects::worstDefault, "ImGui::GetItemRectMax")
+addExtern<DAS_BIND_FUN(ImGui::GetItemRectMax)>(*this, lib, "GetItemRectMax",SideEffects::worstDefault, "ImGui::GetItemRectMax")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsMouseDragging)>(*this, lib, "IsMouseDragging",SideEffects::worstDefault, "ImGui::IsMouseDragging")
@@ -1195,7 +1195,7 @@ addExtern<bool (*)(const char *, int *, const char *const *, int, int),ImGui::Co
 	->args({"label","current_item","items","items_count","popup_max_height_in_items"})
 		->arg_init(4,make_smart<ExprConstInt>(-1))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetCursorScreenPos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetCursorScreenPos",SideEffects::worstDefault, "ImGui::GetCursorScreenPos")
+addExtern<DAS_BIND_FUN(ImGui::GetCursorScreenPos)>(*this, lib, "GetCursorScreenPos",SideEffects::worstDefault, "ImGui::GetCursorScreenPos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginListBox)>(*this, lib, "BeginListBox",SideEffects::worstDefault, "ImGui::BeginListBox")
@@ -1258,7 +1258,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsMousePosValid)>(*this, lib, "IsMousePosValid",Si
 addExtern<DAS_BIND_FUN(ImGui::PushItemWidth)>(*this, lib, "PushItemWidth",SideEffects::worstDefault, "ImGui::PushItemWidth")
 	->args({"item_width"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetFontTexUvWhitePixel), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetFontTexUvWhitePixel",SideEffects::worstDefault, "ImGui::GetFontTexUvWhitePixel")
+addExtern<DAS_BIND_FUN(ImGui::GetFontTexUvWhitePixel)>(*this, lib, "GetFontTexUvWhitePixel",SideEffects::worstDefault, "ImGui::GetFontTexUvWhitePixel")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetStyleColorVec4), SimNode_ExtFuncCallRef>(*this, lib, "GetStyleColorVec4",SideEffects::worstDefault, "ImGui::GetStyleColorVec4")
@@ -1344,7 +1344,7 @@ addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextVoid)>(*this, lib, "BeginPopupCon
 		->arg_init(0,make_smart<ExprConstString>(""))
 		->arg_init(1,make_smart<ExprConstInt>(1))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
+addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta)>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
 	->args({"button","lock_threshold"})
 		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
@@ -1388,7 +1388,7 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTooltip)>(*this, lib, "BeginTooltip",SideEffe
 addExtern<ImU32 (*)(ImU32),ImGui::GetColorU32>(*this, lib, "GetColorU32",SideEffects::worstDefault, "ImGui::GetColorU32")
 	->args({"col"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetWindowPos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetWindowPos",SideEffects::worstDefault, "ImGui::GetWindowPos")
+addExtern<DAS_BIND_FUN(ImGui::GetWindowPos)>(*this, lib, "GetWindowPos",SideEffects::worstDefault, "ImGui::GetWindowPos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::PopButtonRepeat)>(*this, lib, "PopButtonRepeat",SideEffects::worstDefault, "ImGui::PopButtonRepeat")
@@ -1440,7 +1440,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseClicked)>(*this, lib, "IsMouseClicked",Side
 		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(1,make_smart<ExprConstBool>(false))
 ;
-addExtern<DAS_BIND_FUN(ImGui::GetMousePos), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")
+addExtern<DAS_BIND_FUN(ImGui::GetMousePos)>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")
 	->args({})
 ;
 addExtern<DAS_BIND_FUN(ImGui::DragInt2)>(*this, lib, "DragInt2",SideEffects::worstDefault, "ImGui::DragInt2")

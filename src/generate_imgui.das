@@ -30,11 +30,16 @@ def main
 
     local_type_names <- [{auto[]
         "ImVec2";
-        "ImVec3";
         "ImVec4";
         "ImColor";
         "ImGuiTableColumnSortSpecs"
     }]
+
+    alias_types <- {{
+        "ImVec2" => "Type::tFloat2";
+        "ImVec4" => "Type::tFloat4";
+        "ImColor" => "Type::tFloat4"
+    }}
 
     ex_enums <- {{
     // flags

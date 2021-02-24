@@ -293,6 +293,12 @@ Module_imgui::Module_imgui() : Module("imgui") {
 bool Module_imgui::initDependencies() {
     if ( initialized ) return true;
     initialized = true;
+#if USE_GENERATED
+    // aliases
+    addAlias(typeFactory<ImVec2>::make(lib));
+    addAlias(typeFactory<ImVec4>::make(lib));
+    addAlias(typeFactory<ImColor>::make(lib));
+#endif
     initEnums();
     initAnnotations();
     initFunctions();
@@ -304,18 +310,13 @@ bool Module_imgui::initDependencies() {
     addConstant(*this,"IM_COL32_G_SHIFT",uint32_t(IM_COL32_G_SHIFT));
     addConstant(*this,"IM_COL32_B_SHIFT",uint32_t(IM_COL32_B_SHIFT));
     addConstant(*this,"IM_COL32_A_SHIFT",uint32_t(IM_COL32_A_SHIFT));
-    // vector C-tors
-    addCtor<ImVec2>(*this,lib,"ImVec2","ImVec2");
-    addCtor<ImVec2,float,float>(*this,lib,"ImVec2","ImVec2");
-    addCtor<ImVec4>(*this,lib,"ImVec4","ImVec4");
-    addCtor<ImVec4,float,float,float,float>(*this,lib,"ImVec4","ImVec4");
     // imgui text filter
     addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
         SideEffects::worstDefault, "das::PassFilter");
     // imcolor
     addCtor<ImColor>(*this,lib,"ImColor","ImColor");
     addCtor<ImColor,const ImVec4 &>(*this,lib,"ImColor","ImColor");
-    addExtern<DAS_BIND_FUN(das::HSV),SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "HSV",
+    addExtern<DAS_BIND_FUN(das::HSV)>(*this, lib, "HSV",
         SideEffects::none, "das::HSV")
             ->args({"h","s","v","a"})
                 ->arg_init(3,make_smart<ExprConstFloat>(1.0f));
@@ -382,7 +383,7 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::SortDirection)>(*this,lib,"SortDirection",
         SideEffects::none,"das::SortDirection");
     // CalcTextSize
-    addExtern<DAS_BIND_FUN(das::CalcTextSize), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
+    addExtern<DAS_BIND_FUN(das::CalcTextSize)>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
 	->args({"text","hide_text_after_double_hash","wrap_width"})
 		->arg_init(1,make_smart<ExprConstBool>(false))
 		->arg_init(2,make_smart<ExprConstFloat>(-1.0f));
@@ -420,6 +421,17 @@ bool Module_imgui::initDependencies() {
         ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     findUniqueFunction("ColorButton")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+    // time to fix-up const & ImVec2 and const & ImVec4
+    for ( auto fn : this->functions ) {
+        const auto&  pfn = fn.second;
+        for ( auto & arg : pfn->arguments ) {
+            if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
+                if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {
+                    arg->type->ref = false;
+                }
+            }
+        }
+    }
 #endif
     return true;
 }

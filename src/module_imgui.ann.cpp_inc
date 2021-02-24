@@ -18,8 +18,6 @@
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextFilter,ImGuiTextFilter)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiSizeCallbackData,ImGuiSizeCallbackData)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiListClipper,ImGuiListClipper)
-	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImVec2,ImVec2)
-	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImVec4,ImVec4)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFont,ImFont)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextBuffer,ImGuiTextBuffer)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiInputTextCallbackData,ImGuiInputTextCallbackData)
@@ -27,7 +25,6 @@
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiViewport,ImGuiViewport)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImFontAtlasCustomRect,ImFontAtlasCustomRect)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiStyle,ImGuiStyle)
-	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImColor,ImColor)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImDrawListSplitter,ImDrawListSplitter)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiStorage,ImGuiStorage)
 	IMPLEMENT_EXTERNAL_TYPE_FACTORY(ImGuiTextRange,ImGuiTextFilter::ImGuiTextRange)
@@ -300,28 +297,6 @@ struct ImGuiListClipper_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiLi
 		addField<DAS_BIND_MANAGED_FIELD(StartPosY)>("StartPosY","StartPosY");
 	}
 };
-struct ImVec2_GeneratedAnnotation : ManagedStructureAnnotation<ImVec2> {
-	virtual bool isLocal() const override { return true; }
-	virtual bool canBePlacedInContainer() const override { return true; }
-	ImVec2_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec2", ml) {
-	}
-	void init () {
-		addField<DAS_BIND_MANAGED_FIELD(x)>("x","x");
-		addField<DAS_BIND_MANAGED_FIELD(y)>("y","y");
-	}
-};
-struct ImVec4_GeneratedAnnotation : ManagedStructureAnnotation<ImVec4> {
-	virtual bool isLocal() const override { return true; }
-	virtual bool canBePlacedInContainer() const override { return true; }
-	ImVec4_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImVec4", ml) {
-	}
-	void init () {
-		addField<DAS_BIND_MANAGED_FIELD(x)>("x","x");
-		addField<DAS_BIND_MANAGED_FIELD(y)>("y","y");
-		addField<DAS_BIND_MANAGED_FIELD(z)>("z","z");
-		addField<DAS_BIND_MANAGED_FIELD(w)>("w","w");
-	}
-};
 struct ImFont_GeneratedAnnotation : ManagedStructureAnnotation<ImFont> {
 	ImFont_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFont", ml) {
 	}
@@ -452,15 +427,6 @@ struct ImGuiStyle_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStyle> {
 		addField<DAS_BIND_MANAGED_FIELD(CurveTessellationTol)>("CurveTessellationTol","CurveTessellationTol");
 		addField<DAS_BIND_MANAGED_FIELD(CircleSegmentMaxError)>("CircleSegmentMaxError","CircleSegmentMaxError");
 		addField<DAS_BIND_MANAGED_FIELD(Colors)>("Colors","Colors");
-	}
-};
-struct ImColor_GeneratedAnnotation : ManagedStructureAnnotation<ImColor> {
-	virtual bool isLocal() const override { return true; }
-	virtual bool canBePlacedInContainer() const override { return true; }
-	ImColor_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImColor", ml) {
-	}
-	void init () {
-		addField<DAS_BIND_MANAGED_FIELD(Value)>("Value","Value");
 	}
 };
 struct ImDrawListSplitter_GeneratedAnnotation : ManagedStructureAnnotation<ImDrawListSplitter> {

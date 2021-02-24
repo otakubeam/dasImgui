@@ -58,7 +58,7 @@ def InputText ( lab:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags 
 def InputTextWithHint ( lab,hint:string; buf:ImGuiInputTextBuffer; flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
     return _builtin_InputTextWithHint(buf, lab, hint, flags)
 
-def InputTextMultiline ( lab:string; buf:ImGuiInputTextBuffer; siz:ImVec2 = ImVec2(0.0f,0.0f); flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
+def InputTextMultiline ( lab:string; buf:ImGuiInputTextBuffer; siz:float2 = float2(0.0f,0.0f); flags:ImGuiInputTextFlags = ImGuiInputTextFlags None )
     return _builtin_InputTextMultiline(buf, lab, siz, flags)
 
 // note - this needs to correspond to C++ structure
@@ -72,7 +72,7 @@ def ImGuiSizeConstraints(var lmb:lambda<(var data:ImGuiSizeCallbackData):void>)
     self.callback <- lmb
     return <- self
 
-def SetNextWindowSizeConstraints(size_min,size_max:ImVec2; var cn:ImGuiSizeConstraints)
+def SetNextWindowSizeConstraints(size_min,size_max:float2; var cn:ImGuiSizeConstraints)
     _builtin_SetNextWindowSizeConstraints(cn,size_min,size_max)
 
 // note - this needs to correspond to C++ structure
@@ -104,7 +104,7 @@ def PlotLines(
     lab:string; getter:ImGuiPlotGetter; values_count:int; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2())
+    graph_size : float2 = float2())
     var gsize = graph_size
     unsafe
         _builtin_PlotLines(getter, lab, values_count, values_offset, overlay_text, scale_min, scale_max, gsize)
@@ -113,7 +113,7 @@ def PlotHistogram(
     lab:string; getter:ImGuiPlotGetter; values_count:int; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2())
+    graph_size : float2 = float2())
     var gsize = graph_size
     unsafe
         _builtin_PlotHistogram(getter, lab, values_count, values_offset, overlay_text, scale_min, scale_max, gsize)
@@ -127,9 +127,6 @@ def IM_COL32(R,G,B,A:uint)
 
 def IM_COL32(R,G,B,A:int)
     return (uint(A)<<IM_COL32_A_SHIFT) | (uint(B)<<IM_COL32_B_SHIFT) | (uint(G)<<IM_COL32_G_SHIFT) | (uint(R)<<IM_COL32_R_SHIFT)
-
-def ImVec4 ( col:ImColor )
-    return col.Value
 
 def Combo ( lab:string; current_item:int? implicit; items:array<string>; popul_max_heigh_in_items : int = -1 )
     let nItems = length(items)
@@ -159,7 +156,7 @@ def PlotLines(
     lab:string; values:float[]; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2();
+    graph_size : float2 = float2();
     stride : int = typeinfo(sizeof type<float>))
     var gsize = graph_size
     unsafe
@@ -169,7 +166,7 @@ def PlotLines(
     lab:string; values:array<float>; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2();
+    graph_size : float2 = float2();
     stride : int = typeinfo(sizeof type<float>))
     var gsize = graph_size
     unsafe
@@ -179,7 +176,7 @@ def PlotHistogram(
     lab:string; values:float[]; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2();
+    graph_size : float2 = float2();
     stride : int = typeinfo(sizeof type<float>))
     var gsize = graph_size
     unsafe
@@ -189,7 +186,7 @@ def PlotHistogram(
     lab:string; values:array<float>; values_offset:int = 0;
     overlay_text:string = "";
     scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
-    graph_size : ImVec2 = ImVec2();
+    graph_size : float2 = float2();
     stride : int = typeinfo(sizeof type<float>))
     var gsize = graph_size
     unsafe

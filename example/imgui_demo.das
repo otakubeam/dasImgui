@@ -82,7 +82,7 @@ def DasShowAboutWindow(p_open: bool? implicit)
         var io & = GetIO()
         var style & = GetStyle()
         let copy_to_clipboard = Button("Copy to clipboard")
-        var child_size = ImVec2(0., GetTextLineHeightWithSpacing() * 18.)
+        var child_size = float2(0., GetTextLineHeightWithSpacing() * 18.)
         BeginChildFrame(GetID("cfg_infos"), child_size, ImGuiWindowFlags NoMove)
         if copy_to_clipboard
             LogToClipboard()
@@ -239,8 +239,8 @@ def DasShowDemoWindow ( _p_open : bool? )
         window_flags |= ImGuiWindowFlags NoBringToFrontOnFocus
     if no_close
         p_open = null
-    SetNextWindowPos( ImVec2(650., 20.), ImGuiCond FirstUseEver)
-    SetNextWindowSize( ImVec2(550., 680.), ImGuiCond FirstUseEver)
+    SetNextWindowPos( float2(650., 20.), ImGuiCond FirstUseEver)
+    SetNextWindowSize( float2(550., 680.), ImGuiCond FirstUseEver)
     if !Begin("Dear ImGui Demo", p_open, window_flags)
         End()
     PushItemWidth(float(GetFontSize()) * -12.)
@@ -492,8 +492,8 @@ def DasShowDemoWindowPopups()
         TextWrapped("Modal windows are like popups but the user cannot close them by clicking outside.")
         if Button("Delete..")
             OpenPopup("Delete?")
-        var center = ImVec2(GetIO().DisplaySize.x * 0.5f, GetIO().DisplaySize.y * 0.5f)
-        SetNextWindowPos(center, ImGuiCond Appearing, ImVec2(0.5f, 0.5f))
+        var center = float2(GetIO().DisplaySize.x * 0.5f, GetIO().DisplaySize.y * 0.5f)
+        SetNextWindowPos(center, ImGuiCond Appearing, float2(0.5f, 0.5f))
         if BeginPopupModal("Delete?", null, ImGuiWindowFlags AlwaysAutoResize)
             Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n")
             Separator()
@@ -502,14 +502,14 @@ def DasShowDemoWindowPopups()
             Combo("Combo", safe_addr(unused_i), [[auto "Delete"; "Delete harder"]])
             static_let <|
                 var dont_ask_me_next_time = false
-            PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(0.0f, 0.0f))
+            PushStyleVar(ImGuiStyleVar FramePadding, float2(0.0f, 0.0f))
             Checkbox("Don't ask me next time", safe_addr(dont_ask_me_next_time))
             PopStyleVar()
-            if Button("OK", ImVec2(120., 0.))
+            if Button("OK", float2(120., 0.))
                 CloseCurrentPopup()
             SetItemDefaultFocus()
             SameLine()
-            if Button("Cancel", ImVec2(120., 0.))
+            if Button("Cancel", float2(120., 0.))
                 CloseCurrentPopup()
             EndPopup()
         if Button("Stacked modals..")
@@ -581,7 +581,7 @@ def ShowExampleMenuFile()
         static_let <|
             var enabled = true
         MenuItem("Enabled", "", enabled)
-        BeginChild("child", ImVec2(0., 60.), true)
+        BeginChild("child", float2(0., 60.), true)
         for i in range(1)
             Text("Scrolling Text {i}")
         EndChild()
@@ -600,8 +600,8 @@ def ShowExampleMenuFile()
                 continue
             let name = GetStyleColorName(col)
             let p = GetCursorScreenPos()
-            *GetWindowDrawList() |> AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), GetColorU32(col))
-            Dummy(ImVec2(sz, sz))
+            *GetWindowDrawList() |> AddRectFilled(p, float2(p.x + sz, p.y + sz), GetColorU32(col))
+            Dummy(float2(sz, sz))
             SameLine()
             MenuItem(name)
         EndMenu()
@@ -835,7 +835,7 @@ def DasShowDemoWindowLayout
             var window_flags = ImGuiWindowFlags HorizontalScrollbar
             if disable_mouse_wheel
                 window_flags |= ImGuiWindowFlags NoScrollWithMouse
-            BeginChild("ChildL", ImVec2(GetWindowContentRegionWidth() * 0.5f, 260.), false, window_flags)
+            BeginChild("ChildL", float2(GetWindowContentRegionWidth() * 0.5f, 260.), false, window_flags)
             for i in range(100)
                 Text("{i}: scrollable region")
             EndChild()
@@ -847,7 +847,7 @@ def DasShowDemoWindowLayout
             if !disable_menu
                 window_flags |= ImGuiWindowFlags MenuBar
             PushStyleVar(ImGuiStyleVar ChildRounding, 5.0f)
-            BeginChild("ChildR", ImVec2(0., 260.), true, window_flags)
+            BeginChild("ChildR", float2(0., 260.), true, window_flags)
             if !disable_menu && BeginMenuBar()
                 if BeginMenu("Menu")
                     ShowExampleMenuFile()
@@ -856,7 +856,7 @@ def DasShowDemoWindowLayout
             if BeginTable("split", 2, ImGuiTableFlags Resizable | ImGuiTableFlags NoSavedSettings)
                 for i in range(100)
                     TableNextColumn()
-                    Button("{i}", ImVec2(-FLT_MIN, 0.0f))
+                    Button("{i}", float2(-FLT_MIN, 0.0f))
                 EndTable()
             EndChild()
             PopStyleVar()
@@ -868,7 +868,7 @@ def DasShowDemoWindowLayout
             DragInt("Offset X", safe_addr(offset_x), 1.0f, -1000, 1000)
             SetCursorPosX(GetCursorPosX() + float(offset_x))
             PushStyleColor(ImGuiCol ChildBg, IM_COL32(255, 0, 0, 100))
-            BeginChild("Red", ImVec2(200., 100.), true, ImGuiWindowFlags None)
+            BeginChild("Red", float2(200., 100.), true, ImGuiWindowFlags None)
             for i in range(50)
                 Text("Some test {i}")
             EndChild()
@@ -941,10 +941,10 @@ def DasShowDemoWindowLayout
         TextWrapped("(Use SameLine() to keep adding items to the right of the preceding item)")
         Text("Two items: Hello")
         SameLine()
-        TextColored(ImVec4(1.,1.,0.,1.), "Sailor")
+        TextColored(float4(1.,1.,0.,1.), "Sailor")
         Text("More spacing: Hello")
         SameLine(0., 20.)
-        TextColored(ImVec4(1.,1.,0.,1.), "Sailor")
+        TextColored(float4(1.,1.,0.,1.), "Sailor")
         AlignTextToFramePadding()
         Text("Normal buttons")
         SameLine()
@@ -1007,7 +1007,7 @@ def DasShowDemoWindowLayout
             ListBox("", safe_addr(selection[i]), items)
             PopID()
         PopItemWidth()
-        let button_sz = ImVec2(40., 40.)
+        let button_sz = float2(40., 40.)
         Button("A", button_sz)
         SameLine()
         Dummy(button_sz)
@@ -1051,9 +1051,9 @@ def DasShowDemoWindowLayout
         static_let <|
             let values = [[float[] 0.5f; 0.20f; 0.80f; 0.60f; 0.25f ]]
         PlotHistogram("##values", values, 0, "", 0.0f, 1.0f, size)
-        Button("ACTION", ImVec2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
+        Button("ACTION", float2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
         SameLine()
-        Button("REACTION", ImVec2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
+        Button("REACTION", float2((size.x - GetStyle().ItemSpacing.x) * 0.5f, size.y))
         EndGroup()
         SameLine()
         Button("LEVERAGE\nBUZZWORD", size)
@@ -1127,9 +1127,9 @@ def DasShowDemoWindowLayout
         Spacing()
         BulletText("Misc items:")
         Indent()
-        Button("80x80", ImVec2(80., 80.))
+        Button("80x80", float2(80., 80.))
         SameLine()
-        Button("50x50", ImVec2(50., 50.))
+        Button("50x50", float2(50., 50.))
         SameLine()
         Button("Button()")
         SameLine()
@@ -1197,7 +1197,7 @@ def DasShowDemoWindowLayout
             var child_id : uint
             unsafe
                 child_id = GetID(reinterpret<void?> i)
-            let child_is_visible = BeginChild(child_id, ImVec2(child_w, 200.0f), true, child_flags)
+            let child_is_visible = BeginChild(child_id, float2(child_w, 200.0f), true, child_flags)
             if BeginMenuBar()
                 TextUnformatted("abc")
                 EndMenuBar()
@@ -1208,7 +1208,7 @@ def DasShowDemoWindowLayout
             if child_is_visible
                 for item in range(100)
                     if enable_track && item==track_item
-                        TextColored(ImVec4(1., 1., 0., 1.), "Item {item}")
+                        TextColored(float4(1., 1., 0., 1.), "Item {item}")
                         SetScrollHereY(float(i) * 0.25f)
                     else
                         Text("Item {item}")
@@ -1231,7 +1231,7 @@ def DasShowDemoWindowLayout
             var child_id : uint
             unsafe
                 child_id = GetID(reinterpret<void?> i)
-            let child_is_visible = BeginChild(child_id, ImVec2(-100., child_height), true, child_flags)
+            let child_is_visible = BeginChild(child_id, float2(-100., child_height), true, child_flags)
             if scroll_to_off
                 SetScrollX(scroll_to_off_px)
             if scroll_to_pos
@@ -1239,7 +1239,7 @@ def DasShowDemoWindowLayout
             if child_is_visible
                 for item in range(100)
                     if enable_track && item == track_item
-                        TextColored(ImVec4(1., 1., 0., 1.), "Item {item}")
+                        TextColored(float4(1., 1., 0., 1.), "Item {item}")
                         SetScrollHereX(float(i) * 0.25f)
                     else
                         Text("Item {item}")
@@ -1260,8 +1260,8 @@ def DasShowDemoWindowLayout
             var lines = 7
         SliderInt("Lines", safe_addr(lines), 1, 15)
         PushStyleVar(ImGuiStyleVar FrameRounding, 3.0f)
-        PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(2.0f, 1.0f))
-        let scrolling_child_size = ImVec2(0., GetFrameHeightWithSpacing() * 7.0 + 30.0)
+        PushStyleVar(ImGuiStyleVar FramePadding, float2(2.0f, 1.0f))
+        let scrolling_child_size = float2(0., GetFrameHeightWithSpacing() * 7.0 + 30.0)
         BeginChild("scrolling", scrolling_child_size, true, ImGuiWindowFlags HorizontalScrollbar)
         for line in range(lines)
             let num_buttons = 10 + ((line & 1)!=0 ? line * 9 : line * 3)
@@ -1272,10 +1272,10 @@ def DasShowDemoWindowLayout
                 let num_buf = "{n}"
                 let lab = ((n % 15)==0) ? "FizzBuzz" : ((n % 3)==0) ? "Fizz" : ((n % 5)==0) ? "Buzz" : num_buf
                 let hue = float(n) * 0.05f
-                PushStyleColor(ImGuiCol Button, ImVec4(HSV(hue, 0.6f, 0.6f)))
-                PushStyleColor(ImGuiCol ButtonHovered,  ImVec4(HSV(hue, 0.7f, 0.7f)))
-                PushStyleColor(ImGuiCol ButtonActive, ImVec4( HSV(hue, 0.8f, 0.8f)))
-                Button(lab, ImVec2(40.0f + sin(float(line + n)) * 20.0f, 0.0f))
+                PushStyleColor(ImGuiCol Button, HSV(hue, 0.6f, 0.6f))
+                PushStyleColor(ImGuiCol ButtonHovered,  HSV(hue, 0.7f, 0.7f))
+                PushStyleColor(ImGuiCol ButtonActive, HSV(hue, 0.8f, 0.8f))
+                Button(lab, float2(40.0f + sin(float(line + n)) * 20.0f, 0.0f))
                 PopStyleColor(3)
                 PopID()
         let scroll_x = GetScrollX()
@@ -1295,7 +1295,7 @@ def DasShowDemoWindowLayout
         SameLine()
         Text("{scroll_x}/{scroll_max_x}")
         if scroll_x_delta != 0.0f
-            BeginChild("scrolling", ImVec2(0.,0.))
+            BeginChild("scrolling", float2(0.,0.))
             SetScrollX(GetScrollX() + scroll_x_delta)
             EndChild()
         Spacing()
@@ -1314,11 +1314,11 @@ def DasShowDemoWindowLayout
                 var explicit_content_size = false
                 var contents_size_x = 300.0f
             if explicit_content_size
-                SetNextWindowContentSize(ImVec2(contents_size_x, 0.0f))
+                SetNextWindowContentSize(float2(contents_size_x, 0.0f))
             Begin("Horizontal contents size demo window", safe_addr(show_horizontal_contents_size_demo_window),
                 show_h_scrollbar ? ImGuiWindowFlags HorizontalScrollbar : ImGuiWindowFlags None)
-            PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(2., 0.))
-            PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(2., 0.))
+            PushStyleVar(ImGuiStyleVar ItemSpacing, float2(2., 0.))
+            PushStyleVar(ImGuiStyleVar FramePadding, float2(2., 0.))
             DasHelpMarker("Test of different widgets react and impact the work rectangle growing when horizontal scrolling is enabled.\n\nUse 'Metrics->Tools->Show windows rectangles' to visualize rectangles.")
             Checkbox("H-scrollbar", safe_addr(show_h_scrollbar))
             Checkbox("Button", safe_addr(show_button))
@@ -1334,13 +1334,13 @@ def DasShowDemoWindowLayout
                 SetNextItemWidth(100.)
                 DragFloat("##csx", safe_addr(contents_size_x))
                 var p = GetCursorScreenPos()
-                *GetWindowDrawList() |> AddRectFilled(p, ImVec2(p.x + 10., p.y + 10.), IM_COL32_WHITE)
-                *GetWindowDrawList() |> AddRectFilled(ImVec2(p.x + contents_size_x - 10., p.y), ImVec2(p.x + contents_size_x, p.y + 10.), IM_COL32_WHITE)
-                Dummy(ImVec2(0., 10.))
+                *GetWindowDrawList() |> AddRectFilled(p, float2(p.x + 10., p.y + 10.), IM_COL32_WHITE)
+                *GetWindowDrawList() |> AddRectFilled(float2(p.x + contents_size_x - 10., p.y), float2(p.x + contents_size_x, p.y + 10.), IM_COL32_WHITE)
+                Dummy(float2(0., 10.))
             PopStyleVar(2)
             Separator()
             if show_button
-                Button("this is a 300-wide button", ImVec2(300., 0.))
+                Button("this is a 300-wide button", float2(300., 0.))
             if show_tree_nodes
                 var open = true
                 if TreeNode("this is a tree node")
@@ -1375,15 +1375,15 @@ def DasShowDemoWindowLayout
                     EndTabItem()
                 EndTabBar()
             if show_child
-                BeginChild("child", ImVec2(0., 0.), true)
+                BeginChild("child", float2(0., 0.), true)
                 EndChild()
             End()
         TreePop()
 
     if TreeNode("Clipping")
         static_let <|
-            var size = ImVec2(100.0f, 100.0f)
-            var offset = ImVec2(30.0f, 30.0f)
+            var size = float2(100.0f, 100.0f)
+            var offset = float2(30.0f, 30.0f)
         DragFloat2("size", safe_addr(size.x), 0.5f, 1.0f, 200.0f, "%.0f")
         TextWrapped("(Click and drag to scroll)")
         for n in range(3)
@@ -1398,7 +1398,7 @@ def DasShowDemoWindowLayout
             var p0 = GetItemRectMin()
             var p1 = GetItemRectMax()
             let text_str = "Line 1 hello\nLine 2 clip me!";
-            let text_pos = ImVec2(p0.x + offset.x, p0.y + offset.y)
+            let text_pos = float2(p0.x + offset.x, p0.y + offset.y)
             var draw_list = GetWindowDrawList()
             if n==0
                 DasHelpMarker(
@@ -1423,7 +1423,7 @@ def DasShowDemoWindowLayout
                     "Using ImDrawList::AddText() with a fine ClipRect:\n" +
                     "Will alter only this specific ImDrawList::AddText() rendering.\n" +
                     "(this is often used internally to avoid altering the clipping rectangle and minimize draw calls)")
-                var clip_rect = ImVec4(p0.x, p0.y, p1.x, p1.y)
+                var clip_rect = float4(p0.x, p0.y, p1.x, p1.y)
                 *draw_list |> AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255))
                 *draw_list |> AddText(GetFont(), GetFontSize(), text_pos, IM_COL32_WHITE, text_str, 0.0f, safe_addr(clip_rect))
             EndGroup()
@@ -1469,12 +1469,12 @@ class ExampleAppLog
         SameLine()
         *Filter |> Draw("Filter", -100.0f)
         Separator()
-        BeginChild("scrolling", ImVec2(0., 0.), false, ImGuiWindowFlags HorizontalScrollbar)
+        BeginChild("scrolling", float2(0., 0.), false, ImGuiWindowFlags HorizontalScrollbar)
         if clear
             self->Clear()
         if copy
             LogToClipboard()
-        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0., 0.))
         if *Filter |> IsActive()
             var line_no = 0
             while line_no < length(LineOffsets)
@@ -1503,7 +1503,7 @@ class ExampleAppLog
 def DasShowExampleAppLog(p_open:bool? implicit)
     static_let <|
         var log <- ExampleAppLog()
-    SetNextWindowSize(ImVec2(500., 400.), ImGuiCond FirstUseEver)
+    SetNextWindowSize(float2(500., 400.), ImGuiCond FirstUseEver)
     Begin("Example: Log", p_open)
     if SmallButton("[Debug] Add 5 entries")
         static_let <|
@@ -1519,7 +1519,7 @@ def DasShowExampleAppLog(p_open:bool? implicit)
     log->Draw("Example: Log", p_open)
 
 def DasShowExampleAppLayout(var p_open:bool? implicit)
-    SetNextWindowSize(ImVec2(500.0, 440.0), ImGuiCond FirstUseEver)
+    SetNextWindowSize(float2(500.0, 440.0), ImGuiCond FirstUseEver)
     if Begin("Example: Simple layout", p_open, ImGuiWindowFlags MenuBar)
         if BeginMenuBar()
             if BeginMenu("File")
@@ -1529,14 +1529,14 @@ def DasShowExampleAppLayout(var p_open:bool? implicit)
             EndMenuBar()
         static_let <|
             var selected = 0
-        BeginChild("left pane", ImVec2(150., 0.), true)
+        BeginChild("left pane", float2(150., 0.), true)
         for i in range(100)
             if Selectable("MyObject {i}", selected == i)
                 selected = i
         EndChild()
         SameLine()
         BeginGroup()
-        BeginChild("item view", ImVec2(0., -GetFrameHeightWithSpacing())) // Leave room for 1 line below us
+        BeginChild("item view", float2(0., -GetFrameHeightWithSpacing())) // Leave room for 1 line below us
         Text("MyObject: {selected}")
         Separator()
         if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
@@ -1587,7 +1587,7 @@ class ExampleAppConsole
     def AddLog(txt:string)
         Items |> push(txt)
     def Draw(title:string;var p_open:bool? implicit)
-        SetNextWindowSize(ImVec2(520., 600.), ImGuiCond FirstUseEver)
+        SetNextWindowSize(float2(520., 600.), ImGuiCond FirstUseEver)
         if !Begin(title, p_open)
             End()
             return
@@ -1621,24 +1621,24 @@ class ExampleAppConsole
         *Filter |> Draw("Filter (\"incl,-excl\") (\"error\")", 180.)
         Separator()
         let footer_height_to_reserve = GetStyle().ItemSpacing.y + GetFrameHeightWithSpacing()
-        BeginChild("ScrollingRegion", ImVec2(0., -footer_height_to_reserve), false, ImGuiWindowFlags HorizontalScrollbar)
+        BeginChild("ScrollingRegion", float2(0., -footer_height_to_reserve), false, ImGuiWindowFlags HorizontalScrollbar)
         if BeginPopupContextWindow()
             if Selectable("Clear")
                 self->ClearLog()
             EndPopup()
-        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(4., 1.))
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(4., 1.))
         if copy_to_clipboard
             LogToClipboard()
         for item in Items
             if !(*Filter |> PassFilter(item))
                 continue
-            var color = ImVec4()
+            var color = float4()
             var has_color = false
             if find(item, "[error]") != -1
-                color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
+                color = float4(1.0f, 0.4f, 0.4f, 1.0f)
                 has_color = true
             elif starts_with(item, "# ")
-                color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f)
+                color = float4(1.0f, 0.8f, 0.6f, 1.0f)
                 has_color = true
             if has_color
                 PushStyleColor(ImGuiCol Text, color)
@@ -1758,9 +1758,9 @@ struct MyDocument
     OpenPrev:bool
     Dirty:bool = false
     WantClose:bool = false
-    Color:ImVec4 = ImVec4()
+    Color:float4 = float4()
 
-def MyDocument(name:string; open:bool = true; color:ImVec4 = ImVec4(1.0f, 1.0f, 1.0f, 1.0f))
+def MyDocument(name:string; open:bool = true; color:float4 = float4(1.0f, 1.0f, 1.0f, 1.0f))
     var self : MyDocument
     self.Name = name
     self.Open = open
@@ -1787,10 +1787,10 @@ def DisplayContents(var doc:MyDocument)
     PushStyleColor(ImGuiCol Text, doc.Color)
     TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
     PopStyleColor()
-    if Button("Modify", ImVec2(100., 0.))
+    if Button("Modify", float2(100., 0.))
         doc.Dirty = true
     SameLine()
-    if Button("Save", ImVec2(100., 0.))
+    if Button("Save", float2(100., 0.))
         doc |> DoSave()
     ColorEdit3("color", safe_addr(doc.Color.x))
     PopID()
@@ -1809,10 +1809,10 @@ struct ExampleAppDocuments
 
 def ExampleAppDocuments()
     var self : ExampleAppDocuments
-    self.Documents |> push(MyDocument("Lettuce",             true,  ImVec4(0.4f, 0.8f, 0.4f, 1.0f)))
-    self.Documents |> push(MyDocument("Eggplant",            true,  ImVec4(0.8f, 0.5f, 1.0f, 1.0f)))
-    self.Documents |> push(MyDocument("Carrot",              true,  ImVec4(1.0f, 0.8f, 0.5f, 1.0f)))
-    self.Documents |> push(MyDocument("Tomato",              false, ImVec4(1.0f, 0.3f, 0.4f, 1.0f)))
+    self.Documents |> push(MyDocument("Lettuce",             true,  float4(0.4f, 0.8f, 0.4f, 1.0f)))
+    self.Documents |> push(MyDocument("Eggplant",            true,  float4(0.8f, 0.5f, 1.0f, 1.0f)))
+    self.Documents |> push(MyDocument("Carrot",              true,  float4(1.0f, 0.8f, 0.5f, 1.0f)))
+    self.Documents |> push(MyDocument("Tomato",              false, float4(1.0f, 0.3f, 0.4f, 1.0f)))
     self.Documents |> push(MyDocument("A Rather Long Title", false))
     self.Documents |> push(MyDocument("Some Document",       false))
     return <- self
@@ -1900,12 +1900,12 @@ def DasShowExampleAppDocuments(p_open:bool? implicit)
             if BeginPopupModal("Save?", null, ImGuiWindowFlags AlwaysAutoResize)
                 Text("Save change to the following items?")
                 let item_height = GetTextLineHeightWithSpacing()
-                if BeginChildFrame(GetID("frame"), ImVec2(-FLT_MIN, 6.25f * item_height))
+                if BeginChildFrame(GetID("frame"), float2(-FLT_MIN, 6.25f * item_height))
                     for qq in close_queue
                         if qq.Dirty
                             Text("{qq.Name}")
                     EndChildFrame()
-                var button_size = ImVec2(GetFontSize() * 7.0f, 0.0f)
+                var button_size = float2(GetFontSize() * 7.0f, 0.0f)
                 if Button("Yes", button_size)
                     for qq in close_queue
                         if qq.Dirty
@@ -1959,7 +1959,7 @@ def ShowPlaceholderObject(prefix:string;uid:int)
     PopID()
 
 def DasShowExampleAppPropertyEditor(p_open:bool? implicit)
-    SetNextWindowSize(ImVec2(430., 450.), ImGuiCond FirstUseEver)
+    SetNextWindowSize(float2(430., 450.), ImGuiCond FirstUseEver)
     if !Begin("Example: Property editor", p_open)
         End()
         return
@@ -1968,7 +1968,7 @@ def DasShowExampleAppPropertyEditor(p_open:bool? implicit)
         "All objects/fields data are dummies here.\n" +
         "Remember that in many simple cases, you can use SameLine(xxx) to position\n" +
         "your cursor horizontally instead of using the Columns() API.")
-    PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(2., 2.))
+    PushStyleVar(ImGuiStyleVar FramePadding, float2(2., 2.))
     if BeginTable("split", 2, ImGuiTableFlags BordersOuter | ImGuiTableFlags Resizable)
         for obj_i in range(4)
             ShowPlaceholderObject("Object", obj_i)
@@ -1977,7 +1977,7 @@ def DasShowExampleAppPropertyEditor(p_open:bool? implicit)
     End()
 
 def DasShowExampleAppLongText(p_open:bool? implicit)
-    SetNextWindowSize(ImVec2(520., 600.), ImGuiCond FirstUseEver)
+    SetNextWindowSize(float2(520., 600.), ImGuiCond FirstUseEver)
     if !Begin("Example: Long text display", p_open)
         End()
         return
@@ -1999,11 +1999,11 @@ def DasShowExampleAppLongText(p_open:bool? implicit)
         for i in range(1000)
             *log |> append("{lines+i} The quick brown fox jumps over the lazy dog\n")
         lines += 1000
-    BeginChild("Log", ImVec2())
+    BeginChild("Log", float2())
     if test_type==0
         TextUnformatted(*log |> c_str())
     elif test_type==1
-        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0., 0.))
         using() <| $ ( var clipper : ImGuiListClipper# )
             clipper |> Begin(lines)
             while clipper |> Step()
@@ -2012,7 +2012,7 @@ def DasShowExampleAppLongText(p_open:bool? implicit)
             clipper |> End()
             PopStyleVar()
     elif test_type==2
-        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(0., 0.))
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0., 0.))
         for i in range(lines)
             Text("{i} The quick brown fox jumps over the lazy dog")
         PopStyleVar()
@@ -2054,34 +2054,34 @@ def DasShowExampleAppConstrainedResize(p_open:bool? implicit)
             data.DesiredSize.y = t
         var ccs_step <- ImGuiSizeConstraints() <| @(var data:ImGuiSizeCallbackData)
             let step = 100.f
-            data.DesiredSize = ImVec2(
+            data.DesiredSize = float2(
                 floor(data.DesiredSize.x / step + 0.5f) * step,
                 floor(data.DesiredSize.y / step + 0.5f) * step
             )
     if con_type == 0
-        SetNextWindowSizeConstraints(ImVec2(-1., 0.),    ImVec2(-1., FLT_MAX))
+        SetNextWindowSizeConstraints(float2(-1., 0.),    float2(-1., FLT_MAX))
     elif con_type == 1
-        SetNextWindowSizeConstraints(ImVec2(0., -1.),    ImVec2(FLT_MAX, -1.))
+        SetNextWindowSizeConstraints(float2(0., -1.),    float2(FLT_MAX, -1.))
     elif con_type == 2
-        SetNextWindowSizeConstraints(ImVec2(100., 100.), ImVec2(FLT_MAX, FLT_MAX))
+        SetNextWindowSizeConstraints(float2(100., 100.), float2(FLT_MAX, FLT_MAX))
     elif con_type == 3
-        SetNextWindowSizeConstraints(ImVec2(400., -1.),  ImVec2(500., -1.))
+        SetNextWindowSizeConstraints(float2(400., -1.),  float2(500., -1.))
     elif con_type == 4
-        SetNextWindowSizeConstraints(ImVec2(-1., 400.),  ImVec2(-1., 500.))
+        SetNextWindowSizeConstraints(float2(-1., 400.),  float2(-1., 500.))
     elif con_type == 5
-        SetNextWindowSizeConstraints(ImVec2(0., 0.),     ImVec2(FLT_MAX, FLT_MAX), ccs_square)
+        SetNextWindowSizeConstraints(float2(0., 0.),     float2(FLT_MAX, FLT_MAX), ccs_square)
     elif con_type == 6
-        SetNextWindowSizeConstraints(ImVec2(0., 0.),     ImVec2(FLT_MAX, FLT_MAX), ccs_step)
+        SetNextWindowSizeConstraints(float2(0., 0.),     float2(FLT_MAX, FLT_MAX), ccs_step)
     let flags = auto_resize ? ImGuiWindowFlags AlwaysAutoResize : ImGuiWindowFlags None
     if Begin("Example: Constrained Resize", p_open, flags)
         if Button("200x200")
-            SetWindowSize(ImVec2(200., 200.))
+            SetWindowSize(float2(200., 200.))
         SameLine()
         if Button("500x500")
-            SetWindowSize(ImVec2(500., 500.))
+            SetWindowSize(float2(500., 500.))
         SameLine()
         if Button("800x200")
-            SetWindowSize(ImVec2(800., 200.))
+            SetWindowSize(float2(800., 200.))
         SetNextItemWidth(200.)
         Combo("Constraint", safe_addr(con_type), test_desc)
         SetNextItemWidth(200.)
@@ -2101,8 +2101,8 @@ def DasShowExampleAppSimpleOverlay(var p_open:bool? implicit)
         let viewport = GetMainViewport()
         var work_pos = viewport.WorkPos
         var work_size = viewport.WorkSize
-        var window_pos = ImVec2()
-        var window_pos_pivot = ImVec2()
+        var window_pos = float2()
+        var window_pos_pivot = float2()
         window_pos.x = (corner & 1)!=0 ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD)
         window_pos.y = (corner & 2)!=0 ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD)
         window_pos_pivot.x = (corner & 1)!=0 ? 1.0f : 0.0f
@@ -2136,15 +2136,15 @@ def DasShowExampleAppSimpleOverlay(var p_open:bool? implicit)
 def DasShowExampleAppWindowTitles(p_open:bool? implicit)
     let viewport = GetMainViewport()
     let base_pos = viewport.Pos
-    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 100.), ImGuiCond FirstUseEver)
+    SetNextWindowPos(float2(base_pos.x + 100., base_pos.y + 100.), ImGuiCond FirstUseEver)
     Begin("Same title as another window##1")
     Text("This is window 1.\nMy title is the same as window 2, but my identifier is unique.")
     End()
-    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 200.), ImGuiCond FirstUseEver)
+    SetNextWindowPos(float2(base_pos.x + 100., base_pos.y + 200.), ImGuiCond FirstUseEver)
     Begin("Same title as another window##2")
     Text("This is window 2.\nMy title is the same as window 1, but my identifier is unique.")
     End()
-    SetNextWindowPos(ImVec2(base_pos.x + 100., base_pos.y + 300.), ImGuiCond FirstUseEver)
+    SetNextWindowPos(float2(base_pos.x + 100., base_pos.y + 300.), ImGuiCond FirstUseEver)
     static_let <|
         let crot = [[int '|'; '/'; '-'; '\\']]
     let ch = crot[ int(GetTime() / 0.25lf) & 3 ]
@@ -2162,17 +2162,17 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
             PushItemWidth(-GetFontSize() * 15.)
             var draw_list = GetWindowDrawList()
             Text("Gradients")
-            var gradient_size = ImVec2(CalcItemWidth(), GetFrameHeight())
+            var gradient_size = float2(CalcItemWidth(), GetFrameHeight())
             if true
                 let p0 = GetCursorScreenPos()
-                let p1 = ImVec2(p0.x + gradient_size.x, p0.y + gradient_size.y)
+                let p1 = float2(p0.x + gradient_size.x, p0.y + gradient_size.y)
                 let col_a = GetColorU32(IM_COL32(0, 0, 0, 255))
                 let col_b = GetColorU32(IM_COL32(255, 255, 255, 255))
                 *draw_list |> AddRectFilledMultiColor(p0, p1, col_a, col_b, col_b, col_a)
                 InvisibleButton("##gradient1", gradient_size)
             if true
                 let p0 = GetCursorScreenPos()
-                let p1 = ImVec2(p0.x + gradient_size.x, p0.y + gradient_size.y)
+                let p1 = float2(p0.x + gradient_size.x, p0.y + gradient_size.y)
                 let col_a = GetColorU32(IM_COL32(0, 255, 0, 255))
                 let col_b = GetColorU32(IM_COL32(255, 0, 0, 255))
                 *draw_list |> AddRectFilledMultiColor(p0, p1, col_a, col_b, col_b, col_a)
@@ -2187,7 +2187,7 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
                 var circle_segments_override_v = 12
                 var curve_segments_override = false
                 var curve_segments_override_v = 8
-                var colf = ImVec4(1.0f, 1.0f, 0.4f, 1.0f)
+                var colf = float4(1.0f, 1.0f, 0.4f, 1.0f)
             DragFloat("Size", safe_addr(sz), 0.2f, 2.0f, 100.0f, "%.0f")
             DragFloat("Thickness", safe_addr(thickness), 0.05f, 1.0f, 8.0f, "%.02f")
             SliderInt("N-gon sides", safe_addr(ngon_sides), 3, 12)
@@ -2212,60 +2212,60 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
             var y = p.y + 4.0f
             for n in range(2)
                 let th = (n == 0) ? 1.0f : thickness
-                *draw_list |> AddNgon(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, ngon_sides, th)
+                *draw_list |> AddNgon(float2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, ngon_sides, th)
                 x += sz + spacing
-                *draw_list |> AddCircle(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments, th)
+                *draw_list |> AddCircle(float2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments, th)
                 x += sz + spacing
-                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 0.0f,  corners_none, th)
+                *draw_list |> AddRect(float2(x, y), float2(x + sz, y + sz), col, 0.0f,  corners_none, th)
                 x += sz + spacing
-                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, rounding, corners_all, th)
+                *draw_list |> AddRect(float2(x, y), float2(x + sz, y + sz), col, rounding, corners_all, th)
                 x += sz + spacing
-                *draw_list |> AddRect(ImVec2(x, y), ImVec2(x + sz, y + sz), col, rounding, corners_tl_br, th)
+                *draw_list |> AddRect(float2(x, y), float2(x + sz, y + sz), col, rounding, corners_tl_br, th)
                 x += sz + spacing
-                *draw_list |> AddTriangle(ImVec2(x+sz*0.5f,y), ImVec2(x+sz, y+sz-0.5f), ImVec2(x, y+sz-0.5f), col, th)
+                *draw_list |> AddTriangle(float2(x+sz*0.5f,y), float2(x+sz, y+sz-0.5f), float2(x, y+sz-0.5f), col, th)
                 x += sz + spacing
-                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x + sz, y), col, th)
+                *draw_list |> AddLine(float2(x, y), float2(x + sz, y), col, th)
                 x += sz + spacing
-                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x, y + sz), col, th)
+                *draw_list |> AddLine(float2(x, y), float2(x, y + sz), col, th)
                 x += spacing
-                *draw_list |> AddLine(ImVec2(x, y), ImVec2(x + sz, y + sz), col, th)
+                *draw_list |> AddLine(float2(x, y), float2(x + sz, y + sz), col, th)
                 x += sz + spacing
-                var cp3 = [[ImVec2[3] ImVec2(x, y + sz * 0.6f) ; ImVec2(x + sz * 0.5f, y - sz * 0.4f) ; ImVec2(x + sz, y + sz) ]]
+                var cp3 = [[float2[3] float2(x, y + sz * 0.6f) ; float2(x + sz * 0.5f, y - sz * 0.4f) ; float2(x + sz, y + sz) ]]
                 *draw_list |> AddBezierQuadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
                 x += sz + spacing;
-                var cp4 = [[ImVec2[4] ImVec2(x, y) ; ImVec2(x + sz * 1.3f, y + sz * 0.3f) ; ImVec2(x + sz - sz * 1.3f, y + sz - sz * 0.3f) ; ImVec2(x + sz, y + sz) ]]
+                var cp4 = [[float2[4] float2(x, y) ; float2(x + sz * 1.3f, y + sz * 0.3f) ; float2(x + sz - sz * 1.3f, y + sz - sz * 0.3f) ; float2(x + sz, y + sz) ]]
                 *draw_list |> AddBezierCubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
                 x = p.x + 4.
                 y += sz + spacing
 
-            *draw_list |> AddNgonFilled(ImVec2(x + sz * 0.5f, y + sz * 0.5f), sz*0.5f, col, ngon_sides)
+            *draw_list |> AddNgonFilled(float2(x + sz * 0.5f, y + sz * 0.5f), sz*0.5f, col, ngon_sides)
             x += sz + spacing
-            *draw_list |> AddCircleFilled(ImVec2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments)
+            *draw_list |> AddCircleFilled(float2(x + sz*0.5f, y + sz*0.5f), sz*0.5f, col, circle_segments)
             x += sz + spacing
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + sz, y + sz), col)
             x += sz + spacing
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 10.0f)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + sz, y + sz), col, 10.0f)
             x += sz + spacing
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + sz), col, 10.0f, corners_tl_br)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + sz, y + sz), col, 10.0f, corners_tl_br)
             x += sz + spacing
-            *draw_list |> AddTriangleFilled(ImVec2(x+sz*0.5f,y), ImVec2(x+sz, y+sz-0.5f), ImVec2(x, y+sz-0.5f), col)
+            *draw_list |> AddTriangleFilled(float2(x+sz*0.5f,y), float2(x+sz, y+sz-0.5f), float2(x, y+sz-0.5f), col)
             x += sz + spacing
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + sz, y + thickness), col)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + sz, y + thickness), col)
             x += sz + spacing
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + thickness, y + sz), col)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + thickness, y + sz), col)
             x += spacing * 2.0f
-            *draw_list |> AddRectFilled(ImVec2(x, y), ImVec2(x + 1., y + 1.), col)
+            *draw_list |> AddRectFilled(float2(x, y), float2(x + 1., y + 1.), col)
             x += sz
-            *draw_list |> AddRectFilledMultiColor(ImVec2(x, y), ImVec2(x + sz, y + sz), IM_COL32(0, 0, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(255, 255, 0, 255), IM_COL32(0, 255, 0, 255))
+            *draw_list |> AddRectFilledMultiColor(float2(x, y), float2(x + sz, y + sz), IM_COL32(0, 0, 0, 255), IM_COL32(255, 0, 0, 255), IM_COL32(255, 255, 0, 255), IM_COL32(0, 255, 0, 255))
 
-            Dummy(ImVec2((sz + spacing) * 10.2f, (sz + spacing) * 3.0f))
+            Dummy(float2((sz + spacing) * 10.2f, (sz + spacing) * 3.0f))
             PopItemWidth()
             EndTabItem()
 
         if (BeginTabItem("Canvas"))
             static_let <|
                 var points:array<float2>
-                var scrolling = ImVec2(0.0f, 0.0f)
+                var scrolling = float2(0.0f, 0.0f)
                 var opt_enable_grid = true
                 var opt_enable_context_menu = true
                 var adding_line = false;
@@ -2279,7 +2279,7 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
                 canvas_sz.x = 50.0f
             if canvas_sz.y < 50.0f
                 canvas_sz.y = 50.0f
-            var canvas_p1 = ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y)
+            var canvas_p1 = float2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y)
 
             var io & = GetIO()
             var draw_list = GetWindowDrawList()
@@ -2289,7 +2289,7 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
             InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags MouseButtonLeft | ImGuiButtonFlags MouseButtonRight)
             let is_hovered = IsItemHovered()
             let is_active = IsItemActive()
-            let origin = ImVec2(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y)
+            let origin = float2(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y)
             let mouse_pos_in_canvas = float2(io.MousePos.x - origin.x, io.MousePos.y - origin.y)
 
             if is_hovered && !adding_line && IsMouseClicked(ImGuiMouseButton Left)
@@ -2324,15 +2324,15 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
                 let GRID_STEP = 64.0f;
                 var x = scrolling.x % GRID_STEP
                 while x < canvas_sz.x
-                    *draw_list |> AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40))
+                    *draw_list |> AddLine(float2(canvas_p0.x + x, canvas_p0.y), float2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40))
                     x += GRID_STEP
                 var y = scrolling.y % GRID_STEP
                 while y < canvas_sz.y
-                    *draw_list |> AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40))
+                    *draw_list |> AddLine(float2(canvas_p0.x, canvas_p0.y + y), float2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40))
                     y += GRID_STEP
             var n = 0
             while n < points |> length()
-                *draw_list |> AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f)
+                *draw_list |> AddLine(float2(origin.x + points[n].x, origin.y + points[n].y), float2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f)
                 n += 2
             *draw_list |> PopClipRect()
             EndTabItem()
@@ -2349,7 +2349,7 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
             DasHelpMarker("The Foreground draw list will be rendered over every Dear ImGui windows.")
             let window_pos = GetWindowPos()
             let window_size = GetWindowSize()
-            let window_center = ImVec2(window_pos.x + window_size.x * 0.5f, window_pos.y + window_size.y * 0.5f)
+            let window_center = float2(window_pos.x + window_size.x * 0.5f, window_pos.y + window_size.y * 0.5f)
             if draw_bg
                 *GetBackgroundDrawList() |> AddCircle(window_center, window_size.x * 0.6f, IM_COL32(255, 0, 0, 200), 0, 10. + 4.)
             if draw_fg
@@ -2394,8 +2394,8 @@ def SortMyItems ( var items:array<MyItem>; var sorts_specs:ImGuiTableSortSpecs? 
 
 def PushStyleCompact
     var style & = GetStyle()
-    PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(style.FramePadding.x, floor(style.FramePadding.y * 0.60f)))
-    PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(style.ItemSpacing.x, floor(style.ItemSpacing.y * 0.60f)))
+    PushStyleVar(ImGuiStyleVar FramePadding, float2(style.FramePadding.x, floor(style.FramePadding.y * 0.60f)))
+    PushStyleVar(ImGuiStyleVar ItemSpacing, float2(style.ItemSpacing.x, floor(style.ItemSpacing.y * 0.60f)))
 
 def PopStyleCompact
     PopStyleVar(2)
@@ -2608,7 +2608,7 @@ def DasShowDemoWindowTables()
                     if contents_type == ContentsType CT_ShortText
                         TextUnformatted(buf)
                     elif contents_type == ContentsType CT_FillButton
-                        Button(buf, ImVec2(-FLT_MIN, 0.0f))
+                        Button(buf, float2(-FLT_MIN, 0.0f))
             EndTable()
         TreePop()
 
@@ -2716,7 +2716,7 @@ def DasShowDemoWindowTables()
                     TableSetColumnIndex(column)
                     Text("Hello {column},{row}")
             EndTable()
-        if BeginTable("table2", 3, flags | ImGuiTableFlags SizingFixedFit, ImVec2(0.0f, 0.0f))
+        if BeginTable("table2", 3, flags | ImGuiTableFlags SizingFixedFit, float2(0.0f, 0.0f))
             TableSetupColumn("One")
             TableSetupColumn("Two")
             TableSetupColumn("Three")
@@ -2771,12 +2771,12 @@ def DasShowDemoWindowTables()
                     if row == 0
                         Text("Avail {GetContentRegionAvail().x}")
                     else
-                        Button("Hello {column},{row}", ImVec2(-FLT_MIN, 0.0f))
+                        Button("Hello {column},{row}", float2(-FLT_MIN, 0.0f))
             EndTable()
         DasHelpMarker("Setting style.CellPadding to (0,0) or a custom value.")
         static_let <|
             var flags2 = ImGuiTableFlags Borders | ImGuiTableFlags RowBg
-            var cell_padding =  ImVec2(0.0f, 0.0f)
+            var cell_padding =  float2(0.0f, 0.0f)
             var show_widget_frame_bg = true
         PushStyleCompact()
         CheckboxFlags("ImGuiTableFlags Borders", safe_addr(flags2), ImGuiTableFlags Borders)
@@ -2876,7 +2876,7 @@ def DasShowDemoWindowTables()
         PopItemWidth()
         PopID()
         PopStyleCompact()
-        if BeginTable("table2", column_count, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 7.))
+        if BeginTable("table2", column_count, flags, float2(0.0f, TEXT_BASE_HEIGHT * 7.))
             for cell in range(10 * column_count)
                 TableNextColumn()
                 let column = TableGetColumnIndex()
@@ -2892,7 +2892,7 @@ def DasShowDemoWindowTables()
                 elif contents_type==ContentsType CT_Button
                     Button(lab)
                 elif contents_type==ContentsType CT_FillButton
-                    Button(lab, ImVec2(-FLT_MIN, 0.0f))
+                    Button(lab, float2(-FLT_MIN, 0.0f))
                 elif contents_type==ContentsType CT_InputText
                     SetNextItemWidth(-FLT_MIN)
                     static_let <|
@@ -2913,7 +2913,7 @@ def DasShowDemoWindowTables()
         PushStyleCompact()
         CheckboxFlags("ImGuiTableFlags ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
         PopStyleCompact()
-        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8.)
+        var outer_size = float2(0.0f, TEXT_BASE_HEIGHT * 8.)
         if BeginTable("table_scrolly", 3, flags, outer_size)
             TableSetupScrollFreeze(0, 1)
             TableSetupColumn("One", ImGuiTableColumnFlags None)
@@ -2954,7 +2954,7 @@ def DasShowDemoWindowTables()
         SetNextItemWidth(GetFrameHeight())
         DragInt("freeze_rows", safe_addr(freeze_rows), 0.2f, 0, 9, "", ImGuiSliderFlags NoInput)
         PopStyleCompact()
-        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8.)
+        var outer_size = float2(0.0f, TEXT_BASE_HEIGHT * 8.)
         if BeginTable("table_scrollx", 7, flags, outer_size)
             TableSetupScrollFreeze(freeze_cols, freeze_rows)
             TableSetupColumn("Line #", ImGuiTableColumnFlags NoHide)
@@ -3029,7 +3029,7 @@ def DasShowDemoWindowTables()
               ImGuiTableFlags SizingFixedFit | ImGuiTableFlags ScrollX | ImGuiTableFlags ScrollY
             | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV
             | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable | ImGuiTableFlags Sortable )
-        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 9.)
+        var outer_size = float2(0.0f, TEXT_BASE_HEIGHT * 9.)
         if BeginTable("table_columns_flags", column_count, flags, outer_size)
             for column in range(column_count)
                 TableSetupColumn(column_names[column], column_flags[column])
@@ -3162,7 +3162,7 @@ def DasShowDemoWindowTables()
         DasHelpMarker("Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit).\n\n" +
             "Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.")
         PopStyleCompact()
-        var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 5.5f)
+        var outer_size = float2(0.0f, TEXT_BASE_HEIGHT * 5.5f)
         if BeginTable("table1", 3, flags, outer_size)
             for row in range(10)
                 TableNextRow()
@@ -3174,7 +3174,7 @@ def DasShowDemoWindowTables()
         Text("Hello!")
         Spacing()
         Text("Using explicit size:")
-        if BeginTable("table2", 3, ImGuiTableFlags Borders | ImGuiTableFlags RowBg, ImVec2(TEXT_BASE_WIDTH * 30., 0.0f))
+        if BeginTable("table2", 3, ImGuiTableFlags Borders | ImGuiTableFlags RowBg, float2(TEXT_BASE_WIDTH * 30., 0.0f))
             for row in range(5)
                 TableNextRow()
                 for column in range(3)
@@ -3182,7 +3182,7 @@ def DasShowDemoWindowTables()
                     Text("Cell {column},{row}")
             EndTable()
         SameLine()
-        if BeginTable("table3", 3, ImGuiTableFlags Borders | ImGuiTableFlags RowBg, ImVec2(TEXT_BASE_WIDTH * 30., 0.0f))
+        if BeginTable("table3", 3, ImGuiTableFlags Borders | ImGuiTableFlags RowBg, float2(TEXT_BASE_WIDTH * 30., 0.0f))
             for row in range(3)
                 TableNextRow(ImGuiTableRowFlags None, TEXT_BASE_HEIGHT * 1.5f)
                 for column in range(3)
@@ -3220,15 +3220,15 @@ def DasShowDemoWindowTables()
                 TableNextRow()
                 if row_bg_type != 0
                     let row_bg_color = GetColorU32(row_bg_type == 1 ?
-                        ImVec4(0.7f, 0.3f, 0.3f, 0.65f) :
-                        ImVec4(0.2f + float(row) * 0.1f, 0.2f, 0.2f, 0.65f))
+                        float4(0.7f, 0.3f, 0.3f, 0.65f) :
+                        float4(0.2f + float(row) * 0.1f, 0.2f, 0.2f, 0.65f))
                     unsafe
                         TableSetBgColor(reinterpret<ImGuiTableBgTarget>(int(ImGuiTableBgTarget RowBg0) + row_bg_target), row_bg_color)
                 for column in range(5)
                     TableSetColumnIndex(column)
                     Text("{to_char('A' + row)}{to_char('0' + column)}")
                     if row >= 1 && row <= 2 && column >= 1 && column <= 2 && cell_bg_type == 1
-                        let cell_bg_color = GetColorU32(ImVec4(0.3f, 0.3f, 0.7f, 0.65f))
+                        let cell_bg_color = GetColorU32(float4(0.3f, 0.3f, 0.7f, 0.65f))
                         TableSetBgColor(ImGuiTableBgTarget CellBg, cell_bg_color)
             EndTable()
         TreePop()
@@ -3308,7 +3308,7 @@ def DasShowDemoWindowTables()
                 TableSetColumnIndex(column)
                 let column_name = TableGetColumnName(column)
                 PushID(column)
-                PushStyleVar(ImGuiStyleVar FramePadding, ImVec2(0., 0.))
+                PushStyleVar(ImGuiStyleVar FramePadding, float2(0., 0.))
                 Checkbox("##checkall", safe_addr(column_selected[column]))
                 PopStyleVar()
                 SameLine(0.0f, GetStyle().ItemInnerSpacing.x)
@@ -3434,7 +3434,7 @@ def DasShowDemoWindowTables()
         SameLine()
         DasHelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).")
         PopStyleCompact()
-        if BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 15.), 0.0f)
+        if BeginTable("table_sorting", 4, flags, float2(0.0f, TEXT_BASE_HEIGHT * 15.), 0.0f)
             TableSetupColumn("ID",       ImGuiTableColumnFlags DefaultSort          | ImGuiTableColumnFlags WidthFixed,   0.0f, uint(MyItemColumnID ID))
             TableSetupColumn("Name",                                                  ImGuiTableColumnFlags WidthFixed,   0.0f, uint(MyItemColumnID Name))
             TableSetupColumn("Action",   ImGuiTableColumnFlags NoSort               | ImGuiTableColumnFlags WidthFixed,   0.0f, uint(MyItemColumnID Action))
@@ -3479,7 +3479,7 @@ def DasShowDemoWindowTables()
             var freeze_cols = 1
             var freeze_rows = 1
             var items_count = length(template_items_names) * 2
-            var outer_size_value = ImVec2(0.0f, 0.0f)
+            var outer_size_value = float2(0.0f, 0.0f)
             var row_min_height = 0.0f
             var inner_width_with_scroll = 0.0f
             var outer_size_enabled = true
@@ -3598,11 +3598,11 @@ def DasShowDemoWindowTables()
                 item.Quantity = (template_n == 3) ? 10 : (template_n == 4) ? 20 : 0
         var parent_draw_list = GetWindowDrawList()
         let parent_draw_list_draw_cmd_count = parent_draw_list.CmdBuffer.length
-        var table_scroll_cur = ImVec2()
-        var table_scroll_max = ImVec2()
+        var table_scroll_cur = float2()
+        var table_scroll_max = float2()
         var table_draw_list : ImDrawList?
         let inner_width_to_use = (flags && ImGuiTableFlags ScrollX) ? inner_width_with_scroll : 0.0f
-        if BeginTable("table_advanced", 6, flags, outer_size_enabled ? outer_size_value : ImVec2(0., 0.), inner_width_to_use)
+        if BeginTable("table_advanced", 6, flags, outer_size_enabled ? outer_size_value : float2(0., 0.), inner_width_to_use)
             TableSetupColumn("ID",           ImGuiTableColumnFlags DefaultSort | ImGuiTableColumnFlags WidthFixed | ImGuiTableColumnFlags NoHide, 0.0f, uint(MyItemColumnID ID))
             TableSetupColumn("Name",         ImGuiTableColumnFlags WidthFixed, 0.0f, uint(MyItemColumnID Name))
             TableSetupColumn("Action",       ImGuiTableColumnFlags NoSort | ImGuiTableColumnFlags WidthFixed, 0.0f, uint(MyItemColumnID Action))
@@ -3637,12 +3637,12 @@ def DasShowDemoWindowTables()
                         elif contents_type == ContentsTypeEx CT_SmallButton
                             SmallButton(lab)
                         elif contents_type == ContentsTypeEx CT_FillButton
-                            Button(lab, ImVec2(-FLT_MIN, 0.0f))
+                            Button(lab, float2(-FLT_MIN, 0.0f))
                         elif contents_type == ContentsTypeEx CT_Selectable || contents_type == ContentsTypeEx CT_SelectableSpanRow
                             let selectable_flags = ((contents_type == ContentsTypeEx CT_SelectableSpanRow) ?
                                 ImGuiSelectableFlags SpanAllColumns | ImGuiSelectableFlags AllowItemOverlap :
                                     ImGuiSelectableFlags None)
-                            if Selectable(lab, item_is_selected, selectable_flags, ImVec2(0., row_min_height))
+                            if Selectable(lab, item_is_selected, selectable_flags, float2(0., row_min_height))
                                 if GetIO().KeyCtrl
                                     if item_is_selected
                                         let idx = selection |> find_index(item.ID)
@@ -3677,8 +3677,8 @@ def DasShowDemoWindowTables()
                         PopID()
                 clipper |> End()
             PopButtonRepeat()
-            table_scroll_cur = ImVec2(GetScrollX(), GetScrollY())
-            table_scroll_max = ImVec2(GetScrollMaxX(), GetScrollMaxY())
+            table_scroll_cur = float2(GetScrollX(), GetScrollY())
+            table_scroll_max = float2(GetScrollMaxX(), GetScrollMaxY())
             table_draw_list = GetWindowDrawList()
             EndTable()
         static_let <|
@@ -3798,7 +3798,7 @@ def DasShowDemoWindowColumns()
             Text("Avail {GetContentRegionAvail().x}")
             Text("Offset {GetColumnOffset()}")
             Text("Long text that is likely to clip")
-            Button("Button", ImVec2(-FLT_MIN, 0.0f))
+            Button("Button", float2(-FLT_MIN, 0.0f))
             NextColumn()
         Columns(1)
         if h_borders
@@ -3847,8 +3847,8 @@ def DasShowDemoWindowColumns()
         Separator()
         TreePop()
     if TreeNode("Horizontal Scrolling")
-        SetNextWindowContentSize(ImVec2(1500.0f, 0.0f))
-        var child_size = ImVec2(0., GetFontSize() * 20.0f)
+        SetNextWindowContentSize(float2(1500.0f, 0.0f))
+        var child_size = float2(0., GetFontSize() * 20.0f)
         BeginChild("##ScrollingRegion", child_size, false, ImGuiWindowFlags HorizontalScrollbar)
         Columns(10)
         let ITEMS_COUNT = 2000
@@ -3919,9 +3919,9 @@ def DasShowDemoWindowWidgets()
             if i > 0
                 SameLine()
             PushID(i)
-            PushStyleColor(ImGuiCol Button, ImVec4(HSV(float(i) / 7.0f, 0.6f, 0.6f)))
-            PushStyleColor(ImGuiCol ButtonHovered, ImVec4(HSV(float(i) / 7.0f, 0.7f, 0.7f)))
-            PushStyleColor(ImGuiCol ButtonActive, ImVec4(HSV(float(i) / 7.0f, 0.8f, 0.8f)))
+            PushStyleColor(ImGuiCol Button, HSV(float(i) / 7.0f, 0.6f, 0.6f))
+            PushStyleColor(ImGuiCol ButtonHovered, HSV(float(i) / 7.0f, 0.7f, 0.7f))
+            PushStyleColor(ImGuiCol ButtonActive, HSV(float(i) / 7.0f, 0.8f, 0.8f))
             Button("Click")
             PopStyleColor(3)
             PopID()
@@ -4165,8 +4165,8 @@ def DasShowDemoWindowWidgets()
 
     if TreeNode("Text")
         if TreeNode("Colorful Text")
-            TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Pink")
-            TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow")
+            TextColored(float4(1.0f, 0.0f, 1.0f, 1.0f), "Pink")
+            TextColored(float4(1.0f, 1.0f, 0.0f, 1.0f), "Yellow")
             TextDisabled("Disabled")
             SameLine()
             DasHelpMarker("The TextDisabled color is stored in ImGuiStyle.")
@@ -4183,8 +4183,8 @@ def DasShowDemoWindowWidgets()
             for n in range(2)
                 Text("Test paragraph {n}:")
                 var pos = GetCursorScreenPos()
-                var marker_min = ImVec2(pos.x + wrap_width, pos.y)
-                var marker_max = ImVec2(pos.x + wrap_width + 10., pos.y + GetTextLineHeight())
+                var marker_min = float2(pos.x + wrap_width, pos.y)
+                var marker_max = float2(pos.x + wrap_width + 10., pos.y + GetTextLineHeight())
                 PushTextWrapPos(GetCursorPos().x + wrap_width)
                 if n == 0
                     Text("The lazy dog is a good dog. This paragraph should fit within {wrap_width} pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.")
@@ -4220,11 +4220,11 @@ def DasShowDemoWindowWidgets()
         if true
             Text("{my_tex_w}x{my_tex_h}")
             var pos = GetCursorScreenPos()
-            var uv_min = ImVec2(0.0f, 0.0f)
-            var uv_max = ImVec2(1.0f, 1.0f)
-            var tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
-            var border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f)
-            Image(my_tex_id, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col)
+            var uv_min = float2(0.0f, 0.0f)
+            var uv_max = float2(1.0f, 1.0f)
+            var tint_col = float4(1.0f, 1.0f, 1.0f, 1.0f)
+            var border_col = float4(1.0f, 1.0f, 1.0f, 0.5f)
+            Image(my_tex_id, float2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col)
             if IsItemHovered()
                 BeginTooltip()
                 var region_sz = 32.0f
@@ -4241,9 +4241,9 @@ def DasShowDemoWindowWidgets()
                     region_y = my_tex_h - region_sz
                 Text("Min: ({region_x}, {region_y})")
                 Text("Max: ({region_x + region_sz}, region_y + region_sz)")
-                var uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h)
-                var uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h)
-                Image(my_tex_id, ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col)
+                var uv0 = float2((region_x) / my_tex_w, (region_y) / my_tex_h)
+                var uv1 = float2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h)
+                Image(my_tex_id, float2(region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col)
                 EndTooltip()
         TextWrapped("And now some textured buttons..")
         static_let <|
@@ -4251,11 +4251,11 @@ def DasShowDemoWindowWidgets()
         for i in range(8)
             PushID(i)
             var frame_padding = -1 + i
-            var size = ImVec2(32.0f, 32.0f)
-            var uv0 = ImVec2(0.0f, 0.0f)
-            var uv1 = ImVec2(32.0f / my_tex_w, 32.0f / my_tex_h)
-            var bg_col = ImVec4(0.0f, 0.0f, 0.0f, 1.0f)
-            var tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f)
+            var size = float2(32.0f, 32.0f)
+            var uv0 = float2(0.0f, 0.0f)
+            var uv1 = float2(32.0f / my_tex_w, 32.0f / my_tex_h)
+            var bg_col = float4(0.0f, 0.0f, 0.0f, 1.0f)
+            var tint_col = float4(1.0f, 1.0f, 1.0f, 1.0f)
             if ImageButton(my_tex_id, size, uv0, uv1, frame_padding, bg_col, tint_col)
                 pressed_count += 1;
             PopID()
@@ -4313,7 +4313,7 @@ def DasShowDemoWindowWidgets()
                     SetItemDefaultFocus()
             EndListBox()
         Text("Full-width:")
-        if BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 5. * GetTextLineHeightWithSpacing()))
+        if BeginListBox("##listbox 2", float2(-FLT_MIN, 5. * GetTextLineHeightWithSpacing()))
             for n in range(length(items))
                 let is_selected = (item_current_idx == n)
                 if Selectable(items[n], is_selected)
@@ -4390,13 +4390,13 @@ def DasShowDemoWindowWidgets()
             let time = float(GetTime())
             let winning_state = find_index(selected,0)==0
             if winning_state
-                PushStyleVar(ImGuiStyleVar SelectableTextAlign, ImVec2(0.5f + 0.5f * cos(time * 2.0f), 0.5f + 0.5f * sin(time * 3.0f)))
+                PushStyleVar(ImGuiStyleVar SelectableTextAlign, float2(0.5f + 0.5f * cos(time * 2.0f), 0.5f + 0.5f * sin(time * 3.0f)))
             for y in range(4)
                 for x in range(4)
                     if x > 0
                         SameLine()
                     PushID(y * 4 + x)
-                    if Selectable("Sailor", selected[y*4+x] != 0, ImGuiSelectableFlags None, ImVec2(50., 50.))
+                    if Selectable("Sailor", selected[y*4+x] != 0, ImGuiSelectableFlags None, float2(50., 50.))
                         selected[y*4+x] ^= 1
                         if x > 0
                             selected[y*4 + x - 1] ^= 1
@@ -4419,11 +4419,11 @@ def DasShowDemoWindowWidgets()
                 var selected = [[bool[3*3] true; false; true; false; true; false; true; false; true ]]
             for y in range(3)
                 for x in range(3)
-                    var alignment = ImVec2(float(x) / 2.0f, float(y) / 2.0f)
+                    var alignment = float2(float(x) / 2.0f, float(y) / 2.0f)
                     if x > 0
                         SameLine()
                     PushStyleVar(ImGuiStyleVar SelectableTextAlign, alignment)
-                    Selectable("({alignment.x},{alignment.y})", safe_addr(selected[3 * y + x]), ImGuiSelectableFlags None, ImVec2(80., 80.))
+                    Selectable("({alignment.x},{alignment.y})", safe_addr(selected[3 * y + x]), ImGuiSelectableFlags None, float2(80., 80.))
                     PopStyleVar()
             TreePop()
         TreePop()
@@ -4450,7 +4450,7 @@ def DasShowDemoWindowWidgets()
             CheckboxFlags("ImGuiInputTextFlags ReadOnly", safe_addr(flags), ImGuiInputTextFlags ReadOnly)
             CheckboxFlags("ImGuiInputTextFlags AllowTabInput", safe_addr(flags), ImGuiInputTextFlags AllowTabInput)
             CheckboxFlags("ImGuiInputTextFlags CtrlEnterForNewLine", safe_addr(flags), ImGuiInputTextFlags CtrlEnterForNewLine)
-            InputTextMultiline("##source", text, ImVec2(-FLT_MIN, GetTextLineHeight() * 16.), flags)
+            InputTextMultiline("##source", text, float2(-FLT_MIN, GetTextLineHeight() * 16.), flags)
             TreePop()
         if TreeNode("Filtered Text Input")
             static_let <|
@@ -4517,7 +4517,7 @@ def DasShowDemoWindowWidgets()
                         unsafe
                             data.Buf = reinterpret<string> addr(it.buffer[0])
                     return 0
-            InputTextMultiline("##MyStr", m_str, ImVec2(-FLT_MIN, GetTextLineHeight() * 16.), ImGuiInputTextFlags CallbackResize)
+            InputTextMultiline("##MyStr", m_str, float2(-FLT_MIN, GetTextLineHeight() * 16.), ImGuiInputTextFlags CallbackResize)
             unsafe
                 let pbuf = intptr(addr(m_str.buffer[0]))
                 Text("Data: {pbuf}\nSize: {length(m_str.buffer)}\nCapacity: {capacity(m_str.buffer)}")
@@ -4640,8 +4640,8 @@ def DasShowDemoWindowWidgets()
             for val in values
                 average += val
             average /= float(length(values))
-            PlotLines("Lines", values, values_offset, "avg {average}", -1.0f, 1.0f, ImVec2(0., 80.0f))
-        PlotHistogram("Histogram", arr, 0, "", 0.0f, 1.0f, ImVec2(0., 80.0f))
+            PlotLines("Lines", values, values_offset, "avg {average}", -1.0f, 1.0f, float2(0., 80.0f))
+        PlotHistogram("Histogram", arr, 0, "", 0.0f, 1.0f, float2(0., 80.0f))
         static_let <|
             var Sin <- ImGuiPlotGetter() <| @ ( i )
                 return sin(float(i)*0.1)
@@ -4654,8 +4654,8 @@ def DasShowDemoWindowWidgets()
         Combo("func", safe_addr(func_type), [[string "Sin"; "Saw"]])
         SameLine()
         SliderInt("Sample count", safe_addr(display_count), 1, 400)
-        PlotLines("Lines", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, ImVec2(0., 80.))
-        PlotHistogram("Histogram", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, ImVec2(0., 80.))
+        PlotLines("Lines", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, float2(0., 80.))
+        PlotHistogram("Histogram", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, float2(0., 80.))
         Separator()
         static_let <|
             var progress = 0.0f
@@ -4668,16 +4668,16 @@ def DasShowDemoWindowWidgets()
             if progress <= -0.1f
                 progress = -0.1f
                 progress_dir *= -1.0f
-        ProgressBar(progress, ImVec2(0.0f, 0.0f))
+        ProgressBar(progress, float2(0.0f, 0.0f))
         SameLine(0.0f, GetStyle().ItemInnerSpacing.x)
         Text("Progress Bar")
         var progress_saturated = clamp(progress, 0.0f, 1.0f)
-        ProgressBar(progress, ImVec2(0.f, 0.f), "{int(progress_saturated * 1753.)}{1753}")
+        ProgressBar(progress, float2(0.f, 0.f), "{int(progress_saturated * 1753.)}{1753}")
         TreePop()
 
     if TreeNode("Color/Picker Widgets")
         static_let <|
-            var color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f)
+            var color = float4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f)
             var alpha_preview = true
             var alpha_half_preview = false
             var drag_and_drop = true
@@ -4725,7 +4725,7 @@ def DasShowDemoWindowWidgets()
                 saved_palette[n].w = 1.0f
             saved_palette_init = false
         static_let <|
-            var backup_color = ImVec4()
+            var backup_color = float4()
         var open_popup = ColorButton("MyColor##3b", color, misc_flags)
         SameLine(0., GetStyle().ItemInnerSpacing.x)
         open_popup = Button("Palette") || open_popup
@@ -4739,9 +4739,9 @@ def DasShowDemoWindowWidgets()
             SameLine()
             BeginGroup()
             Text("Current")
-            ColorButton("##current", color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60., 40.))
+            ColorButton("##current", color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, float2(60., 40.))
             Text("Previous")
-            if ColorButton("##previous", backup_color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60., 40.))
+            if ColorButton("##previous", backup_color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, float2(60., 40.))
                 color = backup_color
             Separator()
             Text("Palette")
@@ -4750,9 +4750,9 @@ def DasShowDemoWindowWidgets()
                 if (n % 8) != 0
                     SameLine(0.0f, GetStyle().ItemSpacing.y)
                 var palette_button_flags = ImGuiColorEditFlags NoAlpha | ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags NoTooltip;
-                var cc = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, saved_palette[n].w)
-                if ColorButton("##palette", cc, palette_button_flags, ImVec2(20., 20.))
-                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w)
+                var cc = float4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, saved_palette[n].w)
+                if ColorButton("##palette", cc, palette_button_flags, float2(20., 20.))
+                    color = float4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w)
                 if BeginDragDropTarget()
                     if true
                         var payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_3F)
@@ -4772,14 +4772,14 @@ def DasShowDemoWindowWidgets()
         static_let <|
             var no_border = false
         Checkbox("ImGuiColorEditFlags NoBorder", safe_addr(no_border))
-        ColorButton("MyColor##3c", color, misc_flags | (no_border ? ImGuiColorEditFlags NoBorder : ImGuiColorEditFlags None), ImVec2(80., 80.))
+        ColorButton("MyColor##3c", color, misc_flags | (no_border ? ImGuiColorEditFlags NoBorder : ImGuiColorEditFlags None), float2(80., 80.))
         Text("Color picker:")
         static_let <|
             var alpha = true
             var alpha_bar = true
             var side_preview = true
             var ref_color = false
-            var ref_color_v = ImVec4(1.0f, 0.0f, 1.0f, 0.5f)
+            var ref_color_v = float4(1.0f, 0.0f, 1.0f, 0.5f)
             var display_mode = 0
             var picker_mode = 0
         Checkbox("With Alpha", safe_addr(alpha))
@@ -4832,7 +4832,7 @@ def DasShowDemoWindowWidgets()
         if Button("Default: Float + HDR + Hue Wheel")
             SetColorEditOptions(ImGuiColorEditFlags Float | ImGuiColorEditFlags HDR | ImGuiColorEditFlags PickerHueWheel)
         static_let <|
-            var color_hsv = ImVec4(0.23f, 1.0f, 1.0f, 1.0f)
+            var color_hsv = float4(0.23f, 1.0f, 1.0f, 1.0f)
         Spacing()
         Text("HSV encoded colors")
         SameLine()
@@ -5054,10 +5054,10 @@ def DasShowDemoWindowWidgets()
 
     if TreeNode("Vertical Sliders")
         let spacing = 4.
-        PushStyleVar(ImGuiStyleVar ItemSpacing, ImVec2(spacing, spacing))
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(spacing, spacing))
         static_let <|
             var int_value = 0
-        VSliderInt("##int", ImVec2(18., 160.), safe_addr(int_value), 0, 5)
+        VSliderInt("##int", float2(18., 160.), safe_addr(int_value), 0, 5)
         SameLine()
         static_let <|
             var values = [[float 0.0f; 0.60f; 0.35f; 0.9f; 0.70f; 0.20f; 0.0f ]]
@@ -5066,11 +5066,11 @@ def DasShowDemoWindowWidgets()
             if i > 0
                 SameLine()
             PushID(i)
-            PushStyleColor(ImGuiCol FrameBg, ImVec4(HSV(float(i) / 7.0f, 0.5f, 0.5f)))
-            PushStyleColor(ImGuiCol FrameBgHovered, ImVec4(HSV(float(i) / 7.0f, 0.6f, 0.5f)))
-            PushStyleColor(ImGuiCol FrameBgActive, ImVec4(HSV(float(i) / 7.0f, 0.7f, 0.5f)))
-            PushStyleColor(ImGuiCol SliderGrab, ImVec4(HSV(float(i) / 7.0f, 0.9f, 0.9f)))
-            VSliderFloat("##v", ImVec2(18., 160.), safe_addr(values[i]), 0.0f, 1.0f, "")
+            PushStyleColor(ImGuiCol FrameBg, HSV(float(i) / 7.0f, 0.5f, 0.5f))
+            PushStyleColor(ImGuiCol FrameBgHovered, HSV(float(i) / 7.0f, 0.6f, 0.5f))
+            PushStyleColor(ImGuiCol FrameBgActive, HSV(float(i) / 7.0f, 0.7f, 0.5f))
+            PushStyleColor(ImGuiCol SliderGrab, HSV(float(i) / 7.0f, 0.9f, 0.9f))
+            VSliderFloat("##v", float2(18., 160.), safe_addr(values[i]), 0.0f, 1.0f, "")
             if IsItemActive() || IsItemHovered()
                 SetTooltip("{values[i]}")
             PopStyleColor(4)
@@ -5081,7 +5081,7 @@ def DasShowDemoWindowWidgets()
         static_let <|
             var values2 = [[float 0.20f; 0.80f; 0.40f; 0.25f]]
         let rows = 3
-        let small_slider_size = ImVec2(18., floor((160.0f - float(rows - 1) * spacing) / float(rows)))
+        let small_slider_size = float2(18., floor((160.0f - float(rows - 1) * spacing) / float(rows)))
         for nx in range(4)
             if nx > 0
                 SameLine()
@@ -5101,7 +5101,7 @@ def DasShowDemoWindowWidgets()
                 SameLine()
             PushID(i)
             PushStyleVar(ImGuiStyleVar GrabMinSize, 40.)
-            VSliderFloat("##v", ImVec2(40., 160.), safe_addr(values[i]), 0.0f, 1.0f, "%.2f\nsec")
+            VSliderFloat("##v", float2(40., 160.), safe_addr(values[i]), 0.0f, 1.0f, "%.2f\nsec")
             PopStyleVar()
             PopID()
         PopID()
@@ -5138,7 +5138,7 @@ def DasShowDemoWindowWidgets()
                 PushID(n)
                 if (n % 3) != 0
                     SameLine()
-                Button(names[n], ImVec2(60., 60.))
+                Button(names[n], float2(60., 60.))
                 if BeginDragDropSource(ImGuiDragDropFlags None)
                     SetDragDropPayload("DND_DEMO_CELL", safe_addr(n), 4ul)
                     if mode == Mode Copy
@@ -5262,7 +5262,7 @@ def DasShowDemoWindowWidgets()
             var embed_all_inside_a_child_window = false
         Checkbox("Embed everything inside a child window (for additional testing)", safe_addr(embed_all_inside_a_child_window))
         if embed_all_inside_a_child_window
-            BeginChild("outer_child", ImVec2(0., GetFontSize() * 20.0f), true)
+            BeginChild("outer_child", float2(0., GetFontSize() * 20.0f), true)
         BulletText(
             "IsWindowFocused() = {IsWindowFocused()}\n" +
             "IsWindowFocused(_ChildWindows) = {IsWindowFocused(ImGuiFocusedFlags ChildWindows)}\n" +
@@ -5279,7 +5279,7 @@ def DasShowDemoWindowWidgets()
             "IsWindowHovered(_RootWindow) = {IsWindowHovered(ImGuiHoveredFlags RootWindow)}\n"+
             "IsWindowHovered(_AnyWindow) = {IsWindowHovered(ImGuiHoveredFlags AnyWindow)}\n")
 
-        BeginChild("child", ImVec2(0., 50.), true)
+        BeginChild("child", float2(0., 50.), true)
         Text("This is another child window for testing the _ChildWindows flag.")
         EndChild()
         if embed_all_inside_a_child_window

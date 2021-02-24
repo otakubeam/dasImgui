@@ -250,7 +250,7 @@ addExtern<DAS_CALL_METHOD(_GetDebugName_method_58)>(*this, lib, "GetDebugName",S
 	->args({"self",})
 ;
 using _CalcTextSizeA_method_59 = DAS_CALL_MEMBER(ImFont::CalcTextSizeA);
-addExtern<DAS_CALL_METHOD(_CalcTextSizeA_method_59), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "CalcTextSizeA",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImFont::CalcTextSizeA))
+addExtern<DAS_CALL_METHOD(_CalcTextSizeA_method_59)>(*this, lib, "CalcTextSizeA",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImFont::CalcTextSizeA))
 	->args({"self","size","max_width","wrap_width","text_begin","text_end","remaining"})
 		->arg_init(5,make_smart<ExprConstString>(""))
 		->arg_init(6,make_smart<ExprConstPtr>())
@@ -351,11 +351,11 @@ addExtern<DAS_CALL_METHOD(_HasSelection_method_82)>(*this, lib, "HasSelection",S
 	->args({"self",})
 ;
 using _GetCenter_method_83 = DAS_CALL_MEMBER(ImGuiViewport::GetCenter);
-addExtern<DAS_CALL_METHOD(_GetCenter_method_83), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetCenter",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImGuiViewport::GetCenter))
+addExtern<DAS_CALL_METHOD(_GetCenter_method_83)>(*this, lib, "GetCenter",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImGuiViewport::GetCenter))
 	->args({"self",})
 ;
 using _GetWorkCenter_method_84 = DAS_CALL_MEMBER(ImGuiViewport::GetWorkCenter);
-addExtern<DAS_CALL_METHOD(_GetWorkCenter_method_84), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetWorkCenter",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImGuiViewport::GetWorkCenter))
+addExtern<DAS_CALL_METHOD(_GetWorkCenter_method_84)>(*this, lib, "GetWorkCenter",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImGuiViewport::GetWorkCenter))
 	->args({"self",})
 ;
 using _IsPacked_method_85 = DAS_CALL_MEMBER(ImFontAtlasCustomRect::IsPacked);
@@ -488,11 +488,11 @@ addExtern<DAS_CALL_METHOD(_PopTextureID_method_114)>(*this, lib, "PopTextureID",
 	->args({"self",})
 ;
 using _GetClipRectMin_method_115 = DAS_CALL_MEMBER(ImDrawList::GetClipRectMin);
-addExtern<DAS_CALL_METHOD(_GetClipRectMin_method_115), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetClipRectMin",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::GetClipRectMin))
+addExtern<DAS_CALL_METHOD(_GetClipRectMin_method_115)>(*this, lib, "GetClipRectMin",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::GetClipRectMin))
 	->args({"self",})
 ;
 using _GetClipRectMax_method_116 = DAS_CALL_MEMBER(ImDrawList::GetClipRectMax);
-addExtern<DAS_CALL_METHOD(_GetClipRectMax_method_116), SimNode_ExtFuncCallAndCopyOrMove>(*this, lib, "GetClipRectMax",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::GetClipRectMax))
+addExtern<DAS_CALL_METHOD(_GetClipRectMax_method_116)>(*this, lib, "GetClipRectMax",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::GetClipRectMax))
 	->args({"self",})
 ;
 using _AddLine_method_117 = DAS_CALL_MEMBER(ImDrawList::AddLine);
