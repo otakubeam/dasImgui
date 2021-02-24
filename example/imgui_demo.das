@@ -4670,181 +4670,178 @@ def DasShowDemoWindowWidgets()
         ProgressBar(progress, ImVec2(0.f, 0.f), "{int(progress_saturated * 1753.)}{1753}")
         TreePop()
 
-/*
-    if (TreeNode("Color/Picker Widgets"))
-    {
-        static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f)
-
-        static bool alpha_preview = true;
-        static bool alpha_half_preview = false;
-        static bool drag_and_drop = true;
-        static bool options_menu = true;
-        static bool hdr = false;
-        Checkbox("With Alpha Preview", &alpha_preview)
-        Checkbox("With Half Alpha Preview", &alpha_half_preview)
-        Checkbox("With Drag and Drop", &drag_and_drop)
-        Checkbox("With Options Menu", &options_menu) SameLine() HelpMarker("Right-click on the individual color widget to show options.")
-        Checkbox("With HDR", &hdr) SameLine() HelpMarker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
-        ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags NoOptions)
-
+    if TreeNode("Color/Picker Widgets")
+        static_let <|
+            var color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f)
+            var alpha_preview = true
+            var alpha_half_preview = false
+            var drag_and_drop = true
+            var options_menu = true
+            var hdr = false
+        Checkbox("With Alpha Preview", safe_addr(alpha_preview))
+        Checkbox("With Half Alpha Preview", safe_addr(alpha_half_preview))
+        Checkbox("With Drag and Drop", safe_addr(drag_and_drop))
+        Checkbox("With Options Menu", safe_addr(options_menu))
+        SameLine()
+        DasHelpMarker("Right-click on the individual color widget to show options.")
+        Checkbox("With HDR", safe_addr(hdr))
+        SameLine()
+        DasHelpMarker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
+        var misc_flags = (
+                (hdr ? ImGuiColorEditFlags HDR : ImGuiColorEditFlags None) |
+                (drag_and_drop ? ImGuiColorEditFlags None : ImGuiColorEditFlags NoDragDrop) |
+                (alpha_half_preview ? ImGuiColorEditFlags AlphaPreviewHalf :
+                    (alpha_preview ? ImGuiColorEditFlags AlphaPreview : ImGuiColorEditFlags None)) |
+                (options_menu ? ImGuiColorEditFlags None : ImGuiColorEditFlags NoOptions))
         Text("Color widget:")
-        SameLine() HelpMarker(
-            "Click on the color square to open a color picker.\n"
+        SameLine()
+        DasHelpMarker(
+            "Click on the color square to open a color picker.\n" +
             "CTRL+click on individual component to input value.\n")
-        ColorEdit3("MyColor##1", (float*)&color, misc_flags)
-
+        ColorEdit3("MyColor##1", safe_addr(color.x), misc_flags)
         Text("Color widget HSV with Alpha:")
-        ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags DisplayHSV | misc_flags)
-
+        ColorEdit4("MyColor##2", safe_addr(color.x), ImGuiColorEditFlags DisplayHSV | misc_flags)
         Text("Color widget with Float Display:")
-        ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags Float | misc_flags)
-
+        ColorEdit4("MyColor##2f", safe_addr(color.x), ImGuiColorEditFlags Float | misc_flags)
         Text("Color button with Picker:")
-        SameLine() HelpMarker(
-            "With the ImGuiColorEditFlags NoInputs flag you can hide all the slider/text inputs.\n"
-            "With the ImGuiColorEditFlags NoLabel flag you can pass a non-empty label which will only "
+        SameLine()
+        DasHelpMarker(
+            "With the ImGuiColorEditFlags NoInputs flag you can hide all the slider/text inputs.\n" +
+            "With the ImGuiColorEditFlags NoLabel flag you can pass a non-empty label which will only " +
             "be used for the tooltip and picker popup.")
-        ColorEdit4("MyColor##3", (float*)&color, ImGuiColorEditFlags NoInputs | ImGuiColorEditFlags NoLabel | misc_flags)
-
+        ColorEdit4("MyColor##3", safe_addr(color.x), ImGuiColorEditFlags NoInputs | ImGuiColorEditFlags NoLabel | misc_flags)
         Text("Color button with Custom Picker Popup:")
-
-        // Generate a default palette. The palette will persist and can be edited.
-        static bool saved_palette_init = true;
-        static ImVec4 saved_palette[32] = {};
-        if (saved_palette_init)
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(saved_palette) n++)
-            {
-                ColorConvertHSVtoRGB(n / 31.0f, 0.8f, 0.8f,
-                    saved_palette[n].x, saved_palette[n].y, saved_palette[n].z)
-                saved_palette[n].w = 1.0f; // Alpha
-            }
-            saved_palette_init = false;
-        }
-
-        static ImVec4 backup_color;
-        bool open_popup = ColorButton("MyColor##3b", color, misc_flags)
-        SameLine(0, GetStyle().ItemInnerSpacing.x)
-        open_popup |= Button("Palette")
+        static_let <|
+            var saved_palette_init = true
+            var saved_palette : float4[32]
+        if saved_palette_init
+            for n in range(length(saved_palette))
+                ColorConvertHSVtoRGB(float(n) / 31.0f, 0.8f, 0.8f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z)
+                saved_palette[n].w = 1.0f
+            saved_palette_init = false
+        static_let <|
+            var backup_color = ImVec4()
+        var open_popup = ColorButton("MyColor##3b", color, misc_flags)
+        SameLine(0., GetStyle().ItemInnerSpacing.x)
+        open_popup = Button("Palette") || open_popup
         if (open_popup)
-        {
             OpenPopup("mypicker")
-            backup_color = color;
-        }
-        if (BeginPopup("mypicker"))
-        {
+            backup_color = color
+        if BeginPopup("mypicker")
             Text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
             Separator()
-            ColorPicker4("##picker", (float*)&color, misc_flags | ImGuiColorEditFlags NoSidePreview | ImGuiColorEditFlags NoSmallPreview)
+            ColorPicker4("##picker", safe_addr(color.x), misc_flags | ImGuiColorEditFlags NoSidePreview | ImGuiColorEditFlags NoSmallPreview)
             SameLine()
-
-            BeginGroup() // Lock X position
+            BeginGroup()
             Text("Current")
-            ColorButton("##current", color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60, 40))
+            ColorButton("##current", color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60., 40.))
             Text("Previous")
-            if (ColorButton("##previous", backup_color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60, 40)))
-                color = backup_color;
+            if ColorButton("##previous", backup_color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60., 40.))
+                color = backup_color
             Separator()
             Text("Palette")
-            for (int n = 0; n < IM_ARRAYSIZE(saved_palette) n++)
-            {
+            for n in range(length(saved_palette))
                 PushID(n)
-                if ((n % 8) != 0)
+                if (n % 8) != 0
                     SameLine(0.0f, GetStyle().ItemSpacing.y)
-
-                ImGuiColorEditFlags palette_button_flags = ImGuiColorEditFlags NoAlpha | ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags NoTooltip;
-                if (ColorButton("##palette", saved_palette[n], palette_button_flags, ImVec2(20, 20)))
-                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w) // Preserve alpha!
-
-                // Allow user to drop colors into each palette entry. Note that ColorButton() is already a
-                // drag source by default, unless specifying the ImGuiColorEditFlags NoDragDrop flag.
-                if (BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_3F))
-                        memcpy((float*)&saved_palette[n], payload->Data, sizeof(float) * 3)
-                    if (const ImGuiPayload* payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_4F))
-                        memcpy((float*)&saved_palette[n], payload->Data, sizeof(float) * 4)
+                var palette_button_flags = ImGuiColorEditFlags NoAlpha | ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags NoTooltip;
+                var cc = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, saved_palette[n].w)
+                if ColorButton("##palette", cc, palette_button_flags, ImVec2(20., 20.))
+                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w)
+                if BeginDragDropTarget()
+                    if true
+                        var payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_3F)
+                        if payload != null
+                            unsafe
+                                memcpy(addr(saved_palette[n]), payload.Data, 4 * 3)
+                    if true
+                        var payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_4F)
+                        if payload != null
+                            unsafe
+                                memcpy(addr(saved_palette[n]), payload.Data, 4 * 4)
                     EndDragDropTarget()
-                }
-
                 PopID()
-            }
             EndGroup()
             EndPopup()
-        }
-
         Text("Color button only:")
-        static bool no_border = false;
-        Checkbox("ImGuiColorEditFlags NoBorder", &no_border)
-        ColorButton("MyColor##3c", *(ImVec4*)&color, misc_flags | (no_border ? ImGuiColorEditFlags NoBorder : 0), ImVec2(80, 80))
-
+        static_let <|
+            var no_border = false
+        Checkbox("ImGuiColorEditFlags NoBorder", safe_addr(no_border))
+        ColorButton("MyColor##3c", color, misc_flags | (no_border ? ImGuiColorEditFlags NoBorder : ImGuiColorEditFlags None), ImVec2(80., 80.))
         Text("Color picker:")
-        static bool alpha = true;
-        static bool alpha_bar = true;
-        static bool side_preview = true;
-        static bool ref_color = false;
-        static ImVec4 ref_color_v(1.0f, 0.0f, 1.0f, 0.5f)
-        static int display_mode = 0;
-        static int picker_mode = 0;
-        Checkbox("With Alpha", &alpha)
-        Checkbox("With Alpha Bar", &alpha_bar)
-        Checkbox("With Side Preview", &side_preview)
-        if (side_preview)
-        {
+        static_let <|
+            var alpha = true
+            var alpha_bar = true
+            var side_preview = true
+            var ref_color = false
+            var ref_color_v = ImVec4(1.0f, 0.0f, 1.0f, 0.5f)
+            var display_mode = 0
+            var picker_mode = 0
+        Checkbox("With Alpha", safe_addr(alpha))
+        Checkbox("With Alpha Bar", safe_addr(alpha_bar))
+        Checkbox("With Side Preview", safe_addr(side_preview))
+        if side_preview
             SameLine()
-            Checkbox("With Ref Color", &ref_color)
-            if (ref_color)
-            {
+            Checkbox("With Ref Color", safe_addr(ref_color))
+            if ref_color
                 SameLine()
-                ColorEdit4("##RefColor", &ref_color_v.x, ImGuiColorEditFlags NoInputs | misc_flags)
-            }
-        }
-        Combo("Display Mode", &display_mode, "Auto/Current\0None\0RGB Only\0HSV Only\0Hex Only\0")
-        SameLine() HelpMarker(
-            "ColorEdit defaults to displaying RGB inputs if you don't specify a display mode, "
-            "but the user can change it with a right-click.\n\nColorPicker defaults to displaying RGB+HSV+Hex "
+                ColorEdit4("##RefColor", safe_addr(ref_color_v.x), ImGuiColorEditFlags NoInputs | misc_flags)
+        Combo("Display Mode", safe_addr(display_mode), [[string "Auto/Current";"None";"RGB Only";"HSV Only";"Hex Only"]])
+        SameLine()
+        DasHelpMarker(
+            "ColorEdit defaults to displaying RGB inputs if you don't specify a display mode, " +
+            "but the user can change it with a right-click.\n\nColorPicker defaults to displaying RGB+HSV+Hex " +
             "if you don't specify a display mode.\n\nYou can change the defaults using SetColorEditOptions().")
-        Combo("Picker Mode", &picker_mode, "Auto/Current\0Hue bar + SV rect\0Hue wheel + SV triangle\0")
-        SameLine() HelpMarker("User can right-click the picker to change mode.")
-        ImGuiColorEditFlags flags = misc_flags;
-        if (!alpha)            flags |= ImGuiColorEditFlags NoAlpha;        // This is by default if you call ColorPicker3() instead of ColorPicker4()
-        if (alpha_bar)         flags |= ImGuiColorEditFlags AlphaBar;
-        if (!side_preview)     flags |= ImGuiColorEditFlags NoSidePreview;
-        if (picker_mode == 1)  flags |= ImGuiColorEditFlags PickerHueBar;
-        if (picker_mode == 2)  flags |= ImGuiColorEditFlags PickerHueWheel;
-        if (display_mode == 1) flags |= ImGuiColorEditFlags NoInputs;       // Disable all RGB/HSV/Hex displays
-        if (display_mode == 2) flags |= ImGuiColorEditFlags DisplayRGB;     // Override display mode
-        if (display_mode == 3) flags |= ImGuiColorEditFlags DisplayHSV;
-        if (display_mode == 4) flags |= ImGuiColorEditFlags DisplayHex;
-        ColorPicker4("MyColor##4", (float*)&color, flags, ref_color ? &ref_color_v.x : NULL)
-
+        Combo("Picker Mode", safe_addr(picker_mode), [[string "Auto/Current"; "Hue bar + SV rect"; "Hue wheel + SV triangle"]])
+        SameLine()
+        DasHelpMarker("User can right-click the picker to change mode.")
+        var flags = misc_flags
+        if !alpha
+            flags |= ImGuiColorEditFlags NoAlpha
+        if alpha_bar
+            flags |= ImGuiColorEditFlags AlphaBar
+        if !side_preview
+            flags |= ImGuiColorEditFlags NoSidePreview
+        if picker_mode == 1
+            flags |= ImGuiColorEditFlags PickerHueBar
+        if picker_mode == 2
+            flags |= ImGuiColorEditFlags PickerHueWheel
+        if display_mode == 1
+            flags |= ImGuiColorEditFlags NoInputs
+        if display_mode == 2
+            flags |= ImGuiColorEditFlags DisplayRGB
+        if display_mode == 3
+            flags |= ImGuiColorEditFlags DisplayHSV
+        if display_mode == 4
+            flags |= ImGuiColorEditFlags DisplayHex
+        ColorPicker4("MyColor##4", safe_addr(color.x), flags, ref_color ? safe_addr(ref_color_v.x) : null)
         Text("Set defaults in code:")
-        SameLine() HelpMarker(
-            "SetColorEditOptions() is designed to allow you to set boot-time default.\n"
-            "We don't have Push/Pop functions because you can force options on a per-widget basis if needed,"
-            "and the user can change non-forced ones with the options menu.\nWe don't have a getter to avoid"
+        SameLine()
+        DasHelpMarker(
+            "SetColorEditOptions() is designed to allow you to set boot-time default.\n" +
+            "We don't have Push/Pop functions because you can force options on a per-widget basis if needed," +
+            "and the user can change non-forced ones with the options menu.\nWe don't have a getter to avoid" +
             "encouraging you to persistently save values that aren't forward-compatible.")
-        if (Button("Default: Uint8 + HSV + Hue Bar"))
+        if Button("Default: Uint8 + HSV + Hue Bar")
             SetColorEditOptions(ImGuiColorEditFlags Uint8 | ImGuiColorEditFlags DisplayHSV | ImGuiColorEditFlags PickerHueBar)
-        if (Button("Default: Float + HDR + Hue Wheel"))
+        if Button("Default: Float + HDR + Hue Wheel")
             SetColorEditOptions(ImGuiColorEditFlags Float | ImGuiColorEditFlags HDR | ImGuiColorEditFlags PickerHueWheel)
-
-        // HSV encoded support (to avoid RGB<>HSV round trips and singularities when S==0 or V==0)
-        static ImVec4 color_hsv(0.23f, 1.0f, 1.0f, 1.0f) // Stored as HSV!
+        static_let <|
+            var color_hsv = ImVec4(0.23f, 1.0f, 1.0f, 1.0f)
         Spacing()
         Text("HSV encoded colors")
-        SameLine() HelpMarker(
-            "By default, colors are given to ColorEdit and ColorPicker in RGB, but ImGuiColorEditFlags InputHSV"
-            "allows you to store colors as HSV and pass them to ColorEdit and ColorPicker as HSV. This comes with the"
+        SameLine()
+        DasHelpMarker(
+            "By default, colors are given to ColorEdit and ColorPicker in RGB, but ImGuiColorEditFlags InputHSV" +
+            "allows you to store colors as HSV and pass them to ColorEdit and ColorPicker as HSV. This comes with the" +
             "added benefit that you can manipulate hue values with the picker even when saturation or value are zero.")
         Text("Color widget with InputHSV:")
-        ColorEdit4("HSV shown as RGB##1", (float*)&color_hsv, ImGuiColorEditFlags DisplayRGB | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
-        ColorEdit4("HSV shown as HSV##1", (float*)&color_hsv, ImGuiColorEditFlags DisplayHSV | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
-        DragFloat4("Raw HSV values", (float*)&color_hsv, 0.01f, 0.0f, 1.0f)
-
+        ColorEdit4("HSV shown as RGB##1", safe_addr(color_hsv.x), ImGuiColorEditFlags DisplayRGB | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
+        ColorEdit4("HSV shown as HSV##1", safe_addr(color_hsv.x), ImGuiColorEditFlags DisplayHSV | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
+        DragFloat4("Raw HSV values", safe_addr(color_hsv.x), 0.01f, 0.0f, 1.0f)
         TreePop()
-    }
 
+/*
     if (TreeNode("Drag/Slider Flags"))
     {
         // Demonstrate using advanced flags for DragXXX and SliderXXX functions. Note that the flags are the same!

@@ -11,6 +11,10 @@ require rtti
 require strings
 require math
 
+let IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+
+let IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+
 // note - this has to correspond to C++ das::DasImguiInputText structure
 struct ImGuiInputTextBuffer
     context : Context?
