@@ -83,7 +83,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${glfw_INCLUDE_DIR}
 		)
 		SETUP_CPP11(libDasModuleImGuiApp)
-		IF(NOT Vulkan_FOUND)
+		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../../dasVulkan/include/dasVulkan/module.h"))
 			MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
 		ELSE()
 			# libDasModuleImGuiVulkan

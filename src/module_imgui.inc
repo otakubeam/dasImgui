@@ -63,7 +63,8 @@ addExtern<DAS_BIND_FUN(ImGui::EndPopup)>(*this, lib, "EndPopup",SideEffects::wor
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsItemHovered)>(*this, lib, "IsItemHovered",SideEffects::worstDefault, "ImGui::IsItemHovered")
 	->args({"flags"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiHoveredFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiHoveredFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputScalar)>(*this, lib, "InputScalar",SideEffects::worstDefault, "ImGui::InputScalar")
 	->args({"label","data_type","p_data","p_step","p_step_fast","format","flags"})
@@ -357,7 +358,8 @@ addExtern<bool (*)(const char *, ImGuiMouseButton, bool),ImGui::BeginPopupContex
 ;
 addExtern<DAS_BIND_FUN(ImGui::BeginDragDropSource)>(*this, lib, "BeginDragDropSource",SideEffects::worstDefault, "ImGui::BeginDragDropSource")
 	->args({"flags"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiDragDropFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetTime)>(*this, lib, "GetTime",SideEffects::worstDefault, "ImGui::GetTime")
 	->args({})
@@ -1034,7 +1036,8 @@ addExtern<void (*)(const char *, float (*)(void *, int), void *, int, int, const
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsWindowHovered)>(*this, lib, "IsWindowHovered",SideEffects::worstDefault, "ImGui::IsWindowHovered")
 	->args({"flags"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiHoveredFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiHoveredFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::VSliderFloat)>(*this, lib, "VSliderFloat",SideEffects::worstDefault, "ImGui::VSliderFloat")
 	->args({"label","size","v","v_min","v_max","format","flags"})
@@ -1052,7 +1055,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetClipboardText)>(*this, lib, "SetClipboardText",
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsWindowFocused)>(*this, lib, "IsWindowFocused",SideEffects::worstDefault, "ImGui::IsWindowFocused")
 	->args({"flags"})
-		->arg_init(0,make_smart<ExprConstInt>(0))
+		->arg_type(0,makeType<ImGuiFocusedFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiFocusedFlags_>(lib)))
 ;
 addExtern<DAS_BIND_FUN(ImGui::IsAnyItemFocused)>(*this, lib, "IsAnyItemFocused",SideEffects::worstDefault, "ImGui::IsAnyItemFocused")
 	->args({})
@@ -1077,7 +1081,8 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImG
 ;
 addExtern<DAS_BIND_FUN(ImGui::AcceptDragDropPayload)>(*this, lib, "AcceptDragDropPayload",SideEffects::worstDefault, "ImGui::AcceptDragDropPayload")
 	->args({"type","flags"})
-		->arg_init(1,make_smart<ExprConstInt>(0))
+		->arg_type(1,makeType<ImGuiDragDropFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)))
 ;
 addExtern<void (*)(const char *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
 	->args({"str_id"})

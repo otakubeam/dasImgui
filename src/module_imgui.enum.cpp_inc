@@ -23,22 +23,22 @@ public:
 	}
 };
 
-class EnumerationImGuiHoveredFlags_ : public das::Enumeration {
+class EnumerationImGuiHoveredFlags : public das::Enumeration {
 public:
-    EnumerationImGuiHoveredFlags_() : das::Enumeration("ImGuiHoveredFlags_") {
+    EnumerationImGuiHoveredFlags() : das::Enumeration("ImGuiHoveredFlags") {
         external = true;
         cppName = "ImGuiHoveredFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiHoveredFlags_ >::type >::type;
-		addI("ImGuiHoveredFlags_None", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_None), das::LineInfo());
-		addI("ImGuiHoveredFlags_ChildWindows", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_ChildWindows), das::LineInfo());
-		addI("ImGuiHoveredFlags_RootWindow", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RootWindow), das::LineInfo());
-		addI("ImGuiHoveredFlags_AnyWindow", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AnyWindow), das::LineInfo());
-		addI("ImGuiHoveredFlags_AllowWhenBlockedByPopup", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenBlockedByPopup), das::LineInfo());
-		addI("ImGuiHoveredFlags_AllowWhenBlockedByActiveItem", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenBlockedByActiveItem), das::LineInfo());
-		addI("ImGuiHoveredFlags_AllowWhenOverlapped", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenOverlapped), das::LineInfo());
-		addI("ImGuiHoveredFlags_AllowWhenDisabled", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenDisabled), das::LineInfo());
-		addI("ImGuiHoveredFlags_RectOnly", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RectOnly), das::LineInfo());
-		addI("ImGuiHoveredFlags_RootAndChildWindows", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RootAndChildWindows), das::LineInfo());
+		addI("None", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_None), das::LineInfo());
+		addI("ChildWindows", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_ChildWindows), das::LineInfo());
+		addI("RootWindow", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RootWindow), das::LineInfo());
+		addI("AnyWindow", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AnyWindow), das::LineInfo());
+		addI("AllowWhenBlockedByPopup", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenBlockedByPopup), das::LineInfo());
+		addI("AllowWhenBlockedByActiveItem", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenBlockedByActiveItem), das::LineInfo());
+		addI("AllowWhenOverlapped", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenOverlapped), das::LineInfo());
+		addI("AllowWhenDisabled", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_AllowWhenDisabled), das::LineInfo());
+		addI("RectOnly", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RectOnly), das::LineInfo());
+		addI("RootAndChildWindows", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RootAndChildWindows), das::LineInfo());
 	}
 };
 
@@ -116,23 +116,23 @@ public:
 	}
 };
 
-class EnumerationImGuiDragDropFlags_ : public das::Enumeration {
+class EnumerationImGuiDragDropFlags : public das::Enumeration {
 public:
-    EnumerationImGuiDragDropFlags_() : das::Enumeration("ImGuiDragDropFlags_") {
+    EnumerationImGuiDragDropFlags() : das::Enumeration("ImGuiDragDropFlags") {
         external = true;
         cppName = "ImGuiDragDropFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiDragDropFlags_ >::type >::type;
-		addI("ImGuiDragDropFlags_None", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_None), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceNoPreviewTooltip", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoPreviewTooltip), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceNoDisableHover", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoDisableHover), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceNoHoldToOpenOthers", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoHoldToOpenOthers), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceAllowNullID", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAllowNullID), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceExtern", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceExtern), das::LineInfo());
-		addI("ImGuiDragDropFlags_SourceAutoExpirePayload", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAutoExpirePayload), das::LineInfo());
-		addI("ImGuiDragDropFlags_AcceptBeforeDelivery", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptBeforeDelivery), das::LineInfo());
-		addI("ImGuiDragDropFlags_AcceptNoDrawDefaultRect", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptNoDrawDefaultRect), das::LineInfo());
-		addI("ImGuiDragDropFlags_AcceptNoPreviewTooltip", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptNoPreviewTooltip), das::LineInfo());
-		addI("ImGuiDragDropFlags_AcceptPeekOnly", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptPeekOnly), das::LineInfo());
+		addI("None", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_None), das::LineInfo());
+		addI("SourceNoPreviewTooltip", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoPreviewTooltip), das::LineInfo());
+		addI("SourceNoDisableHover", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoDisableHover), das::LineInfo());
+		addI("SourceNoHoldToOpenOthers", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceNoHoldToOpenOthers), das::LineInfo());
+		addI("SourceAllowNullID", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAllowNullID), das::LineInfo());
+		addI("SourceExtern", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceExtern), das::LineInfo());
+		addI("SourceAutoExpirePayload", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_SourceAutoExpirePayload), das::LineInfo());
+		addI("AcceptBeforeDelivery", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptBeforeDelivery), das::LineInfo());
+		addI("AcceptNoDrawDefaultRect", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptNoDrawDefaultRect), das::LineInfo());
+		addI("AcceptNoPreviewTooltip", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptNoPreviewTooltip), das::LineInfo());
+		addI("AcceptPeekOnly", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptPeekOnly), das::LineInfo());
 	}
 };
 
@@ -338,17 +338,17 @@ public:
 	}
 };
 
-class EnumerationImGuiFocusedFlags_ : public das::Enumeration {
+class EnumerationImGuiFocusedFlags : public das::Enumeration {
 public:
-    EnumerationImGuiFocusedFlags_() : das::Enumeration("ImGuiFocusedFlags_") {
+    EnumerationImGuiFocusedFlags() : das::Enumeration("ImGuiFocusedFlags") {
         external = true;
         cppName = "ImGuiFocusedFlags_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiFocusedFlags_ >::type >::type;
-		addI("ImGuiFocusedFlags_None", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_None), das::LineInfo());
-		addI("ImGuiFocusedFlags_ChildWindows", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_ChildWindows), das::LineInfo());
-		addI("ImGuiFocusedFlags_RootWindow", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_RootWindow), das::LineInfo());
-		addI("ImGuiFocusedFlags_AnyWindow", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_AnyWindow), das::LineInfo());
-		addI("ImGuiFocusedFlags_RootAndChildWindows", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_RootAndChildWindows), das::LineInfo());
+		addI("None", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_None), das::LineInfo());
+		addI("ChildWindows", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_ChildWindows), das::LineInfo());
+		addI("RootWindow", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_RootWindow), das::LineInfo());
+		addI("AnyWindow", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_AnyWindow), das::LineInfo());
+		addI("RootAndChildWindows", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_RootAndChildWindows), das::LineInfo());
 	}
 };
 

@@ -3,13 +3,15 @@
 // ------------
 
 addEnumeration(make_smart<EnumerationImGuiDataType>());
-addEnumeration(make_smart<EnumerationImGuiHoveredFlags_>());
+addEnumeration(make_smart<EnumerationImGuiHoveredFlags>());
+addEnumFlagOps<ImGuiHoveredFlags_>(*this,lib,"ImGuiHoveredFlags_");
 addEnumeration(make_smart<EnumerationImGuiNavInput_>());
 addEnumeration(make_smart<EnumerationImGuiDir>());
 addEnumeration(make_smart<EnumerationImGuiCond>());
 addEnumFlagOps<ImGuiCond_>(*this,lib,"ImGuiCond_");
 addEnumeration(make_smart<EnumerationImGuiViewportFlags_>());
-addEnumeration(make_smart<EnumerationImGuiDragDropFlags_>());
+addEnumeration(make_smart<EnumerationImGuiDragDropFlags>());
+addEnumFlagOps<ImGuiDragDropFlags_>(*this,lib,"ImGuiDragDropFlags_");
 addEnumeration(make_smart<EnumerationImGuiColorEditFlags>());
 addEnumFlagOps<ImGuiColorEditFlags_>(*this,lib,"ImGuiColorEditFlags_");
 addEnumeration(make_smart<EnumerationImGuiWindowFlags>());
@@ -19,7 +21,8 @@ addEnumeration(make_smart<EnumerationImGuiTableFlags>());
 addEnumFlagOps<ImGuiTableFlags_>(*this,lib,"ImGuiTableFlags_");
 addEnumeration(make_smart<EnumerationImGuiKeyModFlags>());
 addEnumFlagOps<ImGuiKeyModFlags_>(*this,lib,"ImGuiKeyModFlags_");
-addEnumeration(make_smart<EnumerationImGuiFocusedFlags_>());
+addEnumeration(make_smart<EnumerationImGuiFocusedFlags>());
+addEnumFlagOps<ImGuiFocusedFlags_>(*this,lib,"ImGuiFocusedFlags_");
 addEnumeration(make_smart<EnumerationImGuiMouseCursor_>());
 addEnumeration(make_smart<EnumerationImDrawCornerFlags>());
 addEnumFlagOps<ImDrawCornerFlags_>(*this,lib,"ImDrawCornerFlags_");

@@ -135,13 +135,13 @@ def Combo ( lab:string; current_item:int? implicit; items:array<string>; popul_m
     let nItems = length(items)
     unsafe
         if nItems != 0
-            imgui::Combo(lab,current_item,addr(items[0]),nItems,popul_max_heigh_in_items)
+            return imgui::Combo(lab,current_item,addr(items[0]),nItems,popul_max_heigh_in_items)
         else
-            imgui::Combo(lab,current_item,null,0,popul_max_heigh_in_items)
+            return imgui::Combo(lab,current_item,null,0,popul_max_heigh_in_items)
 
 def Combo ( lab:string; current_item:int? implicit; items:string[]; popul_max_heigh_in_items : int = -1 )
     unsafe
-        imgui::Combo(lab,current_item,addr(items[0]),length(items),popul_max_heigh_in_items)
+        return imgui::Combo(lab,current_item,addr(items[0]),length(items),popul_max_heigh_in_items)
 
 def ListBox ( lab:string; current_item:int? implicit; items:array<string>; height_in_items:int = -1 )
     let nItems = length(items)

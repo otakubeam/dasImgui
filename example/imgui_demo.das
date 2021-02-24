@@ -2496,6 +2496,11 @@ enum ContentsTypeEx
     CT_Selectable
     CT_SelectableSpanRow
 
+enum Mode
+    Copy
+    Move
+    Swap
+
 def DasShowDemoWindowTables()
     if !CollapsingHeader("Tables & Columns")
         return
@@ -5103,267 +5108,198 @@ def DasShowDemoWindowWidgets()
         PopStyleVar()
         TreePop()
 
-/*
-    if (TreeNode("Drag and Drop"))
-    {
-        if (TreeNode("Drag and drop in standard widgets"))
-        {
-            // ColorEdit widgets automatically act as drag source and drag target.
-            // They are using standardized payload strings IMGUI_PAYLOAD_TYPE_COLOR_3F and IMGUI_PAYLOAD_TYPE_COLOR_4F
-            // to allow your own widgets to use colors in their drag and drop interaction.
-            // Also see 'Demo->Widgets->Color/Picker Widgets->Palette' demo.
-            HelpMarker("You can drag from the color squares.")
-            static float col1[3] = { 1.0f, 0.0f, 0.2f };
-            static float col2[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
-            ColorEdit3("color 1", col1)
-            ColorEdit4("color 2", col2)
+    if TreeNode("Drag and Drop")
+        if TreeNode("Drag and drop in standard widgets")
+            DasHelpMarker("You can drag from the color squares.")
+            static_let <|
+                var col1 = [[float 1.0f; 0.0f; 0.2f]]
+                var col2 = [[float 0.4f; 0.7f; 0.0f; 0.5f]]
+            ColorEdit3("color 1", safe_addr(col1))
+            ColorEdit4("color 2", safe_addr(col2))
             TreePop()
-        }
-
-        if (TreeNode("Drag and drop to copy/swap items"))
-        {
-            enum Mode
-            {
-                Mode_Copy,
-                Mode_Move,
-                Mode_Swap
-            };
-            static int mode = 0;
-            if (RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } SameLine()
-            if (RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } SameLine()
-            if (RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-            static const char* names[9] =
-            {
-                "Bobby", "Beatrice", "Betty",
-                "Brianna", "Barry", "Bernard",
-                "Bibi", "Blaine", "Bryn"
-            };
-            for (int n = 0; n < IM_ARRAYSIZE(names) n++)
-            {
+        if TreeNode("Drag and drop to copy/swap items")
+            static_let <|
+                var mode = Mode Copy
+            if RadioButton("Copy", mode == Mode Copy)
+                mode = Mode Copy
+            SameLine()
+            if RadioButton("Move", mode == Mode Move)
+                mode = Mode Move
+                SameLine()
+            if RadioButton("Swap", mode == Mode Swap)
+                mode = Mode Swap
+            static_let <|
+                var names = [[string
+                    "Bobby"; "Beatrice"; "Betty";
+                    "Brianna"; "Barry"; "Bernard";
+                    "Bibi"; "Blaine"; "Bryn"
+                ]]
+            for n in range(length(names))
                 PushID(n)
-                if ((n % 3) != 0)
+                if (n % 3) != 0
                     SameLine()
-                Button(names[n], ImVec2(60, 60))
-
-                // Our buttons are both drag sources and drag targets here!
-                if (BeginDragDropSource(ImGuiDragDropFlags None))
-                {
-                    // Set payload to carry the index of our item (could be anything)
-                    SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int))
-
-                    // Display preview (could be anything, e.g. when dragging an image we could decide to display
-                    // the filename and a small preview of the image, etc.)
-                    if (mode == Mode_Copy) { Text("Copy %s", names[n]) }
-                    if (mode == Mode_Move) { Text("Move %s", names[n]) }
-                    if (mode == Mode_Swap) { Text("Swap %s", names[n]) }
+                Button(names[n], ImVec2(60., 60.))
+                if BeginDragDropSource(ImGuiDragDropFlags None)
+                    SetDragDropPayload("DND_DEMO_CELL", safe_addr(n), 4ul)
+                    if mode == Mode Copy
+                        Text("Copy {names[n]}")
+                    elif mode == Mode Move
+                        Text("Move {names[n]}")
+                    elif mode == Mode Swap
+                        Text("Swap {names[n]}")
                     EndDragDropSource()
-                }
-                if (BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = AcceptDragDropPayload("DND_DEMO_CELL"))
-                    {
-                        IM_ASSERT(payload->DataSize == sizeof(int))
-                        int payload_n = *(const int*)payload->Data;
-                        if (mode == Mode_Copy)
-                        {
-                            names[n] = names[payload_n];
-                        }
-                        if (mode == Mode_Move)
-                        {
-                            names[n] = names[payload_n];
-                            names[payload_n] = "";
-                        }
-                        if (mode == Mode_Swap)
-                        {
-                            const char* tmp = names[n];
-                            names[n] = names[payload_n];
-                            names[payload_n] = tmp;
-                        }
-                    }
+                if BeginDragDropTarget()
+                    let payload = AcceptDragDropPayload("DND_DEMO_CELL")
+                    if payload != null
+                        assert(payload.DataSize == 4)
+                        var payload_n : int
+                        unsafe
+                            payload_n = * reinterpret<int?>(payload.Data)
+                        if mode == Mode Copy
+                            names[n] = names[payload_n]
+                        elif mode == Mode Move
+                            names[n] = names[payload_n]
+                            names[payload_n] = ""
+                        elif mode == Mode Swap
+                            let tmp = names[n]
+                            names[n] = names[payload_n]
+                            names[payload_n] = tmp
                     EndDragDropTarget()
-                }
                 PopID()
-            }
             TreePop()
-        }
-
-        if (TreeNode("Drag to reorder items (simple)"))
-        {
-            // Simple reordering
-            HelpMarker(
-                "We don't use the drag and drop api at all here! "
+        if TreeNode("Drag to reorder items (simple)")
+            DasHelpMarker(
+                "We don't use the drag and drop api at all here! " +
                 "Instead we query when the item is held but not hovered, and order items accordingly.")
-            static const char* item_names[] = { "Item One", "Item Two", "Item Three", "Item Four", "Item Five" };
-            for (int n = 0; n < IM_ARRAYSIZE(item_names) n++)
-            {
-                const char* item = item_names[n];
+            static_let <|
+                var item_names = [[string "Item One"; "Item Two"; "Item Three"; "Item Four"; "Item Five"]]
+            for n in range(length(item_names))
+                let item = item_names[n]
                 Selectable(item)
-
-                if (IsItemActive() && !IsItemHovered())
-                {
-                    int n_next = n + (GetMouseDragDelta(0).y < 0.f ? -1 : 1)
-                    if (n_next >= 0 && n_next < IM_ARRAYSIZE(item_names))
-                    {
-                        item_names[n] = item_names[n_next];
-                        item_names[n_next] = item;
+                if IsItemActive() && !IsItemHovered()
+                    let n_next = n + (GetMouseDragDelta(ImGuiMouseButton Left).y < 0.f ? -1 : 1)
+                    if n_next >= 0 && n_next < length(item_names)
+                        item_names[n] = item_names[n_next]
+                        item_names[n_next] = item
                         ResetMouseDragDelta()
-                    }
-                }
-            }
             TreePop()
-        }
-
         TreePop()
-    }
 
-    if (TreeNode("Querying Status (Edited/Active/Focused/Hovered etc.)"))
-    {
-        // Select an item type
-        const char* item_names[] =
-        {
-            "Text", "Button", "Button (w/ repeat)", "Checkbox", "SliderFloat", "InputText", "InputFloat",
-            "InputFloat3", "ColorEdit4", "MenuItem", "TreeNode", "TreeNode (w/ double-click)", "Combo", "ListBox"
-        };
-        static int item_type = 1;
-        Combo("Item Type", &item_type, item_names, IM_ARRAYSIZE(item_names), IM_ARRAYSIZE(item_names))
+    if TreeNode("Querying Status (Edited/Active/Focused/Hovered etc.)")
+        static_let <|
+            let item_names = [[string
+                    "Text"; "Button"; "Button (w/ repeat)"; "Checkbox"; "SliderFloat"; "InputText"; "InputFloat";
+                    "InputFloat3"; "ColorEdit4"; "MenuItem"; "TreeNode"; "TreeNode (w/ double-click)"; "Combo"; "ListBox"
+                ]]
+            var item_type = 1
+        Combo("Item Type", safe_addr(item_type), item_names)
         SameLine()
-        HelpMarker("Testing how various types of items are interacting with the IsItemXXX functions. Note that the bool return value of most ImGui function is generally equivalent to calling IsItemHovered().")
-
-        // Submit selected item item so we can query their status in the code following it.
-        bool ret = false;
-        static bool b = false;
-        static float col4f[4] = { 1.0f, 0.5, 0.0f, 1.0f };
-        static char str[16] = {};
-        if (item_type == 0) { Text("ITEM: Text") }                                              // Testing text items with no identifier/interaction
-        if (item_type == 1) { ret = Button("ITEM: Button") }                                    // Testing button
-        if (item_type == 2) { PushButtonRepeat(true) ret = Button("ITEM: Button") PopButtonRepeat() } // Testing button (with repeater)
-        if (item_type == 3) { ret = Checkbox("ITEM: Checkbox", &b) }                            // Testing checkbox
-        if (item_type == 4) { ret = SliderFloat("ITEM: SliderFloat", &col4f[0], 0.0f, 1.0f) }   // Testing basic item
-        if (item_type == 5) { ret = InputText("ITEM: InputText", &str[0], IM_ARRAYSIZE(str)) }  // Testing input text (which handles tabbing)
-        if (item_type == 6) { ret = InputFloat("ITEM: InputFloat", col4f, 1.0f) }               // Testing +/- buttons on scalar input
-        if (item_type == 7) { ret = InputFloat3("ITEM: InputFloat3", col4f) }                   // Testing multi-component items (IsItemXXX flags are reported merged)
-        if (item_type == 8) { ret = ColorEdit4("ITEM: ColorEdit4", col4f) }                     // Testing multi-component items (IsItemXXX flags are reported merged)
-        if (item_type == 9) { ret = MenuItem("ITEM: MenuItem") }                                // Testing menu item (they use ImGuiButtonFlags PressedOnRelease button policy)
-        if (item_type == 10){ ret = TreeNode("ITEM: TreeNode") if (ret) TreePop() }     // Testing tree node
-        if (item_type == 11){ ret = TreeNodeEx("ITEM: TreeNode w/ ImGuiTreeNodeFlags OpenOnDoubleClick", ImGuiTreeNodeFlags OpenOnDoubleClick | ImGuiTreeNodeFlags NoTreePushOnOpen) } // Testing tree node with ImGuiButtonFlags PressedOnDoubleClick button policy.
-        if (item_type == 12){ const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi" }; static int current = 1; ret = Combo("ITEM: Combo", &current, items, IM_ARRAYSIZE(items)) }
-        if (item_type == 13){ const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi" }; static int current = 1; ret = ListBox("ITEM: ListBox", &current, items, IM_ARRAYSIZE(items), IM_ARRAYSIZE(items)) }
-
-        // Display the values of IsItemHovered() and other common item state functions.
-        // Note that the ImGuiHoveredFlags XXX flags can be combined.
-        // Because BulletText is an item itself and that would affect the output of IsItemXXX functions,
-        // we query every state in a single call to avoid storing them and to simplify the code.
+        DasHelpMarker("Testing how various types of items are interacting with the IsItemXXX functions. Note that " +
+            "the bool return value of most ImGui function is generally equivalent to calling IsItemHovered().")
+        var ret = false
+        static_let <|
+            var b = false
+            var col4f = [[float 1.0f; 0.5; 0.0f; 1.0f ]]
+            var str <- ImGuiInputTextBuffer("",32)
+        if item_type == 0
+            Text("ITEM: Text")
+        elif item_type == 1
+            ret = Button("ITEM: Button")
+        elif item_type == 2
+            PushButtonRepeat(true)
+            ret = Button("ITEM: Button")
+            PopButtonRepeat()
+        elif item_type == 3
+            ret = Checkbox("ITEM: Checkbox", safe_addr(b))
+        elif item_type == 4
+            ret = SliderFloat("ITEM: SliderFloat", safe_addr(col4f), 0.0f, 1.0f)
+        elif item_type == 5
+            ret = InputText("ITEM: InputText", str)
+        elif item_type == 6
+            ret = InputFloat("ITEM: InputFloat", safe_addr(col4f), 1.0f)
+        elif item_type == 7
+            ret = InputFloat3("ITEM: InputFloat3", safe_addr(col4f))
+        elif item_type == 8
+            ret = ColorEdit4("ITEM: ColorEdit4", safe_addr(col4f))
+        elif item_type == 9
+            ret = MenuItem("ITEM: MenuItem")
+        elif item_type == 10
+            ret = TreeNode("ITEM: TreeNode")
+            if ret
+                TreePop()
+        elif item_type == 11
+            ret = TreeNodeEx("ITEM: TreeNode w/ ImGuiTreeNodeFlags OpenOnDoubleClick", ImGuiTreeNodeFlags OpenOnDoubleClick | ImGuiTreeNodeFlags NoTreePushOnOpen)
+        elif item_type == 12
+            static_let <|
+                let items = [[string "Apple"; "Banana"; "Cherry"; "Kiwi"]]
+                var current = 1
+            ret = Combo("ITEM: Combo", safe_addr(current), items)
+        elif item_type == 13
+            static_let <|
+                let items = [[string "Apple"; "Banana"; "Cherry"; "Kiwi"]]
+                var current = 1
+            ret = ListBox("ITEM: ListBox", safe_addr(current), items)
         BulletText(
-            "Return value = %d\n"
-            "IsItemFocused() = %d\n"
-            "IsItemHovered() = %d\n"
-            "IsItemHovered(_AllowWhenBlockedByPopup) = %d\n"
-            "IsItemHovered(_AllowWhenBlockedByActiveItem) = %d\n"
-            "IsItemHovered(_AllowWhenOverlapped) = %d\n"
-            "IsItemHovered(_RectOnly) = %d\n"
-            "IsItemActive() = %d\n"
-            "IsItemEdited() = %d\n"
-            "IsItemActivated() = %d\n"
-            "IsItemDeactivated() = %d\n"
-            "IsItemDeactivatedAfterEdit() = %d\n"
-            "IsItemVisible() = %d\n"
-            "IsItemClicked() = %d\n"
-            "IsItemToggledOpen() = %d\n"
-            "GetItemRectMin() = (%.1f, %.1f)\n"
-            "GetItemRectMax() = (%.1f, %.1f)\n"
-            "GetItemRectSize() = (%.1f, %.1f)",
-            ret,
-            IsItemFocused(),
-            IsItemHovered(),
-            IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup),
-            IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem),
-            IsItemHovered(ImGuiHoveredFlags AllowWhenOverlapped),
-            IsItemHovered(ImGuiHoveredFlags RectOnly),
-            IsItemActive(),
-            IsItemEdited(),
-            IsItemActivated(),
-            IsItemDeactivated(),
-            IsItemDeactivatedAfterEdit(),
-            IsItemVisible(),
-            IsItemClicked(),
-            IsItemToggledOpen(),
-            GetItemRectMin().x, GetItemRectMin().y,
-            GetItemRectMax().x, GetItemRectMax().y,
-            GetItemRectSize().x, GetItemRectSize().y
-        )
-
-        static bool embed_all_inside_a_child_window = false;
-        Checkbox("Embed everything inside a child window (for additional testing)", &embed_all_inside_a_child_window)
-        if (embed_all_inside_a_child_window)
-            BeginChild("outer_child", ImVec2(0, GetFontSize() * 20.0f), true)
-
-        // Testing IsWindowFocused() function with its various flags.
-        // Note that the ImGuiFocusedFlags XXX flags can be combined.
+            "Return value = {ret}\n" +
+            "IsItemFocused() = {IsItemFocused()}\n" +
+            "IsItemHovered() = {IsItemHovered()}\n" +
+            "IsItemHovered(AllowWhenBlockedByPopup) = {IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup)}\n" +
+            "IsItemHovered(AllowWhenBlockedByActiveItem) = {IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem)}\n" +
+            "IsItemHovered(AllowWhenOverlapped) = {IsItemHovered(ImGuiHoveredFlags AllowWhenOverlapped)}\n" +
+            "IsItemHovered(RectOnly) = {IsItemHovered(ImGuiHoveredFlags RectOnly)}\n" +
+            "IsItemActive() = {IsItemActive()}\n" +
+            "IsItemEdited() = {IsItemEdited()}\n" +
+            "IsItemActivated() = {IsItemActivated()}\n" +
+            "IsItemDeactivated() = {IsItemDeactivated()}\n" +
+            "IsItemDeactivatedAfterEdit() = {IsItemDeactivatedAfterEdit()}\n" +
+            "IsItemVisible() = {IsItemVisible()}\n" +
+            "IsItemClicked() = {IsItemClicked()}\n" +
+            "IsItemToggledOpen() = {IsItemToggledOpen()}\n" +
+            "GetItemRectMin() = ({GetItemRectMin().x}, {GetItemRectMin().y})\n" +
+            "GetItemRectMax() = ({GetItemRectMax().x}, {GetItemRectMax().y})\n" +
+            "GetItemRectSize() = ({GetItemRectSize().x}, {GetItemRectSize().y})")
+        static_let <|
+            var embed_all_inside_a_child_window = false
+        Checkbox("Embed everything inside a child window (for additional testing)", safe_addr(embed_all_inside_a_child_window))
+        if embed_all_inside_a_child_window
+            BeginChild("outer_child", ImVec2(0., GetFontSize() * 20.0f), true)
         BulletText(
-            "IsWindowFocused() = %d\n"
-            "IsWindowFocused(_ChildWindows) = %d\n"
-            "IsWindowFocused(_ChildWindows|_RootWindow) = %d\n"
-            "IsWindowFocused(_RootWindow) = %d\n"
-            "IsWindowFocused(_AnyWindow) = %d\n",
-            IsWindowFocused(),
-            IsWindowFocused(ImGuiFocusedFlags ChildWindows),
-            IsWindowFocused(ImGuiFocusedFlags ChildWindows | ImGuiFocusedFlags RootWindow),
-            IsWindowFocused(ImGuiFocusedFlags RootWindow),
-            IsWindowFocused(ImGuiFocusedFlags AnyWindow))
-
-        // Testing IsWindowHovered() function with its various flags.
-        // Note that the ImGuiHoveredFlags XXX flags can be combined.
+            "IsWindowFocused() = {IsWindowFocused()}\n" +
+            "IsWindowFocused(_ChildWindows) = {IsWindowFocused(ImGuiFocusedFlags ChildWindows)}\n" +
+            "IsWindowFocused(_ChildWindows|_RootWindow) = {IsWindowFocused(ImGuiFocusedFlags ChildWindows | ImGuiFocusedFlags RootWindow)}\n" +
+            "IsWindowFocused(_RootWindow) = {IsWindowFocused(ImGuiFocusedFlags RootWindow)}\n" +
+            "IsWindowFocused(_AnyWindow) = {IsWindowFocused(ImGuiFocusedFlags AnyWindow)}\n")
         BulletText(
-            "IsWindowHovered() = %d\n"
-            "IsWindowHovered(_AllowWhenBlockedByPopup) = %d\n"
-            "IsWindowHovered(_AllowWhenBlockedByActiveItem) = %d\n"
-            "IsWindowHovered(_ChildWindows) = %d\n"
-            "IsWindowHovered(_ChildWindows|_RootWindow) = %d\n"
-            "IsWindowHovered(_ChildWindows|_AllowWhenBlockedByPopup) = %d\n"
-            "IsWindowHovered(_RootWindow) = %d\n"
-            "IsWindowHovered(_AnyWindow) = %d\n",
-            IsWindowHovered(),
-            IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup),
-            IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem),
-            IsWindowHovered(ImGuiHoveredFlags ChildWindows),
-            IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags RootWindow),
-            IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags AllowWhenBlockedByPopup),
-            IsWindowHovered(ImGuiHoveredFlags RootWindow),
-            IsWindowHovered(ImGuiHoveredFlags AnyWindow))
+            "IsWindowHovered() = {IsWindowHovered()}\n"+
+            "IsWindowHovered(_AllowWhenBlockedByPopup) = {IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup)}\n"+
+            "IsWindowHovered(_AllowWhenBlockedByActiveItem) = {IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem)}\n"+
+            "IsWindowHovered(_ChildWindows) = {IsWindowHovered(ImGuiHoveredFlags ChildWindows)}\n"+
+            "IsWindowHovered(_ChildWindows|_RootWindow) = {IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags RootWindow)}\n"+
+            "IsWindowHovered(_ChildWindows|_AllowWhenBlockedByPopup) = {IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags AllowWhenBlockedByPopup)}\n"+
+            "IsWindowHovered(_RootWindow) = {IsWindowHovered(ImGuiHoveredFlags RootWindow)}\n"+
+            "IsWindowHovered(_AnyWindow) = {IsWindowHovered(ImGuiHoveredFlags AnyWindow)}\n")
 
-        BeginChild("child", ImVec2(0, 50), true)
+        BeginChild("child", ImVec2(0., 50.), true)
         Text("This is another child window for testing the _ChildWindows flag.")
         EndChild()
-        if (embed_all_inside_a_child_window)
+        if embed_all_inside_a_child_window
             EndChild()
-
-        static char unused_str[] = "This widget is only here to be able to tab-out of the widgets above.";
-        InputText("unused", unused_str, IM_ARRAYSIZE(unused_str), ImGuiInputTextFlags ReadOnly)
-
-        // Calling IsItemHovered() after begin returns the hovered status of the title bar.
-        // This is useful in particular if you want to create a context menu associated to the title bar of a window.
-        static bool test_window = false;
-        Checkbox("Hovered/Active tests after Begin() for title bar testing", &test_window)
-        if (test_window)
-        {
-            Begin("Title bar Hovered/Active tests", &test_window)
-            if (BeginPopupContextItem()) // <-- This is using IsItemHovered()
-            {
-                if (MenuItem("Close")) { test_window = false; }
+        static_let <|
+            var unused_str <- ImGuiInputTextBuffer("This widget is only here to be able to tab-out of the widgets above.", 128)
+        InputText("unused", unused_str, ImGuiInputTextFlags ReadOnly)
+        static_let <|
+            var test_window = false
+        Checkbox("Hovered/Active tests after Begin() for title bar testing", safe_addr(test_window))
+        if test_window
+            Begin("Title bar Hovered/Active tests", safe_addr(test_window))
+            if BeginPopupContextItem()
+                if MenuItem("Close")
+                    test_window = false
                 EndPopup()
-            }
-            Text(
-                "IsItemHovered() after begin = %d (== is title bar hovered)\n"
-                "IsItemActive() after begin = %d (== is window being clicked/moved)\n",
-                IsItemHovered(), IsItemActive())
+            Text("IsItemHovered() after begin = {IsItemHovered()} (== is title bar hovered)\n" +
+                 "IsItemActive() after begin = {IsItemActive()} (== is window being clicked/moved)\n")
             End()
-        }
-
         TreePop()
-    }
-}
-
-*/
 
 var g_edit_count = 0
 
