@@ -239,6 +239,38 @@ namespace das {
         getter->at = *at;
         return ImGui::Combo(label,current_item,&ComboGetterCallback,getter,items_count,popup_max_height_in_items);
     }
+
+    // Plot lines or historgrams
+
+    struct ImGuiPlotGetter {
+        Context *   context;
+        Lambda      lambda;
+        LineInfo    at;
+    };
+
+    float PlotLinesCallback ( void* data, int idx ) {
+        ImGuiPlotGetter * getter = (ImGuiPlotGetter *) data;
+        if ( !getter->lambda.capture ) {
+            getter->context->throw_error_at(getter->at, "expecting lambda");
+        }
+        return  das_invoke_lambda<float>::invoke<int>(getter->context,getter->lambda,idx);
+    }
+
+    void PlotLines ( vec4f igpg, const char* label, int values_count, int values_offset, const char* overlay_text,
+        float scale_min, float scale_max, ImVec2 graph_size, Context * ctx, LineInfoArg * at ) {
+        ImGuiPlotGetter * getter = cast<ImGuiPlotGetter *>::to(igpg);
+        getter->context = ctx;
+        getter->at = *at;
+        return ImGui::PlotLines(label, &PlotLinesCallback, getter, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size );
+    }
+
+    void PlotHistogram ( vec4f igpg, const char* label, int values_count, int values_offset, const char* overlay_text,
+        float scale_min, float scale_max, ImVec2 graph_size, Context * ctx, LineInfoArg * at ) {
+        ImGuiPlotGetter * getter = cast<ImGuiPlotGetter *>::to(igpg);
+        getter->context = ctx;
+        getter->at = *at;
+        return ImGui::PlotHistogram(label, &PlotLinesCallback, getter, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size );
+    }
 }
 
 Module_imgui::Module_imgui() : Module("imgui") {
@@ -357,6 +389,11 @@ bool Module_imgui::initDependencies() {
     // combo
     addExtern<DAS_BIND_FUN(das::Combo)>(*this, lib, "_builtin_Combo",
         SideEffects::worstDefault, "das::Combo");
+    // plot lines and historgram
+    addExtern<DAS_BIND_FUN(das::PlotLines)>(*this, lib, "_builtin_PlotLines",
+        SideEffects::worstDefault, "das::PlotLines");
+    addExtern<DAS_BIND_FUN(das::PlotHistogram)>(*this, lib, "_builtin_PlotHistogram",
+        SideEffects::worstDefault, "das::PlotHistogram");
     // additional default values
     findUniqueFunction("AddRect")
         ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));

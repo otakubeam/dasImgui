@@ -86,6 +86,35 @@ def ImGuiComboGetter(var lmb:lambda<(idx:int;var result:string&):bool>)
 def Combo ( lab:string; current_item:int? implicit; getter:ImGuiComboGetter; items_count:int; popup_max_height_in_items:int = -1 )
     return _builtin_Combo(getter, lab, current_item, items_count, popup_max_height_in_items)
 
+// note - this needs to correspond to C++ structure
+struct ImGuiPlotGetter
+    context : Context?
+    callback : lambda<(idx:int):float>
+    at : LineInfo
+
+def ImGuiPlotGetter(var lmb:lambda<(idx:int):float>)
+    var self : ImGuiPlotGetter
+    self.callback <- lmb
+    return <-self
+
+def PlotLines(
+    lab:string; getter:ImGuiPlotGetter; values_count:int; values_offset:int = 0;
+    overlay_text:string = "";
+    scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
+    graph_size : ImVec2 = ImVec2())
+    var gsize = graph_size
+    unsafe
+        _builtin_PlotLines(getter, lab, values_count, values_offset, overlay_text, scale_min, scale_max, gsize)
+
+def PlotHistogram(
+    lab:string; getter:ImGuiPlotGetter; values_count:int; values_offset:int = 0;
+    overlay_text:string = "";
+    scale_min : float = FLT_MAX; scale_max : float = FLT_MAX;
+    graph_size : ImVec2 = ImVec2())
+    var gsize = graph_size
+    unsafe
+        _builtin_PlotHistogram(getter, lab, values_count, values_offset, overlay_text, scale_min, scale_max, gsize)
+
 let IM_COL32_WHITE = IM_COL32(255,255,255,255)
 let IM_COL32_BLACK = IM_COL32(0,0,0,255)
 let IM_COL32_BLACK_TRANS = IM_COL32(0,0,0,0)

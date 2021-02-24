@@ -2409,15 +2409,15 @@ def EditTableSizingFlags(var p_flags:ImGuiTableFlags? implicit)
     static_let <|
         var policies = [[EnumDesc
             Value=ImGuiTableFlags None,                 Name="Default",
-                Tooltip="Use default sizing policy:\n- ImGuiTableFlags_SizingFixedFit if ScrollX is on or if host window has ImGuiWindowFlags_AlwaysAutoResize.\n" +
-                    "- ImGuiTableFlags_SizingStretchSame otherwise.";
+                Tooltip="Use default sizing policy:\n- ImGuiTableFlags SizingFixedFit if ScrollX is on or if host window has ImGuiWindowFlags AlwaysAutoResize.\n" +
+                    "- ImGuiTableFlags SizingStretchSame otherwise.";
             Value=ImGuiTableFlags SizingFixedFit,       Name="ImGuiTableFlags SizingFixedFit",
                 Tooltip="Columns default to _WidthFixed (if resizable) or _WidthAuto (if not resizable), matching contents width.";
             Value=ImGuiTableFlags SizingFixedSame,      Name="ImGuiTableFlags SizingFixedSame",
-                Tooltip="Columns are all the same width, matching the maximum contents width.\nImplicitly disable ImGuiTableFlags_Resizable and enable ImGuiTableFlags_NoKeepColumnsVisible.";
-            Value=ImGuiTableFlags SizingStretchProp,    Name="ImGuiTableFlags_SizingStretchProp",
+                Tooltip="Columns are all the same width, matching the maximum contents width.\nImplicitly disable ImGuiTableFlags Resizable and enable ImGuiTableFlags NoKeepColumnsVisible.";
+            Value=ImGuiTableFlags SizingStretchProp,    Name="ImGuiTableFlags SizingStretchProp",
                 Tooltip="Columns default to _WidthStretch with weights proportional to their widths.";
-            Value=ImGuiTableFlags SizingStretchSame,    Name="ImGuiTableFlags_SizingStretchSame",
+            Value=ImGuiTableFlags SizingStretchSame,    Name="ImGuiTableFlags SizingStretchSame",
                 Tooltip="Columns default to _WidthStretch with same weights."
         ]]
     var idx = 0
@@ -2560,8 +2560,8 @@ def DasShowDemoWindowTables()
             var display_headers = false
             var contents_type = ContentsType CT_ShortText
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
-        CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags), ImGuiTableFlags Borders)
+        CheckboxFlags("ImGuiTableFlags RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
+        CheckboxFlags("ImGuiTableFlags Borders", safe_addr(flags), ImGuiTableFlags Borders)
         SameLine()
         DasHelpMarker("ImGuiTableFlags Borders\n = ImGuiTableFlags BordersInnerV\n | ImGuiTableFlags BordersOuterV\n | ImGuiTableFlags BordersInnerV\n | ImGuiTableFlags BordersOuterH")
         Indent()
@@ -2585,7 +2585,7 @@ def DasShowDemoWindowTables()
         SameLine()
         RadioButton("FillButton", safe_addr(contents_type), ContentsType CT_FillButton)
         Checkbox("Display headers", safe_addr(display_headers))
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
+        CheckboxFlags("ImGuiTableFlags NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
         SameLine()
         DasHelpMarker("Disable vertical borders in columns Body (borders will always appears in Headers")
         PopStyleCompact()
@@ -2613,8 +2613,8 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags = ImGuiTableFlags SizingStretchSame | ImGuiTableFlags Resizable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV | ImGuiTableFlags ContextMenuInBody
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
-        CheckboxFlags("ImGuiTableFlags_BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
         SameLine()
         DasHelpMarker("Using the _Resizable flag automatically enables the _BordersInnerV flag as well, this is why the resize borders are still showing when unchecking this.")
         PopStyleCompact()
@@ -2637,7 +2637,7 @@ def DasShowDemoWindowTables()
         PushStyleCompact()
         static_let <|
             var flags = ImGuiTableFlags SizingFixedFit | ImGuiTableFlags Resizable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV | ImGuiTableFlags ContextMenuInBody
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
+        CheckboxFlags("ImGuiTableFlags NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
         PopStyleCompact()
         if BeginTable("table1", 3, flags)
             for row in range(5)
@@ -2692,11 +2692,11 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags = ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
-        CheckboxFlags("ImGuiTableFlags_Reorderable", safe_addr(flags), ImGuiTableFlags Reorderable)
-        CheckboxFlags("ImGuiTableFlags_Hideable", safe_addr(flags), ImGuiTableFlags Hideable)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
-        CheckboxFlags("ImGuiTableFlags_NoBordersInBodyUntilResize", safe_addr(flags), ImGuiTableFlags NoBordersInBodyUntilResize)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags Reorderable", safe_addr(flags), ImGuiTableFlags Reorderable)
+        CheckboxFlags("ImGuiTableFlags Hideable", safe_addr(flags), ImGuiTableFlags Hideable)
+        CheckboxFlags("ImGuiTableFlags NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
+        CheckboxFlags("ImGuiTableFlags NoBordersInBodyUntilResize", safe_addr(flags), ImGuiTableFlags NoBordersInBodyUntilResize)
         SameLine()
         DasHelpMarker("Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers)")
         PopStyleCompact()
@@ -2738,17 +2738,17 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags1 = ImGuiTableFlags BordersV
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_PadOuterX", safe_addr(flags1), ImGuiTableFlags PadOuterX)
+        CheckboxFlags("ImGuiTableFlags PadOuterX", safe_addr(flags1), ImGuiTableFlags PadOuterX)
         SameLine()
-        DasHelpMarker("Enable outer-most padding (default if ImGuiTableFlags_BordersOuterV is set)")
-        CheckboxFlags("ImGuiTableFlags_NoPadOuterX", safe_addr(flags1), ImGuiTableFlags NoPadOuterX)
+        DasHelpMarker("Enable outer-most padding (default if ImGuiTableFlags BordersOuterV is set)")
+        CheckboxFlags("ImGuiTableFlags NoPadOuterX", safe_addr(flags1), ImGuiTableFlags NoPadOuterX)
         SameLine()
-        DasHelpMarker("Disable outer-most padding (default if ImGuiTableFlags_BordersOuterV is not set)")
-        CheckboxFlags("ImGuiTableFlags_NoPadInnerX", safe_addr(flags1), ImGuiTableFlags NoPadInnerX)
+        DasHelpMarker("Disable outer-most padding (default if ImGuiTableFlags BordersOuterV is not set)")
+        CheckboxFlags("ImGuiTableFlags NoPadInnerX", safe_addr(flags1), ImGuiTableFlags NoPadInnerX)
         SameLine()
         DasHelpMarker("Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off)")
-        CheckboxFlags("ImGuiTableFlags_BordersOuterV", safe_addr(flags1), ImGuiTableFlags BordersOuterV)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerV", safe_addr(flags1), ImGuiTableFlags BordersInnerV)
+        CheckboxFlags("ImGuiTableFlags BordersOuterV", safe_addr(flags1), ImGuiTableFlags BordersOuterV)
+        CheckboxFlags("ImGuiTableFlags BordersInnerV", safe_addr(flags1), ImGuiTableFlags BordersInnerV)
         static_let <|
             var show_headers = false
         Checkbox("show_headers", safe_addr(show_headers))
@@ -2774,13 +2774,13 @@ def DasShowDemoWindowTables()
             var cell_padding =  ImVec2(0.0f, 0.0f)
             var show_widget_frame_bg = true
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags2), ImGuiTableFlags Borders)
-        CheckboxFlags("ImGuiTableFlags_BordersH", safe_addr(flags2), ImGuiTableFlags BordersH)
-        CheckboxFlags("ImGuiTableFlags_BordersV", safe_addr(flags2), ImGuiTableFlags BordersV)
-        CheckboxFlags("ImGuiTableFlags_BordersInner", safe_addr(flags2), ImGuiTableFlags BordersInner)
-        CheckboxFlags("ImGuiTableFlags_BordersOuter", safe_addr(flags2), ImGuiTableFlags BordersOuter)
-        CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags2), ImGuiTableFlags RowBg)
-        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags2), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags Borders", safe_addr(flags2), ImGuiTableFlags Borders)
+        CheckboxFlags("ImGuiTableFlags BordersH", safe_addr(flags2), ImGuiTableFlags BordersH)
+        CheckboxFlags("ImGuiTableFlags BordersV", safe_addr(flags2), ImGuiTableFlags BordersV)
+        CheckboxFlags("ImGuiTableFlags BordersInner", safe_addr(flags2), ImGuiTableFlags BordersInner)
+        CheckboxFlags("ImGuiTableFlags BordersOuter", safe_addr(flags2), ImGuiTableFlags BordersOuter)
+        CheckboxFlags("ImGuiTableFlags RowBg", safe_addr(flags2), ImGuiTableFlags RowBg)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags2), ImGuiTableFlags Resizable)
         Checkbox("show_widget_frame_bg", safe_addr(show_widget_frame_bg))
         SliderFloat2("CellPadding", safe_addr(cell_padding.x), 0.0f, 10.0f, "%.0f")
         PopStyleCompact()
@@ -2812,8 +2812,8 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags1 = ImGuiTableFlags BordersV | ImGuiTableFlags BordersOuterH | ImGuiTableFlags RowBg | ImGuiTableFlags ContextMenuInBody
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags1), ImGuiTableFlags Resizable)
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags1), ImGuiTableFlags NoHostExtendX)
+        CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags1), ImGuiTableFlags Resizable)
+        CheckboxFlags("ImGuiTableFlags NoHostExtendX", safe_addr(flags1), ImGuiTableFlags NoHostExtendX)
         PopStyleCompact()
         static_let <|
             var sizing_policy_flags = [[ImGuiTableFlags ImGuiTableFlags SizingFixedFit; ImGuiTableFlags SizingFixedSame; ImGuiTableFlags SizingStretchProp; ImGuiTableFlags SizingStretchSame]]
@@ -2906,7 +2906,7 @@ def DasShowDemoWindowTables()
             var flags = ( ImGuiTableFlags ScrollY | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter |
             ImGuiTableFlags BordersV | ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable )
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
+        CheckboxFlags("ImGuiTableFlags ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
         PopStyleCompact()
         var outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8.)
         if BeginTable("table_scrolly", 3, flags, outer_size)
@@ -2931,7 +2931,7 @@ def DasShowDemoWindowTables()
         SetNextItemOpen(open_action != 0)
     if TreeNode("Horizontal scrolling")
         DasHelpMarker(
-            "When ScrollX is enabled, the default sizing policy becomes ImGuiTableFlags_SizingFixedFit, " +
+            "When ScrollX is enabled, the default sizing policy becomes ImGuiTableFlags SizingFixedFit, " +
             "as automatically stretching columns doesn't make much sense with horizontal scrolling.\n\n" +
             "Also note that as of the current version, you will almost always want to enable ScrollY along with ScrollX," +
             "because the container window won't automatically extend vertically to fix contents (this may be improved in future versions).")
@@ -2984,7 +2984,7 @@ def DasShowDemoWindowTables()
         PushStyleCompact()
         PushID("flags3")
         PushItemWidth(TEXT_BASE_WIDTH * 30.)
-        CheckboxFlags("ImGuiTableFlags_ScrollX", safe_addr(flags2), ImGuiTableFlags ScrollX)
+        CheckboxFlags("ImGuiTableFlags ScrollX", safe_addr(flags2), ImGuiTableFlags ScrollX)
         DragFloat("inner_width", safe_addr(inner_width), 1.0f, 0.0f, FLT_MAX, "%.1f")
         PopItemWidth()
         PopID()
@@ -3003,8 +3003,8 @@ def DasShowDemoWindowTables()
         let column_names= [[string "One"; "Two"; "Three"]]
         static_let <|
             var column_flags = [[ImGuiTableColumnFlags ImGuiTableColumnFlags DefaultSort; ImGuiTableColumnFlags None; ImGuiTableColumnFlags DefaultHide]]
-            var column_flags_out = [[ImGuiTableColumnFlags  ImGuiTableColumnFlags None; ImGuiTableColumnFlags None; ImGuiTableColumnFlags None]]
-        if BeginTable("table_columns_flags_checkboxes", column_count, ImGuiTableFlags None)
+            var column_FlagsOut = [[ImGuiTableColumnFlags  ImGuiTableColumnFlags None; ImGuiTableColumnFlags None; ImGuiTableColumnFlags None]]
+        if BeginTable("table_columns_Flags checkboxes", column_count, ImGuiTableFlags None)
             PushStyleCompact()
             for column in range(column_count)
                 TableNextColumn()
@@ -3016,7 +3016,7 @@ def DasShowDemoWindowTables()
                 EditTableColumnsFlags(safe_addr(column_flags[column]))
                 Spacing()
                 Text("Output flags:")
-                ShowTableColumnsStatusFlags(column_flags_out[column])
+                ShowTableColumnsStatusFlags(column_FlagsOut[column])
                 PopID()
             PopStyleCompact()
             EndTable()
@@ -3030,7 +3030,7 @@ def DasShowDemoWindowTables()
                 TableSetupColumn(column_names[column], column_flags[column])
             TableHeadersRow()
             for column in range(column_count)
-                column_flags_out[column] = TableGetColumnFlags(column)
+                column_FlagsOut[column] = TableGetColumnFlags(column)
             let indent_step = floor(TEXT_BASE_WIDTH / 2.)
             for row in range(8)
                 Indent(indent_step)
@@ -3070,9 +3070,9 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags2 = ImGuiTableFlags None
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_NoKeepColumnsVisible", safe_addr(flags2), ImGuiTableFlags NoKeepColumnsVisible)
-        CheckboxFlags("ImGuiTableFlags_BordersInnerV", safe_addr(flags2), ImGuiTableFlags BordersInnerV)
-        CheckboxFlags("ImGuiTableFlags_BordersOuterV", safe_addr(flags2), ImGuiTableFlags BordersOuterV)
+        CheckboxFlags("ImGuiTableFlags NoKeepColumnsVisible", safe_addr(flags2), ImGuiTableFlags NoKeepColumnsVisible)
+        CheckboxFlags("ImGuiTableFlags BordersInnerV", safe_addr(flags2), ImGuiTableFlags BordersInnerV)
+        CheckboxFlags("ImGuiTableFlags BordersOuterV", safe_addr(flags2), ImGuiTableFlags BordersOuterV)
         PopStyleCompact()
         if BeginTable("table2", 4, flags2)
             TableSetupColumn("", ImGuiTableColumnFlags WidthFixed, 100.0f)
@@ -3148,11 +3148,11 @@ def DasShowDemoWindowTables()
         static_let <|
             var flags = ( ImGuiTableFlags Borders | ImGuiTableFlags Resizable | ImGuiTableFlags ContextMenuInBody
                 | ImGuiTableFlags RowBg | ImGuiTableFlags SizingFixedFit | ImGuiTableFlags NoHostExtendX )
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
+        CheckboxFlags("ImGuiTableFlags NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
         SameLine()
         DasHelpMarker("Make outer width auto-fit to columns, overriding outer_size.x value.\n\n" +
             "Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.")
-        CheckboxFlags("ImGuiTableFlags_NoHostExtendY", safe_addr(flags), ImGuiTableFlags NoHostExtendY)
+        CheckboxFlags("ImGuiTableFlags NoHostExtendY", safe_addr(flags), ImGuiTableFlags NoHostExtendY)
         SameLine()
         DasHelpMarker("Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit).\n\n" +
             "Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.")
@@ -3195,10 +3195,10 @@ def DasShowDemoWindowTables()
             var row_bg_target = 1
             var cell_bg_type = 1
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_Borders", safe_addr(flags), ImGuiTableFlags Borders)
-        CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
+        CheckboxFlags("ImGuiTableFlags Borders", safe_addr(flags), ImGuiTableFlags Borders)
+        CheckboxFlags("ImGuiTableFlags RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
         SameLine()
-        DasHelpMarker("ImGuiTableFlags_RowBg automatically sets RowBg0 to alternative colors pulled from the Style.")
+        DasHelpMarker("ImGuiTableFlags RowBg automatically sets RowBg0 to alternative colors pulled from the Style.")
         Combo("row bg type", safe_addr(row_bg_type), [[auto "None"; "Red"; "Gradient"]])
         Combo("row bg target", safe_addr(row_bg_target), [[auto "RowBg0"; "RowBg1"]])
         SameLine()
@@ -3321,11 +3321,11 @@ def DasShowDemoWindowTables()
         SetNextItemOpen(open_action != 0)
     if TreeNode("Context menus")
         DasHelpMarker("By default, right-clicking over a TableHeadersRow()/TableHeader() line will open the default context-menu.\n" +
-            "Using ImGuiTableFlags_ContextMenuInBody we also allow right-clicking over columns body.")
+            "Using ImGuiTableFlags ContextMenuInBody we also allow right-clicking over columns body.")
         static_let <|
             var flags1 = ImGuiTableFlags Resizable | ImGuiTableFlags Reorderable | ImGuiTableFlags Hideable | ImGuiTableFlags Borders | ImGuiTableFlags ContextMenuInBody
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_ContextMenuInBody", safe_addr(flags1), ImGuiTableFlags ContextMenuInBody)
+        CheckboxFlags("ImGuiTableFlags ContextMenuInBody", safe_addr(flags1), ImGuiTableFlags ContextMenuInBody)
         PopStyleCompact()
         let COLUMNS_COUNT = 3
         if BeginTable("table_context_menu", COLUMNS_COUNT, flags1)
@@ -3422,10 +3422,10 @@ def DasShowDemoWindowTables()
                 | ImGuiTableFlags RowBg | ImGuiTableFlags BordersOuter | ImGuiTableFlags BordersV | ImGuiTableFlags NoBordersInBody
                 | ImGuiTableFlags ScrollY )
         PushStyleCompact()
-        CheckboxFlags("ImGuiTableFlags_SortMulti", safe_addr(flags), ImGuiTableFlags SortMulti)
+        CheckboxFlags("ImGuiTableFlags SortMulti", safe_addr(flags), ImGuiTableFlags SortMulti)
         SameLine()
         DasHelpMarker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).")
-        CheckboxFlags("ImGuiTableFlags_SortTristate", safe_addr(flags), ImGuiTableFlags SortTristate)
+        CheckboxFlags("ImGuiTableFlags SortTristate", safe_addr(flags), ImGuiTableFlags SortTristate)
         SameLine()
         DasHelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).")
         PopStyleCompact()
@@ -3486,25 +3486,25 @@ def DasShowDemoWindowTables()
             PushStyleCompact()
             PushItemWidth(TEXT_BASE_WIDTH * 28.0f)
             if TreeNodeEx("Features:", ImGuiTreeNodeFlags DefaultOpen)
-                CheckboxFlags("ImGuiTableFlags_Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
-                CheckboxFlags("ImGuiTableFlags_Reorderable", safe_addr(flags), ImGuiTableFlags Reorderable)
-                CheckboxFlags("ImGuiTableFlags_Hideable", safe_addr(flags), ImGuiTableFlags Hideable)
-                CheckboxFlags("ImGuiTableFlags_Sortable", safe_addr(flags), ImGuiTableFlags Sortable)
-                CheckboxFlags("ImGuiTableFlags_NoSavedSettings", safe_addr(flags), ImGuiTableFlags NoSavedSettings)
-                CheckboxFlags("ImGuiTableFlags_ContextMenuInBody", safe_addr(flags), ImGuiTableFlags ContextMenuInBody)
+                CheckboxFlags("ImGuiTableFlags Resizable", safe_addr(flags), ImGuiTableFlags Resizable)
+                CheckboxFlags("ImGuiTableFlags Reorderable", safe_addr(flags), ImGuiTableFlags Reorderable)
+                CheckboxFlags("ImGuiTableFlags Hideable", safe_addr(flags), ImGuiTableFlags Hideable)
+                CheckboxFlags("ImGuiTableFlags Sortable", safe_addr(flags), ImGuiTableFlags Sortable)
+                CheckboxFlags("ImGuiTableFlags NoSavedSettings", safe_addr(flags), ImGuiTableFlags NoSavedSettings)
+                CheckboxFlags("ImGuiTableFlags ContextMenuInBody", safe_addr(flags), ImGuiTableFlags ContextMenuInBody)
                 TreePop()
             if TreeNodeEx("Decorations:", ImGuiTreeNodeFlags DefaultOpen)
-                CheckboxFlags("ImGuiTableFlags_RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
-                CheckboxFlags("ImGuiTableFlags_BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
-                CheckboxFlags("ImGuiTableFlags_BordersOuterV", safe_addr(flags), ImGuiTableFlags BordersOuterV)
-                CheckboxFlags("ImGuiTableFlags_BordersInnerV", safe_addr(flags), ImGuiTableFlags BordersInnerV)
-                CheckboxFlags("ImGuiTableFlags_BordersH", safe_addr(flags), ImGuiTableFlags BordersH)
-                CheckboxFlags("ImGuiTableFlags_BordersOuterH", safe_addr(flags), ImGuiTableFlags BordersOuterH)
-                CheckboxFlags("ImGuiTableFlags_BordersInnerH", safe_addr(flags), ImGuiTableFlags BordersInnerH)
-                CheckboxFlags("ImGuiTableFlags_NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
+                CheckboxFlags("ImGuiTableFlags RowBg", safe_addr(flags), ImGuiTableFlags RowBg)
+                CheckboxFlags("ImGuiTableFlags BordersV", safe_addr(flags), ImGuiTableFlags BordersV)
+                CheckboxFlags("ImGuiTableFlags BordersOuterV", safe_addr(flags), ImGuiTableFlags BordersOuterV)
+                CheckboxFlags("ImGuiTableFlags BordersInnerV", safe_addr(flags), ImGuiTableFlags BordersInnerV)
+                CheckboxFlags("ImGuiTableFlags BordersH", safe_addr(flags), ImGuiTableFlags BordersH)
+                CheckboxFlags("ImGuiTableFlags BordersOuterH", safe_addr(flags), ImGuiTableFlags BordersOuterH)
+                CheckboxFlags("ImGuiTableFlags BordersInnerH", safe_addr(flags), ImGuiTableFlags BordersInnerH)
+                CheckboxFlags("ImGuiTableFlags NoBordersInBody", safe_addr(flags), ImGuiTableFlags NoBordersInBody)
                 SameLine()
                 DasHelpMarker("Disable vertical borders in columns Body (borders will always appears in Headers")
-                CheckboxFlags("ImGuiTableFlags_NoBordersInBodyUntilResize", safe_addr(flags), ImGuiTableFlags NoBordersInBodyUntilResize)
+                CheckboxFlags("ImGuiTableFlags NoBordersInBodyUntilResize", safe_addr(flags), ImGuiTableFlags NoBordersInBodyUntilResize)
                 SameLine()
                 DasHelpMarker("Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers)")
                 TreePop()
@@ -3512,46 +3512,46 @@ def DasShowDemoWindowTables()
                 EditTableSizingFlags(safe_addr(flags))
                 SameLine()
                 DasHelpMarker("In the Advanced demo we override the policy of each column so those table-wide settings have less effect that typical.")
-                CheckboxFlags("ImGuiTableFlags_NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
+                CheckboxFlags("ImGuiTableFlags NoHostExtendX", safe_addr(flags), ImGuiTableFlags NoHostExtendX)
                 SameLine()
                 DasHelpMarker("Make outer width auto-fit to columns, overriding outer_size.x value.\n" +
                     "\nOnly available when ScrollX/ScrollY are disabled and Stretch columns are not used.")
-                CheckboxFlags("ImGuiTableFlags_NoHostExtendY", safe_addr(flags), ImGuiTableFlags NoHostExtendY)
+                CheckboxFlags("ImGuiTableFlags NoHostExtendY", safe_addr(flags), ImGuiTableFlags NoHostExtendY)
                 SameLine()
                 DasHelpMarker("Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit).\n" +
                     "\nOnly available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.")
-                CheckboxFlags("ImGuiTableFlags_NoKeepColumnsVisible", safe_addr(flags), ImGuiTableFlags NoKeepColumnsVisible)
+                CheckboxFlags("ImGuiTableFlags NoKeepColumnsVisible", safe_addr(flags), ImGuiTableFlags NoKeepColumnsVisible)
                 SameLine()
                 DasHelpMarker("Only available if ScrollX is disabled.")
-                CheckboxFlags("ImGuiTableFlags_PreciseWidths", safe_addr(flags), ImGuiTableFlags PreciseWidths)
+                CheckboxFlags("ImGuiTableFlags PreciseWidths", safe_addr(flags), ImGuiTableFlags PreciseWidths)
                 SameLine()
                 DasHelpMarker("Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: " +
                     "Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.")
-                CheckboxFlags("ImGuiTableFlags_NoClip", safe_addr(flags), ImGuiTableFlags NoClip)
+                CheckboxFlags("ImGuiTableFlags NoClip", safe_addr(flags), ImGuiTableFlags NoClip)
                 SameLine()
                 DasHelpMarker("Disable clipping rectangle for every individual columns (reduce draw command count, " +
                     " items will be able to overflow into other columns). Generally incompatible with ScrollFreeze options.")
                 TreePop()
             if TreeNodeEx("Padding:", ImGuiTreeNodeFlags DefaultOpen)
-                CheckboxFlags("ImGuiTableFlags_PadOuterX", safe_addr(flags), ImGuiTableFlags PadOuterX)
-                CheckboxFlags("ImGuiTableFlags_NoPadOuterX", safe_addr(flags), ImGuiTableFlags NoPadOuterX)
-                CheckboxFlags("ImGuiTableFlags_NoPadInnerX", safe_addr(flags), ImGuiTableFlags NoPadInnerX)
+                CheckboxFlags("ImGuiTableFlags PadOuterX", safe_addr(flags), ImGuiTableFlags PadOuterX)
+                CheckboxFlags("ImGuiTableFlags NoPadOuterX", safe_addr(flags), ImGuiTableFlags NoPadOuterX)
+                CheckboxFlags("ImGuiTableFlags NoPadInnerX", safe_addr(flags), ImGuiTableFlags NoPadInnerX)
                 TreePop()
             if TreeNodeEx("Scrolling:", ImGuiTreeNodeFlags DefaultOpen)
-                CheckboxFlags("ImGuiTableFlags_ScrollX", safe_addr(flags), ImGuiTableFlags ScrollX)
+                CheckboxFlags("ImGuiTableFlags ScrollX", safe_addr(flags), ImGuiTableFlags ScrollX)
                 SameLine()
                 SetNextItemWidth(GetFrameHeight())
                 DragInt("freeze_cols", safe_addr(freeze_cols), 0.2f, 0, 9, "", ImGuiSliderFlags NoInput)
-                CheckboxFlags("ImGuiTableFlags_ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
+                CheckboxFlags("ImGuiTableFlags ScrollY", safe_addr(flags), ImGuiTableFlags ScrollY)
                 SameLine()
                 SetNextItemWidth(GetFrameHeight())
                 DragInt("freeze_rows", safe_addr(freeze_rows), 0.2f, 0, 9, "", ImGuiSliderFlags NoInput)
                 TreePop()
             if TreeNodeEx("Sorting:", ImGuiTreeNodeFlags DefaultOpen)
-                CheckboxFlags("ImGuiTableFlags_SortMulti", safe_addr(flags), ImGuiTableFlags SortMulti)
+                CheckboxFlags("ImGuiTableFlags SortMulti", safe_addr(flags), ImGuiTableFlags SortMulti)
                 SameLine()
                 DasHelpMarker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).")
-                CheckboxFlags("ImGuiTableFlags_SortTristate", safe_addr(flags), ImGuiTableFlags SortTristate)
+                CheckboxFlags("ImGuiTableFlags SortTristate", safe_addr(flags), ImGuiTableFlags SortTristate)
                 SameLine()
                 DasHelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).")
                 TreePop()
@@ -4439,7 +4439,7 @@ def DasShowDemoWindowWidgets()
                     "\tlock cmpxchg8b eax\n",
                     1024*16)
                 var flags = ImGuiInputTextFlags AllowTabInput
-            DasHelpMarker("You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputTextMultiline()"+
+            DasHelpMarker("You can use the ImGuiInputTextFlags CallbackResize facility if you need to wire InputTextMultiline()"+
                 " to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example. "+
                 "(This is not demonstrated in imgui_demo.cpp because we don't want to include <string> in here)")
             CheckboxFlags("ImGuiInputTextFlags ReadOnly", safe_addr(flags), ImGuiInputTextFlags ReadOnly)
@@ -4501,276 +4501,176 @@ def DasShowDemoWindowWidgets()
             Text("({g_edit_count})")
             TreePop()
 
-/*
-        if (TreeNode("Resize Callback"))
-        {
-            // To wire InputText() with std::string or any other custom string type,
-            // you can use the ImGuiInputTextFlags_CallbackResize flag + create a custom InputText() wrapper
-            // using your preferred type. See misc/cpp/imgui_stdlib.h for an implementation of this using std::string.
-            HelpMarker(
-                "Using ImGuiInputTextFlags_CallbackResize to wire your custom string type to InputText().\n\n"
+        if TreeNode("Resize Callback")
+            DasHelpMarker(
+                "Using ImGuiInputTextFlags CallbackResize to wire your custom string type to InputText().\n\n" +
                 "See misc/cpp/imgui_stdlib.h for an implementation of this for std::string.")
-            struct Funcs
-            {
-                static int MyResizeCallback(ImGuiInputTextCallbackData* data)
-                {
-                    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-                    {
-                        ImVector<char>* my_str = (ImVector<char>*)data->UserData;
-                        IM_ASSERT(my_str->begin() == data->Buf)
-                        my_str->resize(data->BufSize) // NB: On resizing calls, generally data->BufSize == data->BufTextLen + 1
-                        data->Buf = my_str->begin()
-                    }
-                    return 0;
-                }
-
-                // Note: Because  is a namespace you would typically add your own function into the namespace.
-                // For example, you code may declare a function 'InputText(const char* label, MyString* my_str)'
-                static bool MyInputTextMultiline(const char* label, ImVector<char>* my_str, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0)
-                {
-                    IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0)
-                    return InputTextMultiline(label, my_str->begin(), (size_t)my_str->size(), size, flags | ImGuiInputTextFlags_CallbackResize, Funcs::MyResizeCallback, (void*)my_str)
-                }
-            };
-
-            // For this demo we are using ImVector as a string container.
-            // Note that because we need to store a terminating zero character, our size/capacity are 1 more
-            // than usually reported by a typical string class.
-            static ImVector<char> my_str;
-            if (my_str.empty())
-                my_str.push_back(0)
-            Funcs::MyInputTextMultiline("##MyStr", &my_str, ImVec2(-FLT_MIN, GetTextLineHeight() * 16))
-            Text("Data: %p\nSize: %d\nCapacity: %d", (void*)my_str.begin(), my_str.size(), my_str.capacity())
+            static_let <|
+                var m_str <- ImGuiInputTextBuffer("",64) <| @ ( it,data )
+                    if data.EventFlag == ImGuiInputTextFlags CallbackResize
+                        it.buffer |> resize(data.BufSize)
+                        unsafe
+                            data.Buf = reinterpret<string> addr(it.buffer[0])
+                    return 0
+            InputTextMultiline("##MyStr", m_str, ImVec2(-FLT_MIN, GetTextLineHeight() * 16.), ImGuiInputTextFlags CallbackResize)
+            unsafe
+                let pbuf = intptr(addr(m_str.buffer[0]))
+                Text("Data: {pbuf}\nSize: {length(m_str.buffer)}\nCapacity: {capacity(m_str.buffer)}")
             TreePop()
-        }
-
-*/
-
         TreePop()
 
-/*
-    // Tabs
-    if (TreeNode("Tabs"))
-    {
-        if (TreeNode("Basic"))
-        {
-            ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-            if (BeginTabBar("MyTabBar", tab_bar_flags))
-            {
-                if (BeginTabItem("Avocado"))
-                {
+    if TreeNode("Tabs")
+        if TreeNode("Basic")
+            var tab_bar_flags = ImGuiTabBarFlags None
+            if BeginTabBar("MyTabBar", tab_bar_flags)
+                if BeginTabItem("Avocado")
                     Text("This is the Avocado tab!\nblah blah blah blah blah")
                     EndTabItem()
-                }
-                if (BeginTabItem("Broccoli"))
-                {
+                if BeginTabItem("Broccoli")
                     Text("This is the Broccoli tab!\nblah blah blah blah blah")
                     EndTabItem()
-                }
-                if (BeginTabItem("Cucumber"))
-                {
+                if BeginTabItem("Cucumber")
                     Text("This is the Cucumber tab!\nblah blah blah blah blah")
                     EndTabItem()
-                }
                 EndTabBar()
-            }
             Separator()
             TreePop()
-        }
-
-        if (TreeNode("Advanced & Close Button"))
-        {
-            // Expose a couple of the available flags. In most cases you may just call BeginTabBar() with no flags (0).
-            static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
-            CheckboxFlags("ImGuiTabBarFlags_Reorderable", &tab_bar_flags, ImGuiTabBarFlags_Reorderable)
-            CheckboxFlags("ImGuiTabBarFlags_AutoSelectNewTabs", &tab_bar_flags, ImGuiTabBarFlags_AutoSelectNewTabs)
-            CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton)
-            CheckboxFlags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", &tab_bar_flags, ImGuiTabBarFlags_NoCloseWithMiddleMouseButton)
-            if ((tab_bar_flags & ImGuiTabBarFlags_FittingPolicyMask_) == 0)
-                tab_bar_flags |= ImGuiTabBarFlags_FittingPolicyDefault_;
-            if (CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
-                tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown)
-            if (CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
-                tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll)
-
-            // Tab Bar
-            const char* names[4] = { "Artichoke", "Beetroot", "Celery", "Daikon" };
-            static bool opened[4] = { true, true, true, true }; // Persistent user state
-            for (int n = 0; n < IM_ARRAYSIZE(opened) n++)
-            {
-                if (n > 0) { SameLine() }
-                Checkbox(names[n], &opened[n])
-            }
-
-            // Passing a bool* to BeginTabItem() is similar to passing one to Begin():
-            // the underlying bool will be set to false when the tab is closed.
+        if TreeNode("Advanced & Close Button")
+            static_let <|
+                var tab_bar_flags = ImGuiTabBarFlags Reorderable
+            CheckboxFlags("ImGuiTabBarFlags Reorderable", safe_addr(tab_bar_flags), ImGuiTabBarFlags Reorderable)
+            CheckboxFlags("ImGuiTabBarFlags AutoSelectNewTabs", safe_addr(tab_bar_flags), ImGuiTabBarFlags AutoSelectNewTabs)
+            CheckboxFlags("ImGuiTabBarFlags TabListPopupButton", safe_addr(tab_bar_flags), ImGuiTabBarFlags TabListPopupButton)
+            CheckboxFlags("ImGuiTabBarFlags NoCloseWithMiddleMouseButton", safe_addr(tab_bar_flags), ImGuiTabBarFlags NoCloseWithMiddleMouseButton)
+            if !(tab_bar_flags && ImGuiTabBarFlags FittingPolicyMask_)
+                tab_bar_flags |= ImGuiTabBarFlags FittingPolicyDefault_
+            if CheckboxFlags("ImGuiTabBarFlags FittingPolicyResizeDown", safe_addr(tab_bar_flags), ImGuiTabBarFlags FittingPolicyResizeDown)
+                tab_bar_flags &= ~(ImGuiTabBarFlags FittingPolicyMask_ ^ ImGuiTabBarFlags FittingPolicyResizeDown)
+            if CheckboxFlags("ImGuiTabBarFlags FittingPolicyScroll", safe_addr(tab_bar_flags), ImGuiTabBarFlags FittingPolicyScroll)
+                tab_bar_flags &= ~(ImGuiTabBarFlags FittingPolicyMask_ ^ ImGuiTabBarFlags FittingPolicyScroll)
+            static_let <|
+                let names = [[string "Artichoke"; "Beetroot"; "Celery"; "Daikon"]]
+                var opened = [[bool true; true; true; true ]]
+            for n in range(length(opened))
+                if n > 0
+                    SameLine()
+                Checkbox(names[n], safe_addr(opened[n]))
             if (BeginTabBar("MyTabBar", tab_bar_flags))
-            {
-                for (int n = 0; n < IM_ARRAYSIZE(opened) n++)
-                    if (opened[n] && BeginTabItem(names[n], &opened[n], ImGuiTabItemFlags_None))
-                    {
-                        Text("This is the %s tab!", names[n])
-                        if (n & 1)
+                for n in range(length(opened))
+                    if opened[n] && BeginTabItem(names[n], safe_addr(opened[n]), ImGuiTabItemFlags None)
+                        Text("This is the {names[n]} tab!")
+                        if (n & 1)!=0
                             Text("I am an odd tab.")
                         EndTabItem()
-                    }
                 EndTabBar()
-            }
             Separator()
             TreePop()
-        }
-
-        if (TreeNode("TabItemButton & Leading/Trailing flags"))
-        {
-            static ImVector<int> active_tabs;
-            static int next_tab_id = 0;
-            if (next_tab_id == 0) // Initialize with some default tabs
-                for (int i = 0; i < 3; i++)
-                    active_tabs.push_back(next_tab_id++)
-
-            // TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
-            // (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
-            // but they tend to make more sense together)
-            static bool show_leading_button = true;
-            static bool show_trailing_button = true;
-            Checkbox("Show Leading TabItemButton()", &show_leading_button)
-            Checkbox("Show Trailing TabItemButton()", &show_trailing_button)
-
-            // Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
-            static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyResizeDown;
-            CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton)
-            if (CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
-                tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown)
-            if (CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
-                tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll)
-
-            if (BeginTabBar("MyTabBar", tab_bar_flags))
-            {
-                // Demo a Leading TabItemButton(): click the "?" button to open a menu
-                if (show_leading_button)
-                    if (TabItemButton("?", ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_NoTooltip))
+        if TreeNode("TabItemButton & Leading/Trailing flags")
+            static_let <|
+                var active_tabs : array<int>
+                var next_tab_id = 0
+            if next_tab_id == 0
+                for i in range(3)
+                    active_tabs |> push(next_tab_id++)
+            static_let <|
+                var show_leading_button = true
+                var show_trailing_button = true
+            Checkbox("Show Leading TabItemButton()", safe_addr(show_leading_button))
+            Checkbox("Show Trailing TabItemButton()", safe_addr(show_trailing_button))
+            static_let <|
+                var tab_bar_flags = ImGuiTabBarFlags AutoSelectNewTabs | ImGuiTabBarFlags Reorderable | ImGuiTabBarFlags FittingPolicyResizeDown
+            CheckboxFlags("ImGuiTabBarFlags TabListPopupButton", safe_addr(tab_bar_flags), ImGuiTabBarFlags TabListPopupButton)
+            if CheckboxFlags("ImGuiTabBarFlags FittingPolicyResizeDown", safe_addr(tab_bar_flags), ImGuiTabBarFlags FittingPolicyResizeDown)
+                tab_bar_flags &= ~(ImGuiTabBarFlags FittingPolicyMask_ ^ ImGuiTabBarFlags FittingPolicyResizeDown)
+            if CheckboxFlags("ImGuiTabBarFlags FittingPolicyScroll", safe_addr(tab_bar_flags), ImGuiTabBarFlags FittingPolicyScroll)
+                tab_bar_flags &= ~(ImGuiTabBarFlags FittingPolicyMask_ ^ ImGuiTabBarFlags FittingPolicyScroll)
+            if BeginTabBar("MyTabBar", tab_bar_flags)
+                if show_leading_button
+                    if TabItemButton("?", ImGuiTabItemFlags Leading | ImGuiTabItemFlags NoTooltip)
                         OpenPopup("MyHelpMenu")
-                if (BeginPopup("MyHelpMenu"))
-                {
+                if BeginPopup("MyHelpMenu")
                     Selectable("Hello!")
                     EndPopup()
-                }
-
-                // Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
-                // Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
-                if (show_trailing_button)
-                    if (TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip))
-                        active_tabs.push_back(next_tab_id++) // Add new tab
-
-                // Submit our regular tabs
-                for (int n = 0; n < active_tabs.Size; )
-                {
-                    bool open = true;
-                    char name[16];
-                    snprintf(name, IM_ARRAYSIZE(name), "%04d", active_tabs[n])
-                    if (BeginTabItem(name, &open, ImGuiTabItemFlags_None))
-                    {
-                        Text("This is the %s tab!", name)
+                if show_trailing_button
+                    if TabItemButton("+", ImGuiTabItemFlags Trailing | ImGuiTabItemFlags NoTooltip)
+                        active_tabs |> push(next_tab_id++)
+                var n = 0
+                while n < length(active_tabs)
+                    var open = true
+                    let name = "{active_tabs[n]}"
+                    if BeginTabItem(name, safe_addr(open), ImGuiTabItemFlags None)
+                        Text("This is the {name} tab!")
                         EndTabItem()
-                    }
-
-                    if (!open)
-                        active_tabs.erase(active_tabs.Data + n)
+                    if !open
+                        active_tabs |> erase(n)
                     else
-                        n++;
-                }
-
+                        n++
                 EndTabBar()
-            }
             Separator()
             TreePop()
-        }
         TreePop()
-    }
 
-    // Plot/Graph widgets are not very good.
-    // Consider writing your own, or using a third-party one, see:
-    // - ImPlot https://github.com/epezent/implot
-    // - others https://github.com/ocornut/imgui/wiki/Useful-Widgets
-    if (TreeNode("Plots Widgets"))
-    {
-        static bool animate = true;
-        Checkbox("Animate", &animate)
-
-        static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
-        PlotLines("Frame Times", arr, IM_ARRAYSIZE(arr))
-
-        // Fill an array of contiguous float values to plot
-        // Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float
-        // and the sizeof() of your structure in the "stride" parameter.
-        static float values[90] = {};
-        static int values_offset = 0;
-        static double refresh_time = 0.0;
-        if (!animate || refresh_time == 0.0)
+    if TreeNode("Plots Widgets")
+        static_let <|
+            var animate = true
+        Checkbox("Animate", safe_addr(animate))
+        static_let <|
+            var arr = [[float 0.6f; 0.1f; 1.0f; 0.5f; 0.92f; 0.1f; 0.2f]]
+        PlotLines("Frame Times", arr)
+        static_let <|
+            var values : float[90]
+            var values_offset = 0;
+            var refresh_time = 0.0lf
+        if !animate || refresh_time==0.0lf
             refresh_time = GetTime()
-        while (refresh_time < GetTime()) // Create data at fixed 60 Hz rate for the demo
-        {
-            static float phase = 0.0f;
-            values[values_offset] = cosf(phase)
-            values_offset = (values_offset + 1) % IM_ARRAYSIZE(values)
-            phase += 0.10f * values_offset;
-            refresh_time += 1.0f / 60.0f;
-        }
-
-        // Plots can display overlay texts
-        // (in this example, we will display an average value)
-        {
-            float average = 0.0f;
-            for (int n = 0; n < IM_ARRAYSIZE(values) n++)
-                average += values[n];
-            average /= (float)IM_ARRAYSIZE(values)
-            char overlay[32];
-            sprintf(overlay, "avg %f", average)
-            PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, overlay, -1.0f, 1.0f, ImVec2(0, 80.0f))
-        }
-        PlotHistogram("Histogram", arr, IM_ARRAYSIZE(arr), 0, NULL, 0.0f, 1.0f, ImVec2(0, 80.0f))
-
-        // Use functions to generate output
-        // FIXME: This is rather awkward because current plot API only pass in indices.
-        // We probably want an API passing floats and user provide sample rate/count.
-        struct Funcs
-        {
-            static float Sin(void*, int i) { return sinf(i * 0.1f) }
-            static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
-        };
-        static int func_type = 0, display_count = 70;
+        while refresh_time < GetTime()
+            static_let <|
+                var phase = 0.0f
+            values[values_offset] = cos(phase)
+            values_offset = (values_offset + 1) % length(values)
+            phase += 0.10f * float(values_offset)
+            refresh_time += 1.0lf / 60.0lf
+        if true
+            var average = 0.0f
+            for val in values
+                average += val
+            average /= float(length(values))
+            PlotLines("Lines", values, values_offset, "avg {average}", -1.0f, 1.0f, ImVec2(0., 80.0f))
+        PlotHistogram("Histogram", arr, 0, "", 0.0f, 1.0f, ImVec2(0., 80.0f))
+        static_let <|
+            var Sin <- ImGuiPlotGetter() <| @ ( i )
+                return sin(float(i)*0.1)
+            var Saw <- ImGuiPlotGetter() <| @ ( i )
+                return (i & 1)!=0 ? 1.0f : -1.0f
+            var func_type = 0
+            var display_count = 70
         Separator()
-        SetNextItemWidth(100)
-        Combo("func", &func_type, "Sin\0Saw\0")
+        SetNextItemWidth(100.)
+        Combo("func", safe_addr(func_type), [[string "Sin"; "Saw"]])
         SameLine()
-        SliderInt("Sample count", &display_count, 1, 400)
-        float (*func)(void*, int) = (func_type == 0) ? Funcs::Sin : Funcs::Saw;
-        PlotLines("Lines", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(0, 80))
-        PlotHistogram("Histogram", func, NULL, display_count, 0, NULL, -1.0f, 1.0f, ImVec2(0, 80))
+        SliderInt("Sample count", safe_addr(display_count), 1, 400)
+        PlotLines("Lines", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, ImVec2(0., 80.))
+        PlotHistogram("Histogram", (func_type == 0) ? Sin : Saw, display_count, 0, "", -1.0f, 1.0f, ImVec2(0., 80.))
         Separator()
-
-        // Animate a simple progress bar
-        static float progress = 0.0f, progress_dir = 1.0f;
-        if (animate)
-        {
+        static_let <|
+            var progress = 0.0f
+            var progress_dir = 1.0f
+        if animate
             progress += progress_dir * 0.4f * GetIO().DeltaTime;
-            if (progress >= +1.1f) { progress = +1.1f; progress_dir *= -1.0f; }
-            if (progress <= -0.1f) { progress = -0.1f; progress_dir *= -1.0f; }
-        }
-
-        // Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
-        // or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
+            if progress >= +1.1f
+                progress = +1.1f
+                progress_dir *= -1.0f
+            if progress <= -0.1f
+                progress = -0.1f
+                progress_dir *= -1.0f
         ProgressBar(progress, ImVec2(0.0f, 0.0f))
         SameLine(0.0f, GetStyle().ItemInnerSpacing.x)
         Text("Progress Bar")
-
-        float progress_saturated = IM_CLAMP(progress, 0.0f, 1.0f)
-        char buf[32];
-        sprintf(buf, "%d/%d", (int)(progress_saturated * 1753), 1753)
-        ProgressBar(progress, ImVec2(0.f, 0.f), buf)
+        var progress_saturated = clamp(progress, 0.0f, 1.0f)
+        ProgressBar(progress, ImVec2(0.f, 0.f), "{int(progress_saturated * 1753.)}{1753}")
         TreePop()
-    }
 
+/*
     if (TreeNode("Color/Picker Widgets"))
     {
         static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f)
@@ -4785,7 +4685,7 @@ def DasShowDemoWindowWidgets()
         Checkbox("With Drag and Drop", &drag_and_drop)
         Checkbox("With Options Menu", &options_menu) SameLine() HelpMarker("Right-click on the individual color widget to show options.")
         Checkbox("With HDR", &hdr) SameLine() HelpMarker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
-        ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags_NoOptions)
+        ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags HDR : 0) | (drag_and_drop ? 0 : ImGuiColorEditFlags NoDragDrop) | (alpha_half_preview ? ImGuiColorEditFlags AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags AlphaPreview : 0)) | (options_menu ? 0 : ImGuiColorEditFlags NoOptions)
 
         Text("Color widget:")
         SameLine() HelpMarker(
@@ -4794,17 +4694,17 @@ def DasShowDemoWindowWidgets()
         ColorEdit3("MyColor##1", (float*)&color, misc_flags)
 
         Text("Color widget HSV with Alpha:")
-        ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags_DisplayHSV | misc_flags)
+        ColorEdit4("MyColor##2", (float*)&color, ImGuiColorEditFlags DisplayHSV | misc_flags)
 
         Text("Color widget with Float Display:")
-        ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags_Float | misc_flags)
+        ColorEdit4("MyColor##2f", (float*)&color, ImGuiColorEditFlags Float | misc_flags)
 
         Text("Color button with Picker:")
         SameLine() HelpMarker(
-            "With the ImGuiColorEditFlags_NoInputs flag you can hide all the slider/text inputs.\n"
-            "With the ImGuiColorEditFlags_NoLabel flag you can pass a non-empty label which will only "
+            "With the ImGuiColorEditFlags NoInputs flag you can hide all the slider/text inputs.\n"
+            "With the ImGuiColorEditFlags NoLabel flag you can pass a non-empty label which will only "
             "be used for the tooltip and picker popup.")
-        ColorEdit4("MyColor##3", (float*)&color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | misc_flags)
+        ColorEdit4("MyColor##3", (float*)&color, ImGuiColorEditFlags NoInputs | ImGuiColorEditFlags NoLabel | misc_flags)
 
         Text("Color button with Custom Picker Popup:")
 
@@ -4835,14 +4735,14 @@ def DasShowDemoWindowWidgets()
         {
             Text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
             Separator()
-            ColorPicker4("##picker", (float*)&color, misc_flags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview)
+            ColorPicker4("##picker", (float*)&color, misc_flags | ImGuiColorEditFlags NoSidePreview | ImGuiColorEditFlags NoSmallPreview)
             SameLine()
 
             BeginGroup() // Lock X position
             Text("Current")
-            ColorButton("##current", color, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf, ImVec2(60, 40))
+            ColorButton("##current", color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60, 40))
             Text("Previous")
-            if (ColorButton("##previous", backup_color, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf, ImVec2(60, 40)))
+            if (ColorButton("##previous", backup_color, ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags AlphaPreviewHalf, ImVec2(60, 40)))
                 color = backup_color;
             Separator()
             Text("Palette")
@@ -4852,12 +4752,12 @@ def DasShowDemoWindowWidgets()
                 if ((n % 8) != 0)
                     SameLine(0.0f, GetStyle().ItemSpacing.y)
 
-                ImGuiColorEditFlags palette_button_flags = ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip;
+                ImGuiColorEditFlags palette_button_flags = ImGuiColorEditFlags NoAlpha | ImGuiColorEditFlags NoPicker | ImGuiColorEditFlags NoTooltip;
                 if (ColorButton("##palette", saved_palette[n], palette_button_flags, ImVec2(20, 20)))
                     color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w) // Preserve alpha!
 
                 // Allow user to drop colors into each palette entry. Note that ColorButton() is already a
-                // drag source by default, unless specifying the ImGuiColorEditFlags_NoDragDrop flag.
+                // drag source by default, unless specifying the ImGuiColorEditFlags NoDragDrop flag.
                 if (BeginDragDropTarget())
                 {
                     if (const ImGuiPayload* payload = AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_3F))
@@ -4875,8 +4775,8 @@ def DasShowDemoWindowWidgets()
 
         Text("Color button only:")
         static bool no_border = false;
-        Checkbox("ImGuiColorEditFlags_NoBorder", &no_border)
-        ColorButton("MyColor##3c", *(ImVec4*)&color, misc_flags | (no_border ? ImGuiColorEditFlags_NoBorder : 0), ImVec2(80, 80))
+        Checkbox("ImGuiColorEditFlags NoBorder", &no_border)
+        ColorButton("MyColor##3c", *(ImVec4*)&color, misc_flags | (no_border ? ImGuiColorEditFlags NoBorder : 0), ImVec2(80, 80))
 
         Text("Color picker:")
         static bool alpha = true;
@@ -4896,7 +4796,7 @@ def DasShowDemoWindowWidgets()
             if (ref_color)
             {
                 SameLine()
-                ColorEdit4("##RefColor", &ref_color_v.x, ImGuiColorEditFlags_NoInputs | misc_flags)
+                ColorEdit4("##RefColor", &ref_color_v.x, ImGuiColorEditFlags NoInputs | misc_flags)
             }
         }
         Combo("Display Mode", &display_mode, "Auto/Current\0None\0RGB Only\0HSV Only\0Hex Only\0")
@@ -4907,15 +4807,15 @@ def DasShowDemoWindowWidgets()
         Combo("Picker Mode", &picker_mode, "Auto/Current\0Hue bar + SV rect\0Hue wheel + SV triangle\0")
         SameLine() HelpMarker("User can right-click the picker to change mode.")
         ImGuiColorEditFlags flags = misc_flags;
-        if (!alpha)            flags |= ImGuiColorEditFlags_NoAlpha;        // This is by default if you call ColorPicker3() instead of ColorPicker4()
-        if (alpha_bar)         flags |= ImGuiColorEditFlags_AlphaBar;
-        if (!side_preview)     flags |= ImGuiColorEditFlags_NoSidePreview;
-        if (picker_mode == 1)  flags |= ImGuiColorEditFlags_PickerHueBar;
-        if (picker_mode == 2)  flags |= ImGuiColorEditFlags_PickerHueWheel;
-        if (display_mode == 1) flags |= ImGuiColorEditFlags_NoInputs;       // Disable all RGB/HSV/Hex displays
-        if (display_mode == 2) flags |= ImGuiColorEditFlags_DisplayRGB;     // Override display mode
-        if (display_mode == 3) flags |= ImGuiColorEditFlags_DisplayHSV;
-        if (display_mode == 4) flags |= ImGuiColorEditFlags_DisplayHex;
+        if (!alpha)            flags |= ImGuiColorEditFlags NoAlpha;        // This is by default if you call ColorPicker3() instead of ColorPicker4()
+        if (alpha_bar)         flags |= ImGuiColorEditFlags AlphaBar;
+        if (!side_preview)     flags |= ImGuiColorEditFlags NoSidePreview;
+        if (picker_mode == 1)  flags |= ImGuiColorEditFlags PickerHueBar;
+        if (picker_mode == 2)  flags |= ImGuiColorEditFlags PickerHueWheel;
+        if (display_mode == 1) flags |= ImGuiColorEditFlags NoInputs;       // Disable all RGB/HSV/Hex displays
+        if (display_mode == 2) flags |= ImGuiColorEditFlags DisplayRGB;     // Override display mode
+        if (display_mode == 3) flags |= ImGuiColorEditFlags DisplayHSV;
+        if (display_mode == 4) flags |= ImGuiColorEditFlags DisplayHex;
         ColorPicker4("MyColor##4", (float*)&color, flags, ref_color ? &ref_color_v.x : NULL)
 
         Text("Set defaults in code:")
@@ -4925,21 +4825,21 @@ def DasShowDemoWindowWidgets()
             "and the user can change non-forced ones with the options menu.\nWe don't have a getter to avoid"
             "encouraging you to persistently save values that aren't forward-compatible.")
         if (Button("Default: Uint8 + HSV + Hue Bar"))
-            SetColorEditOptions(ImGuiColorEditFlags_Uint8 | ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_PickerHueBar)
+            SetColorEditOptions(ImGuiColorEditFlags Uint8 | ImGuiColorEditFlags DisplayHSV | ImGuiColorEditFlags PickerHueBar)
         if (Button("Default: Float + HDR + Hue Wheel"))
-            SetColorEditOptions(ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_PickerHueWheel)
+            SetColorEditOptions(ImGuiColorEditFlags Float | ImGuiColorEditFlags HDR | ImGuiColorEditFlags PickerHueWheel)
 
         // HSV encoded support (to avoid RGB<>HSV round trips and singularities when S==0 or V==0)
         static ImVec4 color_hsv(0.23f, 1.0f, 1.0f, 1.0f) // Stored as HSV!
         Spacing()
         Text("HSV encoded colors")
         SameLine() HelpMarker(
-            "By default, colors are given to ColorEdit and ColorPicker in RGB, but ImGuiColorEditFlags_InputHSV"
+            "By default, colors are given to ColorEdit and ColorPicker in RGB, but ImGuiColorEditFlags InputHSV"
             "allows you to store colors as HSV and pass them to ColorEdit and ColorPicker as HSV. This comes with the"
             "added benefit that you can manipulate hue values with the picker even when saturation or value are zero.")
         Text("Color widget with InputHSV:")
-        ColorEdit4("HSV shown as RGB##1", (float*)&color_hsv, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_Float)
-        ColorEdit4("HSV shown as HSV##1", (float*)&color_hsv, ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_Float)
+        ColorEdit4("HSV shown as RGB##1", (float*)&color_hsv, ImGuiColorEditFlags DisplayRGB | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
+        ColorEdit4("HSV shown as HSV##1", (float*)&color_hsv, ImGuiColorEditFlags DisplayHSV | ImGuiColorEditFlags InputHSV | ImGuiColorEditFlags Float)
         DragFloat4("Raw HSV values", (float*)&color_hsv, 0.01f, 0.0f, 1.0f)
 
         TreePop()
@@ -4948,14 +4848,14 @@ def DasShowDemoWindowWidgets()
     if (TreeNode("Drag/Slider Flags"))
     {
         // Demonstrate using advanced flags for DragXXX and SliderXXX functions. Note that the flags are the same!
-        static ImGuiSliderFlags flags = ImGuiSliderFlags_None;
-        CheckboxFlags("ImGuiSliderFlags_AlwaysClamp", &flags, ImGuiSliderFlags_AlwaysClamp)
+        static ImGuiSliderFlags flags = ImGuiSliderFlags None;
+        CheckboxFlags("ImGuiSliderFlags AlwaysClamp", &flags, ImGuiSliderFlags AlwaysClamp)
         SameLine() HelpMarker("Always clamp value to min/max bounds (if any) when input manually with CTRL+Click.")
-        CheckboxFlags("ImGuiSliderFlags_Logarithmic", &flags, ImGuiSliderFlags_Logarithmic)
+        CheckboxFlags("ImGuiSliderFlags Logarithmic", &flags, ImGuiSliderFlags Logarithmic)
         SameLine() HelpMarker("Enable logarithmic editing (more precision for small values).")
-        CheckboxFlags("ImGuiSliderFlags_NoRoundToFormat", &flags, ImGuiSliderFlags_NoRoundToFormat)
+        CheckboxFlags("ImGuiSliderFlags NoRoundToFormat", &flags, ImGuiSliderFlags NoRoundToFormat)
         SameLine() HelpMarker("Disable rounding underlying value to match precision of the format string (e.g. %.3f values are rounded to those 3 digits).")
-        CheckboxFlags("ImGuiSliderFlags_NoInput", &flags, ImGuiSliderFlags_NoInput)
+        CheckboxFlags("ImGuiSliderFlags NoInput", &flags, ImGuiSliderFlags NoInput)
         SameLine() HelpMarker("Disable CTRL+Click or Enter key allowing to input text directly into the widget.")
 
         // Drags
@@ -4982,7 +4882,7 @@ def DasShowDemoWindowWidgets()
     {
         static float begin = 10, end = 90;
         static int begin_i = 100, end_i = 1000;
-        DragFloatRange2("range float", &begin, &end, 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%", ImGuiSliderFlags_AlwaysClamp)
+        DragFloatRange2("range float", &begin, &end, 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%", ImGuiSliderFlags AlwaysClamp)
         DragIntRange2("range int", &begin_i, &end_i, 5, 0, 1000, "Min: %d units", "Max: %d units")
         DragIntRange2("range int (no bounds)", &begin_i, &end_i, 5, 0, 0, "Min: %d units", "Max: %d units")
         TreePop()
@@ -5051,9 +4951,9 @@ def DasShowDemoWindowWidgets()
         DragScalar("drag s64",       ImGuiDataType_S64,    &s64_v, drag_speed, drag_clamp ? &s64_zero : NULL, drag_clamp ? &s64_fifty : NULL)
         DragScalar("drag u64",       ImGuiDataType_U64,    &u64_v, drag_speed, drag_clamp ? &u64_zero : NULL, drag_clamp ? &u64_fifty : NULL)
         DragScalar("drag float",     ImGuiDataType_Float,  &f32_v, 0.005f,  &f32_zero, &f32_one, "%f")
-        DragScalar("drag float log", ImGuiDataType_Float,  &f32_v, 0.005f,  &f32_zero, &f32_one, "%f", ImGuiSliderFlags_Logarithmic)
+        DragScalar("drag float log", ImGuiDataType_Float,  &f32_v, 0.005f,  &f32_zero, &f32_one, "%f", ImGuiSliderFlags Logarithmic)
         DragScalar("drag double",    ImGuiDataType_Double, &f64_v, 0.0005f, &f64_zero, NULL,     "%.10f grams")
-        DragScalar("drag double log",ImGuiDataType_Double, &f64_v, 0.0005f, &f64_zero, &f64_one, "0 < %.10f < 1", ImGuiSliderFlags_Logarithmic)
+        DragScalar("drag double log",ImGuiDataType_Double, &f64_v, 0.0005f, &f64_zero, &f64_one, "0 < %.10f < 1", ImGuiSliderFlags Logarithmic)
 
         Text("Sliders")
         SliderScalar("slider s8 full",       ImGuiDataType_S8,     &s8_v,  &s8_min,   &s8_max,   "%d")
@@ -5073,10 +4973,10 @@ def DasShowDemoWindowWidgets()
         SliderScalar("slider u64 high",      ImGuiDataType_U64,    &u64_v, &u64_hi_a, &u64_hi_b, "%I64u ms")
         SliderScalar("slider u64 full",      ImGuiDataType_U64,    &u64_v, &u64_min,  &u64_max,  "%I64u ms")
         SliderScalar("slider float low",     ImGuiDataType_Float,  &f32_v, &f32_zero, &f32_one)
-        SliderScalar("slider float low log", ImGuiDataType_Float,  &f32_v, &f32_zero, &f32_one,  "%.10f", ImGuiSliderFlags_Logarithmic)
+        SliderScalar("slider float low log", ImGuiDataType_Float,  &f32_v, &f32_zero, &f32_one,  "%.10f", ImGuiSliderFlags Logarithmic)
         SliderScalar("slider float high",    ImGuiDataType_Float,  &f32_v, &f32_lo_a, &f32_hi_a, "%e")
         SliderScalar("slider double low",    ImGuiDataType_Double, &f64_v, &f64_zero, &f64_one,  "%.10f grams")
-        SliderScalar("slider double low log",ImGuiDataType_Double, &f64_v, &f64_zero, &f64_one,  "%.10f", ImGuiSliderFlags_Logarithmic)
+        SliderScalar("slider double low log",ImGuiDataType_Double, &f64_v, &f64_zero, &f64_one,  "%.10f", ImGuiSliderFlags Logarithmic)
         SliderScalar("slider double high",   ImGuiDataType_Double, &f64_v, &f64_lo_a, &f64_hi_a, "%e grams")
 
         Text("Sliders (reverse)")
@@ -5095,9 +4995,9 @@ def DasShowDemoWindowWidgets()
         InputScalar("input s16",     ImGuiDataType_S16,    &s16_v, inputs_step ? &s16_one : NULL, NULL, "%d")
         InputScalar("input u16",     ImGuiDataType_U16,    &u16_v, inputs_step ? &u16_one : NULL, NULL, "%u")
         InputScalar("input s32",     ImGuiDataType_S32,    &s32_v, inputs_step ? &s32_one : NULL, NULL, "%d")
-        InputScalar("input s32 hex", ImGuiDataType_S32,    &s32_v, inputs_step ? &s32_one : NULL, NULL, "%08X", ImGuiInputTextFlags_CharsHexadecimal)
+        InputScalar("input s32 hex", ImGuiDataType_S32,    &s32_v, inputs_step ? &s32_one : NULL, NULL, "%08X", ImGuiInputTextFlags CharsHexadecimal)
         InputScalar("input u32",     ImGuiDataType_U32,    &u32_v, inputs_step ? &u32_one : NULL, NULL, "%u")
-        InputScalar("input u32 hex", ImGuiDataType_U32,    &u32_v, inputs_step ? &u32_one : NULL, NULL, "%08X", ImGuiInputTextFlags_CharsHexadecimal)
+        InputScalar("input u32 hex", ImGuiDataType_U32,    &u32_v, inputs_step ? &u32_one : NULL, NULL, "%08X", ImGuiInputTextFlags CharsHexadecimal)
         InputScalar("input s64",     ImGuiDataType_S64,    &s64_v, inputs_step ? &s64_one : NULL)
         InputScalar("input u64",     ImGuiDataType_U64,    &u64_v, inputs_step ? &u64_one : NULL)
         InputScalar("input float",   ImGuiDataType_Float,  &f32_v, inputs_step ? &f32_one : NULL)
@@ -5243,7 +5143,7 @@ def DasShowDemoWindowWidgets()
                 Button(names[n], ImVec2(60, 60))
 
                 // Our buttons are both drag sources and drag targets here!
-                if (BeginDragDropSource(ImGuiDragDropFlags_None))
+                if (BeginDragDropSource(ImGuiDragDropFlags None))
                 {
                     // Set payload to carry the index of our item (could be anything)
                     SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int))
@@ -5340,14 +5240,14 @@ def DasShowDemoWindowWidgets()
         if (item_type == 6) { ret = InputFloat("ITEM: InputFloat", col4f, 1.0f) }               // Testing +/- buttons on scalar input
         if (item_type == 7) { ret = InputFloat3("ITEM: InputFloat3", col4f) }                   // Testing multi-component items (IsItemXXX flags are reported merged)
         if (item_type == 8) { ret = ColorEdit4("ITEM: ColorEdit4", col4f) }                     // Testing multi-component items (IsItemXXX flags are reported merged)
-        if (item_type == 9) { ret = MenuItem("ITEM: MenuItem") }                                // Testing menu item (they use ImGuiButtonFlags_PressedOnRelease button policy)
+        if (item_type == 9) { ret = MenuItem("ITEM: MenuItem") }                                // Testing menu item (they use ImGuiButtonFlags PressedOnRelease button policy)
         if (item_type == 10){ ret = TreeNode("ITEM: TreeNode") if (ret) TreePop() }     // Testing tree node
-        if (item_type == 11){ ret = TreeNodeEx("ITEM: TreeNode w/ ImGuiTreeNodeFlags_OpenOnDoubleClick", ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen) } // Testing tree node with ImGuiButtonFlags_PressedOnDoubleClick button policy.
+        if (item_type == 11){ ret = TreeNodeEx("ITEM: TreeNode w/ ImGuiTreeNodeFlags OpenOnDoubleClick", ImGuiTreeNodeFlags OpenOnDoubleClick | ImGuiTreeNodeFlags NoTreePushOnOpen) } // Testing tree node with ImGuiButtonFlags PressedOnDoubleClick button policy.
         if (item_type == 12){ const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi" }; static int current = 1; ret = Combo("ITEM: Combo", &current, items, IM_ARRAYSIZE(items)) }
         if (item_type == 13){ const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi" }; static int current = 1; ret = ListBox("ITEM: ListBox", &current, items, IM_ARRAYSIZE(items), IM_ARRAYSIZE(items)) }
 
         // Display the values of IsItemHovered() and other common item state functions.
-        // Note that the ImGuiHoveredFlags_XXX flags can be combined.
+        // Note that the ImGuiHoveredFlags XXX flags can be combined.
         // Because BulletText is an item itself and that would affect the output of IsItemXXX functions,
         // we query every state in a single call to avoid storing them and to simplify the code.
         BulletText(
@@ -5372,10 +5272,10 @@ def DasShowDemoWindowWidgets()
             ret,
             IsItemFocused(),
             IsItemHovered(),
-            IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup),
-            IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem),
-            IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped),
-            IsItemHovered(ImGuiHoveredFlags_RectOnly),
+            IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup),
+            IsItemHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem),
+            IsItemHovered(ImGuiHoveredFlags AllowWhenOverlapped),
+            IsItemHovered(ImGuiHoveredFlags RectOnly),
             IsItemActive(),
             IsItemEdited(),
             IsItemActivated(),
@@ -5395,7 +5295,7 @@ def DasShowDemoWindowWidgets()
             BeginChild("outer_child", ImVec2(0, GetFontSize() * 20.0f), true)
 
         // Testing IsWindowFocused() function with its various flags.
-        // Note that the ImGuiFocusedFlags_XXX flags can be combined.
+        // Note that the ImGuiFocusedFlags XXX flags can be combined.
         BulletText(
             "IsWindowFocused() = %d\n"
             "IsWindowFocused(_ChildWindows) = %d\n"
@@ -5403,13 +5303,13 @@ def DasShowDemoWindowWidgets()
             "IsWindowFocused(_RootWindow) = %d\n"
             "IsWindowFocused(_AnyWindow) = %d\n",
             IsWindowFocused(),
-            IsWindowFocused(ImGuiFocusedFlags_ChildWindows),
-            IsWindowFocused(ImGuiFocusedFlags_ChildWindows | ImGuiFocusedFlags_RootWindow),
-            IsWindowFocused(ImGuiFocusedFlags_RootWindow),
-            IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+            IsWindowFocused(ImGuiFocusedFlags ChildWindows),
+            IsWindowFocused(ImGuiFocusedFlags ChildWindows | ImGuiFocusedFlags RootWindow),
+            IsWindowFocused(ImGuiFocusedFlags RootWindow),
+            IsWindowFocused(ImGuiFocusedFlags AnyWindow))
 
         // Testing IsWindowHovered() function with its various flags.
-        // Note that the ImGuiHoveredFlags_XXX flags can be combined.
+        // Note that the ImGuiHoveredFlags XXX flags can be combined.
         BulletText(
             "IsWindowHovered() = %d\n"
             "IsWindowHovered(_AllowWhenBlockedByPopup) = %d\n"
@@ -5420,13 +5320,13 @@ def DasShowDemoWindowWidgets()
             "IsWindowHovered(_RootWindow) = %d\n"
             "IsWindowHovered(_AnyWindow) = %d\n",
             IsWindowHovered(),
-            IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup),
-            IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem),
-            IsWindowHovered(ImGuiHoveredFlags_ChildWindows),
-            IsWindowHovered(ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_RootWindow),
-            IsWindowHovered(ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_AllowWhenBlockedByPopup),
-            IsWindowHovered(ImGuiHoveredFlags_RootWindow),
-            IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByPopup),
+            IsWindowHovered(ImGuiHoveredFlags AllowWhenBlockedByActiveItem),
+            IsWindowHovered(ImGuiHoveredFlags ChildWindows),
+            IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags RootWindow),
+            IsWindowHovered(ImGuiHoveredFlags ChildWindows | ImGuiHoveredFlags AllowWhenBlockedByPopup),
+            IsWindowHovered(ImGuiHoveredFlags RootWindow),
+            IsWindowHovered(ImGuiHoveredFlags AnyWindow))
 
         BeginChild("child", ImVec2(0, 50), true)
         Text("This is another child window for testing the _ChildWindows flag.")
@@ -5435,7 +5335,7 @@ def DasShowDemoWindowWidgets()
             EndChild()
 
         static char unused_str[] = "This widget is only here to be able to tab-out of the widgets above.";
-        InputText("unused", unused_str, IM_ARRAYSIZE(unused_str), ImGuiInputTextFlags_ReadOnly)
+        InputText("unused", unused_str, IM_ARRAYSIZE(unused_str), ImGuiInputTextFlags ReadOnly)
 
         // Calling IsItemHovered() after begin returns the hovered status of the title bar.
         // This is useful in particular if you want to create a context menu associated to the title bar of a window.
