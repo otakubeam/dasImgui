@@ -37,6 +37,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFoc
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalarN>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
 	->args({"label","data_type","p_data","components","p_min","p_max","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(6,make_smart<ExprConstString>(""))
 		->arg_type(7,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(7,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
@@ -66,6 +67,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemHovered)>(*this, lib, "IsItemHovered",SideEf
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputScalar)>(*this, lib, "InputScalar",SideEffects::worstDefault, "ImGui::InputScalar")
 	->args({"label","data_type","p_data","p_step","p_step_fast","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(3,make_smart<ExprConstPtr>())
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstString>(""))
@@ -94,6 +96,7 @@ addExtern<DAS_BIND_FUN(ImGui::CaptureMouseFromApp)>(*this, lib, "CaptureMouseFro
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, float),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
 	->args({"label","data_type","p_data","p_min","p_max","format","power"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvailWidth)>(*this, lib, "GetContentRegionAvailWidth",SideEffects::worstDefault, "ImGui::GetContentRegionAvailWidth")
 	->args({})
@@ -368,6 +371,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsWindowCollapsed)>(*this, lib, "IsWindowCollapsed
 ;
 addExtern<DAS_BIND_FUN(ImGui::VSliderScalar)>(*this, lib, "VSliderScalar",SideEffects::worstDefault, "ImGui::VSliderScalar")
 	->args({"label","size","data_type","p_data","p_min","p_max","format","flags"})
+		->arg_type(2,makeType<ImGuiDataType_>(lib))
 		->arg_init(6,make_smart<ExprConstString>(""))
 		->arg_type(7,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(7,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
@@ -388,6 +392,7 @@ addExtern<DAS_BIND_FUN(ImGui::PopStyleColor)>(*this, lib, "PopStyleColor",SideEf
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, float, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::DragScalar>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
 	->args({"label","data_type","p_data","v_speed","p_min","p_max","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstString>(""))
@@ -549,6 +554,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetKeyPressedAmount)>(*this, lib, "GetKeyPressedAm
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *, const void *, const char *, float),ImGui::DragScalarN>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
 	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","power"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::LabelTextV)>(*this, lib, "LabelTextV",SideEffects::worstDefault, "ImGui::LabelTextV")
 	->args({"label","fmt","args"})
@@ -631,6 +637,7 @@ addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromDisk)>(*this, lib, "LoadIniSett
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, float, const void *, const void *, const char *, float),ImGui::DragScalar>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
 	->args({"label","data_type","p_data","v_speed","p_min","p_max","format","power"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 ;
 addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImGui::SliderFloat4>(*this, lib, "SliderFloat4",SideEffects::worstDefault, "ImGui::SliderFloat4")
 	->args({"label","v","v_min","v_max","format","power"})
@@ -707,6 +714,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetMainViewport)>(*this, lib, "GetMainViewport",Si
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const void *, const char *, float),ImGui::SliderScalarN>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
 	->args({"label","data_type","p_data","components","p_min","p_max","format","power"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 ;
 addExtern<DAS_BIND_FUN(ImGui::SliderInt3)>(*this, lib, "SliderInt3",SideEffects::worstDefault, "ImGui::SliderInt3")
 	->args({"label","v","v_min","v_max","format","flags"})
@@ -883,6 +891,7 @@ addExtern<DAS_BIND_FUN(ImGui::GetCurrentContext)>(*this, lib, "GetCurrentContext
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
 	->args({"label","data_type","p_data","p_min","p_max","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(5,make_smart<ExprConstString>(""))
 		->arg_type(6,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
@@ -1006,6 +1015,7 @@ addExtern<DAS_BIND_FUN(ImGui::Separator)>(*this, lib, "Separator",SideEffects::w
 ;
 addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::DragScalarN>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
 	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstPtr>())
 		->arg_init(7,make_smart<ExprConstString>(""))
@@ -1197,6 +1207,7 @@ addExtern<DAS_BIND_FUN(ImGui::Bullet)>(*this, lib, "Bullet",SideEffects::worstDe
 ;
 addExtern<DAS_BIND_FUN(ImGui::InputScalarN)>(*this, lib, "InputScalarN",SideEffects::worstDefault, "ImGui::InputScalarN")
 	->args({"label","data_type","p_data","components","p_step","p_step_fast","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(4,make_smart<ExprConstPtr>())
 		->arg_init(5,make_smart<ExprConstPtr>())
 		->arg_init(6,make_smart<ExprConstString>(""))

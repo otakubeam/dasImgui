@@ -4841,168 +4841,187 @@ def DasShowDemoWindowWidgets()
         DragFloat4("Raw HSV values", safe_addr(color_hsv.x), 0.01f, 0.0f, 1.0f)
         TreePop()
 
-/*
-    if (TreeNode("Drag/Slider Flags"))
-    {
-        // Demonstrate using advanced flags for DragXXX and SliderXXX functions. Note that the flags are the same!
-        static ImGuiSliderFlags flags = ImGuiSliderFlags None;
-        CheckboxFlags("ImGuiSliderFlags AlwaysClamp", &flags, ImGuiSliderFlags AlwaysClamp)
-        SameLine() HelpMarker("Always clamp value to min/max bounds (if any) when input manually with CTRL+Click.")
-        CheckboxFlags("ImGuiSliderFlags Logarithmic", &flags, ImGuiSliderFlags Logarithmic)
-        SameLine() HelpMarker("Enable logarithmic editing (more precision for small values).")
-        CheckboxFlags("ImGuiSliderFlags NoRoundToFormat", &flags, ImGuiSliderFlags NoRoundToFormat)
-        SameLine() HelpMarker("Disable rounding underlying value to match precision of the format string (e.g. %.3f values are rounded to those 3 digits).")
-        CheckboxFlags("ImGuiSliderFlags NoInput", &flags, ImGuiSliderFlags NoInput)
-        SameLine() HelpMarker("Disable CTRL+Click or Enter key allowing to input text directly into the widget.")
-
-        // Drags
-        static float drag_f = 0.5f;
-        static int drag_i = 50;
-        Text("Underlying float value: %f", drag_f)
-        DragFloat("DragFloat (0 -> 1)", &drag_f, 0.005f, 0.0f, 1.0f, "%.3f", flags)
-        DragFloat("DragFloat (0 -> +inf)", &drag_f, 0.005f, 0.0f, FLT_MAX, "%.3f", flags)
-        DragFloat("DragFloat (-inf -> 1)", &drag_f, 0.005f, -FLT_MAX, 1.0f, "%.3f", flags)
-        DragFloat("DragFloat (-inf -> +inf)", &drag_f, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f", flags)
-        DragInt("DragInt (0 -> 100)", &drag_i, 0.5f, 0, 100, "%d", flags)
-
-        // Sliders
-        static float slider_f = 0.5f;
-        static int slider_i = 50;
-        Text("Underlying float value: %f", slider_f)
-        SliderFloat("SliderFloat (0 -> 1)", &slider_f, 0.0f, 1.0f, "%.3f", flags)
-        SliderInt("SliderInt (0 -> 100)", &slider_i, 0, 100, "%d", flags)
-
+    if TreeNode("Drag/Slider Flags")
+        static_let <|
+            var flags = ImGuiSliderFlags None
+        CheckboxFlags("ImGuiSliderFlags AlwaysClamp", safe_addr(flags), ImGuiSliderFlags AlwaysClamp)
+        SameLine()
+        DasHelpMarker("Always clamp value to min/max bounds (if any) when input manually with CTRL+Click.")
+        CheckboxFlags("ImGuiSliderFlags Logarithmic", safe_addr(flags), ImGuiSliderFlags Logarithmic)
+        SameLine()
+        DasHelpMarker("Enable logarithmic editing (more precision for small values).")
+        CheckboxFlags("ImGuiSliderFlags NoRoundToFormat",  safe_addr(flags), ImGuiSliderFlags NoRoundToFormat)
+        SameLine()
+        DasHelpMarker("Disable rounding underlying value to match precision of the format string (e.g. %.3f values are rounded to those 3 digits).")
+        CheckboxFlags("ImGuiSliderFlags NoInput", safe_addr(flags), ImGuiSliderFlags NoInput)
+        SameLine()
+        DasHelpMarker("Disable CTRL+Click or Enter key allowing to input text directly into the widget.")
+        static_let <|
+            var drag_f = 0.5f
+            var drag_i = 50
+        Text("Underlying float value: {drag_f}")
+        DragFloat("DragFloat (0 -> 1)",  safe_addr(drag_f), 0.005f, 0.0f, 1.0f, "%.3f", flags)
+        DragFloat("DragFloat (0 -> +inf)",  safe_addr(drag_f), 0.005f, 0.0f, FLT_MAX, "%.3f", flags)
+        DragFloat("DragFloat (-inf -> 1)",  safe_addr(drag_f), 0.005f, -FLT_MAX, 1.0f, "%.3f", flags)
+        DragFloat("DragFloat (-inf -> +inf)",  safe_addr(drag_f), 0.005f, -FLT_MAX, +FLT_MAX, "%.3f", flags)
+        DragInt("DragInt (0 -> 100)",  safe_addr(drag_i), 0.5f, 0, 100, "%d", flags)
+        static_let <|
+            var slider_f = 0.5f
+            var slider_i = 50
+        Text("Underlying float value: {slider_f}")
+        SliderFloat("SliderFloat (0 -> 1)",  safe_addr(slider_f), 0.0f, 1.0f, "%.3f", flags)
+        SliderInt("SliderInt (0 -> 100)",  safe_addr(slider_i), 0, 100, "%d", flags)
         TreePop()
-    }
 
-    if (TreeNode("Range Widgets"))
-    {
-        static float begin = 10, end = 90;
-        static int begin_i = 100, end_i = 1000;
-        DragFloatRange2("range float", &begin, &end, 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%", ImGuiSliderFlags AlwaysClamp)
-        DragIntRange2("range int", &begin_i, &end_i, 5, 0, 1000, "Min: %d units", "Max: %d units")
-        DragIntRange2("range int (no bounds)", &begin_i, &end_i, 5, 0, 0, "Min: %d units", "Max: %d units")
+    if TreeNode("Range Widgets")
+        static_let <|
+            var begin = 10.
+            var end = 90.
+            var begin_i = 100
+            var end_i = 1000
+        DragFloatRange2("range float", safe_addr(begin), safe_addr(end), 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%", ImGuiSliderFlags AlwaysClamp)
+        DragIntRange2("range int", safe_addr(begin_i), safe_addr(end_i), 5., 0, 1000, "Min: %d units", "Max: %d units")
+        DragIntRange2("range int (no bounds)", safe_addr(begin_i), safe_addr(end_i), 5., 0, 0, "Min: %d units", "Max: %d units")
         TreePop()
-    }
 
-    if (TreeNode("Data Types"))
-    {
-        // DragScalar/InputScalar/SliderScalar functions allow various data types
-        // - signed/unsigned
-        // - 8/16/32/64-bits
-        // - integer/float/double
-        // To avoid polluting the public API with all possible combinations, we use the ImGuiDataType enum
-        // to pass the type, and passing all arguments by pointer.
-        // This is the reason the test code below creates local variables to hold "zero" "one" etc. for each types.
-        // In practice, if you frequently use a given type that is not covered by the normal API entry points,
-        // you can wrap it yourself inside a 1 line function which can take typed argument as value instead of void*,
-        // and then pass their address to the generic function. For example:
-        //   bool MySliderU64(const char *label, u64* value, u64 min = 0, u64 max = 0, const char* format = "%lld")
-        //   {
-        //      return SliderScalar(label, ImGuiDataType_U64, value, &min, &max, format)
-        //   }
-
-        // Setup limits (as helper variables so we can take their address, as explained above)
-        // Note: SliderScalar() functions have a maximum usable range of half the natural type maximum, hence the /2.
-        #ifndef LLONG_MIN
-        ImS64 LLONG_MIN = -9223372036854775807LL - 1;
-        ImS64 LLONG_MAX = 9223372036854775807LL;
-        ImU64 ULLONG_MAX = (2ULL * 9223372036854775807LL + 1)
-        #endif
-        const char    s8_zero  = 0,   s8_one  = 1,   s8_fifty  = 50, s8_min  = -128,        s8_max = 127;
-        const ImU8    u8_zero  = 0,   u8_one  = 1,   u8_fifty  = 50, u8_min  = 0,           u8_max = 255;
-        const short   s16_zero = 0,   s16_one = 1,   s16_fifty = 50, s16_min = -32768,      s16_max = 32767;
-        const ImU16   u16_zero = 0,   u16_one = 1,   u16_fifty = 50, u16_min = 0,           u16_max = 65535;
-        const ImS32   s32_zero = 0,   s32_one = 1,   s32_fifty = 50, s32_min = INT_MIN/2,   s32_max = INT_MAX/2,    s32_hi_a = INT_MAX/2 - 100,    s32_hi_b = INT_MAX/2;
-        const ImU32   u32_zero = 0,   u32_one = 1,   u32_fifty = 50, u32_min = 0,           u32_max = UINT_MAX/2,   u32_hi_a = UINT_MAX/2 - 100,   u32_hi_b = UINT_MAX/2;
-        const ImS64   s64_zero = 0,   s64_one = 1,   s64_fifty = 50, s64_min = LLONG_MIN/2, s64_max = LLONG_MAX/2,  s64_hi_a = LLONG_MAX/2 - 100,  s64_hi_b = LLONG_MAX/2;
-        const ImU64   u64_zero = 0,   u64_one = 1,   u64_fifty = 50, u64_min = 0,           u64_max = ULLONG_MAX/2, u64_hi_a = ULLONG_MAX/2 - 100, u64_hi_b = ULLONG_MAX/2;
-        const float   f32_zero = 0.f, f32_one = 1.f, f32_lo_a = -10000000000.0f, f32_hi_a = +10000000000.0f;
-        const double  f64_zero = 0.,  f64_one = 1.,  f64_lo_a = -1000000000000000.0, f64_hi_a = +1000000000000000.0;
-
-        // State
-        static char   s8_v  = 127;
-        static ImU8   u8_v  = 255;
-        static short  s16_v = 32767;
-        static ImU16  u16_v = 65535;
-        static ImS32  s32_v = -1;
-        static ImU32  u32_v = (ImU32)-1;
-        static ImS64  s64_v = -1;
-        static ImU64  u64_v = (ImU64)-1;
-        static float  f32_v = 0.123f;
-        static double f64_v = 90000.01234567890123456789;
-
-        const float drag_speed = 0.2f;
-        static bool drag_clamp = false;
+    if TreeNode("Data Types")
+        let s8_zero = int8(0)
+        let s8_one  = int8(1)
+        let s8_fifty = int8(50)
+        let s8_min = int8(-128)
+        let s8_max = int8(127)
+        let u8_zero = uint8(0)
+        let u8_one  = uint8(1)
+        let u8_fifty = uint8(50)
+        let u8_min = uint8(0)
+        let u8_max = uint8(255)
+        let s16_zero = int16(0)
+        let s16_one = int16(1)
+        let s16_fifty = int16(50)
+        let s16_min = int16(-32768)
+        let s16_max = int16(32767)
+        let u16_zero = uint16(0)
+        let u16_one = uint16(1)
+        let u16_fifty = uint16(50)
+        let u16_min = uint16(0)
+        let u16_max = uint16(65535)
+        let s32_zero = 0
+        let s32_one = 1
+        let s32_fifty = 50
+        let s32_min = INT_MIN/2
+        let s32_max = INT_MAX/2
+        let s32_hi_a = INT_MAX/2 - 100
+        let s32_hi_b = INT_MAX/2
+        let u32_zero = 0u
+        let u32_one = 1u
+        let u32_fifty = 50u
+        let u32_min = 0u
+        let u32_max = UINT_MAX/2u
+        let u32_hi_a = UINT_MAX/2u - 100u
+        let u32_hi_b = UINT_MAX/2u
+        let s64_zero = 0l
+        let s64_one = 1l
+        let s64_fifty = 50l
+        let s64_min = LONG_MIN/2l
+        let s64_max = LONG_MAX/2l
+        let s64_hi_a = LONG_MAX/2l - 100l
+        let s64_hi_b = LONG_MAX/2l
+        let u64_zero = 0ul
+        let u64_one = 1ul
+        let u64_fifty = 50ul
+        let u64_min = 0ul
+        let u64_max = ULONG_MAX/2ul
+        let u64_hi_a = ULONG_MAX/2ul - 100ul
+        let u64_hi_b = ULONG_MAX/2ul
+        let f32_zero = 0.f
+        let f32_one = 1.f
+        let f32_lo_a = -10000000000.0f
+        let f32_hi_a = +10000000000.0f
+        let f64_zero = 0.lf
+        let f64_one = 1.lf
+        let f64_lo_a = -1000000000000000.0lf
+        let f64_hi_a = +1000000000000000.0lf
+        static_let <|
+            var s8_v  = int8(127)
+            var u8_v  = uint8(255)
+            var s16_v = int16(32767)
+            var u16_v = uint16(65535)
+            var s32_v = -1
+            var u32_v = -1u
+            var s64_v = -1l
+            var u64_v = -1ul
+            var f32_v = 0.123f
+            var f64_v = 90000.01234567890123456789lf
+        let drag_speed = 0.2f
+        static_let <|
+            var drag_clamp = false
         Text("Drags:")
-        Checkbox("Clamp integers to 0..50", &drag_clamp)
-        SameLine() HelpMarker(
-            "As with every widgets in dear imgui, we never modify values unless there is a user interaction.\n"
+        Checkbox("Clamp integers to 0..50", safe_addr(drag_clamp))
+        SameLine()
+        DasHelpMarker(
+            "As with every widgets in dear imgui, we never modify values unless there is a user interaction.\n" +
             "You can override the clamping limits by using CTRL+Click to input a value.")
-        DragScalar("drag s8",        ImGuiDataType_S8,     &s8_v,  drag_speed, drag_clamp ? &s8_zero  : NULL, drag_clamp ? &s8_fifty  : NULL)
-        DragScalar("drag u8",        ImGuiDataType_U8,     &u8_v,  drag_speed, drag_clamp ? &u8_zero  : NULL, drag_clamp ? &u8_fifty  : NULL, "%u ms")
-        DragScalar("drag s16",       ImGuiDataType_S16,    &s16_v, drag_speed, drag_clamp ? &s16_zero : NULL, drag_clamp ? &s16_fifty : NULL)
-        DragScalar("drag u16",       ImGuiDataType_U16,    &u16_v, drag_speed, drag_clamp ? &u16_zero : NULL, drag_clamp ? &u16_fifty : NULL, "%u ms")
-        DragScalar("drag s32",       ImGuiDataType_S32,    &s32_v, drag_speed, drag_clamp ? &s32_zero : NULL, drag_clamp ? &s32_fifty : NULL)
-        DragScalar("drag u32",       ImGuiDataType_U32,    &u32_v, drag_speed, drag_clamp ? &u32_zero : NULL, drag_clamp ? &u32_fifty : NULL, "%u ms")
-        DragScalar("drag s64",       ImGuiDataType_S64,    &s64_v, drag_speed, drag_clamp ? &s64_zero : NULL, drag_clamp ? &s64_fifty : NULL)
-        DragScalar("drag u64",       ImGuiDataType_U64,    &u64_v, drag_speed, drag_clamp ? &u64_zero : NULL, drag_clamp ? &u64_fifty : NULL)
-        DragScalar("drag float",     ImGuiDataType_Float,  &f32_v, 0.005f,  &f32_zero, &f32_one, "%f")
-        DragScalar("drag float log", ImGuiDataType_Float,  &f32_v, 0.005f,  &f32_zero, &f32_one, "%f", ImGuiSliderFlags Logarithmic)
-        DragScalar("drag double",    ImGuiDataType_Double, &f64_v, 0.0005f, &f64_zero, NULL,     "%.10f grams")
-        DragScalar("drag double log",ImGuiDataType_Double, &f64_v, 0.0005f, &f64_zero, &f64_one, "0 < %.10f < 1", ImGuiSliderFlags Logarithmic)
-
+        DragScalar("drag s8",        ImGuiDataType S8,     safe_addr(s8_v),  drag_speed, drag_clamp ? safe_addr(s8_zero)  : null, drag_clamp ? safe_addr(s8_fifty)  : null)
+        DragScalar("drag u8",        ImGuiDataType U8,     safe_addr(u8_v),  drag_speed, drag_clamp ? safe_addr(u8_zero)  : null, drag_clamp ? safe_addr(u8_fifty)  : null, "%u ms")
+        DragScalar("drag s16",       ImGuiDataType S16,    safe_addr(s16_v), drag_speed, drag_clamp ? safe_addr(s16_zero) : null, drag_clamp ? safe_addr(s16_fifty) : null)
+        DragScalar("drag u16",       ImGuiDataType U16,    safe_addr(u16_v), drag_speed, drag_clamp ? safe_addr(u16_zero) : null, drag_clamp ? safe_addr(u16_fifty) : null, "%u ms")
+        DragScalar("drag s32",       ImGuiDataType S32,    safe_addr(s32_v), drag_speed, drag_clamp ? safe_addr(s32_zero) : null, drag_clamp ? safe_addr(s32_fifty) : null)
+        DragScalar("drag u32",       ImGuiDataType U32,    safe_addr(u32_v), drag_speed, drag_clamp ? safe_addr(u32_zero) : null, drag_clamp ? safe_addr(u32_fifty) : null, "%u ms")
+        DragScalar("drag s64",       ImGuiDataType S64,    safe_addr(s64_v), drag_speed, drag_clamp ? safe_addr(s64_zero) : null, drag_clamp ? safe_addr(s64_fifty) : null)
+        DragScalar("drag u64",       ImGuiDataType U64,    safe_addr(u64_v), drag_speed, drag_clamp ? safe_addr(u64_zero) : null, drag_clamp ? safe_addr(u64_fifty) : null)
+        DragScalar("drag float",     ImGuiDataType Float,  safe_addr(f32_v), 0.005f,  safe_addr(f32_zero), safe_addr(f32_one), "%f")
+        DragScalar("drag float log", ImGuiDataType Float,  safe_addr(f32_v), 0.005f,  safe_addr(f32_zero), safe_addr(f32_one), "%f", ImGuiSliderFlags Logarithmic)
+        DragScalar("drag double",    ImGuiDataType Double, safe_addr(f64_v), 0.0005f, safe_addr(f64_zero), null,     "%.10f grams")
+        DragScalar("drag double log",ImGuiDataType Double, safe_addr(f64_v), 0.0005f, safe_addr(f64_zero), safe_addr(f64_one), "0 < %.10f < 1", ImGuiSliderFlags Logarithmic)
         Text("Sliders")
-        SliderScalar("slider s8 full",       ImGuiDataType_S8,     &s8_v,  &s8_min,   &s8_max,   "%d")
-        SliderScalar("slider u8 full",       ImGuiDataType_U8,     &u8_v,  &u8_min,   &u8_max,   "%u")
-        SliderScalar("slider s16 full",      ImGuiDataType_S16,    &s16_v, &s16_min,  &s16_max,  "%d")
-        SliderScalar("slider u16 full",      ImGuiDataType_U16,    &u16_v, &u16_min,  &u16_max,  "%u")
-        SliderScalar("slider s32 low",       ImGuiDataType_S32,    &s32_v, &s32_zero, &s32_fifty,"%d")
-        SliderScalar("slider s32 high",      ImGuiDataType_S32,    &s32_v, &s32_hi_a, &s32_hi_b, "%d")
-        SliderScalar("slider s32 full",      ImGuiDataType_S32,    &s32_v, &s32_min,  &s32_max,  "%d")
-        SliderScalar("slider u32 low",       ImGuiDataType_U32,    &u32_v, &u32_zero, &u32_fifty,"%u")
-        SliderScalar("slider u32 high",      ImGuiDataType_U32,    &u32_v, &u32_hi_a, &u32_hi_b, "%u")
-        SliderScalar("slider u32 full",      ImGuiDataType_U32,    &u32_v, &u32_min,  &u32_max,  "%u")
-        SliderScalar("slider s64 low",       ImGuiDataType_S64,    &s64_v, &s64_zero, &s64_fifty,"%I64d")
-        SliderScalar("slider s64 high",      ImGuiDataType_S64,    &s64_v, &s64_hi_a, &s64_hi_b, "%I64d")
-        SliderScalar("slider s64 full",      ImGuiDataType_S64,    &s64_v, &s64_min,  &s64_max,  "%I64d")
-        SliderScalar("slider u64 low",       ImGuiDataType_U64,    &u64_v, &u64_zero, &u64_fifty,"%I64u ms")
-        SliderScalar("slider u64 high",      ImGuiDataType_U64,    &u64_v, &u64_hi_a, &u64_hi_b, "%I64u ms")
-        SliderScalar("slider u64 full",      ImGuiDataType_U64,    &u64_v, &u64_min,  &u64_max,  "%I64u ms")
-        SliderScalar("slider float low",     ImGuiDataType_Float,  &f32_v, &f32_zero, &f32_one)
-        SliderScalar("slider float low log", ImGuiDataType_Float,  &f32_v, &f32_zero, &f32_one,  "%.10f", ImGuiSliderFlags Logarithmic)
-        SliderScalar("slider float high",    ImGuiDataType_Float,  &f32_v, &f32_lo_a, &f32_hi_a, "%e")
-        SliderScalar("slider double low",    ImGuiDataType_Double, &f64_v, &f64_zero, &f64_one,  "%.10f grams")
-        SliderScalar("slider double low log",ImGuiDataType_Double, &f64_v, &f64_zero, &f64_one,  "%.10f", ImGuiSliderFlags Logarithmic)
-        SliderScalar("slider double high",   ImGuiDataType_Double, &f64_v, &f64_lo_a, &f64_hi_a, "%e grams")
-
+        SliderScalar("slider s8 full",       ImGuiDataType S8,     safe_addr(s8_v),  safe_addr(s8_min),   safe_addr(s8_max),   "%d")
+        SliderScalar("slider u8 full",       ImGuiDataType U8,     safe_addr(u8_v),  safe_addr(u8_min),   safe_addr(u8_max),   "%u")
+        SliderScalar("slider s16 full",      ImGuiDataType S16,    safe_addr(s16_v), safe_addr(s16_min),  safe_addr(s16_max),  "%d")
+        SliderScalar("slider u16 full",      ImGuiDataType U16,    safe_addr(u16_v), safe_addr(u16_min),  safe_addr(u16_max),  "%u")
+        SliderScalar("slider s32 low",       ImGuiDataType S32,    safe_addr(s32_v), safe_addr(s32_zero), safe_addr(s32_fifty),"%d")
+        SliderScalar("slider s32 high",      ImGuiDataType S32,    safe_addr(s32_v), safe_addr(s32_hi_a), safe_addr(s32_hi_b), "%d")
+        SliderScalar("slider s32 full",      ImGuiDataType S32,    safe_addr(s32_v), safe_addr(s32_min),  safe_addr(s32_max),  "%d")
+        SliderScalar("slider u32 low",       ImGuiDataType U32,    safe_addr(u32_v), safe_addr(u32_zero), safe_addr(u32_fifty),"%u")
+        SliderScalar("slider u32 high",      ImGuiDataType U32,    safe_addr(u32_v), safe_addr(u32_hi_a), safe_addr(u32_hi_b), "%u")
+        SliderScalar("slider u32 full",      ImGuiDataType U32,    safe_addr(u32_v), safe_addr(u32_min),  safe_addr(u32_max),  "%u")
+        SliderScalar("slider s64 low",       ImGuiDataType S64,    safe_addr(s64_v), safe_addr(s64_zero), safe_addr(s64_fifty),"%I64d")
+        SliderScalar("slider s64 high",      ImGuiDataType S64,    safe_addr(s64_v), safe_addr(s64_hi_a), safe_addr(s64_hi_b), "%I64d")
+        SliderScalar("slider s64 full",      ImGuiDataType S64,    safe_addr(s64_v), safe_addr(s64_min),  safe_addr(s64_max),  "%I64d")
+        SliderScalar("slider u64 low",       ImGuiDataType U64,    safe_addr(u64_v), safe_addr(u64_zero), safe_addr(u64_fifty),"%I64u ms")
+        SliderScalar("slider u64 high",      ImGuiDataType U64,    safe_addr(u64_v), safe_addr(u64_hi_a), safe_addr(u64_hi_b), "%I64u ms")
+        SliderScalar("slider u64 full",      ImGuiDataType U64,    safe_addr(u64_v), safe_addr(u64_min),  safe_addr(u64_max),  "%I64u ms")
+        SliderScalar("slider float low",     ImGuiDataType Float,  safe_addr(f32_v), safe_addr(f32_zero), safe_addr(f32_one))
+        SliderScalar("slider float low log", ImGuiDataType Float,  safe_addr(f32_v), safe_addr(f32_zero), safe_addr(f32_one),  "%.10f", ImGuiSliderFlags Logarithmic)
+        SliderScalar("slider float high",    ImGuiDataType Float,  safe_addr(f32_v), safe_addr(f32_lo_a), safe_addr(f32_hi_a), "%e")
+        SliderScalar("slider double low",    ImGuiDataType Double, safe_addr(f64_v), safe_addr(f64_zero), safe_addr(f64_one),  "%.10f grams")
+        SliderScalar("slider double low log",ImGuiDataType Double, safe_addr(f64_v), safe_addr(f64_zero), safe_addr(f64_one),  "%.10f", ImGuiSliderFlags Logarithmic)
+        SliderScalar("slider double high",   ImGuiDataType Double, safe_addr(f64_v), safe_addr(f64_lo_a), safe_addr(f64_hi_a), "%e grams")
         Text("Sliders (reverse)")
-        SliderScalar("slider s8 reverse",    ImGuiDataType_S8,   &s8_v,  &s8_max,    &s8_min, "%d")
-        SliderScalar("slider u8 reverse",    ImGuiDataType_U8,   &u8_v,  &u8_max,    &u8_min, "%u")
-        SliderScalar("slider s32 reverse",   ImGuiDataType_S32,  &s32_v, &s32_fifty, &s32_zero, "%d")
-        SliderScalar("slider u32 reverse",   ImGuiDataType_U32,  &u32_v, &u32_fifty, &u32_zero, "%u")
-        SliderScalar("slider s64 reverse",   ImGuiDataType_S64,  &s64_v, &s64_fifty, &s64_zero, "%I64d")
-        SliderScalar("slider u64 reverse",   ImGuiDataType_U64,  &u64_v, &u64_fifty, &u64_zero, "%I64u ms")
-
-        static bool inputs_step = true;
+        SliderScalar("slider s8 reverse",    ImGuiDataType S8,   safe_addr(s8_v),  safe_addr(s8_max),    safe_addr(s8_min), "%d")
+        SliderScalar("slider u8 reverse",    ImGuiDataType U8,   safe_addr(u8_v),  safe_addr(u8_max),    safe_addr(u8_min), "%u")
+        SliderScalar("slider s32 reverse",   ImGuiDataType S32,  safe_addr(s32_v), safe_addr(s32_fifty), safe_addr(s32_zero), "%d")
+        SliderScalar("slider u32 reverse",   ImGuiDataType U32,  safe_addr(u32_v), safe_addr(u32_fifty), safe_addr(u32_zero), "%u")
+        SliderScalar("slider s64 reverse",   ImGuiDataType S64,  safe_addr(s64_v), safe_addr(s64_fifty), safe_addr(s64_zero), "%I64d")
+        SliderScalar("slider u64 reverse",   ImGuiDataType U64,  safe_addr(u64_v), safe_addr(u64_fifty), safe_addr(u64_zero), "%I64u ms")
+        static_let <|
+            var inputs_step = true
         Text("Inputs")
-        Checkbox("Show step buttons", &inputs_step)
-        InputScalar("input s8",      ImGuiDataType_S8,     &s8_v,  inputs_step ? &s8_one  : NULL, NULL, "%d")
-        InputScalar("input u8",      ImGuiDataType_U8,     &u8_v,  inputs_step ? &u8_one  : NULL, NULL, "%u")
-        InputScalar("input s16",     ImGuiDataType_S16,    &s16_v, inputs_step ? &s16_one : NULL, NULL, "%d")
-        InputScalar("input u16",     ImGuiDataType_U16,    &u16_v, inputs_step ? &u16_one : NULL, NULL, "%u")
-        InputScalar("input s32",     ImGuiDataType_S32,    &s32_v, inputs_step ? &s32_one : NULL, NULL, "%d")
-        InputScalar("input s32 hex", ImGuiDataType_S32,    &s32_v, inputs_step ? &s32_one : NULL, NULL, "%08X", ImGuiInputTextFlags CharsHexadecimal)
-        InputScalar("input u32",     ImGuiDataType_U32,    &u32_v, inputs_step ? &u32_one : NULL, NULL, "%u")
-        InputScalar("input u32 hex", ImGuiDataType_U32,    &u32_v, inputs_step ? &u32_one : NULL, NULL, "%08X", ImGuiInputTextFlags CharsHexadecimal)
-        InputScalar("input s64",     ImGuiDataType_S64,    &s64_v, inputs_step ? &s64_one : NULL)
-        InputScalar("input u64",     ImGuiDataType_U64,    &u64_v, inputs_step ? &u64_one : NULL)
-        InputScalar("input float",   ImGuiDataType_Float,  &f32_v, inputs_step ? &f32_one : NULL)
-        InputScalar("input double",  ImGuiDataType_Double, &f64_v, inputs_step ? &f64_one : NULL)
-
+        Checkbox("Show step buttons", safe_addr(inputs_step))
+        InputScalar("input s8",      ImGuiDataType S8,     safe_addr(s8_v),  inputs_step ? safe_addr(s8_one)  : null, null, "%d")
+        InputScalar("input u8",      ImGuiDataType U8,     safe_addr(u8_v),  inputs_step ? safe_addr(u8_one)  : null, null, "%u")
+        InputScalar("input s16",     ImGuiDataType S16,    safe_addr(s16_v), inputs_step ? safe_addr(s16_one) : null, null, "%d")
+        InputScalar("input u16",     ImGuiDataType U16,    safe_addr(u16_v), inputs_step ? safe_addr(u16_one) : null, null, "%u")
+        InputScalar("input s32",     ImGuiDataType S32,    safe_addr(s32_v), inputs_step ? safe_addr(s32_one) : null, null, "%d")
+        InputScalar("input s32 hex", ImGuiDataType S32,    safe_addr(s32_v), inputs_step ? safe_addr(s32_one) : null, null, "%08X", ImGuiInputTextFlags CharsHexadecimal)
+        InputScalar("input u32",     ImGuiDataType U32,    safe_addr(u32_v), inputs_step ? safe_addr(u32_one) : null, null, "%u")
+        InputScalar("input u32 hex", ImGuiDataType U32,    safe_addr(u32_v), inputs_step ? safe_addr(u32_one) : null, null, "%08X", ImGuiInputTextFlags CharsHexadecimal)
+        InputScalar("input s64",     ImGuiDataType S64,    safe_addr(s64_v), inputs_step ? safe_addr(s64_one) : null)
+        InputScalar("input u64",     ImGuiDataType U64,    safe_addr(u64_v), inputs_step ? safe_addr(u64_one) : null)
+        InputScalar("input float",   ImGuiDataType Float,  safe_addr(f32_v), inputs_step ? safe_addr(f32_one) : null)
+        InputScalar("input double",  ImGuiDataType Double, safe_addr(f64_v), inputs_step ? safe_addr(f64_one) : null)
         TreePop()
-    }
 
+/*
     if (TreeNode("Multi-component Widgets"))
     {
         static float vec4f[4] = { 0.10f, 0.20f, 0.30f, 0.44f };

@@ -5,7 +5,7 @@
 // ------------
 
 DAS_BIND_ENUM_CAST_98(ImGuiDataType_)
-DAS_BASE_BIND_ENUM_98_GEN(ImGuiDataType_,ImGuiDataType_)
+DAS_BASE_BIND_ENUM_98_GEN(ImGuiDataType_,ImGuiDataType)
 DAS_BIND_ENUM_CAST_98(ImGuiHoveredFlags_)
 DAS_BASE_BIND_ENUM_98_GEN(ImGuiHoveredFlags_,ImGuiHoveredFlags_)
 DAS_BIND_ENUM_CAST_98(ImGuiNavInput_)

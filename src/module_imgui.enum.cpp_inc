@@ -3,23 +3,23 @@
 // ------------
 
 
-class EnumerationImGuiDataType_ : public das::Enumeration {
+class EnumerationImGuiDataType : public das::Enumeration {
 public:
-    EnumerationImGuiDataType_() : das::Enumeration("ImGuiDataType_") {
+    EnumerationImGuiDataType() : das::Enumeration("ImGuiDataType") {
         external = true;
         cppName = "ImGuiDataType_";
         baseType = (das::Type) das::ToBasicType< das::underlying_type< ImGuiDataType_ >::type >::type;
-		addI("ImGuiDataType_S8", int64_t(ImGuiDataType_::ImGuiDataType_S8), das::LineInfo());
-		addI("ImGuiDataType_U8", int64_t(ImGuiDataType_::ImGuiDataType_U8), das::LineInfo());
-		addI("ImGuiDataType_S16", int64_t(ImGuiDataType_::ImGuiDataType_S16), das::LineInfo());
-		addI("ImGuiDataType_U16", int64_t(ImGuiDataType_::ImGuiDataType_U16), das::LineInfo());
-		addI("ImGuiDataType_S32", int64_t(ImGuiDataType_::ImGuiDataType_S32), das::LineInfo());
-		addI("ImGuiDataType_U32", int64_t(ImGuiDataType_::ImGuiDataType_U32), das::LineInfo());
-		addI("ImGuiDataType_S64", int64_t(ImGuiDataType_::ImGuiDataType_S64), das::LineInfo());
-		addI("ImGuiDataType_U64", int64_t(ImGuiDataType_::ImGuiDataType_U64), das::LineInfo());
-		addI("ImGuiDataType_Float", int64_t(ImGuiDataType_::ImGuiDataType_Float), das::LineInfo());
-		addI("ImGuiDataType_Double", int64_t(ImGuiDataType_::ImGuiDataType_Double), das::LineInfo());
-		addI("ImGuiDataType_COUNT", int64_t(ImGuiDataType_::ImGuiDataType_COUNT), das::LineInfo());
+		addI("S8", int64_t(ImGuiDataType_::ImGuiDataType_S8), das::LineInfo());
+		addI("U8", int64_t(ImGuiDataType_::ImGuiDataType_U8), das::LineInfo());
+		addI("S16", int64_t(ImGuiDataType_::ImGuiDataType_S16), das::LineInfo());
+		addI("U16", int64_t(ImGuiDataType_::ImGuiDataType_U16), das::LineInfo());
+		addI("S32", int64_t(ImGuiDataType_::ImGuiDataType_S32), das::LineInfo());
+		addI("U32", int64_t(ImGuiDataType_::ImGuiDataType_U32), das::LineInfo());
+		addI("S64", int64_t(ImGuiDataType_::ImGuiDataType_S64), das::LineInfo());
+		addI("U64", int64_t(ImGuiDataType_::ImGuiDataType_U64), das::LineInfo());
+		addI("Float", int64_t(ImGuiDataType_::ImGuiDataType_Float), das::LineInfo());
+		addI("Double", int64_t(ImGuiDataType_::ImGuiDataType_Double), das::LineInfo());
+		addI("COUNT", int64_t(ImGuiDataType_::ImGuiDataType_COUNT), das::LineInfo());
 	}
 };
 

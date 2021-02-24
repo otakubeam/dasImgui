@@ -64,6 +64,7 @@ def main
         "ImGuiSortDirection_" => [[ExEnum() name = "ImGuiSortDirection"]];
         "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]];
         "ImGuiDir_" => [[ExEnum() name = "ImGuiDir"]];
+        "ImGuiDataType_" => [[ExEnum() name = "ImGuiDataType"]];
         "ImGuiTableBgTarget_" => [[ExEnum() name = "ImGuiTableBgTarget"]]
     }}
 

@@ -2,7 +2,7 @@
 // enumerations
 // ------------
 
-addEnumeration(make_smart<EnumerationImGuiDataType_>());
+addEnumeration(make_smart<EnumerationImGuiDataType>());
 addEnumeration(make_smart<EnumerationImGuiHoveredFlags_>());
 addEnumeration(make_smart<EnumerationImGuiNavInput_>());
 addEnumeration(make_smart<EnumerationImGuiDir>());
