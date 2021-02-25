@@ -103,8 +103,10 @@ struct ImGuiIO_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiIO> {
 	ImGuiIO_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiIO", ml) {
 	}
 	void init () {
-		addField<ImGuiConfigFlags_,offsetof(ManagedType,ConfigFlags)>("ConfigFlags","ConfigFlags");
-		addField<ImGuiBackendFlags_,offsetof(ManagedType,BackendFlags)>("BackendFlags","BackendFlags");
+		addField<ImGuiConfigFlags_,offsetof(ManagedType,ConfigFlags)>("ConfigFlags","ConfigFlags")
+			.adjustAot("das_reinterpret<ImGuiConfigFlags_>::pass(",")");
+		addField<ImGuiBackendFlags_,offsetof(ManagedType,BackendFlags)>("BackendFlags","BackendFlags")
+			.adjustAot("das_reinterpret<ImGuiBackendFlags_>::pass(",")");
 		addField<DAS_BIND_MANAGED_FIELD(DisplaySize)>("DisplaySize","DisplaySize");
 		addField<DAS_BIND_MANAGED_FIELD(DeltaTime)>("DeltaTime","DeltaTime");
 		addField<DAS_BIND_MANAGED_FIELD(IniSavingRate)>("IniSavingRate","IniSavingRate");
@@ -331,11 +333,14 @@ struct ImGuiInputTextCallbackData_GeneratedAnnotation : ManagedStructureAnnotati
 	ImGuiInputTextCallbackData_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImGuiInputTextCallbackData", ml) {
 	}
 	void init () {
-		addField<ImGuiInputTextFlags_,offsetof(ManagedType,EventFlag)>("EventFlag","EventFlag");
-		addField<ImGuiInputTextFlags_,offsetof(ManagedType,Flags)>("Flags","Flags");
+		addField<ImGuiInputTextFlags_,offsetof(ManagedType,EventFlag)>("EventFlag","EventFlag")
+			.adjustAot("das_reinterpret<ImGuiInputTextFlags_>::pass(",")");
+		addField<ImGuiInputTextFlags_,offsetof(ManagedType,Flags)>("Flags","Flags")
+			.adjustAot("das_reinterpret<ImGuiInputTextFlags_>::pass(",")");
 		addField<DAS_BIND_MANAGED_FIELD(UserData)>("UserData","UserData");
 		addField<DAS_BIND_MANAGED_FIELD(EventChar)>("EventChar","EventChar");
-		addField<ImGuiKey_,offsetof(ManagedType,EventKey)>("EventKey","EventKey");
+		addField<ImGuiKey_,offsetof(ManagedType,EventKey)>("EventKey","EventKey")
+			.adjustAot("das_reinterpret<ImGuiKey_>::pass(",")");
 		addField<DAS_BIND_MANAGED_FIELD(Buf)>("Buf","Buf");
 		addField<DAS_BIND_MANAGED_FIELD(BufTextLen)>("BufTextLen","BufTextLen");
 		addField<DAS_BIND_MANAGED_FIELD(BufSize)>("BufSize","BufSize");
