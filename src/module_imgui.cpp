@@ -11,6 +11,8 @@ using namespace das;
 
 #include "module_imgui.h"
 
+#include "aot_imgui.h"
+
 #endif
 
 namespace das {
@@ -143,13 +145,13 @@ namespace das {
     }
 
     void AddText2( ImDrawList & drawList, const ImFont* font, float font_size, const ImVec2& pos, ImU32 col,
-        const char* text_begin, float wrap_width = 0.0f, const ImVec4* cpu_fine_clip_rect = nullptr) {
+        const char* text_begin, float wrap_width, const ImVec4* cpu_fine_clip_rect) {
         drawList.AddText(font,font_size,pos,col,text_begin,nullptr,wrap_width,cpu_fine_clip_rect);
     }
 
     // ImColor
 
-    ImColor HSV(float h, float s, float v, float a = 1.0f) {
+    ImColor HSV(float h, float s, float v, float a) {
         return ImColor::HSV(h,s,v,a);
     }
 
@@ -383,7 +385,7 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::SortDirection)>(*this,lib,"SortDirection",
         SideEffects::none,"das::SortDirection");
     // CalcTextSize
-    addExtern<DAS_BIND_FUN(das::CalcTextSize)>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "ImGui::CalcTextSize")
+    addExtern<DAS_BIND_FUN(das::CalcTextSize)>(*this, lib, "CalcTextSize",SideEffects::worstDefault, "das::CalcTextSize")
 	->args({"text","hide_text_after_double_hash","wrap_width"})
 		->arg_init(1,make_smart<ExprConstBool>(false))
 		->arg_init(2,make_smart<ExprConstFloat>(-1.0f));
@@ -439,6 +441,10 @@ bool Module_imgui::initDependencies() {
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
     tw << "#include <imgui.h>\n";
+    tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
+    tw << "#include \"daScript/ast/ast.h\"\n";
+    tw << "#include \"daScript/simulate/bind_enum.h\"\n";
+    tw << "#include \"../modules/dasImGui/src/module_imgui.h\"\n";
     // specifying AOT type, in this case direct cpp mode (and not hybrid mode)
     return ModuleAotType::cpp;
 }

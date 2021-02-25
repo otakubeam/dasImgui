@@ -90,6 +90,8 @@ public:
     }
     virtual ModuleAotType aotRequire ( TextWriter & tw ) const override {
         tw << "#include <imgui.h>\n";
+        tw << "#include <backends/imgui_impl_glfw.h>\n";
+        tw << "#include <backends/imgui_impl_opengl2.h>\n";
         return ModuleAotType::cpp;
     }
 };

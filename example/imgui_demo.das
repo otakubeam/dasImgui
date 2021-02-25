@@ -5,7 +5,7 @@ module imgui_demo
 
 require daslib/imgui_boost
 require daslib/safe_addr
-require daslib/static
+require daslib/static_let
 require math
 require strings
 

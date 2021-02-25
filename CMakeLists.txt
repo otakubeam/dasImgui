@@ -83,6 +83,27 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${glfw_INCLUDE_DIR}
 		)
 		SETUP_CPP11(libDasModuleImGuiApp)
+
+		# demo AOT
+		add_custom_target(dasImGuiOpenGL_AOT)
+		SET(IMGUI_OPENGL_AOT_GENERATED_SRC)
+		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_demo.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_opengl2.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
+		SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
+
+		# now, the demo
+		SET(IMGUI_OPENGL_DEMO_SRC
+			${DAS_IMGUI_DIR}/example/imgui_opengl_aot.cpp
+			${DAS_MODULES_NEED_INC}
+		)
+		SOURCE_GROUP_FILES("main" IMGUI_OPENGL_DEMO_SRC)
+		add_executable(dasImGuiOpenGL ${IMGUI_OPENGL_DEMO_SRC} ${IMGUI_OPENGL_AOT_GENERATED_SRC} ${AOT_GENERATED_SRC})
+		TARGET_LINK_LIBRARIES(dasImGuiOpenGL libDaScript libDasModuleUriparser libUriParser Threads::Threads ${DAS_MODULES_LIBS})
+		ADD_DEPENDENCIES(dasImGuiOpenGL libDaScript libDasModuleUriparser libUriParser need_and_resolve ${DAS_MODULES_LIBS})
+		ADD_DEPENDENCIES(dasImGuiOpenGL dasImGuiOpenGL_AOT dasAotStub)
+		SETUP_CPP11(dasImGuiOpenGL)
+		SETUP_LTO(dasImGuiOpenGL)
+
 		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../../dasVulkan/include/dasVulkan/module.h"))
 			MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
 		ELSE()
