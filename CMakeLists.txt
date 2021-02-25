@@ -89,6 +89,8 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		SET(IMGUI_OPENGL_AOT_GENERATED_SRC)
 		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_demo.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
 		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_opengl2.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/daslib/glfw_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImGuiOpenGL_AOT dasAot)
 		SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
 
 		# now, the demo
