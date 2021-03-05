@@ -722,3 +722,7 @@ using __OnChangedVtxOffset_method_167 = DAS_CALL_MEMBER(ImDrawList::_OnChangedVt
 addExtern<DAS_CALL_METHOD(__OnChangedVtxOffset_method_167)>(*this, lib, "_OnChangedVtxOffset",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedVtxOffset))
 	->args({"self",})
 ;
+using __CalcCircleAutoSegmentCount_method_168 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
+addExtern<DAS_CALL_METHOD(__CalcCircleAutoSegmentCount_method_168)>(*this, lib, "_CalcCircleAutoSegmentCount",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_CalcCircleAutoSegmentCount))
+	->args({"self","radius"})
+;

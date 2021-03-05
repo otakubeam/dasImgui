@@ -239,11 +239,12 @@ struct ImFontAtlas_GeneratedAnnotation : ManagedStructureAnnotation<ImFontAtlas>
 	ImFontAtlas_GeneratedAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("ImFontAtlas", ml) {
 	}
 	void init () {
-		addField<DAS_BIND_MANAGED_FIELD(Locked)>("Locked","Locked");
 		addField<DAS_BIND_MANAGED_FIELD(Flags)>("Flags","Flags");
 		addField<DAS_BIND_MANAGED_FIELD(TexID)>("TexID","TexID");
 		addField<DAS_BIND_MANAGED_FIELD(TexDesiredWidth)>("TexDesiredWidth","TexDesiredWidth");
 		addField<DAS_BIND_MANAGED_FIELD(TexGlyphPadding)>("TexGlyphPadding","TexGlyphPadding");
+		addField<DAS_BIND_MANAGED_FIELD(Locked)>("Locked","Locked");
+		addField<DAS_BIND_MANAGED_FIELD(TexPixelsUseColors)>("TexPixelsUseColors","TexPixelsUseColors");
 		addField<DAS_BIND_MANAGED_FIELD(TexPixelsAlpha8)>("TexPixelsAlpha8","TexPixelsAlpha8");
 		addField<DAS_BIND_MANAGED_FIELD(TexPixelsRGBA32)>("TexPixelsRGBA32","TexPixelsRGBA32");
 		addField<DAS_BIND_MANAGED_FIELD(TexWidth)>("TexWidth","TexWidth");
@@ -430,7 +431,7 @@ struct ImGuiStyle_GeneratedAnnotation : ManagedStructureAnnotation<ImGuiStyle> {
 		addField<DAS_BIND_MANAGED_FIELD(AntiAliasedLinesUseTex)>("AntiAliasedLinesUseTex","AntiAliasedLinesUseTex");
 		addField<DAS_BIND_MANAGED_FIELD(AntiAliasedFill)>("AntiAliasedFill","AntiAliasedFill");
 		addField<DAS_BIND_MANAGED_FIELD(CurveTessellationTol)>("CurveTessellationTol","CurveTessellationTol");
-		addField<DAS_BIND_MANAGED_FIELD(CircleSegmentMaxError)>("CircleSegmentMaxError","CircleSegmentMaxError");
+		addField<DAS_BIND_MANAGED_FIELD(CircleTessellationMaxError)>("CircleTessellationMaxError","CircleTessellationMaxError");
 		addField<DAS_BIND_MANAGED_FIELD(Colors)>("Colors","Colors");
 	}
 };

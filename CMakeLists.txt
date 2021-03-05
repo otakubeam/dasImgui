@@ -10,7 +10,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
     FIND_PACKAGE(Vulkan)
 
 	# we are actually going to build it
-	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui-1.81)
+	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui)
 	SET(DAS_IMGUI_SRC
 		${imgui_INCLUDE_DIR}/imconfig.h
 		${imgui_INCLUDE_DIR}/imgui.cpp

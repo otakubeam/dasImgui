@@ -1649,6 +1649,9 @@ struct ImVector
     inline T&           operator[](int i)                   { IM_ASSERT(i >= 0 && i < Size); return Data[i]; }
     inline const T&     operator[](int i) const             { IM_ASSERT(i >= 0 && i < Size); return Data[i]; }
 
+    inline T*           data()                             { return Data; }
+    inline const T*     data() const                       { return Data; }
+
     inline void         clear()                             { if (Data) { Size = Capacity = 0; IM_FREE(Data); Data = NULL; } }
     inline T*           begin()                             { return Data; }
     inline const T*     begin() const                       { return Data; }

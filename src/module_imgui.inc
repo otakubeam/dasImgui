@@ -473,8 +473,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetColumnWidth)>(*this, lib, "SetColumnWidth",Side
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4)>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
 	->args({"in"})
 ;
-addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
-	->args({})
+addExtern<DAS_BIND_FUN(ImGui::LogTextV)>(*this, lib, "LogTextV",SideEffects::worstDefault, "ImGui::LogTextV")
+	->args({"fmt","args"})
 ;
 addExtern<DAS_BIND_FUN(ImGui::CalcItemWidth)>(*this, lib, "CalcItemWidth",SideEffects::worstDefault, "ImGui::CalcItemWidth")
 	->args({})
@@ -513,6 +513,9 @@ addExtern<DAS_BIND_FUN(ImGui::EndTooltip)>(*this, lib, "EndTooltip",SideEffects:
 ;
 addExtern<bool (*)(const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
 	->args({"size"})
+;
+addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
+	->args({})
 ;
 addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
 	->args({"label","v","v_speed","v_min","v_max","format","power"})
@@ -1229,6 +1232,9 @@ addExtern<DAS_BIND_FUN(ImGui::GetFrameHeightWithSpacing)>(*this, lib, "GetFrameH
 ;
 addExtern<void (*)(const char *, const char *),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
 	->args({"str_id_begin","str_id_end"})
+;
+addExtern<DAS_BIND_FUN(ImGui::GetAllocatorFunctions)>(*this, lib, "GetAllocatorFunctions",SideEffects::worstDefault, "ImGui::GetAllocatorFunctions")
+	->args({"p_alloc_func","p_free_func","p_user_data"})
 ;
 addExtern<bool (*)(const char *, int *, bool (*)(void *, int, const char **), void *, int, int),ImGui::ListBox>(*this, lib, "ListBox",SideEffects::worstDefault, "ImGui::ListBox")
 	->args({"label","current_item","items_getter","data","items_count","height_in_items"})
