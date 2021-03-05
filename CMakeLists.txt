@@ -9,7 +9,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
     FIND_PACKAGE(glfw3)
     FIND_PACKAGE(Vulkan)
 
-	# we are actually going to build it
+	# imgui
 	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui)
 	SET(DAS_IMGUI_SRC
 		${imgui_INCLUDE_DIR}/imconfig.h
@@ -23,6 +23,13 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${imgui_INCLUDE_DIR}/imstb_rectpack.h
 		${imgui_INCLUDE_DIR}/imstb_textedit.h
 		${imgui_INCLUDE_DIR}/imstb_truetype.h
+	)
+
+	# imnodes
+	SET(imnodes_INCLUDE_DIR ${DAS_IMGUI_DIR}/imnodes)
+	SET(DAS_IMNODES_SRC
+		${imnodes_INCLUDE_DIR}/imnodes.cpp
+		${imnodes_INCLUDE_DIR}/imnodes.h
 	)
 
 	# libDasModuleImGui
@@ -42,22 +49,20 @@ IF(NOT DAS_IMGUI_INCLUDED)
 	ADD_MODULE_LIB(libDasModuleImGui)
 	ADD_MODULE_CPP(imgui)
 	ADD_MODULE_NATIVE(imgui_boost)
-	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_SRC})
+	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC})
 	#TARGET_LINK_LIBRARIES(libDasModuleImGui ${imgui_LIBRARIES})
 	ADD_DEPENDENCIES(libDasModuleImGui libDaScript)
-	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR})
+	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR} ${imnodes_INCLUDE_DIR})
 	SETUP_CPP11(libDasModuleImGui)
 	# GENERATED IMGUI
-	get_target_property(BIND_INCLUDE_DIRS libDasModuleImGui INCLUDE_DIRECTORIES)
 	FIND_FILE(IMGUI_H "imgui.h" ${imgui_INCLUDE_DIR})
-
 	CPP_BIND_AST(
 		IMGUI_GENERATE
 		generate_imgui.das
 		${DAS_IMGUI_DIR}/src/imgui_headers.h
 		${DAS_IMGUI_DIR}/src/module_imgui
 		${DAS_IMGUI_DIR}/src
-		${BIND_INCLUDE_DIRS}
+		${imgui_INCLUDE_DIR}
 		${IMGUI_H}
 	)
 	IF(NOT glfw3_FOUND)
@@ -72,6 +77,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl2.h
 			${DAS_IMGUI_DIR}/example/imgui_demo.das
 			${DAS_IMGUI_DIR}/example/imgui_opengl2.das
+			${DAS_IMGUI_DIR}/example/imnode_editor.das
 		)
 		ADD_MODULE_LIB(libDasModuleImGuiApp)
 		ADD_MODULE_CPP(imgui_app)

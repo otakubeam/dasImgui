@@ -64,6 +64,9 @@ def main
         "ImGuiDragDropFlags_" => [[ExEnum() name = "ImGuiDragDropFlags", isFlags=true]];
         "ImGuiHoveredFlags_" => [[ExEnum() name = "ImGuiHoveredFlags", isFlags=true]];
         "ImGuiFocusedFlags_" => [[ExEnum() name = "ImGuiFocusedFlags", isFlags=true]];
+        // imnodes
+        "StyleFlags" => [[ExEnum() name = "ImNodesStyleFlags", isFlags=true]];
+        "AttributeFlags" => [[ExEnum() name = "ImNodesAttributeFlags", isFlags=true]];
 
     // not flags
         "ImGuiStyleVar_" => [[ExEnum() name = "ImGuiStyleVar"]];
@@ -73,7 +76,11 @@ def main
         "ImGuiMouseButton_" => [[ExEnum() name = "ImGuiMouseButton"]];
         "ImGuiDir_" => [[ExEnum() name = "ImGuiDir"]];
         "ImGuiDataType_" => [[ExEnum() name = "ImGuiDataType"]];
-        "ImGuiTableBgTarget_" => [[ExEnum() name = "ImGuiTableBgTarget"]]
+        "ImGuiTableBgTarget_" => [[ExEnum() name = "ImGuiTableBgTarget"]];
+        // imnodes
+        "PinShape" => [[ExEnum() name = "ImNodesPinShape"]];
+        "StyleVar" => [[ExEnum() name = "ImNodesStyleVar"]];
+        "ColorStyle" => [[ExEnum() name = "ImNodesColorStyle"]]
     }}
 
     substitute_field_types <- {{
@@ -83,6 +90,10 @@ def main
         "ImGuiIO::ConfigFlags" => "ImGuiConfigFlags_";
         "ImGuiIO::BackendFlags" => "ImGuiBackendFlags_";
         "ImGuiIO::ImGuiKeyModFlags" => "ImGuiKeyModFlags_"
+    }}
+
+    namespace_to_prefix <- {{
+        "imnodes" => "ImNodes_"
     }}
 
     // generate

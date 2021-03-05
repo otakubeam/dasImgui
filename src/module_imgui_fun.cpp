@@ -2,6 +2,7 @@
 #include "daScript/ast/ast_typefactory_bind.h"
 
 #include <imgui.h>
+#include <imnodes.h>
 
 using namespace das;
 

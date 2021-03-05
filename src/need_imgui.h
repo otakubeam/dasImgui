@@ -19,6 +19,7 @@ protected:
 MAKE_TYPE_FACTORY(ImGuiContext,ImGuiContext);
 MAKE_TYPE_FACTORY(ImDrawListSharedData,ImDrawListSharedData);
 MAKE_TYPE_FACTORY(ImFontBuilderIO,ImFontBuilderIO);
+MAKE_TYPE_FACTORY(EditorContext,imnodes::EditorContext);
 
 namespace das {
 

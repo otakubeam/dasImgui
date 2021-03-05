@@ -2,6 +2,7 @@
 #include "daScript/ast/ast_typefactory_bind.h"
 
 #include <imgui.h>
+#include <imnodes.h>
 
 using namespace das;
 
@@ -287,6 +288,8 @@ Module_imgui::Module_imgui() : Module("imgui") {
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
     addAnnotation(make_smart<DummyTypeAnnotation>("ImFontBuilderIO", "ImFontBuilderIO",
         1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
+    addAnnotation(make_smart<DummyTypeAnnotation>("EditorContext", "EditorContext",
+        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
     // constants
     addConstant(*this,"IMGUI_VERSION", IMGUI_VERSION);
     addConstant(*this,"IMGUI_VERSION_NUM", IMGUI_VERSION_NUM);
@@ -421,6 +424,10 @@ bool Module_imgui::initDependencies() {
         ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     findUniqueFunction("ColorButton")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+    findUniqueFunction("ImNodes_BeginInputAttribute")
+        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
+    findUniqueFunction("ImNodes_BeginOutputAttribute")
+        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
     // time to fix-up const & ImVec2 and const & ImVec4
     for ( auto fn : this->functions ) {
         const auto&  pfn = fn.second;
@@ -439,6 +446,7 @@ bool Module_imgui::initDependencies() {
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
     tw << "#include <imgui.h>\n";
+    tw << "#include <imnodes.h>\n";
     tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
