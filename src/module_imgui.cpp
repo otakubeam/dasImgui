@@ -316,8 +316,6 @@ bool Module_imgui::initDependencies() {
     addExtern<DAS_BIND_FUN(das::PassFilter)>(*this, lib, "PassFilter",
         SideEffects::worstDefault, "das::PassFilter");
     // imcolor
-    addCtor<ImColor>(*this,lib,"ImColor","ImColor");
-    addCtor<ImColor,const ImVec4 &>(*this,lib,"ImColor","ImColor");
     addExtern<DAS_BIND_FUN(das::HSV)>(*this, lib, "HSV",
         SideEffects::none, "das::HSV")
             ->args({"h","s","v","a"})
