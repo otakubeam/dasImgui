@@ -10,17 +10,16 @@ using namespace das;
 
 #if USE_GENERATED
 
-#define GLOBAL_NAMESPACE    1
+#define IMNODES_NAMESPACE    1
 
 #include "module_imgui.h"
 
-#include "module_imgui.ann.cpp_inc"
+#include "module_imgui.enum.cpp_inc"
 
 #endif
 
-
-void Module_imgui::initAnnotations() {
+void Module_imnodes::initEnums() {
 #if USE_GENERATED
-#include "module_imgui.ann.inc"
+#include "module_imgui.enum.inc"
 #endif
 }

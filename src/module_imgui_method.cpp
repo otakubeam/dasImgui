@@ -10,6 +10,8 @@ using namespace das;
 
 #if USE_GENERATED
 
+#define GLOBAL_NAMESPACE    1
+
 #include "module_imgui.h"
 
 #endif

@@ -276,20 +276,18 @@ namespace das {
     }
 }
 
+////////
+// IMGUI
+
 Module_imgui::Module_imgui() : Module("imgui") {
     // check version
     IMGUI_CHECKVERSION();
     // make basic module
     lib.addModule(this);
     lib.addBuiltInModule();
-    addAnnotation(make_smart<DummyTypeAnnotation>("ImGuiContext", "ImGuiContext",
-        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
-    addAnnotation(make_smart<DummyTypeAnnotation>("ImDrawListSharedData", "ImDrawListSharedData",
-        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
-    addAnnotation(make_smart<DummyTypeAnnotation>("ImFontBuilderIO", "ImFontBuilderIO",
-        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
-    addAnnotation(make_smart<DummyTypeAnnotation>("EditorContext", "EditorContext",
-        1, 1)); // sizeof(ImGuiContext), alignof(ImGuiContext)));
+    addAnnotation(make_smart<DummyTypeAnnotation>("ImGuiContext", "ImGuiContext", 1, 1));
+    addAnnotation(make_smart<DummyTypeAnnotation>("ImDrawListSharedData", "ImDrawListSharedData", 1, 1));
+    addAnnotation(make_smart<DummyTypeAnnotation>("ImFontBuilderIO", "ImFontBuilderIO", 1, 1));
     // constants
     addConstant(*this,"IMGUI_VERSION", IMGUI_VERSION);
     addConstant(*this,"IMGUI_VERSION_NUM", IMGUI_VERSION_NUM);
@@ -424,10 +422,6 @@ bool Module_imgui::initDependencies() {
         ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     findUniqueFunction("ColorButton")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
-    findUniqueFunction("ImNodes_BeginInputAttribute")
-        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
-    findUniqueFunction("ImNodes_BeginOutputAttribute")
-        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
     // time to fix-up const & ImVec2 and const & ImVec4
     for ( auto fn : this->functions ) {
         const auto&  pfn = fn.second;
@@ -446,7 +440,6 @@ bool Module_imgui::initDependencies() {
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
     tw << "#include <imgui.h>\n";
-    tw << "#include <imnodes.h>\n";
     tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
@@ -457,3 +450,59 @@ ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
 
 // registering module, so that its available via 'NEED_MODULE' macro
 REGISTER_MODULE(Module_imgui);
+
+///////////
+// IMNODES
+
+Module_imnodes::Module_imnodes() : Module("imnodes") {
+}
+
+bool Module_imnodes::initDependencies() {
+    if ( initialized ) return true;
+    auto mod_imgui = Module::require("imgui");
+    if ( !mod_imgui ) return false;
+    if ( !mod_imgui->initDependencies() ) return false;
+    initialized = true;
+    // make basic module
+    lib.addModule(this);
+    lib.addBuiltInModule();
+    lib.addModule(mod_imgui);
+    addAnnotation(make_smart<DummyTypeAnnotation>("EditorContext", "EditorContext",1, 1));
+    initEnums();
+    initAnnotations();
+    initFunctions();
+    initMethods();
+#if USE_GENERATED
+    findUniqueFunction("BeginInputAttribute")
+        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
+    findUniqueFunction("BeginOutputAttribute")
+        ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
+    // time to fix-up const & ImVec2 and const & ImVec4
+    for ( auto fn : this->functions ) {
+        const auto&  pfn = fn.second;
+        for ( auto & arg : pfn->arguments ) {
+            if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
+                if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {
+                    arg->type->ref = false;
+                }
+            }
+        }
+    }
+#endif
+    return true;
+}
+
+ModuleAotType Module_imnodes::aotRequire ( TextWriter & tw ) const  {
+    // add your stuff here
+    tw << "#include <imgui.h>\n";
+    tw << "#include <imnodes.h>\n";
+    tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
+    tw << "#include \"daScript/ast/ast.h\"\n";
+    tw << "#include \"daScript/simulate/bind_enum.h\"\n";
+    tw << "#include \"../modules/dasImGui/src/module_imgui.h\"\n";
+    // specifying AOT type, in this case direct cpp mode (and not hybrid mode)
+    return ModuleAotType::cpp;
+}
+
+// registering module, so that its available via 'NEED_MODULE' macro
+REGISTER_MODULE(Module_imnodes);

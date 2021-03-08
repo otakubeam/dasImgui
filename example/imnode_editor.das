@@ -6,6 +6,8 @@ require daslib/glfw_boost
 require daslib/imgui_boost
 require daslib/static_let
 
+require imnodes
+
 var window : GLFWwindow?
 
 def imgui_app ( title:string; blk : block )
@@ -17,8 +19,8 @@ def imgui_app ( title:string; blk : block )
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)
-    ImNodes_Initialize()
-    var io & = GetIO()
+    imnodes::Initialize()
+    var io & = imgui::GetIO()
     io.FontGlobalScale = 2.0;   // BBATKIN: note - my monitor is HUGE
     StyleColorsDark(null)
     ImGui_ImplGlfw_InitForOpenGL(window, true)
@@ -37,7 +39,7 @@ def imgui_app ( title:string; blk : block )
         ImGui_ImplOpenGL2_RenderDrawData(GetDrawData())
         glfwMakeContextCurrent(window)
         glfwSwapBuffers(window)
-    ImNodes_Shutdown()
+    imnodes::Shutdown()
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
     DestroyContext(null)
@@ -45,34 +47,34 @@ def imgui_app ( title:string; blk : block )
     glfwTerminate()
 
 def EditNode(id:int;cap:string)
-    ImNodes_BeginNode(id)
-    ImNodes_BeginNodeTitleBar()
+    imnodes::BeginNode(id)
+    imnodes::BeginNodeTitleBar()
     TextUnformatted("{cap} id:{id}")
-    ImNodes_EndNodeTitleBar()
-    ImNodes_BeginInputAttribute(id*1000+2)
+    imnodes::EndNodeTitleBar()
+    imnodes::BeginInputAttribute(id*1000+2)
     Text("input")
-    ImNodes_EndInputAttribute()
-    ImNodes_BeginOutputAttribute(id*1000+3)
+    imnodes::EndInputAttribute()
+    imnodes::BeginOutputAttribute(id*1000+3)
     Indent(40.)
     Text("output")
-    ImNodes_EndOutputAttribute()
-    ImNodes_EndNode()
+    imnodes::EndOutputAttribute()
+    imnodes::EndNode()
 
 def LinkNode(lid,id1,id2:int)
-    ImNodes_Link(lid,id1*1000+2,id2*1000+3)
+    imnodes::Link(lid,id1*1000+2,id2*1000+3)
 
 def EditorDemo()
     static_let <|
         var edc : EditorContext?
     if edc==null
-        edc = ImNodes_EditorContextCreate()
+        edc = imnodes::EditorContextCreate()
     Begin("Node editor")
-    ImNodes_EditorContextSet(edc)
-    ImNodes_BeginNodeEditor()
+    imnodes::EditorContextSet(edc)
+    imnodes::BeginNodeEditor()
     EditNode(1,"One")
     EditNode(2,"Two")
     LinkNode(1234,1,2)
-    ImNodes_EndNodeEditor()
+    imnodes::EndNodeEditor()
     End()
 
 [export]

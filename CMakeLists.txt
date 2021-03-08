@@ -40,6 +40,10 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${DAS_IMGUI_DIR}/src/module_imgui_ann.cpp
 		${DAS_IMGUI_DIR}/src/module_imgui_fun.cpp
 		${DAS_IMGUI_DIR}/src/module_imgui_method.cpp
+		${DAS_IMGUI_DIR}/src/module_imnodes_enums.cpp
+		${DAS_IMGUI_DIR}/src/module_imnodes_ann.cpp
+		${DAS_IMGUI_DIR}/src/module_imnodes_fun.cpp
+		${DAS_IMGUI_DIR}/src/module_imnodes_method.cpp
 		${DAS_IMGUI_DIR}/src/module_imgui.h
 		${DAS_IMGUI_DIR}/src/module_imgui.inc
 		${DAS_IMGUI_DIR}/src/module_imgui.method.inc
@@ -48,6 +52,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 	)
 	ADD_MODULE_LIB(libDasModuleImGui)
 	ADD_MODULE_CPP(imgui)
+	ADD_MODULE_CPP(imnodes)
 	ADD_MODULE_NATIVE(imgui_boost)
 	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC})
 	#TARGET_LINK_LIBRARIES(libDasModuleImGui ${imgui_LIBRARIES})

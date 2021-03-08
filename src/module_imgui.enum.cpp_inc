@@ -2,6 +2,7 @@
 // enumerations
 // ------------
 
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiDataType : public das::Enumeration {
 public:
@@ -22,6 +23,8 @@ public:
 		addIEx("COUNT", "ImGuiDataType_COUNT", int64_t(ImGuiDataType_::ImGuiDataType_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiHoveredFlags : public das::Enumeration {
 public:
@@ -41,6 +44,8 @@ public:
 		addIEx("RootAndChildWindows", "ImGuiHoveredFlags_RootAndChildWindows", int64_t(ImGuiHoveredFlags_::ImGuiHoveredFlags_RootAndChildWindows), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiNavInput_ : public das::Enumeration {
 public:
@@ -73,6 +78,8 @@ public:
 		addIEx("ImGuiNavInput_InternalStart_", "ImGuiNavInput_InternalStart_", int64_t(ImGuiNavInput_::ImGuiNavInput_InternalStart_), das::LineInfo());
 	}
 };
+#endif
+#ifdef IMNODES_NAMESPACE
 
 class EnumerationImNodesPinShape : public das::Enumeration {
 public:
@@ -88,6 +95,8 @@ public:
 		addIEx("QuadFilled", "PinShape_QuadFilled", int64_t(imnodes::PinShape::PinShape_QuadFilled), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiDir : public das::Enumeration {
 public:
@@ -103,6 +112,8 @@ public:
 		addIEx("COUNT", "ImGuiDir_COUNT", int64_t(ImGuiDir_::ImGuiDir_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiCond : public das::Enumeration {
 public:
@@ -117,6 +128,8 @@ public:
 		addIEx("Appearing", "ImGuiCond_Appearing", int64_t(ImGuiCond_::ImGuiCond_Appearing), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiViewportFlags_ : public das::Enumeration {
 public:
@@ -130,6 +143,8 @@ public:
 		addIEx("ImGuiViewportFlags_OwnedByApp", "ImGuiViewportFlags_OwnedByApp", int64_t(ImGuiViewportFlags_::ImGuiViewportFlags_OwnedByApp), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiDragDropFlags : public das::Enumeration {
 public:
@@ -150,6 +165,8 @@ public:
 		addIEx("AcceptPeekOnly", "ImGuiDragDropFlags_AcceptPeekOnly", int64_t(ImGuiDragDropFlags_::ImGuiDragDropFlags_AcceptPeekOnly), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiColorEditFlags : public das::Enumeration {
 public:
@@ -191,6 +208,8 @@ public:
 		addIEx("HEX", "ImGuiColorEditFlags_HEX", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HEX), das::LineInfo());
 	}
 };
+#endif
+#ifdef IMNODES_NAMESPACE
 
 class EnumerationImNodesStyleVar : public das::Enumeration {
 public:
@@ -214,6 +233,8 @@ public:
 		addIEx("PinOffset", "StyleVar_PinOffset", int64_t(imnodes::StyleVar::StyleVar_PinOffset), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiWindowFlags : public das::Enumeration {
 public:
@@ -253,6 +274,8 @@ public:
 		addIEx("ChildMenu", "ImGuiWindowFlags_ChildMenu", int64_t(ImGuiWindowFlags_::ImGuiWindowFlags_ChildMenu), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiCol : public das::Enumeration {
 public:
@@ -316,6 +339,8 @@ public:
 		addIEx("COUNT", "ImGuiCol_COUNT", int64_t(ImGuiCol_::ImGuiCol_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTableFlags : public das::Enumeration {
 public:
@@ -361,6 +386,8 @@ public:
 		addIEx("SizingMask_", "ImGuiTableFlags_SizingMask_", int64_t(ImGuiTableFlags_::ImGuiTableFlags_SizingMask_), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiKeyModFlags : public das::Enumeration {
 public:
@@ -375,6 +402,8 @@ public:
 		addIEx("Super", "ImGuiKeyModFlags_Super", int64_t(ImGuiKeyModFlags_::ImGuiKeyModFlags_Super), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiFocusedFlags : public das::Enumeration {
 public:
@@ -389,6 +418,8 @@ public:
 		addIEx("RootAndChildWindows", "ImGuiFocusedFlags_RootAndChildWindows", int64_t(ImGuiFocusedFlags_::ImGuiFocusedFlags_RootAndChildWindows), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiMouseCursor_ : public das::Enumeration {
 public:
@@ -409,6 +440,8 @@ public:
 		addIEx("ImGuiMouseCursor_COUNT", "ImGuiMouseCursor_COUNT", int64_t(ImGuiMouseCursor_::ImGuiMouseCursor_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImDrawCornerFlags : public das::Enumeration {
 public:
@@ -428,6 +461,8 @@ public:
 		addIEx("All", "ImDrawCornerFlags_All", int64_t(ImDrawCornerFlags_::ImDrawCornerFlags_All), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTableBgTarget : public das::Enumeration {
 public:
@@ -441,6 +476,8 @@ public:
 		addIEx("CellBg", "ImGuiTableBgTarget_CellBg", int64_t(ImGuiTableBgTarget_::ImGuiTableBgTarget_CellBg), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiButtonFlags : public das::Enumeration {
 public:
@@ -456,6 +493,8 @@ public:
 		addIEx("MouseButtonDefault_", "ImGuiButtonFlags_MouseButtonDefault_", int64_t(ImGuiButtonFlags_::ImGuiButtonFlags_MouseButtonDefault_), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiMouseButton : public das::Enumeration {
 public:
@@ -469,6 +508,8 @@ public:
 		addIEx("COUNT", "ImGuiMouseButton_COUNT", int64_t(ImGuiMouseButton_::ImGuiMouseButton_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTabBarFlags : public das::Enumeration {
 public:
@@ -489,6 +530,8 @@ public:
 		addIEx("FittingPolicyDefault_", "ImGuiTabBarFlags_FittingPolicyDefault_", int64_t(ImGuiTabBarFlags_::ImGuiTabBarFlags_FittingPolicyDefault_), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTreeNodeFlags : public das::Enumeration {
 public:
@@ -514,6 +557,8 @@ public:
 		addIEx("CollapsingHeader", "ImGuiTreeNodeFlags_CollapsingHeader", int64_t(ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_CollapsingHeader), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTabItemFlags : public das::Enumeration {
 public:
@@ -532,6 +577,8 @@ public:
 		addIEx("Trailing", "ImGuiTabItemFlags_Trailing", int64_t(ImGuiTabItemFlags_::ImGuiTabItemFlags_Trailing), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImDrawListFlags_ : public das::Enumeration {
 public:
@@ -546,6 +593,8 @@ public:
 		addIEx("ImDrawListFlags_AllowVtxOffset", "ImDrawListFlags_AllowVtxOffset", int64_t(ImDrawListFlags_::ImDrawListFlags_AllowVtxOffset), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiSelectableFlags : public das::Enumeration {
 public:
@@ -561,6 +610,8 @@ public:
 		addIEx("AllowItemOverlap", "ImGuiSelectableFlags_AllowItemOverlap", int64_t(ImGuiSelectableFlags_::ImGuiSelectableFlags_AllowItemOverlap), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTableColumnFlags : public das::Enumeration {
 public:
@@ -595,6 +646,8 @@ public:
 		addIEx("NoDirectResize_", "ImGuiTableColumnFlags_NoDirectResize_", int64_t(ImGuiTableColumnFlags_::ImGuiTableColumnFlags_NoDirectResize_), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiSortDirection : public das::Enumeration {
 public:
@@ -607,6 +660,8 @@ public:
 		addIEx("Descending", "ImGuiSortDirection_Descending", int64_t(ImGuiSortDirection_::ImGuiSortDirection_Descending), das::LineInfo());
 	}
 };
+#endif
+#ifdef IMNODES_NAMESPACE
 
 class EnumerationImNodesColorStyle : public das::Enumeration {
 public:
@@ -633,6 +688,8 @@ public:
 		addIEx("Count", "ColorStyle_Count", int64_t(imnodes::ColorStyle::ColorStyle_Count), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiInputTextFlags : public das::Enumeration {
 public:
@@ -665,6 +722,8 @@ public:
 		addIEx("NoMarkEdited", "ImGuiInputTextFlags_NoMarkEdited", int64_t(ImGuiInputTextFlags_::ImGuiInputTextFlags_NoMarkEdited), das::LineInfo());
 	}
 };
+#endif
+#ifdef IMNODES_NAMESPACE
 
 class EnumerationImNodesStyleFlags : public das::Enumeration {
 public:
@@ -677,6 +736,8 @@ public:
 		addIEx("GridLines", "StyleFlags_GridLines", int64_t(imnodes::StyleFlags::StyleFlags_GridLines), das::LineInfo());
 	}
 };
+#endif
+#ifdef IMNODES_NAMESPACE
 
 class EnumerationImNodesAttributeFlags : public das::Enumeration {
 public:
@@ -689,6 +750,8 @@ public:
 		addIEx("EnableLinkCreationOnSnap", "AttributeFlags_EnableLinkCreationOnSnap", int64_t(imnodes::AttributeFlags::AttributeFlags_EnableLinkCreationOnSnap), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiBackendFlags : public das::Enumeration {
 public:
@@ -703,6 +766,8 @@ public:
 		addIEx("RendererHasVtxOffset", "ImGuiBackendFlags_RendererHasVtxOffset", int64_t(ImGuiBackendFlags_::ImGuiBackendFlags_RendererHasVtxOffset), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiPopupFlags_ : public das::Enumeration {
 public:
@@ -723,6 +788,8 @@ public:
 		addIEx("ImGuiPopupFlags_AnyPopup", "ImGuiPopupFlags_AnyPopup", int64_t(ImGuiPopupFlags_::ImGuiPopupFlags_AnyPopup), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiComboFlags : public das::Enumeration {
 public:
@@ -741,6 +808,8 @@ public:
 		addIEx("HeightMask_", "ImGuiComboFlags_HeightMask_", int64_t(ImGuiComboFlags_::ImGuiComboFlags_HeightMask_), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiKey : public das::Enumeration {
 public:
@@ -773,6 +842,8 @@ public:
 		addIEx("COUNT", "ImGuiKey_COUNT", int64_t(ImGuiKey_::ImGuiKey_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiStyleVar : public das::Enumeration {
 public:
@@ -807,6 +878,8 @@ public:
 		addIEx("COUNT", "ImGuiStyleVar_COUNT", int64_t(ImGuiStyleVar_::ImGuiStyleVar_COUNT), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiConfigFlags : public das::Enumeration {
 public:
@@ -825,6 +898,8 @@ public:
 		addIEx("IsTouchScreen", "ImGuiConfigFlags_IsTouchScreen", int64_t(ImGuiConfigFlags_::ImGuiConfigFlags_IsTouchScreen), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiSliderFlags : public das::Enumeration {
 public:
@@ -841,6 +916,8 @@ public:
 		addIEx("ClampOnInput", "ImGuiSliderFlags_ClampOnInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_ClampOnInput), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImGuiTableRowFlags : public das::Enumeration {
 public:
@@ -852,6 +929,8 @@ public:
 		addIEx("Headers", "ImGuiTableRowFlags_Headers", int64_t(ImGuiTableRowFlags_::ImGuiTableRowFlags_Headers), das::LineInfo());
 	}
 };
+#endif
+#ifdef GLOBAL_NAMESPACE
 
 class EnumerationImFontAtlasFlags_ : public das::Enumeration {
 public:
@@ -865,3 +944,4 @@ public:
 		addIEx("ImFontAtlasFlags_NoBakedLines", "ImFontAtlasFlags_NoBakedLines", int64_t(ImFontAtlasFlags_::ImFontAtlasFlags_NoBakedLines), das::LineInfo());
 	}
 };
+#endif

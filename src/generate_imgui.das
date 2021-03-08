@@ -93,7 +93,7 @@ def main
     }}
 
     namespace_to_prefix <- {{
-        "imnodes" => "ImNodes_"
+        "imnodes" => "IMNODES_NAMESPACE"
     }}
 
     // generate
