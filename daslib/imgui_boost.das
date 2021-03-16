@@ -204,3 +204,17 @@ def RadioButton(lab:string; var p_flags:auto(FLAGT)? implicit; flags:FLAGT)
             reinterpret<int?> p_flags,
             int(flags))
 
+def Begin(name:string; blk:block)
+    Begin(name)
+    invoke(blk)
+    End()
+
+def Begin(name:string; p_open:bool?; blk:block)
+    Begin(name,p_open)
+    invoke(blk)
+    End()
+
+def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags; blk:block)
+    Begin(name,p_open,flags)
+    invoke(blk)
+    End()

@@ -1,12 +1,11 @@
-options persistent_heap = true
-options persistent_string_heap = true
+options persistent_heap
+options persistent_string_heap
 
 require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
 require daslib/static_let
-
-require imnodes
+require daslib/imnodes_boost
 
 var window : GLFWwindow?
 
@@ -47,18 +46,14 @@ def imgui_app ( title:string; blk : block )
     glfwTerminate()
 
 def EditNode(id:int;cap:string)
-    imnodes::BeginNode(id)
-    imnodes::BeginNodeTitleBar()
-    TextUnformatted("{cap} id:{id}")
-    imnodes::EndNodeTitleBar()
-    imnodes::BeginInputAttribute(id*1000+2)
-    Text("input")
-    imnodes::EndInputAttribute()
-    imnodes::BeginOutputAttribute(id*1000+3)
-    Indent(40.)
-    Text("output")
-    imnodes::EndOutputAttribute()
-    imnodes::EndNode()
+    BeginNode(id) <|
+        BeginNodeTitleBar() <|
+            TextUnformatted("{cap} id:{id}")
+        BeginInputAttribute(id*1000+2) <|
+            Text("input")
+        BeginOutputAttribute(id*1000+3) <|
+            Indent(40.)
+            Text("output")
 
 def LinkNode(lid,id1,id2:int)
     imnodes::Link(lid,id1*1000+2,id2*1000+3)
@@ -68,14 +63,19 @@ def EditorDemo()
         var edc : EditorContext?
     if edc==null
         edc = imnodes::EditorContextCreate()
-    Begin("Node editor")
-    imnodes::EditorContextSet(edc)
-    imnodes::BeginNodeEditor()
-    EditNode(1,"One")
-    EditNode(2,"Two")
-    LinkNode(1234,1,2)
-    imnodes::EndNodeEditor()
-    End()
+    Begin("Node editor") <|
+        imnodes::EditorContextSet(edc)
+        BeginNodeEditor() <|
+            EditNode(1,"One")
+            EditNode(2,"Two")
+            LinkNode(1234,1,2)
+            static_let <|
+                var once = true
+            if once
+                once = false
+                SetNodeGridSpacePos(1,float2(10))
+                SetNodeGridSpacePos(2,float2(50))
+
 
 [export]
 def main
