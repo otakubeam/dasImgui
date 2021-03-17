@@ -218,3 +218,47 @@ def Begin(name:string; p_open:bool?; flags:ImGuiWindowFlags; blk:block)
     Begin(name,p_open,flags)
     invoke(blk)
     End()
+
+def BeginMainMenuBar ( blk:block )
+    if BeginMainMenuBar()
+        invoke(blk)
+        EndMainMenuBar()
+
+def BeginMenuBar ( blk:block )
+    if BeginMenuBar()
+        invoke(blk)
+        EndMenuBar()
+
+def BeginMenu ( lab:string; blk:block )
+    if BeginMenu(lab)
+        invoke(blk)
+        EndMenu()
+
+def BeginMenu ( lab:string; enabled:bool; blk:block )
+    if BeginMenu(lab,enabled)
+        invoke(blk)
+        EndMenu()
+
+def MenuItem ( lab:string; blk:block )
+    if MenuItem(lab)
+        invoke(blk)
+
+def MenuItem ( lab,shortcut:string; blk:block )
+    if MenuItem(lab,shortcut)
+        invoke(blk)
+
+def MenuItem ( lab,shortcut:string; selected:bool; blk:block )
+    if MenuItem(lab,shortcut,selected)
+        invoke(blk)
+
+def MenuItem ( lab,shortcut:string; selected,enabled:bool; blk:block )
+    if MenuItem(lab,shortcut,selected,enabled)
+        invoke(blk)
+
+def MenuItem ( lab,shortcut:string; selected:bool?; blk:block )
+    if MenuItem(lab,shortcut,selected)
+        invoke(blk)
+
+def MenuItem ( lab,shortcut:string; selected:bool?; enabled:bool; blk:block )
+    if MenuItem(lab,shortcut,selected,enabled)
+        invoke(blk)

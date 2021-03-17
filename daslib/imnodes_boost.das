@@ -6,6 +6,8 @@ module imnodes_boost shared
 require imgui public
 require imnodes public
 
+require daslib/safe_addr
+
 def BeginNodeEditor ( blk:block )
     BeginNodeEditor()
     invoke(blk)
@@ -40,3 +42,13 @@ def BeginOutputAttribute ( id:int; blk:block )
     BeginOutputAttribute(id,ImNodesPinShape CircleFilled)
     invoke(blk)
     EndInputAttribute()
+
+def IsLinkCreated( blk:block<(l_from,l_to:int):void> )
+    var l_from,l_to:int
+    if IsLinkCreated(safe_addr(l_from),safe_addr(l_to))
+        invoke(blk,l_from,l_to)
+
+def IsLinkDestroyed( blk:block<(l_id:int):void> )
+    var l_id:int
+    if IsLinkDestroyed(safe_addr(l_id))
+        invoke(blk,l_id)
