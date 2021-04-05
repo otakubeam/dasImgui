@@ -1165,68 +1165,52 @@ addExtern<DAS_CALL_METHOD(_PrimVtx_method_159)>(*this, lib, "PrimVtx",SideEffect
 	->args({"self","pos","uv","col"})
 ;
 #endif
-using _AddBezierCurve_method_160 = DAS_CALL_MEMBER(ImDrawList::AddBezierCurve);
+using __ResetForNewFrame_method_160 = DAS_CALL_MEMBER(ImDrawList::_ResetForNewFrame);
 #ifdef GLOBAL_NAMESPACE
-using _AddBezierCurve_method_160 = DAS_CALL_MEMBER(ImDrawList::AddBezierCurve);
-addExtern<DAS_CALL_METHOD(_AddBezierCurve_method_160)>(*this, lib, "AddBezierCurve",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddBezierCurve))
-	->args({"self","p1","p2","p3","p4","col","thickness","num_segments"})
-		->arg_init(7,make_smart<ExprConstInt>(0))
-;
-#endif
-using _PathBezierCurveTo_method_161 = DAS_CALL_MEMBER(ImDrawList::PathBezierCurveTo);
-#ifdef GLOBAL_NAMESPACE
-using _PathBezierCurveTo_method_161 = DAS_CALL_MEMBER(ImDrawList::PathBezierCurveTo);
-addExtern<DAS_CALL_METHOD(_PathBezierCurveTo_method_161)>(*this, lib, "PathBezierCurveTo",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathBezierCurveTo))
-	->args({"self","p2","p3","p4","num_segments"})
-		->arg_init(4,make_smart<ExprConstInt>(0))
-;
-#endif
-using __ResetForNewFrame_method_162 = DAS_CALL_MEMBER(ImDrawList::_ResetForNewFrame);
-#ifdef GLOBAL_NAMESPACE
-using __ResetForNewFrame_method_162 = DAS_CALL_MEMBER(ImDrawList::_ResetForNewFrame);
-addExtern<DAS_CALL_METHOD(__ResetForNewFrame_method_162)>(*this, lib, "_ResetForNewFrame",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_ResetForNewFrame))
+using __ResetForNewFrame_method_160 = DAS_CALL_MEMBER(ImDrawList::_ResetForNewFrame);
+addExtern<DAS_CALL_METHOD(__ResetForNewFrame_method_160)>(*this, lib, "_ResetForNewFrame",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_ResetForNewFrame))
 	->args({"self",})
 ;
 #endif
-using __ClearFreeMemory_method_163 = DAS_CALL_MEMBER(ImDrawList::_ClearFreeMemory);
+using __ClearFreeMemory_method_161 = DAS_CALL_MEMBER(ImDrawList::_ClearFreeMemory);
 #ifdef GLOBAL_NAMESPACE
-using __ClearFreeMemory_method_163 = DAS_CALL_MEMBER(ImDrawList::_ClearFreeMemory);
-addExtern<DAS_CALL_METHOD(__ClearFreeMemory_method_163)>(*this, lib, "_ClearFreeMemory",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_ClearFreeMemory))
+using __ClearFreeMemory_method_161 = DAS_CALL_MEMBER(ImDrawList::_ClearFreeMemory);
+addExtern<DAS_CALL_METHOD(__ClearFreeMemory_method_161)>(*this, lib, "_ClearFreeMemory",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_ClearFreeMemory))
 	->args({"self",})
 ;
 #endif
-using __PopUnusedDrawCmd_method_164 = DAS_CALL_MEMBER(ImDrawList::_PopUnusedDrawCmd);
+using __PopUnusedDrawCmd_method_162 = DAS_CALL_MEMBER(ImDrawList::_PopUnusedDrawCmd);
 #ifdef GLOBAL_NAMESPACE
-using __PopUnusedDrawCmd_method_164 = DAS_CALL_MEMBER(ImDrawList::_PopUnusedDrawCmd);
-addExtern<DAS_CALL_METHOD(__PopUnusedDrawCmd_method_164)>(*this, lib, "_PopUnusedDrawCmd",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_PopUnusedDrawCmd))
+using __PopUnusedDrawCmd_method_162 = DAS_CALL_MEMBER(ImDrawList::_PopUnusedDrawCmd);
+addExtern<DAS_CALL_METHOD(__PopUnusedDrawCmd_method_162)>(*this, lib, "_PopUnusedDrawCmd",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_PopUnusedDrawCmd))
 	->args({"self",})
 ;
 #endif
-using __OnChangedClipRect_method_165 = DAS_CALL_MEMBER(ImDrawList::_OnChangedClipRect);
+using __OnChangedClipRect_method_163 = DAS_CALL_MEMBER(ImDrawList::_OnChangedClipRect);
 #ifdef GLOBAL_NAMESPACE
-using __OnChangedClipRect_method_165 = DAS_CALL_MEMBER(ImDrawList::_OnChangedClipRect);
-addExtern<DAS_CALL_METHOD(__OnChangedClipRect_method_165)>(*this, lib, "_OnChangedClipRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedClipRect))
+using __OnChangedClipRect_method_163 = DAS_CALL_MEMBER(ImDrawList::_OnChangedClipRect);
+addExtern<DAS_CALL_METHOD(__OnChangedClipRect_method_163)>(*this, lib, "_OnChangedClipRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedClipRect))
 	->args({"self",})
 ;
 #endif
-using __OnChangedTextureID_method_166 = DAS_CALL_MEMBER(ImDrawList::_OnChangedTextureID);
+using __OnChangedTextureID_method_164 = DAS_CALL_MEMBER(ImDrawList::_OnChangedTextureID);
 #ifdef GLOBAL_NAMESPACE
-using __OnChangedTextureID_method_166 = DAS_CALL_MEMBER(ImDrawList::_OnChangedTextureID);
-addExtern<DAS_CALL_METHOD(__OnChangedTextureID_method_166)>(*this, lib, "_OnChangedTextureID",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedTextureID))
+using __OnChangedTextureID_method_164 = DAS_CALL_MEMBER(ImDrawList::_OnChangedTextureID);
+addExtern<DAS_CALL_METHOD(__OnChangedTextureID_method_164)>(*this, lib, "_OnChangedTextureID",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedTextureID))
 	->args({"self",})
 ;
 #endif
-using __OnChangedVtxOffset_method_167 = DAS_CALL_MEMBER(ImDrawList::_OnChangedVtxOffset);
+using __OnChangedVtxOffset_method_165 = DAS_CALL_MEMBER(ImDrawList::_OnChangedVtxOffset);
 #ifdef GLOBAL_NAMESPACE
-using __OnChangedVtxOffset_method_167 = DAS_CALL_MEMBER(ImDrawList::_OnChangedVtxOffset);
-addExtern<DAS_CALL_METHOD(__OnChangedVtxOffset_method_167)>(*this, lib, "_OnChangedVtxOffset",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedVtxOffset))
+using __OnChangedVtxOffset_method_165 = DAS_CALL_MEMBER(ImDrawList::_OnChangedVtxOffset);
+addExtern<DAS_CALL_METHOD(__OnChangedVtxOffset_method_165)>(*this, lib, "_OnChangedVtxOffset",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_OnChangedVtxOffset))
 	->args({"self",})
 ;
 #endif
-using __CalcCircleAutoSegmentCount_method_168 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
+using __CalcCircleAutoSegmentCount_method_166 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
 #ifdef GLOBAL_NAMESPACE
-using __CalcCircleAutoSegmentCount_method_168 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
-addExtern<DAS_CALL_METHOD(__CalcCircleAutoSegmentCount_method_168)>(*this, lib, "_CalcCircleAutoSegmentCount",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_CalcCircleAutoSegmentCount))
+using __CalcCircleAutoSegmentCount_method_166 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
+addExtern<DAS_CALL_METHOD(__CalcCircleAutoSegmentCount_method_166)>(*this, lib, "_CalcCircleAutoSegmentCount",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_CalcCircleAutoSegmentCount))
 	->args({"self","radius"})
 ;
 #endif

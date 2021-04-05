@@ -16,11 +16,6 @@ addExtern<bool (*)(const char *, bool *, ImGuiSelectableFlags, const ImVec2 &),I
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::EndDragDropTarget)>(*this, lib, "EndDragDropTarget",SideEffects::worstDefault, "ImGui::EndDragDropTarget")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginTabBar)>(*this, lib, "BeginTabBar",SideEffects::worstDefault, "ImGui::BeginTabBar")
 	->args({"str_id","flags"})
 		->arg_type(1,makeType<ImGuiTabBarFlags_>(lib))
@@ -28,7 +23,7 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTabBar)>(*this, lib, "BeginTabBar",SideEffect
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ListBoxFooter)>(*this, lib, "ListBoxFooter",SideEffects::worstDefault, "ImGui::ListBoxFooter")
+addExtern<DAS_BIND_FUN(ImGui::EndDragDropTarget)>(*this, lib, "EndDragDropTarget",SideEffects::worstDefault, "ImGui::EndDragDropTarget")
 	->args({})
 ;
 #endif
@@ -48,12 +43,7 @@ addExtern<DAS_BIND_FUN(ImGui::CalcListClipping)>(*this, lib, "CalcListClipping",
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",SideEffects::worstDefault, "ImGui::IsItemActivated")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, float, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::DragScalar>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
+addExtern<DAS_BIND_FUN(ImGui::DragScalar)>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
 	->args({"label","data_type","p_data","v_speed","p_min","p_max","format","flags"})
 		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(4,make_smart<ExprConstPtr>())
@@ -75,12 +65,6 @@ addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFoc
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::CaptureMouseFromApp)>(*this, lib, "CaptureMouseFromApp",SideEffects::worstDefault, "ImGui::CaptureMouseFromApp")
-	->args({"want_capture_mouse_value"})
-		->arg_init(0,make_smart<ExprConstBool>(true))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetNextWindowPos)>(*this, lib, "SetNextWindowPos",SideEffects::worstDefault, "ImGui::SetNextWindowPos")
 	->args({"pos","cond","pivot"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
@@ -94,32 +78,14 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemHovered)>(*this, lib, "IsItemHovered",SideEf
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiHoveredFlags_>(lib)))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::PopAttributeFlag)>(*this, lib, "PopAttributeFlag",SideEffects::worstDefault, "imnodes::PopAttributeFlag")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const char *, bool),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
-	->args({"prefix","b"})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionWidth)>(*this, lib, "GetWindowContentRegionWidth",SideEffects::worstDefault, "ImGui::GetWindowContentRegionWidth")
 	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableGetColumnFlags)>(*this, lib, "TableGetColumnFlags",SideEffects::worstDefault, "ImGui::TableGetColumnFlags")
-	->args({"column_n"})
-		->res_type(makeType<ImGuiTableColumnFlags_>(lib))
-		->arg_init(0,make_smart<ExprConstInt>(-1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::CaptureKeyboardFromApp)>(*this, lib, "CaptureKeyboardFromApp",SideEffects::worstDefault, "ImGui::CaptureKeyboardFromApp")
-	->args({"want_capture_keyboard_value"})
-		->arg_init(0,make_smart<ExprConstBool>(true))
+addExtern<void (*)(const char *, bool),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
+	->args({"prefix","b"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -134,11 +100,6 @@ addExtern<void (*)(ImGuiCol, const ImVec4 &),ImGui::PushStyleColor>(*this, lib, 
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const char *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
-	->args({"str_id"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::VSliderScalar)>(*this, lib, "VSliderScalar",SideEffects::worstDefault, "ImGui::VSliderScalar")
 	->args({"label","size","data_type","p_data","p_min","p_max","format","flags"})
 		->arg_type(2,makeType<ImGuiDataType_>(lib))
@@ -148,11 +109,8 @@ addExtern<DAS_BIND_FUN(ImGui::VSliderScalar)>(*this, lib, "VSliderScalar",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::OpenPopupContextItem)>(*this, lib, "OpenPopupContextItem",SideEffects::worstDefault, "ImGui::OpenPopupContextItem")
-	->args({"str_id","mb"})
-		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_type(1,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiMouseButton_>(lib)))
+addExtern<void (*)(const char *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
+	->args({"str_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -162,14 +120,20 @@ addExtern<DAS_BIND_FUN(ImGui::StyleColorsLight)>(*this, lib, "StyleColorsLight",
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvailWidth)>(*this, lib, "GetContentRegionAvailWidth",SideEffects::worstDefault, "ImGui::GetContentRegionAvailWidth")
+addExtern<DAS_BIND_FUN(ImGui::TableGetColumnFlags)>(*this, lib, "TableGetColumnFlags",SideEffects::worstDefault, "ImGui::TableGetColumnFlags")
+	->args({"column_n"})
+		->res_type(makeType<ImGuiTableColumnFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstInt>(-1))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",SideEffects::worstDefault, "ImGui::IsItemActivated")
 	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, int, int),ImGui::ListBoxHeader>(*this, lib, "ListBoxHeader",SideEffects::worstDefault, "ImGui::ListBoxHeader")
-	->args({"label","items_count","height_in_items"})
-		->arg_init(2,make_smart<ExprConstInt>(-1))
+addExtern<void (*)(const void *),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
+	->args({"ptr_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -180,19 +144,31 @@ addExtern<bool (*)(const char *, ImGuiTreeNodeFlags),ImGui::TreeNodeEx>(*this, l
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const void *),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
-	->args({"ptr_id"})
+addExtern<DAS_BIND_FUN(ImGui::CaptureKeyboardFromApp)>(*this, lib, "CaptureKeyboardFromApp",SideEffects::worstDefault, "ImGui::CaptureKeyboardFromApp")
+	->args({"want_capture_keyboard_value"})
+		->arg_init(0,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::CaptureMouseFromApp)>(*this, lib, "CaptureMouseFromApp",SideEffects::worstDefault, "ImGui::CaptureMouseFromApp")
+	->args({"want_capture_mouse_value"})
+		->arg_init(0,make_smart<ExprConstBool>(true))
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetNodeDraggable)>(*this, lib, "SetNodeDraggable",SideEffects::worstDefault, "imnodes::SetNodeDraggable")
-	->args({"node_id","draggable"})
+addExtern<DAS_BIND_FUN(imnodes::PopAttributeFlag)>(*this, lib, "PopAttributeFlag",SideEffects::worstDefault, "imnodes::PopAttributeFlag")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetScrollFromPosX)>(*this, lib, "SetScrollFromPosX",SideEffects::worstDefault, "ImGui::SetScrollFromPosX")
 	->args({"local_x","center_x_ratio"})
 		->arg_init(1,make_smart<ExprConstFloat>(0.5))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SetNodeDraggable)>(*this, lib, "SetNodeDraggable",SideEffects::worstDefault, "imnodes::SetNodeDraggable")
+	->args({"node_id","draggable"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -206,24 +182,9 @@ addExtern<bool (*)(const char *, int *, int),ImGui::RadioButton>(*this, lib, "Ra
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromMemory)>(*this, lib, "LoadIniSettingsFromMemory",SideEffects::worstDefault, "ImGui::LoadIniSettingsFromMemory")
-	->args({"ini_data","ini_size"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat2>(*this, lib, "DragFloat2",SideEffects::worstDefault, "ImGui::DragFloat2")
-	->args({"label","v","v_speed","v_min","v_max","format","power"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ArrowButton)>(*this, lib, "ArrowButton",SideEffects::worstDefault, "ImGui::ArrowButton")
 	->args({"str_id","dir"})
 		->arg_type(1,makeType<ImGuiDir_>(lib))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::BeginStaticAttribute)>(*this, lib, "BeginStaticAttribute",SideEffects::worstDefault, "imnodes::BeginStaticAttribute")
-	->args({"id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -239,6 +200,16 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextWindowFocus)>(*this, lib, "SetNextWindowFoc
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetWindowDrawList)>(*this, lib, "GetWindowDrawList",SideEffects::worstDefault, "ImGui::GetWindowDrawList")
 	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromMemory)>(*this, lib, "LoadIniSettingsFromMemory",SideEffects::worstDefault, "ImGui::LoadIniSettingsFromMemory")
+	->args({"ini_data","ini_size"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::BeginStaticAttribute)>(*this, lib, "BeginStaticAttribute",SideEffects::worstDefault, "imnodes::BeginStaticAttribute")
+	->args({"id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -267,19 +238,15 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemClicked)>(*this, lib, "IsItemClicked",SideEf
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::GetSelectedLinks)>(*this, lib, "GetSelectedLinks",SideEffects::worstDefault, "imnodes::GetSelectedLinks")
-	->args({"link_ids"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyItemActive)>(*this, lib, "IsAnyItemActive",SideEffects::worstDefault, "ImGui::IsAnyItemActive")
-	->args({})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetItemDefaultFocus)>(*this, lib, "SetItemDefaultFocus",SideEffects::worstDefault, "ImGui::SetItemDefaultFocus")
 	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const char *, int *, bool (*)(void *, int, const char **), void *, int, int),ImGui::ListBox>(*this, lib, "ListBox",SideEffects::worstDefault, "ImGui::ListBox")
+	->args({"label","current_item","items_getter","data","items_count","height_in_items"})
+		->arg_init(5,make_smart<ExprConstInt>(-1))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -291,19 +258,18 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTabItem)>(*this, lib, "BeginTabItem",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, int *, bool (*)(void *, int, const char **), void *, int, int),ImGui::ListBox>(*this, lib, "ListBox",SideEffects::worstDefault, "ImGui::ListBox")
-	->args({"label","current_item","items_getter","data","items_count","height_in_items"})
-		->arg_init(5,make_smart<ExprConstInt>(-1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<void (*)(const char *, int),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
 	->args({"prefix","v"})
 ;
 #endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsAnyItemActive)>(*this, lib, "IsAnyItemActive",SideEffects::worstDefault, "ImGui::IsAnyItemActive")
+	->args({})
+;
+#endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SaveCurrentEditorStateToIniFile)>(*this, lib, "SaveCurrentEditorStateToIniFile",SideEffects::worstDefault, "imnodes::SaveCurrentEditorStateToIniFile")
-	->args({"file_name"})
+addExtern<DAS_BIND_FUN(imnodes::GetSelectedLinks)>(*this, lib, "GetSelectedLinks",SideEffects::worstDefault, "imnodes::GetSelectedLinks")
+	->args({"link_ids"})
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -311,15 +277,9 @@ addExtern<DAS_BIND_FUN(imnodes::EditorContextResetPanning)>(*this, lib, "EditorC
 	->args({"pos"})
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableSetupScrollFreeze)>(*this, lib, "TableSetupScrollFreeze",SideEffects::worstDefault, "ImGui::TableSetupScrollFreeze")
-	->args({"cols","rows"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetAllocatorFunctions)>(*this, lib, "SetAllocatorFunctions",SideEffects::worstDefault, "ImGui::SetAllocatorFunctions")
-	->args({"alloc_func","free_func","user_data"})
-		->arg_init(2,make_smart<ExprConstPtr>())
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SaveCurrentEditorStateToIniFile)>(*this, lib, "SaveCurrentEditorStateToIniFile",SideEffects::worstDefault, "imnodes::SaveCurrentEditorStateToIniFile")
+	->args({"file_name"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -334,13 +294,19 @@ addExtern<DAS_BIND_FUN(ImGui::Unindent)>(*this, lib, "Unindent",SideEffects::wor
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
-	->args({"label","v","v_speed","v_min","v_max","format","power"})
+addExtern<DAS_BIND_FUN(ImGui::TableSetupScrollFreeze)>(*this, lib, "TableSetupScrollFreeze",SideEffects::worstDefault, "ImGui::TableSetupScrollFreeze")
+	->args({"cols","rows"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsItemDeactivatedAfterEdit)>(*this, lib, "IsItemDeactivatedAfterEdit",SideEffects::worstDefault, "ImGui::IsItemDeactivatedAfterEdit")
 	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SetAllocatorFunctions)>(*this, lib, "SetAllocatorFunctions",SideEffects::worstDefault, "ImGui::SetAllocatorFunctions")
+	->args({"alloc_func","free_func","user_data"})
+		->arg_init(2,make_smart<ExprConstPtr>())
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -402,12 +368,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowHeight)>(*this, lib, "GetWindowHeight",Si
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::InputInt)>(*this, lib, "InputInt",SideEffects::worstDefault, "ImGui::InputInt")
-	->args({"label","v","step","step_fast","flags"})
-		->arg_init(2,make_smart<ExprConstInt>(1))
-		->arg_init(3,make_smart<ExprConstInt>(100))
-		->arg_type(4,makeType<ImGuiInputTextFlags_>(lib))
-		->arg_init(4,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
+addExtern<DAS_BIND_FUN(ImGui::SetWindowFontScale)>(*this, lib, "SetWindowFontScale",SideEffects::worstDefault, "ImGui::SetWindowFontScale")
+	->args({"scale"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -417,30 +379,18 @@ addExtern<DAS_BIND_FUN(ImGui::SetScrollFromPosY)>(*this, lib, "SetScrollFromPosY
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetWindowFontScale)>(*this, lib, "SetWindowFontScale",SideEffects::worstDefault, "ImGui::SetWindowFontScale")
-	->args({"scale"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToMemory)>(*this, lib, "SaveIniSettingsToMemory",SideEffects::worstDefault, "ImGui::SaveIniSettingsToMemory")
-	->args({"out_ini_size"})
-		->arg_init(0,make_smart<ExprConstPtr>())
+addExtern<DAS_BIND_FUN(ImGui::InputInt)>(*this, lib, "InputInt",SideEffects::worstDefault, "ImGui::InputInt")
+	->args({"label","v","step","step_fast","flags"})
+		->arg_init(2,make_smart<ExprConstInt>(1))
+		->arg_init(3,make_smart<ExprConstInt>(100))
+		->arg_type(4,makeType<ImGuiInputTextFlags_>(lib))
+		->arg_init(4,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<void (*)(const void *),ImGui::TreePush>(*this, lib, "TreePush",SideEffects::worstDefault, "ImGui::TreePush")
 	->args({"ptr_id"})
 		->arg_init(0,make_smart<ExprConstPtr>())
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EditorContextMoveToNode)>(*this, lib, "EditorContextMoveToNode",SideEffects::worstDefault, "imnodes::EditorContextMoveToNode")
-	->args({"node_id"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
-	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -452,9 +402,15 @@ addExtern<void (*)(const char *, const float *, int, int, const char *, float, f
 		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
 ;
 #endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToMemory)>(*this, lib, "SaveIniSettingsToMemory",SideEffects::worstDefault, "ImGui::SaveIniSettingsToMemory")
+	->args({"out_ini_size"})
+		->arg_init(0,make_smart<ExprConstPtr>())
+;
+#endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetNodeEditorSpacePos)>(*this, lib, "SetNodeEditorSpacePos",SideEffects::worstDefault, "imnodes::SetNodeEditorSpacePos")
-	->args({"node_id","editor_space_pos"})
+addExtern<DAS_BIND_FUN(imnodes::EditorContextMoveToNode)>(*this, lib, "EditorContextMoveToNode",SideEffects::worstDefault, "imnodes::EditorContextMoveToNode")
+	->args({"node_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -474,6 +430,11 @@ addExtern<DAS_BIND_FUN(ImGui::SetColorEditOptions)>(*this, lib, "SetColorEditOpt
 		->arg_type(0,makeType<ImGuiColorEditFlags_>(lib))
 ;
 #endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SetNodeEditorSpacePos)>(*this, lib, "SetNodeEditorSpacePos",SideEffects::worstDefault, "imnodes::SetNodeEditorSpacePos")
+	->args({"node_id","editor_space_pos"})
+;
+#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginMenu)>(*this, lib, "BeginMenu",SideEffects::worstDefault, "ImGui::BeginMenu")
 	->args({"label","enabled"})
@@ -482,6 +443,11 @@ addExtern<DAS_BIND_FUN(ImGui::BeginMenu)>(*this, lib, "BeginMenu",SideEffects::w
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetWindowSize)>(*this, lib, "GetWindowSize",SideEffects::worstDefault, "ImGui::GetWindowSize")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
 	->args({})
 ;
 #endif
@@ -563,7 +529,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsKeyPressed)>(*this, lib, "IsKeyPressed",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat4>(*this, lib, "DragFloat4",SideEffects::worstDefault, "ImGui::DragFloat4")
+addExtern<DAS_BIND_FUN(ImGui::DragFloat4)>(*this, lib, "DragFloat4",SideEffects::worstDefault, "ImGui::DragFloat4")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
 		->arg_init(2,make_smart<ExprConstFloat>(1))
 		->arg_init(3,make_smart<ExprConstFloat>(0))
@@ -574,19 +540,9 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImG
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsKeyDown)>(*this, lib, "IsKeyDown",SideEffects::worstDefault, "ImGui::IsKeyDown")
-	->args({"user_key_index"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::OpenPopup)>(*this, lib, "OpenPopup",SideEffects::worstDefault, "ImGui::OpenPopup")
 	->args({"str_id","popup_flags"})
 		->arg_init(1,make_smart<ExprConstInt>(0))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsEditorHovered)>(*this, lib, "IsEditorHovered",SideEffects::worstDefault, "imnodes::IsEditorHovered")
-	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -604,14 +560,8 @@ addExtern<void (*)(const char *, float (*)(void *, int), void *, int, int, const
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsMouseReleased)>(*this, lib, "IsMouseReleased",SideEffects::worstDefault, "ImGui::IsMouseReleased")
-	->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::LoadEditorStateFromIniFile)>(*this, lib, "LoadEditorStateFromIniFile",SideEffects::worstDefault, "imnodes::LoadEditorStateFromIniFile")
-	->args({"editor","file_name"})
+addExtern<DAS_BIND_FUN(ImGui::IsKeyDown)>(*this, lib, "IsKeyDown",SideEffects::worstDefault, "ImGui::IsKeyDown")
+	->args({"user_key_index"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -622,6 +572,12 @@ addExtern<DAS_BIND_FUN(ImGui::BeginMenuBar)>(*this, lib, "BeginMenuBar",SideEffe
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetCursorStartPos)>(*this, lib, "GetCursorStartPos",SideEffects::worstDefault, "ImGui::GetCursorStartPos")
 	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsMouseReleased)>(*this, lib, "IsMouseReleased",SideEffects::worstDefault, "ImGui::IsMouseReleased")
+	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -637,6 +593,11 @@ addExtern<DAS_BIND_FUN(ImGui::ShowDemoWindow)>(*this, lib, "ShowDemoWindow",Side
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SetScrollX)>(*this, lib, "SetScrollX",SideEffects::worstDefault, "ImGui::SetScrollX")
+	->args({"scroll_x"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<ImU32 (*)(const ImVec4 &),ImGui::GetColorU32>(*this, lib, "GetColorU32",SideEffects::worstDefault, "ImGui::GetColorU32")
 	->args({"col"})
 ;
@@ -647,18 +608,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetColumnIndex)>(*this, lib, "GetColumnIndex",Side
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetScrollX)>(*this, lib, "SetScrollX",SideEffects::worstDefault, "ImGui::SetScrollX")
-	->args({"scroll_x"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::GetNodeDimensions)>(*this, lib, "GetNodeDimensions",SideEffects::worstDefault, "imnodes::GetNodeDimensions")
-	->args({"id"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsNodeHovered)>(*this, lib, "IsNodeHovered",SideEffects::worstDefault, "imnodes::IsNodeHovered")
-	->args({"node_id"})
+addExtern<void (*)(int),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
+	->args({"int_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -668,24 +619,8 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetColumnName)>(*this, lib, "TableGetColumnNa
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(int),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
-	->args({"int_id"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SaveCurrentEditorStateToIniString)>(*this, lib, "SaveCurrentEditorStateToIniString",SideEffects::worstDefault, "imnodes::SaveCurrentEditorStateToIniString")
-	->args({"data_size"})
-		->arg_init(0,make_smart<ExprConstPtr>())
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetFont)>(*this, lib, "GetFont",SideEffects::worstDefault, "ImGui::GetFont")
 	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImGui::SliderFloat2>(*this, lib, "SliderFloat2",SideEffects::worstDefault, "ImGui::SliderFloat2")
-	->args({"label","v","v_min","v_max","format","power"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -714,13 +649,34 @@ addExtern<DAS_BIND_FUN(ImGui::InputFloat4)>(*this, lib, "InputFloat4",SideEffect
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsAttributeActive)>(*this, lib, "IsAttributeActive",SideEffects::worstDefault, "imnodes::IsAttributeActive")
-	->args({})
+addExtern<DAS_BIND_FUN(imnodes::GetNodeDimensions)>(*this, lib, "GetNodeDimensions",SideEffects::worstDefault, "imnodes::GetNodeDimensions")
+	->args({"id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::Image)>(*this, lib, "Image",SideEffects::worstDefault, "ImGui::Image")
 	->args({"user_texture_id","size","uv0","uv1","tint_col","border_col"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsEditorHovered)>(*this, lib, "IsEditorHovered",SideEffects::worstDefault, "imnodes::IsEditorHovered")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsNodeHovered)>(*this, lib, "IsNodeHovered",SideEffects::worstDefault, "imnodes::IsNodeHovered")
+	->args({"node_id"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsAttributeActive)>(*this, lib, "IsAttributeActive",SideEffects::worstDefault, "imnodes::IsAttributeActive")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SaveCurrentEditorStateToIniString)>(*this, lib, "SaveCurrentEditorStateToIniString",SideEffects::worstDefault, "imnodes::SaveCurrentEditorStateToIniString")
+	->args({"data_size"})
+		->arg_init(0,make_smart<ExprConstPtr>())
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -772,9 +728,9 @@ addExtern<DAS_BIND_FUN(ImGui::Render)>(*this, lib, "Render",SideEffects::worstDe
 	->args({})
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TreeAdvanceToLabelPos)>(*this, lib, "TreeAdvanceToLabelPos",SideEffects::worstDefault, "ImGui::TreeAdvanceToLabelPos")
-	->args({})
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::LoadEditorStateFromIniFile)>(*this, lib, "LoadEditorStateFromIniFile",SideEffects::worstDefault, "imnodes::LoadEditorStateFromIniFile")
+	->args({"editor","file_name"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -799,11 +755,6 @@ addExtern<bool (*)(const char *, int *, const char *, int),ImGui::Combo>(*this, 
 		->arg_init(3,make_smart<ExprConstInt>(-1))
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, const ImVec2 &),ImGui::ListBoxHeader>(*this, lib, "ListBoxHeader",SideEffects::worstDefault, "ImGui::ListBoxHeader")
-	->args({"label","size"})
-;
-#endif
 #ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::IsPinHovered)>(*this, lib, "IsPinHovered",SideEffects::worstDefault, "imnodes::IsPinHovered")
 	->args({"attribute_id"})
@@ -820,12 +771,6 @@ addExtern<DAS_BIND_FUN(imnodes::GetNodeEditorSpacePos)>(*this, lib, "GetNodeEdit
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, float, const void *, const void *, const char *, float),ImGui::DragScalar>(*this, lib, "DragScalar",SideEffects::worstDefault, "ImGui::DragScalar")
-	->args({"label","data_type","p_data","v_speed","p_min","p_max","format","power"})
-		->arg_type(1,makeType<ImGuiDataType_>(lib))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ImageButton)>(*this, lib, "ImageButton",SideEffects::worstDefault, "ImGui::ImageButton")
 	->args({"user_texture_id","size","uv0","uv1","frame_padding","bg_col","tint_col"})
 		->arg_init(4,make_smart<ExprConstInt>(-1))
@@ -834,11 +779,6 @@ addExtern<DAS_BIND_FUN(ImGui::ImageButton)>(*this, lib, "ImageButton",SideEffect
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::MemAlloc)>(*this, lib, "MemAlloc",SideEffects::worstDefault, "ImGui::MemAlloc")
 	->args({"size"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableSetColumnIndex)>(*this, lib, "TableSetColumnIndex",SideEffects::worstDefault, "ImGui::TableSetColumnIndex")
-	->args({"column_n"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -853,19 +793,27 @@ addExtern<DAS_BIND_FUN(ImGui::SetScrollHereY)>(*this, lib, "SetScrollHereY",Side
 		->arg_init(0,make_smart<ExprConstFloat>(0.5))
 ;
 #endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TableSetColumnIndex)>(*this, lib, "TableSetColumnIndex",SideEffects::worstDefault, "ImGui::TableSetColumnIndex")
+	->args({"column_n"})
+;
+#endif
 #ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::EditorContextFree)>(*this, lib, "EditorContextFree",SideEffects::worstDefault, "imnodes::EditorContextFree")
 	->args({"arg0"})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EndInputAttribute)>(*this, lib, "EndInputAttribute",SideEffects::worstDefault, "imnodes::EndInputAttribute")
-	->args({})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<bool (*)(const char *, unsigned int *, unsigned int),ImGui::CheckboxFlags>(*this, lib, "CheckboxFlags",SideEffects::worstDefault, "ImGui::CheckboxFlags")
 	->args({"label","flags","flags_value"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const char *, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
+	->args({"str_id","size","border","flags"})
+		->arg_init(2,make_smart<ExprConstBool>(false))
+		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -876,11 +824,24 @@ addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowSize>(*this, lib, 
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::BeginChild>(*this, lib, "BeginChild",SideEffects::worstDefault, "ImGui::BeginChild")
-	->args({"str_id","size","border","flags"})
-		->arg_init(2,make_smart<ExprConstBool>(false))
-		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
-		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
+addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxY)>(*this, lib, "GetScrollMaxY",SideEffects::worstDefault, "ImGui::GetScrollMaxY")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::DragScalarN)>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
+	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","flags"})
+		->arg_type(1,makeType<ImGuiDataType_>(lib))
+		->arg_init(5,make_smart<ExprConstPtr>())
+		->arg_init(6,make_smart<ExprConstPtr>())
+		->arg_init(7,make_smart<ExprConstString>(""))
+		->arg_type(8,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(8,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxX)>(*this, lib, "GetScrollMaxX",SideEffects::worstDefault, "ImGui::GetScrollMaxX")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -894,68 +855,13 @@ addExtern<DAS_BIND_FUN(ImGui::InputFloat)>(*this, lib, "InputFloat",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxY)>(*this, lib, "GetScrollMaxY",SideEffects::worstDefault, "ImGui::GetScrollMaxY")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::Columns)>(*this, lib, "Columns",SideEffects::worstDefault, "ImGui::Columns")
-	->args({"count","id","border"})
-		->arg_init(0,make_smart<ExprConstInt>(1))
-		->arg_init(1,make_smart<ExprConstString>(""))
-		->arg_init(2,make_smart<ExprConstBool>(true))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<bool (*)(const char *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
 	->args({"str_id","fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::DragScalarN>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
-	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","flags"})
-		->arg_type(1,makeType<ImGuiDataType_>(lib))
-		->arg_init(5,make_smart<ExprConstPtr>())
-		->arg_init(6,make_smart<ExprConstPtr>())
-		->arg_init(7,make_smart<ExprConstString>(""))
-		->arg_type(8,makeType<ImGuiSliderFlags_>(lib))
-		->arg_init(8,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetKeyIndex)>(*this, lib, "GetKeyIndex",SideEffects::worstDefault, "ImGui::GetKeyIndex")
-	->args({"imgui_key"})
-		->arg_type(0,makeType<ImGuiKey_>(lib))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::EndChildFrame)>(*this, lib, "EndChildFrame",SideEffects::worstDefault, "ImGui::EndChildFrame")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxX)>(*this, lib, "GetScrollMaxX",SideEffects::worstDefault, "ImGui::GetScrollMaxX")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::DebugCheckVersionAndDataLayout)>(*this, lib, "DebugCheckVersionAndDataLayout",SideEffects::worstDefault, "ImGui::DebugCheckVersionAndDataLayout")
-	->args({"version_str","sz_io","sz_style","sz_vec2","sz_vec4","sz_drawvert","sz_drawidx"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::GetSelectedNodes)>(*this, lib, "GetSelectedNodes",SideEffects::worstDefault, "imnodes::GetSelectedNodes")
-	->args({"node_ids"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginListBox)>(*this, lib, "BeginListBox",SideEffects::worstDefault, "ImGui::BeginListBox")
 	->args({"label","size"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetStateStorage)>(*this, lib, "SetStateStorage",SideEffects::worstDefault, "ImGui::SetStateStorage")
-	->args({"storage"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -971,18 +877,16 @@ addExtern<DAS_BIND_FUN(ImGui::Spacing)>(*this, lib, "Spacing",SideEffects::worst
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::Columns)>(*this, lib, "Columns",SideEffects::worstDefault, "ImGui::Columns")
+	->args({"count","id","border"})
+		->arg_init(0,make_smart<ExprConstInt>(1))
+		->arg_init(1,make_smart<ExprConstString>(""))
+		->arg_init(2,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetColumnWidth)>(*this, lib, "SetColumnWidth",SideEffects::worstDefault, "ImGui::SetColumnWidth")
 	->args({"column_index","width"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4)>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
-	->args({"in"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
-	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -996,18 +900,18 @@ addExtern<DAS_BIND_FUN(ImGui::Button)>(*this, lib, "Button",SideEffects::worstDe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffects::worstDefault, "ImGui::TextWrappedV")
+	->args({"fmt","args"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::LogButtons)>(*this, lib, "LogButtons",SideEffects::worstDefault, "ImGui::LogButtons")
 	->args({})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::BeginNode)>(*this, lib, "BeginNode",SideEffects::worstDefault, "imnodes::BeginNode")
-	->args({"id"})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffects::worstDefault, "ImGui::TextWrappedV")
-	->args({"fmt","args"})
+addExtern<DAS_BIND_FUN(ImGui::SetStateStorage)>(*this, lib, "SetStateStorage",SideEffects::worstDefault, "ImGui::SetStateStorage")
+	->args({"storage"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1021,26 +925,40 @@ addExtern<DAS_BIND_FUN(ImGui::EndTooltip)>(*this, lib, "EndTooltip",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::EndChildFrame)>(*this, lib, "EndChildFrame",SideEffects::worstDefault, "ImGui::EndChildFrame")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4)>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
+	->args({"in"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetKeyIndex)>(*this, lib, "GetKeyIndex",SideEffects::worstDefault, "ImGui::GetKeyIndex")
+	->args({"imgui_key"})
+		->arg_type(0,makeType<ImGuiKey_>(lib))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsMouseHoveringRect)>(*this, lib, "IsMouseHoveringRect",SideEffects::worstDefault, "ImGui::IsMouseHoveringRect")
 	->args({"r_min","r_max","clip"})
 		->arg_init(2,make_smart<ExprConstBool>(true))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, float),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
-	->args({"label","data_type","p_data","p_min","p_max","format","power"})
-		->arg_type(1,makeType<ImGuiDataType_>(lib))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SaveEditorStateToIniString)>(*this, lib, "SaveEditorStateToIniString",SideEffects::worstDefault, "imnodes::SaveEditorStateToIniString")
-	->args({"editor","data_size"})
-		->arg_init(1,make_smart<ExprConstPtr>())
+addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::BeginGroup)>(*this, lib, "BeginGroup",SideEffects::worstDefault, "ImGui::BeginGroup")
-	->args({})
+addExtern<DAS_BIND_FUN(ImGui::DebugCheckVersionAndDataLayout)>(*this, lib, "DebugCheckVersionAndDataLayout",SideEffects::worstDefault, "ImGui::DebugCheckVersionAndDataLayout")
+	->args({"version_str","sz_io","sz_style","sz_vec2","sz_vec4","sz_drawvert","sz_drawidx"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::BeginNode)>(*this, lib, "BeginNode",SideEffects::worstDefault, "imnodes::BeginNode")
+	->args({"id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1048,6 +966,11 @@ addExtern<DAS_BIND_FUN(ImGui::SameLine)>(*this, lib, "SameLine",SideEffects::wor
 	->args({"offset_from_start_x","spacing"})
 		->arg_init(0,make_smart<ExprConstFloat>(0))
 		->arg_init(1,make_smart<ExprConstFloat>(-1))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::BeginGroup)>(*this, lib, "BeginGroup",SideEffects::worstDefault, "ImGui::BeginGroup")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1062,11 +985,6 @@ addExtern<void (*)(const char *, const float *, int, int, const char *, float, f
 		->arg_init(4,make_smart<ExprConstString>(""))
 		->arg_init(5,make_smart<ExprConstFloat>(3.40282347E+38))
 		->arg_init(6,make_smart<ExprConstFloat>(3.40282347E+38))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToDisk)>(*this, lib, "SaveIniSettingsToDisk",SideEffects::worstDefault, "ImGui::SaveIniSettingsToDisk")
-	->args({"ini_filename"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1090,19 +1008,14 @@ addExtern<DAS_BIND_FUN(ImGui::GetDrawListSharedData)>(*this, lib, "GetDrawListSh
 	->args({})
 ;
 #endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToDisk)>(*this, lib, "SaveIniSettingsToDisk",SideEffects::worstDefault, "ImGui::SaveIniSettingsToDisk")
+	->args({"ini_filename"})
+;
+#endif
 #ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::PushColorStyle)>(*this, lib, "PushColorStyle",SideEffects::worstDefault, "imnodes::PushColorStyle")
 	->args({"item","color"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EndStaticAttribute)>(*this, lib, "EndStaticAttribute",SideEffects::worstDefault, "imnodes::EndStaticAttribute")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat4>(*this, lib, "DragFloat4",SideEffects::worstDefault, "ImGui::DragFloat4")
-	->args({"label","v","v_speed","v_min","v_max","format","power"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1111,6 +1024,11 @@ addExtern<DAS_BIND_FUN(ImGui::SliderInt2)>(*this, lib, "SliderInt2",SideEffects:
 		->arg_init(4,make_smart<ExprConstString>("%d"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndInputAttribute)>(*this, lib, "EndInputAttribute",SideEffects::worstDefault, "imnodes::EndInputAttribute")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1130,14 +1048,14 @@ addExtern<DAS_BIND_FUN(ImGui::TextColoredV)>(*this, lib, "TextColoredV",SideEffe
 	->args({"col","fmt","args"})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::GetNodeGridSpacePos)>(*this, lib, "GetNodeGridSpacePos",SideEffects::worstDefault, "imnodes::GetNodeGridSpacePos")
-	->args({"node_id"})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::PushButtonRepeat)>(*this, lib, "PushButtonRepeat",SideEffects::worstDefault, "ImGui::PushButtonRepeat")
 	->args({"repeat"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndStaticAttribute)>(*this, lib, "EndStaticAttribute",SideEffects::worstDefault, "imnodes::EndStaticAttribute")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1146,17 +1064,22 @@ addExtern<void (*)(const char *, unsigned int),ImGui::Value>(*this, lib, "Value"
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetColumnOffset)>(*this, lib, "GetColumnOffset",SideEffects::worstDefault, "ImGui::GetColumnOffset")
-	->args({"column_index"})
-		->arg_init(0,make_smart<ExprConstInt>(-1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::InputFloat3)>(*this, lib, "InputFloat3",SideEffects::worstDefault, "ImGui::InputFloat3")
 	->args({"label","v","format","flags"})
 		->arg_init(2,make_smart<ExprConstString>("%.3f"))
 		->arg_type(3,makeType<ImGuiInputTextFlags_>(lib))
 		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetColumnOffset)>(*this, lib, "GetColumnOffset",SideEffects::worstDefault, "ImGui::GetColumnOffset")
+	->args({"column_index"})
+		->arg_init(0,make_smart<ExprConstInt>(-1))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::GetNodeGridSpacePos)>(*this, lib, "GetNodeGridSpacePos",SideEffects::worstDefault, "imnodes::GetNodeGridSpacePos")
+	->args({"node_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1175,6 +1098,17 @@ addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextItem)>(*this, lib, "BeginPopupCon
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstString>(""))
 		->arg_init(1,make_smart<ExprConstInt>(1))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::GetSelectedNodes)>(*this, lib, "GetSelectedNodes",SideEffects::worstDefault, "imnodes::GetSelectedNodes")
+	->args({"node_ids"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SaveEditorStateToIniString)>(*this, lib, "SaveEditorStateToIniString",SideEffects::worstDefault, "imnodes::SaveEditorStateToIniString")
+	->args({"editor","data_size"})
+		->arg_init(1,make_smart<ExprConstPtr>())
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1210,7 +1144,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetScrollHereX)>(*this, lib, "SetScrollHereX",Side
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat3>(*this, lib, "SliderFloat3",SideEffects::worstDefault, "ImGui::SliderFloat3")
+addExtern<DAS_BIND_FUN(ImGui::SliderFloat3)>(*this, lib, "SliderFloat3",SideEffects::worstDefault, "ImGui::SliderFloat3")
 	->args({"label","v","v_min","v_max","format","flags"})
 		->arg_init(4,make_smart<ExprConstString>("%.3f"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
@@ -1223,22 +1157,12 @@ addExtern<DAS_BIND_FUN(ImGui::GetCursorPosY)>(*this, lib, "GetCursorPosY",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyItemHovered)>(*this, lib, "IsAnyItemHovered",SideEffects::worstDefault, "ImGui::IsAnyItemHovered")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::PopTextWrapPos)>(*this, lib, "PopTextWrapPos",SideEffects::worstDefault, "ImGui::PopTextWrapPos")
 	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvail)>(*this, lib, "GetContentRegionAvail",SideEffects::worstDefault, "ImGui::GetContentRegionAvail")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableGetSortSpecs)>(*this, lib, "TableGetSortSpecs",SideEffects::worstDefault, "ImGui::TableGetSortSpecs")
 	->args({})
 ;
 #endif
@@ -1256,13 +1180,12 @@ addExtern<DAS_BIND_FUN(ImGui::SliderInt)>(*this, lib, "SliderInt",SideEffects::w
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsMouseDown)>(*this, lib, "IsMouseDown",SideEffects::worstDefault, "ImGui::IsMouseDown")
-	->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+addExtern<DAS_BIND_FUN(ImGui::TableGetSortSpecs)>(*this, lib, "TableGetSortSpecs",SideEffects::worstDefault, "ImGui::TableGetSortSpecs")
+	->args({})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::PopStyleVar)>(*this, lib, "PopStyleVar",SideEffects::worstDefault, "imnodes::PopStyleVar")
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsAnyItemHovered)>(*this, lib, "IsAnyItemHovered",SideEffects::worstDefault, "ImGui::IsAnyItemHovered")
 	->args({})
 ;
 #endif
@@ -1273,10 +1196,9 @@ addExtern<DAS_BIND_FUN(ImGui::IsPopupOpen)>(*this, lib, "IsPopupOpen",SideEffect
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetNextTreeNodeOpen)>(*this, lib, "SetNextTreeNodeOpen",SideEffects::worstDefault, "ImGui::SetNextTreeNodeOpen")
-	->args({"open","cond"})
-		->arg_type(1,makeType<ImGuiCond_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
+addExtern<DAS_BIND_FUN(ImGui::IsMouseDown)>(*this, lib, "IsMouseDown",SideEffects::worstDefault, "ImGui::IsMouseDown")
+	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1291,6 +1213,11 @@ addExtern<void (*)(const char *),ImGui::PushID>(*this, lib, "PushID",SideEffects
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::EndMenu)>(*this, lib, "EndMenu",SideEffects::worstDefault, "ImGui::EndMenu")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::PopStyleVar)>(*this, lib, "PopStyleVar",SideEffects::worstDefault, "imnodes::PopStyleVar")
 	->args({})
 ;
 #endif
@@ -1333,21 +1260,6 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseDoubleClicked)>(*this, lib, "IsMouseDoubleC
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetMouseCursor)>(*this, lib, "SetMouseCursor",SideEffects::worstDefault, "ImGui::SetMouseCursor")
-	->args({"cursor_type"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EndNodeTitleBar)>(*this, lib, "EndNodeTitleBar",SideEffects::worstDefault, "imnodes::EndNodeTitleBar")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImGui::SliderFloat3>(*this, lib, "SliderFloat3",SideEffects::worstDefault, "ImGui::SliderFloat3")
-	->args({"label","v","v_min","v_max","format","power"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::TreePop)>(*this, lib, "TreePop",SideEffects::worstDefault, "ImGui::TreePop")
 	->args({})
 ;
@@ -1361,7 +1273,17 @@ addExtern<DAS_BIND_FUN(ImGui::SliderInt3)>(*this, lib, "SliderInt3",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SetMouseCursor)>(*this, lib, "SetMouseCursor",SideEffects::worstDefault, "ImGui::SetMouseCursor")
+	->args({"cursor_type"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetStateStorage)>(*this, lib, "GetStateStorage",SideEffects::worstDefault, "ImGui::GetStateStorage")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndNodeTitleBar)>(*this, lib, "EndNodeTitleBar",SideEffects::worstDefault, "imnodes::EndNodeTitleBar")
 	->args({})
 ;
 #endif
@@ -1396,11 +1318,6 @@ addExtern<DAS_BIND_FUN(ImGui::InputScalar)>(*this, lib, "InputScalar",SideEffect
 		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, float),ImGui::DragFloat>(*this, lib, "DragFloat",SideEffects::worstDefault, "ImGui::DragFloat")
-	->args({"label","v","v_speed","v_min","v_max","format","power"})
-;
-#endif
 #ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::GetIO), SimNode_ExtFuncCallRef>(*this, lib, "GetIO",SideEffects::worstDefault, "imnodes::GetIO")
 	->args({})
@@ -1414,7 +1331,7 @@ addExtern<DAS_BIND_FUN(ImGui::InputInt4)>(*this, lib, "InputInt4",SideEffects::w
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalar>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
+addExtern<DAS_BIND_FUN(ImGui::SliderScalar)>(*this, lib, "SliderScalar",SideEffects::worstDefault, "ImGui::SliderScalar")
 	->args({"label","data_type","p_data","p_min","p_max","format","flags"})
 		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(5,make_smart<ExprConstString>(""))
@@ -1423,7 +1340,7 @@ addExtern<bool (*)(const char *, ImGuiDataType, void *, const void *, const void
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat4>(*this, lib, "SliderFloat4",SideEffects::worstDefault, "ImGui::SliderFloat4")
+addExtern<DAS_BIND_FUN(ImGui::SliderFloat4)>(*this, lib, "SliderFloat4",SideEffects::worstDefault, "ImGui::SliderFloat4")
 	->args({"label","v","v_min","v_max","format","flags"})
 		->arg_init(4,make_smart<ExprConstString>("%.3f"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
@@ -1438,11 +1355,6 @@ addExtern<bool (*)(const void *, const char *, va_list),ImGui::TreeNodeV>(*this,
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertRGBtoHSV)>(*this, lib, "ColorConvertRGBtoHSV",SideEffects::worstDefault, "ImGui::ColorConvertRGBtoHSV")
 	->args({"r","g","b","out_h","out_s","out_v"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImGui::SliderFloat>(*this, lib, "SliderFloat",SideEffects::worstDefault, "ImGui::SliderFloat")
-	->args({"label","v","v_min","v_max","format","power"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1485,19 +1397,19 @@ addExtern<DAS_BIND_FUN(ImGui::GetContentRegionMax)>(*this, lib, "GetContentRegio
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SliderFloat2)>(*this, lib, "SliderFloat2",SideEffects::worstDefault, "ImGui::SliderFloat2")
+	->args({"label","v","v_min","v_max","format","flags"})
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorPicker4)>(*this, lib, "ColorPicker4",SideEffects::worstDefault, "ImGui::ColorPicker4")
 	->args({"label","col","flags","ref_col"})
 		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)))
 		->arg_init(3,make_smart<ExprConstPtr>())
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat2>(*this, lib, "SliderFloat2",SideEffects::worstDefault, "ImGui::SliderFloat2")
-	->args({"label","v","v_min","v_max","format","flags"})
-		->arg_init(4,make_smart<ExprConstString>("%.3f"))
-		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
-		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -1554,18 +1466,7 @@ addExtern<bool (*)(const char *, int *, const char *const *, int, int),ImGui::Li
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const void *, const char *, float),ImGui::SliderScalarN>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
-	->args({"label","data_type","p_data","components","p_min","p_max","format","power"})
-		->arg_type(1,makeType<ImGuiDataType_>(lib))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::TableGetRowIndex)>(*this, lib, "TableGetRowIndex",SideEffects::worstDefault, "ImGui::TableGetRowIndex")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetOverlayDrawList)>(*this, lib, "GetOverlayDrawList",SideEffects::worstDefault, "ImGui::GetOverlayDrawList")
 	->args({})
 ;
 #endif
@@ -1583,16 +1484,6 @@ addExtern<DAS_BIND_FUN(ImGui::ProgressBar)>(*this, lib, "ProgressBar",SideEffect
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::BeginDragDropTarget)>(*this, lib, "BeginDragDropTarget",SideEffects::worstDefault, "ImGui::BeginDragDropTarget")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(),ImGui::SetWindowFocus>(*this, lib, "SetWindowFocus",SideEffects::worstDefault, "ImGui::SetWindowFocus")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::StyleColorsClassic)>(*this, lib, "StyleColorsClassic",SideEffects::worstDefault, "ImGui::StyleColorsClassic")
 	->args({"dst"})
 		->arg_init(0,make_smart<ExprConstPtr>())
@@ -1604,10 +1495,8 @@ addExtern<DAS_BIND_FUN(ImGui::ShowUserGuide)>(*this, lib, "ShowUserGuide",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::AcceptDragDropPayload)>(*this, lib, "AcceptDragDropPayload",SideEffects::worstDefault, "ImGui::AcceptDragDropPayload")
-	->args({"type","flags"})
-		->arg_type(1,makeType<ImGuiDragDropFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)))
+addExtern<void (*)(),ImGui::SetWindowFocus>(*this, lib, "SetWindowFocus",SideEffects::worstDefault, "ImGui::SetWindowFocus")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1618,6 +1507,18 @@ addExtern<DAS_BIND_FUN(ImGui::PushFont)>(*this, lib, "PushFont",SideEffects::wor
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetFontSize)>(*this, lib, "GetFontSize",SideEffects::worstDefault, "ImGui::GetFontSize")
 	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::BeginDragDropTarget)>(*this, lib, "BeginDragDropTarget",SideEffects::worstDefault, "ImGui::BeginDragDropTarget")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::AcceptDragDropPayload)>(*this, lib, "AcceptDragDropPayload",SideEffects::worstDefault, "ImGui::AcceptDragDropPayload")
+	->args({"type","flags"})
+		->arg_type(1,makeType<ImGuiDragDropFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)))
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -1647,11 +1548,6 @@ addExtern<DAS_BIND_FUN(imnodes::EditorContextGetPanning)>(*this, lib, "EditorCon
 	->args({})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetImGuiContext)>(*this, lib, "SetImGuiContext",SideEffects::worstDefault, "imnodes::SetImGuiContext")
-	->args({"ctx"})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeight)>(*this, lib, "GetTextLineHeight",SideEffects::worstDefault, "ImGui::GetTextLineHeight")
 	->args({})
@@ -1660,6 +1556,11 @@ addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeight)>(*this, lib, "GetTextLineHeight
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetItemAllowOverlap)>(*this, lib, "SetItemAllowOverlap",SideEffects::worstDefault, "ImGui::SetItemAllowOverlap")
 	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SetImGuiContext)>(*this, lib, "SetImGuiContext",SideEffects::worstDefault, "imnodes::SetImGuiContext")
+	->args({"ctx"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1673,13 +1574,13 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMin)>(*this, lib, "GetWindow
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeightWithSpacing)>(*this, lib, "GetTextLineHeightWithSpacing",SideEffects::worstDefault, "ImGui::GetTextLineHeightWithSpacing")
+addExtern<DAS_BIND_FUN(ImGui::IsWindowAppearing)>(*this, lib, "IsWindowAppearing",SideEffects::worstDefault, "ImGui::IsWindowAppearing")
 	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsWindowAppearing)>(*this, lib, "IsWindowAppearing",SideEffects::worstDefault, "ImGui::IsWindowAppearing")
-	->args({})
+addExtern<DAS_BIND_FUN(ImGui::SetNextWindowBgAlpha)>(*this, lib, "SetNextWindowBgAlpha",SideEffects::worstDefault, "ImGui::SetNextWindowBgAlpha")
+	->args({"alpha"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1693,31 +1594,8 @@ addExtern<DAS_BIND_FUN(ImGui::PopAllowKeyboardFocus)>(*this, lib, "PopAllowKeybo
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetNextWindowBgAlpha)>(*this, lib, "SetNextWindowBgAlpha",SideEffects::worstDefault, "ImGui::SetNextWindowBgAlpha")
-	->args({"alpha"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const char *, float, const char *),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
-	->args({"prefix","v","float_format"})
-		->arg_init(2,make_smart<ExprConstString>(""))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LogToClipboard)>(*this, lib, "LogToClipboard",SideEffects::worstDefault, "ImGui::LogToClipboard")
-	->args({"auto_open_depth"})
-		->arg_init(0,make_smart<ExprConstInt>(-1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, int, float, const void *, const void *, const char *, float),ImGui::DragScalarN>(*this, lib, "DragScalarN",SideEffects::worstDefault, "ImGui::DragScalarN")
-	->args({"label","data_type","p_data","components","v_speed","p_min","p_max","format","power"})
-		->arg_type(1,makeType<ImGuiDataType_>(lib))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const ImVec2 &, const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
-	->args({"rect_min","rect_max"})
+addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeightWithSpacing)>(*this, lib, "GetTextLineHeightWithSpacing",SideEffects::worstDefault, "ImGui::GetTextLineHeightWithSpacing")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1729,28 +1607,14 @@ addExtern<DAS_BIND_FUN(ImGui::Begin)>(*this, lib, "Begin",SideEffects::worstDefa
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LogFinish)>(*this, lib, "LogFinish",SideEffects::worstDefault, "ImGui::LogFinish")
-	->args({})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::StyleColorsDark)>(*this, lib, "StyleColorsDark",SideEffects::worstDefault, "imnodes::StyleColorsDark")
-	->args({})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsLinkDestroyed)>(*this, lib, "IsLinkDestroyed",SideEffects::worstDefault, "imnodes::IsLinkDestroyed")
-	->args({"link_id"})
+addExtern<void (*)(const char *, float, const char *),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
+	->args({"prefix","v","float_format"})
+		->arg_init(2,make_smart<ExprConstString>(""))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetCurrentContext)>(*this, lib, "GetCurrentContext",SideEffects::worstDefault, "ImGui::GetCurrentContext")
 	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromDisk)>(*this, lib, "LoadIniSettingsFromDisk",SideEffects::worstDefault, "ImGui::LoadIniSettingsFromDisk")
-	->args({"ini_filename"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1764,16 +1628,15 @@ addExtern<DAS_BIND_FUN(ImGui::GetColumnWidth)>(*this, lib, "GetColumnWidth",Side
 		->arg_init(0,make_smart<ExprConstInt>(-1))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::PushStyleVar)>(*this, lib, "PushStyleVar",SideEffects::worstDefault, "imnodes::PushStyleVar")
-	->args({"style_item","value"})
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::LogToClipboard)>(*this, lib, "LogToClipboard",SideEffects::worstDefault, "ImGui::LogToClipboard")
+	->args({"auto_open_depth"})
+		->arg_init(0,make_smart<ExprConstInt>(-1))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsLinkDropped)>(*this, lib, "IsLinkDropped",SideEffects::worstDefault, "imnodes::IsLinkDropped")
-	->args({"started_at_attribute_id","including_detached_links"})
-		->arg_init(0,make_smart<ExprConstPtr>())
-		->arg_init(1,make_smart<ExprConstBool>(true))
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::LogFinish)>(*this, lib, "LogFinish",SideEffects::worstDefault, "ImGui::LogFinish")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1781,11 +1644,6 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextWindowCollapsed)>(*this, lib, "SetNextWindo
 	->args({"collapsed","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup)>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
-	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1803,6 +1661,16 @@ addExtern<bool (*)(const char *, const char *, bool, bool),ImGui::MenuItem>(*thi
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const ImVec2 &, const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
+	->args({"rect_min","rect_max"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup)>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<ImGuiID (*)(const char *),ImGui::GetID>(*this, lib, "GetID",SideEffects::worstDefault, "ImGui::GetID")
 	->args({"str_id"})
 ;
@@ -1817,9 +1685,14 @@ addExtern<DAS_BIND_FUN(ImGui::GetClipboardText)>(*this, lib, "GetClipboardText",
 	->args({})
 ;
 #endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromDisk)>(*this, lib, "LoadIniSettingsFromDisk",SideEffects::worstDefault, "ImGui::LoadIniSettingsFromDisk")
+	->args({"ini_filename"})
+;
+#endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::IsLinkStarted)>(*this, lib, "IsLinkStarted",SideEffects::worstDefault, "imnodes::IsLinkStarted")
-	->args({"started_at_attribute_id"})
+addExtern<DAS_BIND_FUN(imnodes::StyleColorsDark)>(*this, lib, "StyleColorsDark",SideEffects::worstDefault, "imnodes::StyleColorsDark")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1828,15 +1701,10 @@ addExtern<DAS_BIND_FUN(ImGui::TextDisabledV)>(*this, lib, "TextDisabledV",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiPopupFlags),ImGui::BeginPopupContextWindow>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
+addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextWindow)>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstString>(""))
 		->arg_init(1,make_smart<ExprConstInt>(1))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::BeginInputAttribute)>(*this, lib, "BeginInputAttribute",SideEffects::worstDefault, "imnodes::BeginInputAttribute")
-	->args({"id","shape"})
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -1844,9 +1712,24 @@ addExtern<DAS_BIND_FUN(imnodes::PopColorStyle)>(*this, lib, "PopColorStyle",Side
 	->args({})
 ;
 #endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::PushStyleVar)>(*this, lib, "PushStyleVar",SideEffects::worstDefault, "imnodes::PushStyleVar")
+	->args({"style_item","value"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::BeginInputAttribute)>(*this, lib, "BeginInputAttribute",SideEffects::worstDefault, "imnodes::BeginInputAttribute")
+	->args({"id","shape"})
+;
+#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::Separator)>(*this, lib, "Separator",SideEffects::worstDefault, "ImGui::Separator")
 	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsLinkStarted)>(*this, lib, "IsLinkStarted",SideEffects::worstDefault, "imnodes::IsLinkStarted")
+	->args({"started_at_attribute_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1855,7 +1738,7 @@ addExtern<DAS_BIND_FUN(ImGui::SetCursorPosX)>(*this, lib, "SetCursorPosX",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat>(*this, lib, "DragFloat",SideEffects::worstDefault, "ImGui::DragFloat")
+addExtern<DAS_BIND_FUN(ImGui::DragFloat)>(*this, lib, "DragFloat",SideEffects::worstDefault, "ImGui::DragFloat")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
 		->arg_init(2,make_smart<ExprConstFloat>(1))
 		->arg_init(3,make_smart<ExprConstFloat>(0))
@@ -1863,6 +1746,13 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImG
 		->arg_init(5,make_smart<ExprConstString>("%.3f"))
 		->arg_type(6,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsLinkDropped)>(*this, lib, "IsLinkDropped",SideEffects::worstDefault, "imnodes::IsLinkDropped")
+	->args({"started_at_attribute_id","including_detached_links"})
+		->arg_init(0,make_smart<ExprConstPtr>())
+		->arg_init(1,make_smart<ExprConstBool>(true))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1873,7 +1763,7 @@ addExtern<DAS_BIND_FUN(ImGui::IsWindowHovered)>(*this, lib, "IsWindowHovered",Si
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, ImGuiSliderFlags),ImGui::SliderFloat>(*this, lib, "SliderFloat",SideEffects::worstDefault, "ImGui::SliderFloat")
+addExtern<DAS_BIND_FUN(ImGui::SliderFloat)>(*this, lib, "SliderFloat",SideEffects::worstDefault, "ImGui::SliderFloat")
 	->args({"label","v","v_min","v_max","format","flags"})
 		->arg_init(4,make_smart<ExprConstString>("%.3f"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
@@ -1904,11 +1794,6 @@ addExtern<DAS_BIND_FUN(ImGui::VSliderFloat)>(*this, lib, "VSliderFloat",SideEffe
 		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::ClearNodeSelection)>(*this, lib, "ClearNodeSelection",SideEffects::worstDefault, "imnodes::ClearNodeSelection")
-	->args({})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsWindowFocused)>(*this, lib, "IsWindowFocused",SideEffects::worstDefault, "ImGui::IsWindowFocused")
 	->args({"flags"})
@@ -1921,6 +1806,11 @@ addExtern<DAS_BIND_FUN(ImGui::BulletTextV)>(*this, lib, "BulletTextV",SideEffect
 	->args({"fmt","args"})
 ;
 #endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::ClearNodeSelection)>(*this, lib, "ClearNodeSelection",SideEffects::worstDefault, "imnodes::ClearNodeSelection")
+	->args({})
+;
+#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::InputInt3)>(*this, lib, "InputInt3",SideEffects::worstDefault, "ImGui::InputInt3")
 	->args({"label","v","flags"})
@@ -1928,9 +1818,9 @@ addExtern<DAS_BIND_FUN(ImGui::InputInt3)>(*this, lib, "InputInt3",SideEffects::w
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyItemFocused)>(*this, lib, "IsAnyItemFocused",SideEffects::worstDefault, "ImGui::IsAnyItemFocused")
-	->args({})
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsLinkDestroyed)>(*this, lib, "IsLinkDestroyed",SideEffects::worstDefault, "imnodes::IsLinkDestroyed")
+	->args({"link_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1944,6 +1834,11 @@ addExtern<DAS_BIND_FUN(ImGui::InvisibleButton)>(*this, lib, "InvisibleButton",Si
 addExtern<DAS_BIND_FUN(ImGui::GetStyleColorVec4), SimNode_ExtFuncCallRef>(*this, lib, "GetStyleColorVec4",SideEffects::worstDefault, "ImGui::GetStyleColorVec4")
 	->args({"idx"})
 		->arg_type(0,makeType<ImGuiCol_>(lib))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsAnyItemFocused)>(*this, lib, "IsAnyItemFocused",SideEffects::worstDefault, "ImGui::IsAnyItemFocused")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1978,7 +1873,7 @@ addExtern<DAS_BIND_FUN(imnodes::SaveEditorStateToIniFile)>(*this, lib, "SaveEdit
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiDataType, void *, int, const void *, const void *, const char *, ImGuiSliderFlags),ImGui::SliderScalarN>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
+addExtern<DAS_BIND_FUN(ImGui::SliderScalarN)>(*this, lib, "SliderScalarN",SideEffects::worstDefault, "ImGui::SliderScalarN")
 	->args({"label","data_type","p_data","components","p_min","p_max","format","flags"})
 		->arg_type(1,makeType<ImGuiDataType_>(lib))
 		->arg_init(6,make_smart<ExprConstString>(""))
@@ -2053,11 +1948,6 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetColumnIndex)>(*this, lib, "TableGetColumnI
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetItemRectMax)>(*this, lib, "GetItemRectMax",SideEffects::worstDefault, "ImGui::GetItemRectMax")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::PopStyleVar)>(*this, lib, "PopStyleVar",SideEffects::worstDefault, "ImGui::PopStyleVar")
 	->args({"count"})
 		->arg_init(0,make_smart<ExprConstInt>(1))
@@ -2074,9 +1964,8 @@ addExtern<DAS_BIND_FUN(ImGui::PopClipRect)>(*this, lib, "PopClipRect",SideEffect
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetScrollHere)>(*this, lib, "SetScrollHere",SideEffects::worstDefault, "ImGui::SetScrollHere")
-	->args({"center_ratio"})
-		->arg_init(0,make_smart<ExprConstFloat>(0.5))
+addExtern<DAS_BIND_FUN(ImGui::GetItemRectMax)>(*this, lib, "GetItemRectMax",SideEffects::worstDefault, "ImGui::GetItemRectMax")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2096,11 +1985,6 @@ addExtern<bool (*)(const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisi
 	->args({"size"})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetNodeGridSpacePos)>(*this, lib, "SetNodeGridSpacePos",SideEffects::worstDefault, "imnodes::SetNodeGridSpacePos")
-	->args({"node_id","grid_pos"})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetCursorScreenPos)>(*this, lib, "GetCursorScreenPos",SideEffects::worstDefault, "ImGui::GetCursorScreenPos")
 	->args({})
@@ -2113,10 +1997,9 @@ addExtern<bool (*)(const char *, bool *, ImGuiTreeNodeFlags),ImGui::CollapsingHe
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTreeNodeFlags_>(lib)))
 ;
 #endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiMouseButton, bool),ImGui::BeginPopupContextWindow>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
-	->args({"str_id","mb","over_items"})
-		->arg_type(1,makeType<ImGuiMouseButton_>(lib))
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::SetNodeGridSpacePos)>(*this, lib, "SetNodeGridSpacePos",SideEffects::worstDefault, "imnodes::SetNodeGridSpacePos")
+	->args({"node_id","grid_pos"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2125,7 +2008,7 @@ addExtern<DAS_BIND_FUN(ImGui::Bullet)>(*this, lib, "Bullet",SideEffects::worstDe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat3>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
+addExtern<DAS_BIND_FUN(ImGui::DragFloat3)>(*this, lib, "DragFloat3",SideEffects::worstDefault, "ImGui::DragFloat3")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
 		->arg_init(2,make_smart<ExprConstFloat>(1))
 		->arg_init(3,make_smart<ExprConstFloat>(0))
@@ -2136,23 +2019,18 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImG
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ResetMouseDragDelta)>(*this, lib, "ResetMouseDragDelta",SideEffects::worstDefault, "ImGui::ResetMouseDragDelta")
-	->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::Shutdown)>(*this, lib, "Shutdown",SideEffects::worstDefault, "imnodes::Shutdown")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupModal)>(*this, lib, "BeginPopupModal",SideEffects::worstDefault, "ImGui::BeginPopupModal")
 	->args({"name","p_open","flags"})
 		->arg_init(1,make_smart<ExprConstPtr>())
 		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::ResetMouseDragDelta)>(*this, lib, "ResetMouseDragDelta",SideEffects::worstDefault, "ImGui::ResetMouseDragDelta")
+	->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2170,21 +2048,26 @@ addExtern<DAS_BIND_FUN(ImGui::SetTabItemClosed)>(*this, lib, "SetTabItemClosed",
 	->args({"tab_or_docked_window_label"})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<bool (*)(int *, int *, int *, int *, bool *),imnodes::IsLinkCreated>(*this, lib, "IsLinkCreated",SideEffects::worstDefault, "imnodes::IsLinkCreated")
-	->args({"started_at_node_id","started_at_attribute_id","ended_at_node_id","ended_at_attribute_id","created_from_snap"})
-		->arg_init(4,make_smart<ExprConstPtr>())
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsMousePosValid)>(*this, lib, "IsMousePosValid",SideEffects::worstDefault, "ImGui::IsMousePosValid")
 	->args({"mouse_pos"})
 		->arg_init(0,make_smart<ExprConstPtr>())
 ;
 #endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::Shutdown)>(*this, lib, "Shutdown",SideEffects::worstDefault, "imnodes::Shutdown")
+	->args({})
+;
+#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::EndChild)>(*this, lib, "EndChild",SideEffects::worstDefault, "ImGui::EndChild")
 	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<bool (*)(int *, int *, int *, int *, bool *),imnodes::IsLinkCreated>(*this, lib, "IsLinkCreated",SideEffects::worstDefault, "imnodes::IsLinkCreated")
+	->args({"started_at_node_id","started_at_attribute_id","ended_at_node_id","ended_at_attribute_id","created_from_snap"})
+		->arg_init(4,make_smart<ExprConstPtr>())
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -2211,13 +2094,13 @@ addExtern<DAS_BIND_FUN(ImGui::PushItemWidth)>(*this, lib, "PushItemWidth",SideEf
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::Checkbox)>(*this, lib, "Checkbox",SideEffects::worstDefault, "ImGui::Checkbox")
-	->args({"label","v"})
+addExtern<DAS_BIND_FUN(ImGui::GetFontTexUvWhitePixel)>(*this, lib, "GetFontTexUvWhitePixel",SideEffects::worstDefault, "ImGui::GetFontTexUvWhitePixel")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetFontTexUvWhitePixel)>(*this, lib, "GetFontTexUvWhitePixel",SideEffects::worstDefault, "ImGui::GetFontTexUvWhitePixel")
-	->args({})
+addExtern<DAS_BIND_FUN(ImGui::Checkbox)>(*this, lib, "Checkbox",SideEffects::worstDefault, "ImGui::Checkbox")
+	->args({"label","v"})
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -2263,11 +2146,6 @@ addExtern<DAS_BIND_FUN(ImGui::GetColumnsCount)>(*this, lib, "GetColumnsCount",Si
 	->args({})
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::NumSelectedNodes)>(*this, lib, "NumSelectedNodes",SideEffects::worstDefault, "imnodes::NumSelectedNodes")
-	->args({})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::AlignTextToFramePadding)>(*this, lib, "AlignTextToFramePadding",SideEffects::worstDefault, "ImGui::AlignTextToFramePadding")
 	->args({})
@@ -2281,12 +2159,22 @@ addExtern<void (*)(const char *, const ImVec2 &, ImGuiCond),ImGui::SetWindowPos>
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsItemActive)>(*this, lib, "IsItemActive",SideEffects::worstDefault, "ImGui::IsItemActive")
+addExtern<DAS_BIND_FUN(ImGui::GetIO), SimNode_ExtFuncCallRef>(*this, lib, "GetIO",SideEffects::worstDefault, "ImGui::GetIO")
 	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetIO), SimNode_ExtFuncCallRef>(*this, lib, "GetIO",SideEffects::worstDefault, "ImGui::GetIO")
+addExtern<DAS_BIND_FUN(ImGui::EndGroup)>(*this, lib, "EndGroup",SideEffects::worstDefault, "ImGui::EndGroup")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const char *, int *, int),ImGui::CheckboxFlags>(*this, lib, "CheckboxFlags",SideEffects::worstDefault, "ImGui::CheckboxFlags")
+	->args({"label","flags","flags_value"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::CloseCurrentPopup)>(*this, lib, "CloseCurrentPopup",SideEffects::worstDefault, "ImGui::CloseCurrentPopup")
 	->args({})
 ;
 #endif
@@ -2299,40 +2187,7 @@ addExtern<DAS_BIND_FUN(ImGui::TableNextRow)>(*this, lib, "TableNextRow",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::EndGroup)>(*this, lib, "EndGroup",SideEffects::worstDefault, "ImGui::EndGroup")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::CloseCurrentPopup)>(*this, lib, "CloseCurrentPopup",SideEffects::worstDefault, "ImGui::CloseCurrentPopup")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, int *, int),ImGui::CheckboxFlags>(*this, lib, "CheckboxFlags",SideEffects::worstDefault, "ImGui::CheckboxFlags")
-	->args({"label","flags","flags_value"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetNodeScreenSpacePos)>(*this, lib, "SetNodeScreenSpacePos",SideEffects::worstDefault, "imnodes::SetNodeScreenSpacePos")
-	->args({"node_id","screen_space_pos"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ColorConvertFloat4ToU32)>(*this, lib, "ColorConvertFloat4ToU32",SideEffects::worstDefault, "ImGui::ColorConvertFloat4ToU32")
-	->args({"in"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta)>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
-	->args({"button","lock_threshold"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
-		->arg_init(1,make_smart<ExprConstFloat>(-1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImGuiSliderFlags),ImGui::DragFloat2>(*this, lib, "DragFloat2",SideEffects::worstDefault, "ImGui::DragFloat2")
+addExtern<DAS_BIND_FUN(ImGui::DragFloat2)>(*this, lib, "DragFloat2",SideEffects::worstDefault, "ImGui::DragFloat2")
 	->args({"label","v","v_speed","v_min","v_max","format","flags"})
 		->arg_init(2,make_smart<ExprConstFloat>(1))
 		->arg_init(3,make_smart<ExprConstFloat>(0))
@@ -2340,6 +2195,11 @@ addExtern<bool (*)(const char *, float *, float, float, float, const char *, ImG
 		->arg_init(5,make_smart<ExprConstString>("%.3f"))
 		->arg_type(6,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsItemActive)>(*this, lib, "IsItemActive",SideEffects::worstDefault, "ImGui::IsItemActive")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2364,6 +2224,11 @@ addExtern<ImGuiID (*)(const char *, const char *),ImGui::GetID>(*this, lib, "Get
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::NewLine)>(*this, lib, "NewLine",SideEffects::worstDefault, "ImGui::NewLine")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorPicker3)>(*this, lib, "ColorPicker3",SideEffects::worstDefault, "ImGui::ColorPicker3")
 	->args({"label","col","flags"})
 		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
@@ -2371,8 +2236,8 @@ addExtern<DAS_BIND_FUN(ImGui::ColorPicker3)>(*this, lib, "ColorPicker3",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::NewLine)>(*this, lib, "NewLine",SideEffects::worstDefault, "ImGui::NewLine")
-	->args({})
+addExtern<DAS_BIND_FUN(ImGui::ColorConvertFloat4ToU32)>(*this, lib, "ColorConvertFloat4ToU32",SideEffects::worstDefault, "ImGui::ColorConvertFloat4ToU32")
+	->args({"in"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2383,6 +2248,14 @@ addExtern<DAS_BIND_FUN(ImGui::End)>(*this, lib, "End",SideEffects::worstDefault,
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetCursorPos)>(*this, lib, "SetCursorPos",SideEffects::worstDefault, "ImGui::SetCursorPos")
 	->args({"local_pos"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SliderInt4)>(*this, lib, "SliderInt4",SideEffects::worstDefault, "ImGui::SliderInt4")
+	->args({"label","v","v_min","v_max","format","flags"})
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2397,16 +2270,21 @@ addExtern<DAS_BIND_FUN(ImGui::InputScalarN)>(*this, lib, "InputScalarN",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SliderInt4)>(*this, lib, "SliderInt4",SideEffects::worstDefault, "ImGui::SliderInt4")
-	->args({"label","v","v_min","v_max","format","flags"})
-		->arg_init(4,make_smart<ExprConstString>("%d"))
-		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
-		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+addExtern<DAS_BIND_FUN(ImGui::GetMouseDragDelta)>(*this, lib, "GetMouseDragDelta",SideEffects::worstDefault, "ImGui::GetMouseDragDelta")
+	->args({"button","lock_threshold"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
+		->arg_init(1,make_smart<ExprConstFloat>(-1))
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::LoadEditorStateFromIniString)>(*this, lib, "LoadEditorStateFromIniString",SideEffects::worstDefault, "imnodes::LoadEditorStateFromIniString")
-	->args({"editor","data","data_size"})
+addExtern<DAS_BIND_FUN(imnodes::SetNodeScreenSpacePos)>(*this, lib, "SetNodeScreenSpacePos",SideEffects::worstDefault, "imnodes::SetNodeScreenSpacePos")
+	->args({"node_id","screen_space_pos"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::NumSelectedNodes)>(*this, lib, "NumSelectedNodes",SideEffects::worstDefault, "imnodes::NumSelectedNodes")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2420,6 +2298,11 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTable)>(*this, lib, "BeginTable",SideEffects:
 		->arg_type(2,makeType<ImGuiTableFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableFlags_>(lib)))
 		->arg_init(4,make_smart<ExprConstFloat>(0))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::LoadEditorStateFromIniString)>(*this, lib, "LoadEditorStateFromIniString",SideEffects::worstDefault, "imnodes::LoadEditorStateFromIniString")
+	->args({"editor","data","data_size"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2443,11 +2326,6 @@ addExtern<DAS_BIND_FUN(ImGui::BeginTooltip)>(*this, lib, "BeginTooltip",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<ImU32 (*)(ImU32),ImGui::GetColorU32>(*this, lib, "GetColorU32",SideEffects::worstDefault, "ImGui::GetColorU32")
-	->args({"col"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowPos>(*this, lib, "SetWindowPos",SideEffects::worstDefault, "ImGui::SetWindowPos")
 	->args({"pos","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
@@ -2461,16 +2339,6 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowPos)>(*this, lib, "GetWindowPos",SideEffe
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::PopButtonRepeat)>(*this, lib, "PopButtonRepeat",SideEffects::worstDefault, "ImGui::PopButtonRepeat")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::EndDragDropSource)>(*this, lib, "EndDragDropSource",SideEffects::worstDefault, "ImGui::EndDragDropSource")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsItemFocused)>(*this, lib, "IsItemFocused",SideEffects::worstDefault, "ImGui::IsItemFocused")
 	->args({})
 ;
 #endif
@@ -2489,18 +2357,8 @@ addExtern<void (*)(const char *, bool, ImGuiCond),ImGui::SetWindowCollapsed>(*th
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetMousePos)>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableHeadersRow)>(*this, lib, "TableHeadersRow",SideEffects::worstDefault, "ImGui::TableHeadersRow")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ColorConvertHSVtoRGB)>(*this, lib, "ColorConvertHSVtoRGB",SideEffects::worstDefault, "ImGui::ColorConvertHSVtoRGB")
-	->args({"h","s","v","out_r","out_g","out_b"})
+addExtern<ImU32 (*)(ImU32),ImGui::GetColorU32>(*this, lib, "GetColorU32",SideEffects::worstDefault, "ImGui::GetColorU32")
+	->args({"col"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2511,14 +2369,34 @@ addExtern<DAS_BIND_FUN(ImGui::ColorEdit3)>(*this, lib, "ColorEdit3",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TableHeadersRow)>(*this, lib, "TableHeadersRow",SideEffects::worstDefault, "ImGui::TableHeadersRow")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::EndDragDropSource)>(*this, lib, "EndDragDropSource",SideEffects::worstDefault, "ImGui::EndDragDropSource")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsItemFocused)>(*this, lib, "IsItemFocused",SideEffects::worstDefault, "ImGui::IsItemFocused")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::ColorConvertHSVtoRGB)>(*this, lib, "ColorConvertHSVtoRGB",SideEffects::worstDefault, "ImGui::ColorConvertHSVtoRGB")
+	->args({"h","s","v","out_r","out_g","out_b"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsMouseClicked)>(*this, lib, "IsMouseClicked",SideEffects::worstDefault, "ImGui::IsMouseClicked")
 	->args({"button","repeat"})
 		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(1,make_smart<ExprConstBool>(false))
 ;
 #endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::Initialize)>(*this, lib, "Initialize",SideEffects::worstDefault, "imnodes::Initialize")
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetMousePos)>(*this, lib, "GetMousePos",SideEffects::worstDefault, "ImGui::GetMousePos")
 	->args({})
 ;
 #endif
@@ -2550,6 +2428,11 @@ addExtern<DAS_BIND_FUN(ImGui::SetClipboardText)>(*this, lib, "SetClipboardText",
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::Initialize)>(*this, lib, "Initialize",SideEffects::worstDefault, "imnodes::Initialize")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::GetStyle), SimNode_ExtFuncCallRef>(*this, lib, "GetStyle",SideEffects::worstDefault, "imnodes::GetStyle")
 	->args({})
 ;
@@ -2572,10 +2455,5 @@ addExtern<DAS_BIND_FUN(ImGui::PopID)>(*this, lib, "PopID",SideEffects::worstDefa
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsItemToggledOpen)>(*this, lib, "IsItemToggledOpen",SideEffects::worstDefault, "ImGui::IsItemToggledOpen")
 	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, float *, float, float, const char *, float),ImGui::SliderFloat4>(*this, lib, "SliderFloat4",SideEffects::worstDefault, "ImGui::SliderFloat4")
-	->args({"label","v","v_min","v_max","format","power"})
 ;
 #endif

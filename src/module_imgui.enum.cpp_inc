@@ -203,9 +203,6 @@ public:
 		addIEx("DataTypeMask", "ImGuiColorEditFlags__DataTypeMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__DataTypeMask), das::LineInfo());
 		addIEx("PickerMask", "ImGuiColorEditFlags__PickerMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__PickerMask), das::LineInfo());
 		addIEx("InputMask", "ImGuiColorEditFlags__InputMask", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags__InputMask), das::LineInfo());
-		addIEx("RGB", "ImGuiColorEditFlags_RGB", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_RGB), das::LineInfo());
-		addIEx("HSV", "ImGuiColorEditFlags_HSV", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HSV), das::LineInfo());
-		addIEx("HEX", "ImGuiColorEditFlags_HEX", int64_t(ImGuiColorEditFlags_::ImGuiColorEditFlags_HEX), das::LineInfo());
 	}
 };
 #endif
@@ -913,7 +910,6 @@ public:
 		addIEx("NoRoundToFormat", "ImGuiSliderFlags_NoRoundToFormat", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoRoundToFormat), das::LineInfo());
 		addIEx("NoInput", "ImGuiSliderFlags_NoInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_NoInput), das::LineInfo());
 		addIEx("InvalidMask_", "ImGuiSliderFlags_InvalidMask_", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_InvalidMask_), das::LineInfo());
-		addIEx("ClampOnInput", "ImGuiSliderFlags_ClampOnInput", int64_t(ImGuiSliderFlags_::ImGuiSliderFlags_ClampOnInput), das::LineInfo());
 	}
 };
 #endif
