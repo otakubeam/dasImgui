@@ -398,9 +398,9 @@ bool Module_imgui::initDependencies() {
         SideEffects::worstDefault, "das::PlotHistogram");
     // additional default values
     findUniqueFunction("AddRect")
-        ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
+        ->arg_init(5, make_smart<ExprConstEnumeration>("RoundCornersAll",makeType<ImDrawFlags_>(lib)));
     findUniqueFunction("AddRectFilled")
-        ->arg_init(5, make_smart<ExprConstEnumeration>("All",makeType<ImDrawCornerFlags_>(lib)));
+        ->arg_init(5, make_smart<ExprConstEnumeration>("RoundCornersAll",makeType<ImDrawFlags_>(lib)));
     findUniqueFunction("BeginTable")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     for ( auto & fn : functionsByName["Selectable"] ) {
@@ -468,6 +468,7 @@ bool Module_imnodes::initDependencies() {
     lib.addBuiltInModule();
     lib.addModule(mod_imgui);
     addAnnotation(make_smart<DummyTypeAnnotation>("EditorContext", "EditorContext",1, 1));
+    addAnnotation(make_smart<DummyTypeAnnotation>("ImNodesContext", "imnodes::Context",1, 1));
     initEnums();
     initAnnotations();
     initFunctions();

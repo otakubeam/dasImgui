@@ -208,6 +208,11 @@ addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromMemory)>(*this, lib, "LoadIniSe
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::GetCurrentContext)>(*this, lib, "GetCurrentContext",SideEffects::worstDefault, "imnodes::GetCurrentContext")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::BeginStaticAttribute)>(*this, lib, "BeginStaticAttribute",SideEffects::worstDefault, "imnodes::BeginStaticAttribute")
 	->args({"id"})
 ;
@@ -409,8 +414,8 @@ addExtern<DAS_BIND_FUN(ImGui::SaveIniSettingsToMemory)>(*this, lib, "SaveIniSett
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EditorContextMoveToNode)>(*this, lib, "EditorContextMoveToNode",SideEffects::worstDefault, "imnodes::EditorContextMoveToNode")
-	->args({"node_id"})
+addExtern<DAS_BIND_FUN(imnodes::CreateContext)>(*this, lib, "CreateContext",SideEffects::worstDefault, "imnodes::CreateContext")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -431,8 +436,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetColorEditOptions)>(*this, lib, "SetColorEditOpt
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetNodeEditorSpacePos)>(*this, lib, "SetNodeEditorSpacePos",SideEffects::worstDefault, "imnodes::SetNodeEditorSpacePos")
-	->args({"node_id","editor_space_pos"})
+addExtern<DAS_BIND_FUN(imnodes::EditorContextMoveToNode)>(*this, lib, "EditorContextMoveToNode",SideEffects::worstDefault, "imnodes::EditorContextMoveToNode")
+	->args({"node_id"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -447,8 +452,8 @@ addExtern<DAS_BIND_FUN(ImGui::GetWindowSize)>(*this, lib, "GetWindowSize",SideEf
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
-	->args({})
+addExtern<DAS_BIND_FUN(imnodes::SetNodeEditorSpacePos)>(*this, lib, "SetNodeEditorSpacePos",SideEffects::worstDefault, "imnodes::SetNodeEditorSpacePos")
+	->args({"node_id","editor_space_pos"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -467,6 +472,11 @@ addExtern<bool (*)(ImGuiID, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::Begin
 		->arg_init(2,make_smart<ExprConstBool>(false))
 		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
 		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1217,6 +1227,12 @@ addExtern<DAS_BIND_FUN(ImGui::EndMenu)>(*this, lib, "EndMenu",SideEffects::worst
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::DestroyContext)>(*this, lib, "DestroyContext",SideEffects::worstDefault, "imnodes::DestroyContext")
+	->args({"ctx"})
+		->arg_init(0,make_smart<ExprConstPtr>())
+;
+#endif
+#ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::PopStyleVar)>(*this, lib, "PopStyleVar",SideEffects::worstDefault, "imnodes::PopStyleVar")
 	->args({})
 ;
@@ -1544,8 +1560,8 @@ addExtern<DAS_BIND_FUN(ImGui::DragIntRange2)>(*this, lib, "DragIntRange2",SideEf
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EditorContextGetPanning)>(*this, lib, "EditorContextGetPanning",SideEffects::worstDefault, "imnodes::EditorContextGetPanning")
-	->args({})
+addExtern<DAS_BIND_FUN(imnodes::SetImGuiContext)>(*this, lib, "SetImGuiContext",SideEffects::worstDefault, "imnodes::SetImGuiContext")
+	->args({"ctx"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1559,8 +1575,8 @@ addExtern<DAS_BIND_FUN(ImGui::SetItemAllowOverlap)>(*this, lib, "SetItemAllowOve
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetImGuiContext)>(*this, lib, "SetImGuiContext",SideEffects::worstDefault, "imnodes::SetImGuiContext")
-	->args({"ctx"})
+addExtern<DAS_BIND_FUN(imnodes::EditorContextGetPanning)>(*this, lib, "EditorContextGetPanning",SideEffects::worstDefault, "imnodes::EditorContextGetPanning")
+	->args({})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2055,8 +2071,8 @@ addExtern<DAS_BIND_FUN(ImGui::IsMousePosValid)>(*this, lib, "IsMousePosValid",Si
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::Shutdown)>(*this, lib, "Shutdown",SideEffects::worstDefault, "imnodes::Shutdown")
-	->args({})
+addExtern<DAS_BIND_FUN(imnodes::SetCurrentContext)>(*this, lib, "SetCurrentContext",SideEffects::worstDefault, "imnodes::SetCurrentContext")
+	->args({"ctx"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2425,11 +2441,6 @@ addExtern<DAS_BIND_FUN(ImGui::IsKeyReleased)>(*this, lib, "IsKeyReleased",SideEf
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetClipboardText)>(*this, lib, "SetClipboardText",SideEffects::worstDefault, "ImGui::SetClipboardText")
 	->args({"text"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::Initialize)>(*this, lib, "Initialize",SideEffects::worstDefault, "imnodes::Initialize")
-	->args({})
 ;
 #endif
 #ifdef IMNODES_NAMESPACE

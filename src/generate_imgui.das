@@ -53,6 +53,7 @@ def main
         "ImGuiInputTextFlags_" => [[ExEnum() name = "ImGuiInputTextFlags", isFlags=true]];
         "ImGuiColorEditFlags_" => [[ExEnum() name = "ImGuiColorEditFlags", isFlags=true]];
         "ImDrawCornerFlags_" => [[ExEnum() name = "ImDrawCornerFlags", isFlags=true]];
+        "ImDrawFlags_" => [[ExEnum() name = "ImDrawFlags", isFlags=true]];
         "ImGuiTabBarFlags_" => [[ExEnum() name = "ImGuiTabBarFlags", isFlags=true]];
         "ImGuiTabItemFlags_" => [[ExEnum() name = "ImGuiTabItemFlags", isFlags=true]];
         "ImGuiTreeNodeFlags_" => [[ExEnum() name = "ImGuiTreeNodeFlags", isFlags=true]];

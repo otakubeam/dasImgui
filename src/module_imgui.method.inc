@@ -855,9 +855,10 @@ using _AddRect_method_118 = DAS_CALL_MEMBER(ImDrawList::AddRect);
 #ifdef GLOBAL_NAMESPACE
 using _AddRect_method_118 = DAS_CALL_MEMBER(ImDrawList::AddRect);
 addExtern<DAS_CALL_METHOD(_AddRect_method_118)>(*this, lib, "AddRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddRect))
-	->args({"self","p_min","p_max","col","rounding","rounding_corners","thickness"})
+	->args({"self","p_min","p_max","col","rounding","flags","thickness"})
 		->arg_init(4,make_smart<ExprConstFloat>(0))
-		->arg_type(5,makeType<ImDrawCornerFlags_>(lib))
+		->arg_type(5,makeType<ImDrawFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
 		->arg_init(6,make_smart<ExprConstFloat>(1))
 ;
 #endif
@@ -865,9 +866,10 @@ using _AddRectFilled_method_119 = DAS_CALL_MEMBER(ImDrawList::AddRectFilled);
 #ifdef GLOBAL_NAMESPACE
 using _AddRectFilled_method_119 = DAS_CALL_MEMBER(ImDrawList::AddRectFilled);
 addExtern<DAS_CALL_METHOD(_AddRectFilled_method_119)>(*this, lib, "AddRectFilled",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddRectFilled))
-	->args({"self","p_min","p_max","col","rounding","rounding_corners"})
+	->args({"self","p_min","p_max","col","rounding","flags"})
 		->arg_init(4,make_smart<ExprConstFloat>(0))
-		->arg_type(5,makeType<ImDrawCornerFlags_>(lib))
+		->arg_type(5,makeType<ImDrawFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
 ;
 #endif
 using _AddRectFilledMultiColor_method_120 = DAS_CALL_MEMBER(ImDrawList::AddRectFilledMultiColor);
@@ -943,7 +945,8 @@ using _AddPolyline_method_129 = DAS_CALL_MEMBER(ImDrawList::AddPolyline);
 #ifdef GLOBAL_NAMESPACE
 using _AddPolyline_method_129 = DAS_CALL_MEMBER(ImDrawList::AddPolyline);
 addExtern<DAS_CALL_METHOD(_AddPolyline_method_129)>(*this, lib, "AddPolyline",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddPolyline))
-	->args({"self","points","num_points","col","closed","thickness"})
+	->args({"self","points","num_points","col","flags","thickness"})
+		->arg_type(4,makeType<ImDrawFlags_>(lib))
 ;
 #endif
 using _AddConvexPolyFilled_method_130 = DAS_CALL_MEMBER(ImDrawList::AddConvexPolyFilled);
@@ -987,8 +990,9 @@ using _AddImageRounded_method_135 = DAS_CALL_MEMBER(ImDrawList::AddImageRounded)
 #ifdef GLOBAL_NAMESPACE
 using _AddImageRounded_method_135 = DAS_CALL_MEMBER(ImDrawList::AddImageRounded);
 addExtern<DAS_CALL_METHOD(_AddImageRounded_method_135)>(*this, lib, "AddImageRounded",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::AddImageRounded))
-	->args({"self","user_texture_id","p_min","p_max","uv_min","uv_max","col","rounding","rounding_corners"})
-		->arg_type(8,makeType<ImDrawCornerFlags_>(lib))
+	->args({"self","user_texture_id","p_min","p_max","uv_min","uv_max","col","rounding","flags"})
+		->arg_type(8,makeType<ImDrawFlags_>(lib))
+		->arg_init(8,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
 ;
 #endif
 using _PathClear_method_136 = DAS_CALL_MEMBER(ImDrawList::PathClear);
@@ -1023,7 +1027,9 @@ using _PathStroke_method_140 = DAS_CALL_MEMBER(ImDrawList::PathStroke);
 #ifdef GLOBAL_NAMESPACE
 using _PathStroke_method_140 = DAS_CALL_MEMBER(ImDrawList::PathStroke);
 addExtern<DAS_CALL_METHOD(_PathStroke_method_140)>(*this, lib, "PathStroke",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathStroke))
-	->args({"self","col","closed","thickness"})
+	->args({"self","col","flags","thickness"})
+		->arg_type(2,makeType<ImDrawFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
 		->arg_init(3,make_smart<ExprConstFloat>(1))
 ;
 #endif
@@ -1032,7 +1038,7 @@ using _PathArcTo_method_141 = DAS_CALL_MEMBER(ImDrawList::PathArcTo);
 using _PathArcTo_method_141 = DAS_CALL_MEMBER(ImDrawList::PathArcTo);
 addExtern<DAS_CALL_METHOD(_PathArcTo_method_141)>(*this, lib, "PathArcTo",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathArcTo))
 	->args({"self","center","radius","a_min","a_max","num_segments"})
-		->arg_init(5,make_smart<ExprConstInt>(10))
+		->arg_init(5,make_smart<ExprConstInt>(0))
 ;
 #endif
 using _PathArcToFast_method_142 = DAS_CALL_MEMBER(ImDrawList::PathArcToFast);
@@ -1062,9 +1068,10 @@ using _PathRect_method_145 = DAS_CALL_MEMBER(ImDrawList::PathRect);
 #ifdef GLOBAL_NAMESPACE
 using _PathRect_method_145 = DAS_CALL_MEMBER(ImDrawList::PathRect);
 addExtern<DAS_CALL_METHOD(_PathRect_method_145)>(*this, lib, "PathRect",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::PathRect))
-	->args({"self","rect_min","rect_max","rounding","rounding_corners"})
+	->args({"self","rect_min","rect_max","rounding","flags"})
 		->arg_init(3,make_smart<ExprConstFloat>(0))
-		->arg_type(4,makeType<ImDrawCornerFlags_>(lib))
+		->arg_type(4,makeType<ImDrawFlags_>(lib))
+		->arg_init(4,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
 ;
 #endif
 using _AddCallback_method_146 = DAS_CALL_MEMBER(ImDrawList::AddCallback);
@@ -1212,5 +1219,19 @@ using __CalcCircleAutoSegmentCount_method_166 = DAS_CALL_MEMBER(ImDrawList::_Cal
 using __CalcCircleAutoSegmentCount_method_166 = DAS_CALL_MEMBER(ImDrawList::_CalcCircleAutoSegmentCount);
 addExtern<DAS_CALL_METHOD(__CalcCircleAutoSegmentCount_method_166)>(*this, lib, "_CalcCircleAutoSegmentCount",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_CalcCircleAutoSegmentCount))
 	->args({"self","radius"})
+;
+#endif
+using __PathArcToFastEx_method_167 = DAS_CALL_MEMBER(ImDrawList::_PathArcToFastEx);
+#ifdef GLOBAL_NAMESPACE
+using __PathArcToFastEx_method_167 = DAS_CALL_MEMBER(ImDrawList::_PathArcToFastEx);
+addExtern<DAS_CALL_METHOD(__PathArcToFastEx_method_167)>(*this, lib, "_PathArcToFastEx",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_PathArcToFastEx))
+	->args({"self","center","radius","a_min_sample","a_max_sample","a_step"})
+;
+#endif
+using __PathArcToN_method_168 = DAS_CALL_MEMBER(ImDrawList::_PathArcToN);
+#ifdef GLOBAL_NAMESPACE
+using __PathArcToN_method_168 = DAS_CALL_MEMBER(ImDrawList::_PathArcToN);
+addExtern<DAS_CALL_METHOD(__PathArcToN_method_168)>(*this, lib, "_PathArcToN",SideEffects::worstDefault, DAS_CALL_MEMBER_CPP(ImDrawList::_PathArcToN))
+	->args({"self","center","radius","a_min","a_max","num_segments"})
 ;
 #endif
