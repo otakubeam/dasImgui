@@ -37,6 +37,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 	# libDasModuleImGui
 	SET(DAS_IMGUI_MODULE_SRC
 		${DAS_IMGUI_DIR}/src/need_imgui.h
+		${DAS_IMGUI_DIR}/src/need_imnodes.h
 		${DAS_IMGUI_DIR}/src/module_imgui.cpp
 		${DAS_IMGUI_DIR}/src/module_imgui_enums.cpp
 		${DAS_IMGUI_DIR}/src/module_imgui_ann.cpp
@@ -51,6 +52,8 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${DAS_IMGUI_DIR}/src/module_imgui.method.inc
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.inc
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.cpp_inc
+		${DAS_IMGUI_DIR}/src/imgui_stub.h
+		${DAS_IMGUI_DIR}/src/imnodes_stub.h
 	)
 
 	# libDasModuleImGui split

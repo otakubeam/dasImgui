@@ -1,12 +1,13 @@
 #include "daScript/daScript.h"
 #include "daScript/ast/ast_typefactory_bind.h"
 
-#include <imgui.h>
-#include <imnodes.h>
+#include "imgui_stub.h"
+#include "imnodes_stub.h"
 
 using namespace das;
 
 #include "need_imgui.h"
+#include "need_imnodes.h"
 
 #if USE_GENERATED
 
@@ -463,7 +464,7 @@ bool Module_imgui::initDependencies() {
 
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
-    tw << "#include <imgui.h>\n";
+    tw << "#include \"imgui_stub.h\"\n";
     tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
@@ -519,8 +520,8 @@ bool Module_imnodes::initDependencies() {
 
 ModuleAotType Module_imnodes::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
-    tw << "#include <imgui.h>\n";
-    tw << "#include <imnodes.h>\n";
+    tw << "#include \"imgui_stub.h\"\n";
+    tw << "#include \"imnodes_stub.h\"\n";
     tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
