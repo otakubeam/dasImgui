@@ -465,6 +465,7 @@ bool Module_imgui::initDependencies() {
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
     tw << "#include \"imgui_stub.h\"\n";
+    tw << "#include \"imnodes_stub.h\"\n";
     tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
