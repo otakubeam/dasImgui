@@ -114,9 +114,9 @@ template <> struct cast_arg<const ImVec4 &> {
     }
 };
 
-template<> struct das::cast <ImVec2>  : cast_fVec_half<ImVec2> {};
-template<> struct das::cast <ImVec4>  : cast_fVec<ImVec4> {};
-template<> struct das::cast <ImColor> : cast_fVec<ImColor> {};
+template<> struct cast <ImVec2>  : cast_fVec_half<ImVec2> {};
+template<> struct cast <ImVec4>  : cast_fVec<ImVec4> {};
+template<> struct cast <ImColor> : cast_fVec<ImColor> {};
 
 template <>
 struct typeName<char> {
