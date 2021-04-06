@@ -64,11 +64,6 @@ addExtern<DAS_BIND_FUN(ImGui::DragScalar)>(*this, lib, "DragScalar",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetTooltipV)>(*this, lib, "SetTooltipV",SideEffects::worstDefault, "ImGui::SetTooltipV")
-	->args({"fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFocusHere",SideEffects::worstDefault, "ImGui::SetKeyboardFocusHere")
 	->args({"offset"})
 		->arg_init(0,make_smart<ExprConstInt>(0))
@@ -134,6 +129,11 @@ addExtern<DAS_BIND_FUN(ImGui::TableGetColumnFlags)>(*this, lib, "TableGetColumnF
 	->args({"column_n"})
 		->res_type(makeType<ImGuiTableColumnFlags_>(lib))
 		->arg_init(0,make_smart<ExprConstInt>(-1))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",SideEffects::worstDefault, "ImGui::IsItemActivated")
+	->args({})
 ;
 #endif
 

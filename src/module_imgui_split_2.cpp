@@ -13,13 +13,6 @@ void Module_imgui::initFunctions_2() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsItemClicked)>(*this, lib, "IsItemClicked",SideEffects::worstDefault, "ImGui::IsItemClicked")
-	->args({"mouse_button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetItemDefaultFocus)>(*this, lib, "SetItemDefaultFocus",SideEffects::worstDefault, "ImGui::SetItemDefaultFocus")
 	->args({})
 ;
@@ -125,6 +118,11 @@ addExtern<void (*)(ImGuiStyleVar, float),ImGui::PushStyleVar>(*this, lib, "PushS
 addExtern<bool (*)(const char *, int *, bool (*)(void *, int, const char **), void *, int, int),ImGui::Combo>(*this, lib, "Combo",SideEffects::worstDefault, "ImGui::Combo")
 	->args({"label","current_item","items_getter","data","items_count","popup_max_height_in_items"})
 		->arg_init(5,make_smart<ExprConstInt>(-1))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::EndTable)>(*this, lib, "EndTable",SideEffects::worstDefault, "ImGui::EndTable")
+	->args({})
 ;
 #endif
 

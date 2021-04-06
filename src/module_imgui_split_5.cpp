@@ -13,12 +13,6 @@ void Module_imgui::initFunctions_5() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::ShowDemoWindow)>(*this, lib, "ShowDemoWindow",SideEffects::worstDefault, "ImGui::ShowDemoWindow")
-	->args({"p_open"})
-		->arg_init(0,make_smart<ExprConstPtr>())
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetScrollX)>(*this, lib, "SetScrollX",SideEffects::worstDefault, "ImGui::SetScrollX")
 	->args({"scroll_x"})
 ;
@@ -129,6 +123,11 @@ addExtern<DAS_BIND_FUN(ImGui::ColorButton)>(*this, lib, "ColorButton",SideEffect
 	->args({"desc_id","col","flags","size"})
 		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetTime)>(*this, lib, "GetTime",SideEffects::worstDefault, "ImGui::GetTime")
+	->args({})
 ;
 #endif
 

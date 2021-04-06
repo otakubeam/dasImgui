@@ -13,47 +13,6 @@ void Module_imgui::initFunctions_14() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetNextWindowCollapsed)>(*this, lib, "SetNextWindowCollapsed",SideEffects::worstDefault, "ImGui::SetNextWindowCollapsed")
-	->args({"collapsed","cond"})
-		->arg_type(1,makeType<ImGuiCond_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::Indent)>(*this, lib, "Indent",SideEffects::worstDefault, "ImGui::Indent")
-	->args({"indent_w"})
-		->arg_init(0,make_smart<ExprConstFloat>(0))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, const char *, bool, bool),ImGui::MenuItem>(*this, lib, "MenuItem",SideEffects::worstDefault, "ImGui::MenuItem")
-	->args({"label","shortcut","selected","enabled"})
-		->arg_init(1,make_smart<ExprConstString>(""))
-		->arg_init(2,make_smart<ExprConstBool>(false))
-		->arg_init(3,make_smart<ExprConstBool>(true))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const ImVec2 &, const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
-	->args({"rect_min","rect_max"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup)>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<ImGuiID (*)(const char *),ImGui::GetID>(*this, lib, "GetID",SideEffects::worstDefault, "ImGui::GetID")
-	->args({"str_id"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetItemRectSize)>(*this, lib, "GetItemRectSize",SideEffects::worstDefault, "ImGui::GetItemRectSize")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetClipboardText)>(*this, lib, "GetClipboardText",SideEffects::worstDefault, "ImGui::GetClipboardText")
 	->args({})
 ;
@@ -66,11 +25,6 @@ addExtern<DAS_BIND_FUN(ImGui::LoadIniSettingsFromDisk)>(*this, lib, "LoadIniSett
 #ifdef IMNODES_NAMESPACE
 addExtern<DAS_BIND_FUN(imnodes::StyleColorsDark)>(*this, lib, "StyleColorsDark",SideEffects::worstDefault, "imnodes::StyleColorsDark")
 	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextDisabledV)>(*this, lib, "TextDisabledV",SideEffects::worstDefault, "ImGui::TextDisabledV")
-	->args({"fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -126,6 +80,57 @@ addExtern<DAS_BIND_FUN(imnodes::IsLinkDropped)>(*this, lib, "IsLinkDropped",Side
 	->args({"started_at_attribute_id","including_detached_links"})
 		->arg_init(0,make_smart<ExprConstPtr>())
 		->arg_init(1,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsWindowHovered)>(*this, lib, "IsWindowHovered",SideEffects::worstDefault, "ImGui::IsWindowHovered")
+	->args({"flags"})
+		->arg_type(0,makeType<ImGuiHoveredFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiHoveredFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SliderFloat)>(*this, lib, "SliderFloat",SideEffects::worstDefault, "ImGui::SliderFloat")
+	->args({"label","v","v_min","v_max","format","flags"})
+		->arg_init(4,make_smart<ExprConstString>("%.3f"))
+		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TableHeader)>(*this, lib, "TableHeader",SideEffects::worstDefault, "ImGui::TableHeader")
+	->args({"label"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndNode)>(*this, lib, "EndNode",SideEffects::worstDefault, "imnodes::EndNode")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const char *, const char *, bool *, bool),ImGui::MenuItem>(*this, lib, "MenuItem",SideEffects::worstDefault, "ImGui::MenuItem")
+	->args({"label","shortcut","p_selected","enabled"})
+		->arg_init(3,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::VSliderFloat)>(*this, lib, "VSliderFloat",SideEffects::worstDefault, "ImGui::VSliderFloat")
+	->args({"label","size","v","v_min","v_max","format","flags"})
+		->arg_init(5,make_smart<ExprConstString>("%.3f"))
+		->arg_type(6,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsWindowFocused)>(*this, lib, "IsWindowFocused",SideEffects::worstDefault, "ImGui::IsWindowFocused")
+	->args({"flags"})
+		->arg_type(0,makeType<ImGuiFocusedFlags_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiFocusedFlags_>(lib)))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::ClearNodeSelection)>(*this, lib, "ClearNodeSelection",SideEffects::worstDefault, "imnodes::ClearNodeSelection")
+	->args({})
 ;
 #endif
 

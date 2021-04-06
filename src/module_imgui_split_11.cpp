@@ -13,26 +13,6 @@ void Module_imgui::initFunctions_11() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetMouseCursor)>(*this, lib, "SetMouseCursor",SideEffects::worstDefault, "ImGui::SetMouseCursor")
-	->args({"cursor_type"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetStateStorage)>(*this, lib, "GetStateStorage",SideEffects::worstDefault, "ImGui::GetStateStorage")
-	->args({})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EndNodeTitleBar)>(*this, lib, "EndNodeTitleBar",SideEffects::worstDefault, "imnodes::EndNodeTitleBar")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetFrameHeight)>(*this, lib, "GetFrameHeight",SideEffects::worstDefault, "ImGui::GetFrameHeight")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::VSliderInt)>(*this, lib, "VSliderInt",SideEffects::worstDefault, "ImGui::VSliderInt")
 	->args({"label","size","v","v_min","v_max","format","flags"})
 		->arg_init(5,make_smart<ExprConstString>("%d"))
@@ -88,11 +68,6 @@ addExtern<DAS_BIND_FUN(ImGui::SliderFloat4)>(*this, lib, "SliderFloat4",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const void *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
-	->args({"ptr_id","fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertRGBtoHSV)>(*this, lib, "ColorConvertRGBtoHSV",SideEffects::worstDefault, "ImGui::ColorConvertRGBtoHSV")
 	->args({"r","g","b","out_h","out_s","out_v"})
 ;
@@ -142,6 +117,44 @@ addExtern<DAS_BIND_FUN(ImGui::SliderFloat2)>(*this, lib, "SliderFloat2",SideEffe
 		->arg_init(4,make_smart<ExprConstString>("%.3f"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::ColorPicker4)>(*this, lib, "ColorPicker4",SideEffects::worstDefault, "ImGui::ColorPicker4")
+	->args({"label","col","flags","ref_col"})
+		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)))
+		->arg_init(3,make_smart<ExprConstPtr>())
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::IsLinkHovered)>(*this, lib, "IsLinkHovered",SideEffects::worstDefault, "imnodes::IsLinkHovered")
+	->args({"link_id"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::OpenPopupOnItemClick)>(*this, lib, "OpenPopupOnItemClick",SideEffects::worstDefault, "ImGui::OpenPopupOnItemClick")
+	->args({"str_id","popup_flags"})
+		->arg_init(0,make_smart<ExprConstString>(""))
+		->arg_init(1,make_smart<ExprConstInt>(1))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::DragInt3)>(*this, lib, "DragInt3",SideEffects::worstDefault, "ImGui::DragInt3")
+	->args({"label","v","v_speed","v_min","v_max","format","flags"})
+		->arg_init(2,make_smart<ExprConstFloat>(1))
+		->arg_init(3,make_smart<ExprConstInt>(0))
+		->arg_init(4,make_smart<ExprConstInt>(0))
+		->arg_init(5,make_smart<ExprConstString>("%d"))
+		->arg_type(6,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(6,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TableSetBgColor)>(*this, lib, "TableSetBgColor",SideEffects::worstDefault, "ImGui::TableSetBgColor")
+	->args({"target","color","column_n"})
+		->arg_type(0,makeType<ImGuiTableBgTarget_>(lib))
+		->arg_init(2,make_smart<ExprConstInt>(-1))
 ;
 #endif
 

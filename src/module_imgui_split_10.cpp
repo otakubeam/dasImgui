@@ -13,29 +13,6 @@ void Module_imgui::initFunctions_10() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::PopItemWidth)>(*this, lib, "PopItemWidth",SideEffects::worstDefault, "ImGui::PopItemWidth")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SliderInt)>(*this, lib, "SliderInt",SideEffects::worstDefault, "ImGui::SliderInt")
-	->args({"label","v","v_min","v_max","format","flags"})
-		->arg_init(4,make_smart<ExprConstString>("%d"))
-		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
-		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TableGetSortSpecs)>(*this, lib, "TableGetSortSpecs",SideEffects::worstDefault, "ImGui::TableGetSortSpecs")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyItemHovered)>(*this, lib, "IsAnyItemHovered",SideEffects::worstDefault, "ImGui::IsAnyItemHovered")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsPopupOpen)>(*this, lib, "IsPopupOpen",SideEffects::worstDefault, "ImGui::IsPopupOpen")
 	->args({"str_id","flags"})
 		->arg_init(1,make_smart<ExprConstInt>(0))
@@ -122,6 +99,26 @@ addExtern<DAS_BIND_FUN(ImGui::SliderInt3)>(*this, lib, "SliderInt3",SideEffects:
 		->arg_init(4,make_smart<ExprConstString>("%d"))
 		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
 		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SetMouseCursor)>(*this, lib, "SetMouseCursor",SideEffects::worstDefault, "ImGui::SetMouseCursor")
+	->args({"cursor_type"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetStateStorage)>(*this, lib, "GetStateStorage",SideEffects::worstDefault, "ImGui::GetStateStorage")
+	->args({})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndNodeTitleBar)>(*this, lib, "EndNodeTitleBar",SideEffects::worstDefault, "imnodes::EndNodeTitleBar")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetFrameHeight)>(*this, lib, "GetFrameHeight",SideEffects::worstDefault, "ImGui::GetFrameHeight")
+	->args({})
 ;
 #endif
 

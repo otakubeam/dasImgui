@@ -54,11 +54,6 @@ addExtern<DAS_BIND_FUN(ImGui::DragScalar)>(*this, lib, "DragScalar",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetTooltipV)>(*this, lib, "SetTooltipV",SideEffects::worstDefault, "ImGui::SetTooltipV")
-	->args({"fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetKeyboardFocusHere)>(*this, lib, "SetKeyboardFocusHere",SideEffects::worstDefault, "ImGui::SetKeyboardFocusHere")
 	->args({"offset"})
 		->arg_init(0,make_smart<ExprConstInt>(0))
@@ -865,11 +860,6 @@ addExtern<DAS_BIND_FUN(ImGui::InputFloat)>(*this, lib, "InputFloat",SideEffects:
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
-	->args({"str_id","fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginListBox)>(*this, lib, "BeginListBox",SideEffects::worstDefault, "ImGui::BeginListBox")
 	->args({"label","size"})
 ;
@@ -907,11 +897,6 @@ addExtern<DAS_BIND_FUN(ImGui::CalcItemWidth)>(*this, lib, "CalcItemWidth",SideEf
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::Button)>(*this, lib, "Button",SideEffects::worstDefault, "ImGui::Button")
 	->args({"label","size"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffects::worstDefault, "ImGui::TextWrappedV")
-	->args({"fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1051,11 +1036,6 @@ addExtern<ImU32 (*)(ImGuiCol, float),ImGui::GetColorU32>(*this, lib, "GetColorU3
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::Dummy)>(*this, lib, "Dummy",SideEffects::worstDefault, "ImGui::Dummy")
 	->args({"size"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextColoredV)>(*this, lib, "TextColoredV",SideEffects::worstDefault, "ImGui::TextColoredV")
-	->args({"col","fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1364,11 +1344,6 @@ addExtern<DAS_BIND_FUN(ImGui::SliderFloat4)>(*this, lib, "SliderFloat4",SideEffe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const void *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
-	->args({"ptr_id","fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertRGBtoHSV)>(*this, lib, "ColorConvertRGBtoHSV",SideEffects::worstDefault, "ImGui::ColorConvertRGBtoHSV")
 	->args({"r","g","b","out_h","out_s","out_v"})
 ;
@@ -1434,21 +1409,10 @@ addExtern<DAS_BIND_FUN(imnodes::IsLinkHovered)>(*this, lib, "IsLinkHovered",Side
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LabelTextV)>(*this, lib, "LabelTextV",SideEffects::worstDefault, "ImGui::LabelTextV")
-	->args({"label","fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::OpenPopupOnItemClick)>(*this, lib, "OpenPopupOnItemClick",SideEffects::worstDefault, "ImGui::OpenPopupOnItemClick")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstString>(""))
 		->arg_init(1,make_smart<ExprConstInt>(1))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const void *, ImGuiTreeNodeFlags, const char *, va_list),ImGui::TreeNodeExV>(*this, lib, "TreeNodeExV",SideEffects::worstDefault, "ImGui::TreeNodeExV")
-	->args({"ptr_id","flags","fmt","args"})
-		->arg_type(1,makeType<ImGuiTreeNodeFlags_>(lib))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -1712,11 +1676,6 @@ addExtern<DAS_BIND_FUN(imnodes::StyleColorsDark)>(*this, lib, "StyleColorsDark",
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextDisabledV)>(*this, lib, "TextDisabledV",SideEffects::worstDefault, "ImGui::TextDisabledV")
-	->args({"fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::BeginPopupContextWindow)>(*this, lib, "BeginPopupContextWindow",SideEffects::worstDefault, "ImGui::BeginPopupContextWindow")
 	->args({"str_id","popup_flags"})
 		->arg_init(0,make_smart<ExprConstString>(""))
@@ -1815,11 +1774,6 @@ addExtern<DAS_BIND_FUN(ImGui::IsWindowFocused)>(*this, lib, "IsWindowFocused",Si
 	->args({"flags"})
 		->arg_type(0,makeType<ImGuiFocusedFlags_>(lib))
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiFocusedFlags_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::BulletTextV)>(*this, lib, "BulletTextV",SideEffects::worstDefault, "ImGui::BulletTextV")
-	->args({"fmt","args"})
 ;
 #endif
 #ifdef IMNODES_NAMESPACE
@@ -1950,12 +1904,6 @@ addExtern<DAS_BIND_FUN(ImGui::IsItemEdited)>(*this, lib, "IsItemEdited",SideEffe
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::TableNextColumn)>(*this, lib, "TableNextColumn",SideEffects::worstDefault, "ImGui::TableNextColumn")
 	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, ImGuiTreeNodeFlags, const char *, va_list),ImGui::TreeNodeExV>(*this, lib, "TreeNodeExV",SideEffects::worstDefault, "ImGui::TreeNodeExV")
-	->args({"str_id","flags","fmt","args"})
-		->arg_type(1,makeType<ImGuiTreeNodeFlags_>(lib))
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2134,11 +2082,6 @@ addExtern<DAS_BIND_FUN(ImGui::SetDragDropPayload)>(*this, lib, "SetDragDropPaylo
 	->args({"type","data","sz","cond"})
 		->arg_type(3,makeType<ImGuiCond_>(lib))
 		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextV)>(*this, lib, "TextV",SideEffects::worstDefault, "ImGui::TextV")
-	->args({"fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -2426,11 +2369,6 @@ addExtern<DAS_BIND_FUN(ImGui::TabItemButton)>(*this, lib, "TabItemButton",SideEf
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetCursorPosY)>(*this, lib, "SetCursorPosY",SideEffects::worstDefault, "ImGui::SetCursorPosY")
 	->args({"local_y"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::LogTextV)>(*this, lib, "LogTextV",SideEffects::worstDefault, "ImGui::LogTextV")
-	->args({"fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE

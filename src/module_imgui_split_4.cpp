@@ -12,11 +12,6 @@ using namespace das;
 void Module_imgui::initFunctions_4() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
-	->args({})
-;
-#endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::PopFont)>(*this, lib, "PopFont",SideEffects::worstDefault, "ImGui::PopFont")
 	->args({})
@@ -132,6 +127,12 @@ addExtern<DAS_BIND_FUN(ImGui::IsMouseReleased)>(*this, lib, "IsMouseReleased",Si
 addExtern<DAS_BIND_FUN(ImGui::PushTextWrapPos)>(*this, lib, "PushTextWrapPos",SideEffects::worstDefault, "ImGui::PushTextWrapPos")
 	->args({"wrap_local_pos_x"})
 		->arg_init(0,make_smart<ExprConstFloat>(0))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::ShowDemoWindow)>(*this, lib, "ShowDemoWindow",SideEffects::worstDefault, "ImGui::ShowDemoWindow")
+	->args({"p_open"})
+		->arg_init(0,make_smart<ExprConstPtr>())
 ;
 #endif
 

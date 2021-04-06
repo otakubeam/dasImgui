@@ -13,23 +13,6 @@ void Module_imgui::initFunctions_8() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetKeyIndex)>(*this, lib, "GetKeyIndex",SideEffects::worstDefault, "ImGui::GetKeyIndex")
-	->args({"imgui_key"})
-		->arg_type(0,makeType<ImGuiKey_>(lib))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsMouseHoveringRect)>(*this, lib, "IsMouseHoveringRect",SideEffects::worstDefault, "ImGui::IsMouseHoveringRect")
-	->args({"r_min","r_max","clip"})
-		->arg_init(2,make_smart<ExprConstBool>(true))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::DebugCheckVersionAndDataLayout)>(*this, lib, "DebugCheckVersionAndDataLayout",SideEffects::worstDefault, "ImGui::DebugCheckVersionAndDataLayout")
 	->args({"version_str","sz_io","sz_style","sz_vec2","sz_vec4","sz_drawvert","sz_drawidx"})
 ;
@@ -122,8 +105,26 @@ addExtern<DAS_BIND_FUN(ImGui::Dummy)>(*this, lib, "Dummy",SideEffects::worstDefa
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextColoredV)>(*this, lib, "TextColoredV",SideEffects::worstDefault, "ImGui::TextColoredV")
-	->args({"col","fmt","args"})
+addExtern<DAS_BIND_FUN(ImGui::PushButtonRepeat)>(*this, lib, "PushButtonRepeat",SideEffects::worstDefault, "ImGui::PushButtonRepeat")
+	->args({"repeat"})
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::EndStaticAttribute)>(*this, lib, "EndStaticAttribute",SideEffects::worstDefault, "imnodes::EndStaticAttribute")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<void (*)(const char *, unsigned int),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
+	->args({"prefix","v"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::InputFloat3)>(*this, lib, "InputFloat3",SideEffects::worstDefault, "ImGui::InputFloat3")
+	->args({"label","v","format","flags"})
+		->arg_init(2,make_smart<ExprConstString>("%.3f"))
+		->arg_type(3,makeType<ImGuiInputTextFlags_>(lib))
+		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
 ;
 #endif
 

@@ -13,13 +13,6 @@ void Module_imgui::initFunctions_7() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowSize>(*this, lib, "SetWindowSize",SideEffects::worstDefault, "ImGui::SetWindowSize")
-	->args({"size","cond"})
-		->arg_type(1,makeType<ImGuiCond_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetScrollMaxY)>(*this, lib, "GetScrollMaxY",SideEffects::worstDefault, "ImGui::GetScrollMaxY")
 	->args({})
 ;
@@ -48,11 +41,6 @@ addExtern<DAS_BIND_FUN(ImGui::InputFloat)>(*this, lib, "InputFloat",SideEffects:
 		->arg_init(4,make_smart<ExprConstString>("%.3f"))
 		->arg_type(5,makeType<ImGuiInputTextFlags_>(lib))
 		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<bool (*)(const char *, const char *, va_list),ImGui::TreeNodeV>(*this, lib, "TreeNodeV",SideEffects::worstDefault, "ImGui::TreeNodeV")
-	->args({"str_id","fmt","args"})
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
@@ -96,11 +84,6 @@ addExtern<DAS_BIND_FUN(ImGui::Button)>(*this, lib, "Button",SideEffects::worstDe
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::TextWrappedV)>(*this, lib, "TextWrappedV",SideEffects::worstDefault, "ImGui::TextWrappedV")
-	->args({"fmt","args"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::LogButtons)>(*this, lib, "LogButtons",SideEffects::worstDefault, "ImGui::LogButtons")
 	->args({})
 ;
@@ -128,6 +111,23 @@ addExtern<DAS_BIND_FUN(ImGui::EndChildFrame)>(*this, lib, "EndChildFrame",SideEf
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::ColorConvertU32ToFloat4)>(*this, lib, "ColorConvertU32ToFloat4",SideEffects::worstDefault, "ImGui::ColorConvertU32ToFloat4")
 	->args({"in"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetKeyIndex)>(*this, lib, "GetKeyIndex",SideEffects::worstDefault, "ImGui::GetKeyIndex")
+	->args({"imgui_key"})
+		->arg_type(0,makeType<ImGuiKey_>(lib))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsMouseHoveringRect)>(*this, lib, "IsMouseHoveringRect",SideEffects::worstDefault, "ImGui::IsMouseHoveringRect")
+	->args({"r_min","r_max","clip"})
+		->arg_init(2,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsAnyMouseDown)>(*this, lib, "IsAnyMouseDown",SideEffects::worstDefault, "ImGui::IsAnyMouseDown")
+	->args({})
 ;
 #endif
 

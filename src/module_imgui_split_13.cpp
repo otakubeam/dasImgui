@@ -13,48 +13,6 @@ void Module_imgui::initFunctions_13() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetWindowWidth)>(*this, lib, "GetWindowWidth",SideEffects::worstDefault, "ImGui::GetWindowWidth")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::DragIntRange2)>(*this, lib, "DragIntRange2",SideEffects::worstDefault, "ImGui::DragIntRange2")
-	->args({"label","v_current_min","v_current_max","v_speed","v_min","v_max","format","format_max","flags"})
-		->arg_init(3,make_smart<ExprConstFloat>(1))
-		->arg_init(4,make_smart<ExprConstInt>(0))
-		->arg_init(5,make_smart<ExprConstInt>(0))
-		->arg_init(6,make_smart<ExprConstString>("%d"))
-		->arg_init(7,make_smart<ExprConstString>(""))
-		->arg_type(8,makeType<ImGuiSliderFlags_>(lib))
-		->arg_init(8,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::SetImGuiContext)>(*this, lib, "SetImGuiContext",SideEffects::worstDefault, "imnodes::SetImGuiContext")
-	->args({"ctx"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetTextLineHeight)>(*this, lib, "GetTextLineHeight",SideEffects::worstDefault, "ImGui::GetTextLineHeight")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetItemAllowOverlap)>(*this, lib, "SetItemAllowOverlap",SideEffects::worstDefault, "ImGui::SetItemAllowOverlap")
-	->args({})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EditorContextGetPanning)>(*this, lib, "EditorContextGetPanning",SideEffects::worstDefault, "imnodes::EditorContextGetPanning")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetDrawData)>(*this, lib, "GetDrawData",SideEffects::worstDefault, "ImGui::GetDrawData")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetWindowContentRegionMin)>(*this, lib, "GetWindowContentRegionMin",SideEffects::worstDefault, "ImGui::GetWindowContentRegionMin")
 	->args({})
 ;
@@ -122,6 +80,47 @@ addExtern<DAS_BIND_FUN(ImGui::LogToClipboard)>(*this, lib, "LogToClipboard",Side
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::LogFinish)>(*this, lib, "LogFinish",SideEffects::worstDefault, "ImGui::LogFinish")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SetNextWindowCollapsed)>(*this, lib, "SetNextWindowCollapsed",SideEffects::worstDefault, "ImGui::SetNextWindowCollapsed")
+	->args({"collapsed","cond"})
+		->arg_type(1,makeType<ImGuiCond_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::Indent)>(*this, lib, "Indent",SideEffects::worstDefault, "ImGui::Indent")
+	->args({"indent_w"})
+		->arg_init(0,make_smart<ExprConstFloat>(0))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const char *, const char *, bool, bool),ImGui::MenuItem>(*this, lib, "MenuItem",SideEffects::worstDefault, "ImGui::MenuItem")
+	->args({"label","shortcut","selected","enabled"})
+		->arg_init(1,make_smart<ExprConstString>(""))
+		->arg_init(2,make_smart<ExprConstBool>(false))
+		->arg_init(3,make_smart<ExprConstBool>(true))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<bool (*)(const ImVec2 &, const ImVec2 &),ImGui::IsRectVisible>(*this, lib, "IsRectVisible",SideEffects::worstDefault, "ImGui::IsRectVisible")
+	->args({"rect_min","rect_max"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetMousePosOnOpeningCurrentPopup)>(*this, lib, "GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault, "ImGui::GetMousePosOnOpeningCurrentPopup")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<ImGuiID (*)(const char *),ImGui::GetID>(*this, lib, "GetID",SideEffects::worstDefault, "ImGui::GetID")
+	->args({"str_id"})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::GetItemRectSize)>(*this, lib, "GetItemRectSize",SideEffects::worstDefault, "ImGui::GetItemRectSize")
 	->args({})
 ;
 #endif

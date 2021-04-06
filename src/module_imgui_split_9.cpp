@@ -13,29 +13,6 @@ void Module_imgui::initFunctions_9() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::PushButtonRepeat)>(*this, lib, "PushButtonRepeat",SideEffects::worstDefault, "ImGui::PushButtonRepeat")
-	->args({"repeat"})
-;
-#endif
-#ifdef IMNODES_NAMESPACE
-addExtern<DAS_BIND_FUN(imnodes::EndStaticAttribute)>(*this, lib, "EndStaticAttribute",SideEffects::worstDefault, "imnodes::EndStaticAttribute")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<void (*)(const char *, unsigned int),ImGui::Value>(*this, lib, "Value",SideEffects::worstDefault, "ImGui::Value")
-	->args({"prefix","v"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::InputFloat3)>(*this, lib, "InputFloat3",SideEffects::worstDefault, "ImGui::InputFloat3")
-	->args({"label","v","format","flags"})
-		->arg_init(2,make_smart<ExprConstString>("%.3f"))
-		->arg_type(3,makeType<ImGuiInputTextFlags_>(lib))
-		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiInputTextFlags_>(lib)))
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetColumnOffset)>(*this, lib, "GetColumnOffset",SideEffects::worstDefault, "ImGui::GetColumnOffset")
 	->args({"column_index"})
 		->arg_init(0,make_smart<ExprConstInt>(-1))
@@ -127,6 +104,29 @@ addExtern<DAS_BIND_FUN(ImGui::PopTextWrapPos)>(*this, lib, "PopTextWrapPos",Side
 #endif
 #ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::GetContentRegionAvail)>(*this, lib, "GetContentRegionAvail",SideEffects::worstDefault, "ImGui::GetContentRegionAvail")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::PopItemWidth)>(*this, lib, "PopItemWidth",SideEffects::worstDefault, "ImGui::PopItemWidth")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::SliderInt)>(*this, lib, "SliderInt",SideEffects::worstDefault, "ImGui::SliderInt")
+	->args({"label","v","v_min","v_max","format","flags"})
+		->arg_init(4,make_smart<ExprConstString>("%d"))
+		->arg_type(5,makeType<ImGuiSliderFlags_>(lib))
+		->arg_init(5,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSliderFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::TableGetSortSpecs)>(*this, lib, "TableGetSortSpecs",SideEffects::worstDefault, "ImGui::TableGetSortSpecs")
+	->args({})
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsAnyItemHovered)>(*this, lib, "IsAnyItemHovered",SideEffects::worstDefault, "ImGui::IsAnyItemHovered")
 	->args({})
 ;
 #endif

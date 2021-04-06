@@ -13,11 +13,6 @@ void Module_imgui::initFunctions_6() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::GetTime)>(*this, lib, "GetTime",SideEffects::worstDefault, "ImGui::GetTime")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::IsWindowCollapsed)>(*this, lib, "IsWindowCollapsed",SideEffects::worstDefault, "ImGui::IsWindowCollapsed")
 	->args({})
 ;
@@ -121,6 +116,13 @@ addExtern<bool (*)(const char *, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::
 		->arg_init(2,make_smart<ExprConstBool>(false))
 		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
 		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<void (*)(const ImVec2 &, ImGuiCond),ImGui::SetWindowSize>(*this, lib, "SetWindowSize",SideEffects::worstDefault, "ImGui::SetWindowSize")
+	->args({"size","cond"})
+		->arg_type(1,makeType<ImGuiCond_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
 ;
 #endif
 

@@ -13,11 +13,6 @@ void Module_imgui::initFunctions_3() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::EndTable)>(*this, lib, "EndTable",SideEffects::worstDefault, "ImGui::EndTable")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::LogToTTY)>(*this, lib, "LogToTTY",SideEffects::worstDefault, "ImGui::LogToTTY")
 	->args({"auto_open_depth"})
 		->arg_init(0,make_smart<ExprConstInt>(-1))
@@ -133,6 +128,11 @@ addExtern<bool (*)(ImGuiID, const ImVec2 &, bool, ImGuiWindowFlags),ImGui::Begin
 		->arg_init(2,make_smart<ExprConstBool>(false))
 		->arg_type(3,makeType<ImGuiWindowFlags_>(lib))
 		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)))
+;
+#endif
+#ifdef IMNODES_NAMESPACE
+addExtern<DAS_BIND_FUN(imnodes::ClearLinkSelection)>(*this, lib, "ClearLinkSelection",SideEffects::worstDefault, "imnodes::ClearLinkSelection")
+	->args({})
 ;
 #endif
 

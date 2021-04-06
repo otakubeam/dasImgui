@@ -13,11 +13,6 @@ void Module_imgui::initFunctions_1() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsItemActivated)>(*this, lib, "IsItemActivated",SideEffects::worstDefault, "ImGui::IsItemActivated")
-	->args({})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<void (*)(const void *),ImGui::PushID>(*this, lib, "PushID",SideEffects::worstDefault, "ImGui::PushID")
 	->args({"ptr_id"})
 ;
@@ -120,6 +115,13 @@ addExtern<DAS_BIND_FUN(ImGui::SetNextItemOpen)>(*this, lib, "SetNextItemOpen",Si
 	->args({"is_open","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)))
+;
+#endif
+#ifdef GLOBAL_NAMESPACE
+addExtern<DAS_BIND_FUN(ImGui::IsItemClicked)>(*this, lib, "IsItemClicked",SideEffects::worstDefault, "ImGui::IsItemClicked")
+	->args({"mouse_button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
 ;
 #endif
 
