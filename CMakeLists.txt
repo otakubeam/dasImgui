@@ -52,12 +52,18 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.inc
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.cpp_inc
 	)
+
+	# libDasModuleImGui split
+	file(GLOB DAS_IMGUI_MODULE_SRC_SPLIT
+		"${DAS_IMGUI_DIR}/src/module_imgui_split_*.cpp"
+	)
+
 	ADD_MODULE_LIB(libDasModuleImGui)
 	ADD_MODULE_CPP(imgui)
 	ADD_MODULE_CPP(imnodes)
 	ADD_MODULE_NATIVE(imgui_boost)
 	ADD_MODULE_NATIVE(imnodes_boost)
-	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC})
+	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_MODULE_SRC_SPLIT} ${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC})
 	#TARGET_LINK_LIBRARIES(libDasModuleImGui ${imgui_LIBRARIES})
 	ADD_DEPENDENCIES(libDasModuleImGui libDaScript)
 	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR} ${imnodes_INCLUDE_DIR})

@@ -18,6 +18,8 @@ using namespace das;
 
 void Module_imgui::initFunctions() {
 #if USE_GENERATED
+#if !USE_GENERATED_SPLIT
 #include "module_imgui.inc"
+#endif
 #endif
 }

@@ -98,8 +98,32 @@ def main
     }}
 
     // generate
-
     var args <- get_command_line_arguments()
+    generate_split_functions = true
+    split_prefix = "{args[4]}_split"
+
+    split_cpp_prefix="
+#include \"daScript\/daScript.h\"
+#include \"daScript\/ast\/ast_typefactory_bind.h\"
+#include <imgui.h>
+#include <imnodes.h>
+using namespace das;
+#include \"need_imgui.h\"
+#if USE_GENERATED
+#define GLOBAL_NAMESPACE    1
+#include \"module_imgui.h\"
+#endif
+void Module_imgui::initFunctions_$$$() \{
+#if USE_GENERATED
+#if USE_GENERATED_SPLIT
+"
+
+    split_cpp_suffix="
+#endif
+#endif
+}
+"
+
     bindHeaders(args[3], args[4])
     genDefineConstants(args[5],args[4])
 
