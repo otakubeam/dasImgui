@@ -464,12 +464,12 @@ bool Module_imgui::initDependencies() {
 
 ModuleAotType Module_imgui::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
-    tw << "#include \"../modules/dasImGui/src/imgui_stub.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/imnodes_stub.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/imgui_stub.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/imnodes_stub.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/module_imgui.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/module_imgui.h\"\n";
     // specifying AOT type, in this case direct cpp mode (and not hybrid mode)
     return ModuleAotType::cpp;
 }
@@ -521,12 +521,12 @@ bool Module_imnodes::initDependencies() {
 
 ModuleAotType Module_imnodes::aotRequire ( TextWriter & tw ) const  {
     // add your stuff here
-    tw << "#include \"../modules/dasImGui/src/imgui_stub.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/imnodes_stub.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/aot_imgui.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/imgui_stub.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/imnodes_stub.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/aot_imgui.h\"\n";
     tw << "#include \"daScript/ast/ast.h\"\n";
     tw << "#include \"daScript/simulate/bind_enum.h\"\n";
-    tw << "#include \"../modules/dasImGui/src/module_imgui.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/module_imgui.h\"\n";
     // specifying AOT type, in this case direct cpp mode (and not hybrid mode)
     return ModuleAotType::cpp;
 }
