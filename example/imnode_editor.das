@@ -1,12 +1,231 @@
 options persistent_heap
 options persistent_string_heap
 
+require math
+require rtti
+require ast
+require daslib/ast_boost
 require imgui_app
 require daslib/glfw_boost
 require daslib/imgui_boost
 require daslib/static_let
 require daslib/imnodes_boost
 require daslib/safe_addr
+
+//////////////////
+// basic node view
+
+
+class NodeView
+    def abstract editNodes ( assign_position : bool ) : void
+    def abstract editLinks : void
+
+/////////////////////
+// ast implementation
+
+struct AstIdHelper
+    node_id : int = 1
+    node2id : table<string; int>
+    id2node : table<int; string>
+
+def get_id ( var helper:AstIdHelper; uid:string )
+    if helper.node2id |> key_exists(uid)
+        return helper.node2id[uid]
+    else
+        var id = helper.node_id ++
+        helper.node2id[uid] = id
+        helper.id2node[id] = uid
+        return id
+
+def get_function_id ( var helper:AstIdHelper; fun:FunctionPtr )
+    return helper |> get_id("function {get_mangled_name(fun)}")
+
+def get_function_argument_id ( var helper:AstIdHelper; fun:FunctionPtr; arg:VariablePtr )
+    return helper |> get_id("function {get_mangled_name(fun)} argument {arg.name}")
+
+
+def get_function_result_id ( var helper:AstIdHelper; fun:FunctionPtr )
+    return helper |> get_id("function result {get_mangled_name(fun)}")
+
+def intptr ( expr:ExpressionPtr )
+    var p = intptr(null)
+    unsafe
+        return intptr(reinterpret <void?> expr)
+
+def get_node_id ( var helper:AstIdHelper; expr:ExpressionPtr )
+    return helper |> get_id("{expr.__rtti} {intptr(expr)}")
+
+def get_expr_eval_id ( var helper:AstIdHelper; expr:ExpressionPtr )
+    return helper |> get_id("{expr.__rtti} eval {intptr(expr)}")
+
+def get_expr_var_id ( var helper:AstIdHelper; expr:smart_ptr<ExprVar> )
+    return helper |> get_id("{expr.__rtti} variable {intptr(expr)}")
+
+def get_expr_field_id ( var helper:AstIdHelper; expr:ExpressionPtr; field:string )
+    return helper |> get_id("{expr.__rtti} field {field} {intptr(expr)}")
+
+let
+    FUNCTION_VPAD = 20.
+    FUNCTION_HPAD = 20.
+    BLOCK_VPAD = 20.
+    BLOCK_HPAD = 40.
+    EXPR_HPAD = 30.
+
+struct AstNodeLink
+    lid : int
+    from : int
+    to : int
+
+class AstNodeViewVisitor : AstVisitor
+    helper : AstIdHelper?
+    assign_position : bool
+    cursor : float2
+    hoffset : array<float>
+    voffset : array<float>
+    vmax : float
+    links : array<AstNodeLink>
+    def AstNodeViewVisitor(var h:AstIdHelper)
+        assign_position = false
+        unsafe
+            helper = addr(h)
+    def override preVisitProgram(prog:ProgramPtr) : void
+        links |> clear()
+        if assign_position
+            cursor = float2(10,10)
+            hoffset |> clear()
+            voffset |> clear()
+            vmax = 0.
+    def override preVisitFunction(fun:FunctionPtr)
+        let id = *helper |> get_function_id(fun)
+        BeginNode(id) <|
+            BeginNodeTitleBar() <|
+                Text("Function {fun.name}")
+            for arg in fun.arguments
+                let aid = *helper |> get_function_argument_id(fun,arg)
+                BeginOutputAttribute(aid) <|
+                    Text("{arg.name}")
+            if !fun.result.isVoid
+                let rid = *helper |> get_function_result_id(fun)
+                BeginInputAttribute(rid) <|
+                    Text("Result")
+        if assign_position
+            SetNodeGridSpacePos(id, cursor)
+            let dim = GetNodeDimensions(id)
+            cursor.y += dim.y + BLOCK_VPAD
+            cursor.x += FUNCTION_HPAD
+    def override visitFunction(fun:FunctionPtr)
+        if assign_position
+            cursor.x -= FUNCTION_HPAD
+            cursor.y += FUNCTION_VPAD
+        return fun
+    def override preVisitExprBlock(blk:smart_ptr<ExprBlock>)
+        let id = *helper |> get_node_id(blk)
+        BeginNode (id) <|
+            BeginNodeTitleBar() <|
+                Text("ExprBlock")
+        if assign_position
+            SetNodeGridSpacePos(id, cursor)
+            let dim = GetNodeDimensions(id)
+            cursor.y += dim.y + BLOCK_VPAD
+            hoffset |> push(cursor.x)
+            cursor.x += BLOCK_HPAD
+    def override preVisitExprBlockExpression(blk:smart_ptr<ExprBlock>;expr:ExpressionPtr)
+        if assign_position
+            hoffset |> push(cursor.x)
+            voffset |> push(vmax)
+            vmax = 0.
+    def override visitExprBlockExpression(blk:smart_ptr<ExprBlock>;expr:ExpressionPtr)
+        if assign_position
+            cursor.x = hoffset[length(hoffset)-1]
+            hoffset |> pop()
+            cursor.y += vmax + BLOCK_VPAD
+            vmax = voffset[length(voffset)-1]
+            voffset |> pop()
+        return expr
+    def override visitExprBlock(blk:smart_ptr<ExprBlock>) : ExpressionPtr
+        if assign_position
+            cursor.x = hoffset[length(hoffset)-1]
+            hoffset |> pop()
+        return blk
+    def nextExprEval(expr:ExpressionPtr):void
+        let eid = *helper |> get_expr_eval_id(expr)
+        BeginOutputAttribute(eid) <|
+            Text("eval")
+    def nextExprPos(id:int):void
+        if assign_position
+            SetNodeGridSpacePos(id, cursor)
+            let dim = GetNodeDimensions(id)
+            cursor.x += dim.x + EXPR_HPAD
+            vmax = max(vmax, dim.y)
+    def exprFieldEvalPtr(expr:ExpressionPtr;field:string;node:ExpressionPtr):void
+        let pid = *helper |> get_expr_field_id(expr,field)
+        BeginInputAttribute(pid) <|
+            Text(field)
+        if node != null
+            let nid = *helper |> get_expr_eval_id(node)
+            let lid = *helper |> get_id("link {expr.__rtti} {intptr(expr)} => {node.__rtti} {intptr(node)}")
+            links |> push ([[AstNodeLink lid=lid, from=pid, to=nid]])
+    def override preVisitExprReturn(expr:smart_ptr<ExprReturn>) : void
+        let id = *helper |> get_node_id(expr)
+        BeginNode (id) <|
+            BeginNodeTitleBar() <|
+                Text("ExprReturn")
+            self->exprFieldEvalPtr(expr,"subexpr",expr.subexpr)
+        self->nextExprPos(id)
+    def override preVisitExprVar(expr:smart_ptr<ExprVar>)
+        let id = *helper |> get_node_id(expr)
+        BeginNode (id) <|
+            BeginNodeTitleBar() <|
+                Text("ExprVar")
+            let vid = *helper |> get_expr_var_id(expr)
+            BeginInputAttribute(vid) <|
+                Text("{expr.name}")
+            self->nextExprEval(expr)
+        self->nextExprPos(id)
+    def override preVisitExprOp2(expr:smart_ptr<ExprOp2>)
+        let id = *helper |> get_node_id(expr)
+        BeginNode (id) <|
+            BeginNodeTitleBar() <|
+                Text("ExprOp2 {expr.op}")
+            self->exprFieldEvalPtr(expr,"left",expr.left)
+            self->exprFieldEvalPtr(expr,"right",expr.right)
+            self->nextExprEval(expr)
+        self->nextExprPos(id)
+
+class AstNodeView : NodeView
+    prog:ProgramPtr
+    access:FileAccessPtr
+    nvv:AstNodeViewVisitor?
+    nvva:smart_ptr<VisitorAdapter>
+    helper:AstIdHelper
+    def AstNodeView(fname:string)
+        helper <- AstIdHelper()
+        access := make_file_access("")
+        using <| $(var cop:CodeOfPolicies#)
+            rtti::compile_file(fname,access,cop) <| $(ok,program,issues)
+                if ok
+                    prog := program
+                else
+                    print("{fname} failed to compile\n{issues}\n")
+        nvv = new AstNodeViewVisitor(helper)
+        unsafe
+            nvva <- make_visitor(*nvv)
+    def finalize
+        prog := null
+        access := null
+        nvva := null
+        unsafe
+            delete nvv
+    def override editNodes ( assign_position : bool ) : void
+        nvv.assign_position = assign_position
+        prog |> visit(nvva)
+    def override editLinks : void
+        // print("\n\nlinking\n")
+        for lnk in nvv.links
+            imnodes::Link(lnk.lid,lnk.from,lnk.to)
+            // print("{helper.id2node[lnk.lid]}\n")
+
+var g_nodeView : NodeView?
 
 var window : GLFWwindow?
 
@@ -45,19 +264,6 @@ def imgui_app ( title:string; blk : block )
     imgui::DestroyContext(null)
     glfwDestroyWindow(window)
     glfwTerminate()
-
-def EditNode(id:int;cap:string)
-    BeginNode(id) <|
-        BeginNodeTitleBar() <|
-            TextUnformatted("{cap} id:{id}")
-        BeginInputAttribute(id*1000+2) <|
-            Text("input")
-        BeginOutputAttribute(id*1000+3) <|
-            Indent(40.)
-            Text("output")
-
-def LinkNode(lid,id1,id2:int)
-    imnodes::Link(lid,id1*1000+2,id2*1000+3)
 
 def MainMenu()
     BeginMenuBar <|
@@ -100,17 +306,11 @@ def EditorDemo()
                     EndMenu()
                 EndPopup()
             // nodes
-            EditNode(1,"One")
-            EditNode(2,"Two")
-            // links
-            LinkNode(1234,1,2)
-            // node locations
             static_let <|
                 var once = true
-            if once
-                once = false
-                SetNodeGridSpacePos(1,float2(10))
-                SetNodeGridSpacePos(2,float2(50))
+            g_nodeView->editNodes(once)
+            once = false
+            g_nodeView->editLinks()
     // link events
     IsLinkCreated <| $ ( l_from, l_to )
         print("linked {l_from} {l_to}\n")
@@ -120,6 +320,9 @@ def EditorDemo()
 
 [export]
 def main
+
+    g_nodeView = new AstNodeView("example.das")
+
 	var f = 0.0
 	imgui_app("Testing IMGUI") <|
         NewFrame()
