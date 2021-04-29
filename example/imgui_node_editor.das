@@ -6,7 +6,7 @@ require daslib/glfw_boost
 require daslib/imgui_boost
 require daslib/static_let
 require daslib/safe_addr
-require imgui_node_editor
+require daslib/imgui_node_editor_boost
 
 var window : GLFWwindow?
 
@@ -80,20 +80,16 @@ def EditorDemo()
         MainMenu()
         // editor
         SetCurrentEditor(g_Context)
-        Begin("My Editor", float2(0.0, 0.0f))
-        var uniqueId = 1
-        for n in range(3)
-            BeginNode(uniqueId++)
-            Text("Node {n}")
-            BeginPin(uniqueId++, PinKind Input)
-            Text("-> In")
-            EndPin()
-            SameLine()
-            BeginPin(uniqueId++, PinKind Output)
-            Text("Out ->")
-            EndPin()
-            EndNode()
-        imgui_node_editor::End()
+        Begin("My Editor", float2(0.0, 0.0f)) <|
+            var uniqueId = 1
+            for n in range(3)
+                BeginNode(uniqueId++) <|
+                    Text("Node {n}")
+                    BeginPin(uniqueId++, PinKind Input) <|
+                        Text("-> In")
+                    SameLine()
+                    BeginPin(uniqueId++, PinKind Output) <|
+                        Text("Out ->")
         SetCurrentEditor(null)
 
 
