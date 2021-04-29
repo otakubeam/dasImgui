@@ -102,9 +102,10 @@ MAKE_TYPE_FACTORY(Config, ax::NodeEditor::Config);
 
 struct NodeEditorConfigAnnotation : ManagedStructureAnnotation <ax::NodeEditor::Config> {
     NodeEditorConfigAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Config", ml) {
-        addField<DAS_BIND_MANAGED_FIELD(SettingsFile)>("SettingsFile");
+        addField<DAS_BIND_MANAGED_FIELD(SettingsFile)>("SettingsFile").decl->constant = false;
         // todo: other fields? callbacks?
     }
+    virtual bool isLocal() const override { return true; }
 };
 
 // making custom builtin module
@@ -135,7 +136,9 @@ public:
         // type annotations
         addAnnotation(make_smart<DummyTypeAnnotation>("EditorContext", "ax::NodeEditor::EditorContext",1, 1));
         addAnnotation(make_smart<NodeEditorStyleAnnotation>(lib));
+
         addAnnotation(make_smart<NodeEditorConfigAnnotation>(lib));
+        addCtorAndUsing<ax::NodeEditor::Config>(*this,lib,"Config","ax::NodeEditor::Config");
         // functions
         addExtern<DAS_BIND_FUN(ax::NodeEditor::SetCurrentEditor)>(*this, lib, "SetCurrentEditor",
                 SideEffects::worstDefault, "ax::NodeEditor::SetCurrentEditor");
@@ -357,6 +360,18 @@ public:
                 SideEffects::worstDefault, "ax::NodeEditor::ScreenToCanvas");
         addExtern<DAS_BIND_FUN(ax::NodeEditor::CanvasToScreen)>(*this, lib, "CanvasToScreen",
                 SideEffects::worstDefault, "ax::NodeEditor::CanvasToScreen");
+
+        // time to fix-up const & ImVec2 and const & ImVec4
+        for ( auto fn : this->functions ) {
+                const auto&  pfn = fn.second;
+                for ( auto & arg : pfn->arguments ) {
+                if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
+                        if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {
+                        arg->type->ref = false;
+                        }
+                }
+                }
+        }
 
         // all good
         return true;
