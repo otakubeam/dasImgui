@@ -558,7 +558,7 @@ void ed::Pin::Draw(ImDrawList* drawList, DrawFlags flags)
 
 ImVec2 ed::Pin::GetClosestPoint(const ImVec2& p) const
 {
-    return ImRect_ClosestPoint(m_Pivot, p, true, m_Radius + m_ArrowSize);
+    return ImRect_ClosestPoint(m_Pivot, p, true, m_Radius);
 }
 
 ImLine ed::Pin::GetClosestLine(const Pin* pin) const
