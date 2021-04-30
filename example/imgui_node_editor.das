@@ -171,7 +171,6 @@ def EditorDemo()
                 // There may be many links marked for deletion, let's loop over them.
                 var deletedLinkId : LinkId
                 while QueryDeletedLink(safe_addr(deletedLinkId),null,null)
-                    print("Delete!\n")
                     // If you agree that link can be deleted, accept deletion.
                     if AcceptDeletedItem()
                         let index = find_index_if(g_Links) <| $ ( lnk )

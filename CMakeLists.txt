@@ -72,6 +72,15 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.inc
 		${DAS_IMGUI_DIR}/src/module_imgui.enum.cpp_inc
 		${DAS_IMGUI_DIR}/src/module_imgui_node_editor.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_types.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun1.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun2.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun3.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun4.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun5.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun6.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun7.cpp
+		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun8.cpp
 		${DAS_IMGUI_DIR}/src/imgui_stub.h
 		${DAS_IMGUI_DIR}/src/imnodes_stub.h
 		${DAS_IMGUI_DIR}/src/imgui_node_editor_stub.h

@@ -1,5 +1,40 @@
 #pragma once
 
+class Module_imgui_node_editor: public Module {
+    ModuleLibrary lib;
+    bool initialized = false;
+public:
+    Module_imgui_node_editor();
+protected:
+    virtual bool initDependencies() override;
+    virtual ModuleAotType aotRequire ( TextWriter & tw ) const override;
+protected:
+    void initTypes();
+    void initFunc1();
+    void initFunc2();
+    void initFunc3();
+    void initFunc4();
+    void initFunc5();
+    void initFunc6();
+    void initFunc7();
+    void initFunc8();
+};
+
+DAS_BIND_ENUM_CAST(ax::NodeEditor::SaveReasonFlags);
+DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::SaveReasonFlags,SaveReasonFlags);
+DAS_BIND_ENUM_CAST(ax::NodeEditor::PinKind);
+DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::PinKind,PinKind);
+DAS_BIND_ENUM_CAST(ax::NodeEditor::StyleColor);
+DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::StyleColor,StyleColor);
+DAS_BIND_ENUM_CAST(ax::NodeEditor::StyleVar);
+DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::StyleVar,StyleVar);
+
+MAKE_EXTERNAL_TYPE_FACTORY(Style, ax::NodeEditor::Style);
+MAKE_EXTERNAL_TYPE_FACTORY(EditorContext,ax::NodeEditor::EditorContext);
+MAKE_EXTERNAL_TYPE_FACTORY(Config, ax::NodeEditor::Config);
+
+MAKE_EXTERNAL_TYPE_FACTORY(ImDrawList, ImDrawList);
+
 namespace das {
 
 // node
