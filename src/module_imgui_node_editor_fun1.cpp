@@ -19,7 +19,7 @@ void Module_imgui_node_editor::initFunc1() {
     addExtern<DAS_BIND_FUN(ax::NodeEditor::DestroyEditor)>(*this, lib, "DestroyEditor",
             SideEffects::worstDefault, "ax::NodeEditor::DestroyEditor");
 
-    addExtern<DAS_BIND_FUN(ax::NodeEditor::GetStyle)>(*this, lib, "GetStyle",
+    addExtern<DAS_BIND_FUN(ax::NodeEditor::GetStyle), SimNode_ExtFuncCallRef>(*this, lib, "GetStyle",
             SideEffects::worstDefault, "ax::NodeEditor::GetStyle");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetStyleColorName)>(*this, lib, "GetStyleColorName",
             SideEffects::worstDefault, "ax::NodeEditor::GetStyleColorName");
