@@ -25,9 +25,11 @@ void Module_imgui_node_editor::initFunc7() {
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetActionContextSize)>(*this, lib, "GetActionContextSize",
             SideEffects::worstDefault, "ax::NodeEditor::GetActionContextSize");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetActionContextNodes)>(*this, lib, "GetActionContextNodes",
-            SideEffects::worstDefault, "ax::NodeEditor::GetActionContextNodes");
+            SideEffects::worstDefault, "ax::NodeEditor::GetActionContextNodes")
+        ->args({"nodes","size"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetActionContextLinks)>(*this, lib, "GetActionContextLinks",
-            SideEffects::worstDefault, "ax::NodeEditor::GetActionContextLinks");
+            SideEffects::worstDefault, "ax::NodeEditor::GetActionContextLinks")
+        ->args({"links","size"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::EndShortcut)>(*this, lib, "EndShortcut",
             SideEffects::worstDefault, "ax::NodeEditor::EndShortcut");
 

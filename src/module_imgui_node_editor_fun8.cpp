@@ -22,12 +22,15 @@ void Module_imgui_node_editor::initFunc8() {
             SideEffects::worstDefault, "ax::NodeEditor::IsBackgroundDoubleClicked");
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::PinHadAnyLinks)>(*this, lib, "PinHadAnyLinks",
-            SideEffects::worstDefault, "ax::NodeEditor::PinHadAnyLinks");
+            SideEffects::worstDefault, "ax::NodeEditor::PinHadAnyLinks")
+        ->args({"pinId"});
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetScreenSize)>(*this, lib, "GetScreenSize",
             SideEffects::worstDefault, "ax::NodeEditor::GetScreenSize");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::ScreenToCanvas)>(*this, lib, "ScreenToCanvas",
-            SideEffects::worstDefault, "ax::NodeEditor::ScreenToCanvas");
+            SideEffects::worstDefault, "ax::NodeEditor::ScreenToCanvas")
+        ->args({"pos"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::CanvasToScreen)>(*this, lib, "CanvasToScreen",
-            SideEffects::worstDefault, "ax::NodeEditor::CanvasToScreen");
+            SideEffects::worstDefault, "ax::NodeEditor::CanvasToScreen")
+        ->args({"pos"});
 }

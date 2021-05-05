@@ -11,7 +11,8 @@ using namespace das;
 
 void Module_imgui_node_editor::initFunc3() {
     addExtern<DAS_BIND_FUN(ax::NodeEditor::BeginGroupHint)>(*this, lib, "BeginGroupHint",
-            SideEffects::worstDefault, "ax::NodeEditor::BeginGroupHint");
+            SideEffects::worstDefault, "ax::NodeEditor::BeginGroupHint")
+        ->args({"nodeId"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetGroupMin)>(*this, lib, "GetGroupMin",
             SideEffects::worstDefault, "ax::NodeEditor::GetGroupMin");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetGroupMax)>(*this, lib, "GetGroupMax",
@@ -24,26 +25,36 @@ void Module_imgui_node_editor::initFunc3() {
             SideEffects::worstDefault, "ax::NodeEditor::EndGroupHint");
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetNodeBackgroundDrawList)>(*this, lib, "GetNodeBackgroundDrawList",
-            SideEffects::worstDefault, "ax::NodeEditor::GetNodeBackgroundDrawList");
+            SideEffects::worstDefault, "ax::NodeEditor::GetNodeBackgroundDrawList")
+        ->args({"nodeId"});
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::Link)>(*this, lib, "Link",
             SideEffects::worstDefault, "ax::NodeEditor::Link")
-            ->arg_init(3, make_smart<ExprConstFloat4>(float4(1.0f)))
-            ->arg_init(4, make_smart<ExprConstFloat>(1.0f));
+        ->args({"id","startPin","endPin","color","thickness"})
+        ->arg_init(3, make_smart<ExprConstFloat4>(float4(1.0f)))
+        ->arg_init(4, make_smart<ExprConstFloat>(1.0f));
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::Flow)>(*this, lib, "Flow",
-            SideEffects::worstDefault, "ax::NodeEditor::Flow");
+            SideEffects::worstDefault, "ax::NodeEditor::Flow")
+        ->args({"linkId"});
 
     addExtern<DAS_BIND_FUN(ax::NodeEditor::BeginCreate)>(*this, lib, "BeginCreate",
             SideEffects::worstDefault, "ax::NodeEditor::BeginCreate")
-            ->arg_init(0, make_smart<ExprConstFloat4>(float4(1.0f)))
-            ->arg_init(1, make_smart<ExprConstFloat>(1.0f));
+        ->args({"color","thickness"})
+        ->arg_init(0, make_smart<ExprConstFloat4>(float4(1.0f)))
+        ->arg_init(1, make_smart<ExprConstFloat>(1.0f));
     addExtern<bool (*)(ax::NodeEditor::PinId *,ax::NodeEditor::PinId *),ax::NodeEditor::QueryNewLink>(*this, lib, "QueryNewLink",
-            SideEffects::worstDefault, "ax::NodeEditor::QueryNewLink");
+            SideEffects::worstDefault, "ax::NodeEditor::QueryNewLink")
+        ->args({"startId","endId"});
     addExtern<bool (*)(ax::NodeEditor::PinId *, ax::NodeEditor::PinId *, const ImVec4&, float) ,ax::NodeEditor::QueryNewLink>(*this, lib, "QueryNewLink",
-            SideEffects::worstDefault, "ax::NodeEditor::QueryNewLink");
+            SideEffects::worstDefault, "ax::NodeEditor::QueryNewLink")
+        ->args({"startId","endId","color","thickness"})
+        ->arg_init(3, make_smart<ExprConstFloat>(1.0f));
     addExtern<bool (*)(ax::NodeEditor::PinId *), ax::NodeEditor::QueryNewNode>(*this, lib, "QueryNewNode",
-            SideEffects::worstDefault, "ax::NodeEditor::QueryNewNode");
+            SideEffects::worstDefault, "ax::NodeEditor::QueryNewNode")
+        ->args({"id"});;
     addExtern<bool (*)(ax::NodeEditor::PinId *, const ImVec4&, float), ax::NodeEditor::QueryNewNode>(*this, lib, "QueryNewNode",
-            SideEffects::worstDefault, "ax::NodeEditor::QueryNewNode");
+            SideEffects::worstDefault, "ax::NodeEditor::QueryNewNode")
+        ->args({"id","color","thickness"})
+        ->arg_init(2, make_smart<ExprConstFloat>(1.0f));
 }

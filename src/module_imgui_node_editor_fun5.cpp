@@ -25,17 +25,25 @@ void Module_imgui_node_editor::initFunc5() {
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetSelectedObjectCount)>(*this, lib, "GetSelectedObjectCount",
             SideEffects::worstDefault, "ax::NodeEditor::GetSelectedObjectCount");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetSelectedNodes)>(*this, lib, "GetSelectedNodes",
-            SideEffects::worstDefault, "ax::NodeEditor::GetSelectedNodes");
+            SideEffects::worstDefault, "ax::NodeEditor::GetSelectedNodes")
+        ->args({"nodes","size"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::GetSelectedLinks)>(*this, lib, "GetSelectedLinks",
-            SideEffects::worstDefault, "ax::NodeEditor::GetSelectedLinks");
+            SideEffects::worstDefault, "ax::NodeEditor::GetSelectedLinks")
+        ->args({"links","size"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::ClearSelection)>(*this, lib, "ClearSelection",
             SideEffects::worstDefault, "ax::NodeEditor::ClearSelection");
     addExtern<DAS_BIND_FUN(ax::NodeEditor::SelectNode)>(*this, lib, "SelectNode",
-            SideEffects::worstDefault, "ax::NodeEditor::SelectNode");
+            SideEffects::worstDefault, "ax::NodeEditor::SelectNode")
+        ->args({"nodeId","append"})
+        ->arg_init(1,make_smart<ExprConstBool>(false));
     addExtern<DAS_BIND_FUN(ax::NodeEditor::SelectLink)>(*this, lib, "SelectLink",
-            SideEffects::worstDefault, "ax::NodeEditor::SelectLink");
+            SideEffects::worstDefault, "ax::NodeEditor::SelectLink")
+        ->args({"linkId","append"})
+        ->arg_init(1,make_smart<ExprConstBool>(false));
     addExtern<DAS_BIND_FUN(ax::NodeEditor::DeselectNode)>(*this, lib, "DeselectNode",
-            SideEffects::worstDefault, "ax::NodeEditor::DeselectNode");
+            SideEffects::worstDefault, "ax::NodeEditor::DeselectNode")
+        ->args({"nodeId"});
     addExtern<DAS_BIND_FUN(ax::NodeEditor::DeselectLink)>(*this, lib, "DeselectLink",
-            SideEffects::worstDefault, "ax::NodeEditor::DeselectLink");
+            SideEffects::worstDefault, "ax::NodeEditor::DeselectLink")
+        ->args({"linkId"});
 }
