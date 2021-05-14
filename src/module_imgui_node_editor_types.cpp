@@ -70,7 +70,7 @@ DAS_BASE_BIND_ENUM_IMPL(ax::NodeEditor::StyleVar, StyleVar,
 IMPLEMENT_EXTERNAL_TYPE_FACTORY(Style, ax::NodeEditor::Style);
 
 struct NodeEditorStyleAnnotation : ManagedStructureAnnotation <ax::NodeEditor::Style> {
-    NodeEditorStyleAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Style", ml) {
+    NodeEditorStyleAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Style", ml, "ax::NodeEditor::Style") {
         addField<DAS_BIND_MANAGED_FIELD(NodePadding)>("NodePadding");
         addField<DAS_BIND_MANAGED_FIELD(NodeRounding)>("NodeRounding");
         addField<DAS_BIND_MANAGED_FIELD(NodeBorderWidth)>("NodeBorderWidth");
@@ -103,7 +103,7 @@ IMPLEMENT_EXTERNAL_TYPE_FACTORY(EditorContext,ax::NodeEditor::EditorContext);
 IMPLEMENT_EXTERNAL_TYPE_FACTORY(Config, ax::NodeEditor::Config);
 
 struct NodeEditorConfigAnnotation : ManagedStructureAnnotation <ax::NodeEditor::Config> {
-    NodeEditorConfigAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Config", ml) {
+    NodeEditorConfigAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Config", ml, "ax::NodeEditor::Config") {
         addField<DAS_BIND_MANAGED_FIELD(SettingsFile)>("SettingsFile").decl->constant = false;
         // todo: other fields? callbacks?
     }

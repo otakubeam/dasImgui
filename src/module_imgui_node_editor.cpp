@@ -52,6 +52,7 @@ bool Module_imgui_node_editor::initDependencies() {
 
 ModuleAotType Module_imgui_node_editor::aotRequire ( TextWriter & tw ) const  {
     tw << "#include \"../modules/dasImgui/src/imgui_node_editor_stub.h\"\n";
+    tw << "#include \"../modules/dasImgui/src/aot_imgui_node_editor.h\"\n";
     return ModuleAotType::cpp;
 }
 

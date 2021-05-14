@@ -1,5 +1,7 @@
 #pragma once
 
+#include "aot_imgui_node_editor.h"
+
 class Module_imgui_node_editor: public Module {
     ModuleLibrary lib;
     bool initialized = false;
@@ -20,13 +22,9 @@ protected:
     void initFunc8();
 };
 
-DAS_BIND_ENUM_CAST(ax::NodeEditor::SaveReasonFlags);
 DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::SaveReasonFlags,SaveReasonFlags);
-DAS_BIND_ENUM_CAST(ax::NodeEditor::PinKind);
 DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::PinKind,PinKind);
-DAS_BIND_ENUM_CAST(ax::NodeEditor::StyleColor);
 DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::StyleColor,StyleColor);
-DAS_BIND_ENUM_CAST(ax::NodeEditor::StyleVar);
 DAS_BASE_BIND_ENUM_GEN(ax::NodeEditor::StyleVar,StyleVar);
 
 MAKE_EXTERNAL_TYPE_FACTORY(Style, ax::NodeEditor::Style);
@@ -42,7 +40,7 @@ namespace das {
 template <> struct typeFactory<ax::NodeEditor::NodeId> {
 	static TypeDeclPtr make(const ModuleLibrary &) {
 		auto t = make_smart<TypeDecl>(Type::tInt);
-		t->alias = "NodeId";
+		t->alias = "ax::NodeEditor::NodeId";
 		t->aotAlias = true;
 		return t;
 	}
@@ -65,7 +63,7 @@ template <> struct cast_res<ax::NodeEditor::NodeId> {
 template <> struct typeFactory<ax::NodeEditor::PinId> {
 	static TypeDeclPtr make(const ModuleLibrary &) {
 		auto t = make_smart<TypeDecl>(Type::tInt);
-		t->alias = "PinId";
+		t->alias = "ax::NodeEditor::PinId";
 		t->aotAlias = true;
 		return t;
 	}
@@ -88,7 +86,7 @@ template <> struct cast_res<ax::NodeEditor::PinId> {
 template <> struct typeFactory<ax::NodeEditor::LinkId> {
 	static TypeDeclPtr make(const ModuleLibrary &) {
 		auto t = make_smart<TypeDecl>(Type::tInt);
-		t->alias = "LinkId";
+		t->alias = "ax::NodeEditor::LinkId";
 		t->aotAlias = true;
 		return t;
 	}

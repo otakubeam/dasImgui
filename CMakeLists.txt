@@ -54,6 +54,8 @@ IF(NOT DAS_IMGUI_INCLUDED)
 
 	# libDasModuleImGui
 	SET(DAS_IMGUI_MODULE_SRC
+		${DAS_IMGUI_DIR}/src/aot_imgui.h
+		${DAS_IMGUI_DIR}/src/aot_imgui_node_editor.h
 		${DAS_IMGUI_DIR}/src/need_imgui.h
 		${DAS_IMGUI_DIR}/src/need_imnodes.h
 		${DAS_IMGUI_DIR}/src/need_imgui_node_editor.h
