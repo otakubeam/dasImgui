@@ -568,9 +568,7 @@ def EditorChildWindow()
                 Text(inst.name)
                 SameLine()
                 if Button("[X]##{inst.id}_E")
-                    post_event() <| @
-                        DeleteInstruction(inst)
-                        inst = null // so that lambda does not delete this pointer
+                    DeleteNode(get_unique_id(inst.id))
                 if inst.editing
                     inst->edit()
                 ImGuiEx_BeginColumn()
@@ -586,8 +584,7 @@ def EditorChildWindow()
                                 ClearSelection()
                             SameLine()
                             if Button("[X]##goto_{inp}_from_{inst.id}")
-                                inp.src = null
-                                inp.name = ""
+                                DeleteLink(inp_id)
                 ImGuiEx_NextColumn()
                 for outp in inst.outputs
                     let outp_id = get_output_unique_id(inst,outp.name)
@@ -648,7 +645,17 @@ def EditorChildWindow()
             var deletedLinkId : LinkId
             while QueryDeletedLink(safe_addr(deletedLinkId),null,null)
                 if AcceptDeletedItem()
-                    print("deleting link {deletedLinkId}\n")
+                    post_event <| @
+                        DeleteConnection(deletedLinkId)
+            var deletedNodeId : NodeId
+            while QueryDeletedNode(safe_addr(deletedNodeId))
+                if AcceptDeletedItem()
+                    post_event <| @
+                        let inst_id = id_2_guid[deletedNodeId]
+                        let inst = g_Project->find_instruction(inst_id)
+                        assert(inst!=null)
+                        DeleteInstruction(inst)
+
 
 
     if g_FirstFrame
@@ -673,6 +680,11 @@ def DeleteInstruction ( inst:Instruction? )
     g_Project->delete_instruction(inst)
     if g_PreviewInstruction==inst
         g_PreviewInstruction = null
+
+def DeleteConnection ( id:LinkId )
+    var inL = translate_input_output_id(id,"INPUT")
+    let inI = inL.inst->input_index(inL.pin)
+    inL.inst.inputs[inI].src = null
 
 def SideChildWindow()
     SetCurrentEditor(g_Context)
@@ -712,9 +724,7 @@ def SideChildWindow()
                 Text("id: `{inst.id}`")
                 SameLine()
                 if Button("[X]##{inst.id}_S")
-                    post_event() <| @
-                        DeleteInstruction(inst)
-                        inst = null // so that lambda does not delete this pointer
+                    DeleteNode(get_unique_id(inst.id))
                 HelpMarker("Delete")
                 Text("name: `{inst.name}`")      // todo: make editabe
                 for outp in inst.outputs
