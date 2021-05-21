@@ -11,6 +11,8 @@ require daslib/imgui_node_editor_boost
 require math
 require rtti
 
+let NAVIGATION_TIME = 0.5
+
 var window : GLFWwindow?
 
 def make_rgba_texture(width,height:int; data:void?)
@@ -32,7 +34,6 @@ def make_checkerboard
             cbt[y][x] = ((x^y)&1)!=0 ? 0xff404040 : 0xff808080
     return make_rgba_texture(16,16,gl_array_ptr(cbt))
 
-///////////
 // surfaces
 
 struct Surface
@@ -132,7 +133,6 @@ class Instruction_Blend : Instruction
         if src!=null && dst!=null
             var src_s <- gen_input(src)
             var dst_s <- gen_input(dst)
-            print("{src_s.size} {dst_s.size}\n")
             if src_s.size==size && dst_s.size==size
                 if op==BlendOp Add
                     for c,sC,dC in s.data,src_s.data,dst_s.data
@@ -151,6 +151,21 @@ class Instruction_Blend : Instruction
         unsafe
             Combo("Operation", op)
 
+// factory
+
+var g_instructionFactory : table < string; lambda<():Instruction?> >
+
+[unused_argument(it_type)]
+def make_instruction_factory ( it_name:string; it_type:auto(InstType) )
+    g_instructionFactory[it_name] <- @ <| () : Instruction?
+        return new InstType()
+
+[init]
+def init_instruction_factory
+    // todo: turn into annotation
+    make_instruction_factory("Solid color", type<Instruction_SolidColor>)
+    make_instruction_factory("Gradient", type<Instruction_Gradient>)
+    make_instruction_factory("Blend", type<Instruction_Blend>)
 
 // project
 
@@ -186,8 +201,20 @@ class Project
         // now, lets sort everything vertically
         for i,t in instructions, range(100500)
             i.at = int2(0, t*100)
+    def delete_instruction ( dinst:Instruction? )
+        var idx = -1
+        for i,index in instructions,range(100500)
+            if i == dinst
+                idx = index
+            for inp in i.inputs
+                if inp.src==dinst
+                    inp.src = null
+        assert(idx!=-1)
+        instructions |> erase(idx)
 
 var g_Project <- Project()
+
+// PREVIEW
 
 var g_PreviewTexture : uint
 
@@ -256,6 +283,8 @@ def DrawPreview ( display_w, display_h : int )
     glDisableClientState(GL_VERTEX_ARRAY)
     glDisable(GL_TEXTURE_2D)
 
+// APP
+
 def imgui_app ( title:string; blk : block )
     if glfwInit()==0
 		panic("can't init glfw")
@@ -292,6 +321,8 @@ def imgui_app ( title:string; blk : block )
     glfwDestroyWindow(window)
     glfwTerminate()
 
+// MAIN MENU
+
 def MainMenu()
     BeginMenuBar <|
         BeginMenu("File") <|
@@ -310,9 +341,10 @@ def MainMenu()
                 pass
 
 
-var g_Context : EditorContext?
+// GUID TO IMGUI ID
 
 var guid_2_id : table<string; int>
+var id_2_guid : table<int; string>
 var guid_2_id_next = 1000
 
 def get_unique_id ( guid:string ) : int
@@ -322,10 +354,25 @@ def get_unique_id ( guid:string ) : int
     if id == 0
         id = guid_2_id_next++
         guid_2_id[guid] = id
+        id_2_guid[id] = guid
     return id
 
 def get_input_unique_id ( inst:Instruction?; inp:Input ) : int
-    return get_unique_id("in_{inst.id}_{inp.name}")
+    return get_unique_id("{inst.id} {inp.name}")
+
+def translate_input_id ( id:int )
+    pass
+
+// COMMAND QUE
+
+var g_que : array<lambda<():void>>
+
+def post_event ( var evt : lambda<():void> )
+    g_que |> emplace(evt)
+
+// NODE EDITOR WINDOW
+
+var g_Context : EditorContext?
 
 def EditorChildWindow()
     SetCurrentEditor(g_Context)
@@ -333,10 +380,12 @@ def EditorChildWindow()
         var g_FirstFrame = true
 
     var style & = imgui_node_editor::GetStyle()
+    /*
     style.NodeRounding = 0f
     style.GroupRounding = 0f
     style.PinRounding = 0f
     style.NodePadding = float4(4)
+    */
     style.Colors[int(StyleColor StyleColor_Bg)].w = 0.
     style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
 
@@ -346,8 +395,15 @@ def EditorChildWindow()
             BeginNode(id) <|
                 if Button("[P]##{inst.id}_E")
                     GeneratePreview(inst)
+                HelpMarker("Preview")
                 SameLine()
                 Text(inst.name)
+                SameLine()
+                if Button("[X]##{inst.id}_E")
+                    post_event() <| @
+                        g_Project->delete_instruction(inst)
+                        inst = null // so that lambda does not delete this pointer
+                HelpMarker("Delete")
                 if TreeNode("embedded_{inst.id}","")
                     inst->edit()
                     TreePop()
@@ -356,12 +412,28 @@ def EditorChildWindow()
                     let inp_id = get_input_unique_id(inst,inp)
                     BeginPin(inp_id, PinKind Input) <|
                         Text("-> {inp.name}")
+                        if inp.src != null
+                            SameLine()
+                            if Button("[G]##goto_{inp}_from_{inst.id}")
+                                SelectNode(get_unique_id(inp.src.id), false)
+                                NavigateToSelection(false, NAVIGATION_TIME)
+                            HelpMarker("Navigate to source")
                 ImGuiEx_NextColumn()
                 BeginPin(id, PinKind Output) <|
                     Text("Out ->")
                 ImGuiEx_EndColumn()
+                /*
+            let nodePosition = GetNodePosition(id)
+            let screenPosition = CanvasToScreen(nodePosition)
+            let canvasPosition = ScreenToCanvas(nodePosition)
+            print("np={nodePosition} sp={screenPosition} cp={canvasPosition}\n")
+                */
+
             if inst.firstFrame
-                SetNodePosition(id, float2(inst.at))
+                if inst.at==int2(0)
+                    CenterNodeOnScreen(get_unique_id(inst.id))
+                else
+                    SetNodePosition(id, float2(inst.at))
                 inst.firstFrame = false
 
         for inst in g_Project.instructions
@@ -371,9 +443,15 @@ def EditorChildWindow()
                     let outp_id = get_unique_id(inp.src.id)
                     Link(inp_id, inp_id, outp_id)
 
+        BeginCreate(float4(1), 1.0f) <|
+            print("Begin create")
+            var inputPinId, outputPinId : PinId
+            if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
+                if inputPinId!=0 && outputPinId!=0 // both are valid, let's accept link
+                    if AcceptNewItem()
+                        print("Connecting {id_2_guid[inputPinId]} -> {id_2_guid[outputPinId]} \n")
+
         /*
-        for linkInfo in g_Links
-            Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId)
         BeginCreate(float4(1), 1.0f) <|
             var inputPinId, outputPinId : PinId
             if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
@@ -393,11 +471,14 @@ def EditorChildWindow()
 */
 
     if g_FirstFrame
-        NavigateToContent(0.0f)
+        NavigateToContent(0.)
     SetCurrentEditor(null)
     g_FirstFrame = false
 
-def HelpMarker(desc:string)
+def HelpMarker(desc:string; qsign:bool = false)
+    if qsign
+        SameLine()
+        TextDisabled("[?]")
     if IsItemHovered()
         BeginTooltip()
         PushTextWrapPos(GetFontSize() * 35.0f)
@@ -405,6 +486,7 @@ def HelpMarker(desc:string)
         PopTextWrapPos()
         EndTooltip()
 
+// SIDE WINDOW
 
 def SideChildWindow()
     SetCurrentEditor(g_Context)
@@ -414,7 +496,7 @@ def SideChildWindow()
     BeginChild("Project", float2(600., -FLT_MIN), true)
 
     if Button("[*]")
-        NavigateToContent(0.5)
+        NavigateToContent(NAVIGATION_TIME)
     SameLine()
     HelpMarker("Navigate to content")
     SameLine()
@@ -422,7 +504,13 @@ def SideChildWindow()
         NavigateToSelection(false, 0.5)
     HelpMarker("Navigate to selection")
 
-    if CollapsingHeader("Instructions")
+    if CollapsingHeader("New instruction")
+        for ai in keys(g_instructionFactory)
+            if Button("{ai}##make_S")
+                post_event() <| @
+                    var inst = invoke(g_instructionFactory[ai])
+                    g_Project->add_new_insturction(inst)
+    if CollapsingHeader("Project")
         for inst,idx in g_Project.instructions,range(100500)
             if TreeNode("side_{inst.id}","{inst.name}")
                 if Button("[P]##{inst.id}_S")
@@ -434,16 +522,22 @@ def SideChildWindow()
                 HelpMarker("Center")
                 SameLine()
                 Text("id: `{inst.id}`")
+                SameLine()
+                if Button("[X]##{inst.id}_S")
+                    post_event() <| @
+                        g_Project->delete_instruction(inst)
+                        inst = null // so that lambda does not delete this pointer
+                HelpMarker("Delete")
                 Text("name: `{inst.name}`")      // todo: make editabe
                 inst->edit()
                 TreePop()
-
-
 
     EndChild()
     imgui::PopStyleColor()
 
     SetCurrentEditor(null)
+
+// MAIN WINDOW
 
 def MainEditorScreen()
     if g_Context == null
@@ -457,13 +551,11 @@ def MainEditorScreen()
         SetWindowPos(float2(0.,0.), ImGuiCond Once)
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         MainMenu()
-        SideChildWindow()
-        SameLine()
+        //SideChildWindow()
+        //SameLine()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         EditorChildWindow()
         EndChild()
-
-
 
 [export]
 def main
@@ -474,5 +566,8 @@ def main
         NewFrame()
         MainEditorScreen()
         Render()
+        for ev in g_que
+            invoke(ev)
+        delete g_que
     DestroyEditor(g_Context)
 
