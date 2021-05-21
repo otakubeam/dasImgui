@@ -470,25 +470,11 @@ def MainMenu()
     BeginMenuBar <|
         BeginMenu("File") <|
             pass
-        BeginMenu("Edit") <|
-            MenuItem("Undo", "CTRL+Z") <|
-                pass
-            MenuItem("Redo", "CTRL+Y", false, false) <|
-                pass
-            Separator()
-            MenuItem("Cut", "CTRL+X") <|
-                pass
-            MenuItem("Copy", "CTRL+C") <|
-                pass
-            MenuItem("Paste", "CTRL+V") <|
-                pass
         var previewName = ""
         if g_PreviewInstruction != null
             previewName = " {g_PreviewInstruction.name}:{g_PreviewInstruction.id}"
         BeginMenu("Preview{previewName}") <|
             if Checkbox("Live preview",safe_addr(g_LivePreview))
-                UpdatePreview()
-            if MenuItem("Update", "")
                 UpdatePreview()
 
 // GUID TO IMGUI ID
@@ -681,6 +667,39 @@ def DeleteConnection ( id:LinkId )
     let inI = inL.inst->input_index(inL.pin)
     inL.inst.inputs[inI].src = null
 
+def SideEditInstance( var inst:Instruction? )
+    if TreeNode("side_{inst.id}","{inst.name}:{inst.id}")
+        if Button("[G]##goto_{inst.id}")
+            SelectNode(get_unique_id(inst.id), false)
+            NavigateToSelection(false, NAVIGATION_TIME)
+            ClearSelection()
+        HelpMarker("Center")
+        SameLine()
+        if Button("<C>##{inst.id}_S")
+            CenterNodeOnScreen(get_unique_id(inst.id))
+        HelpMarker("Center")
+        SameLine()
+        Text("id: `{inst.id}`")
+        SameLine()
+        if Button("[X]##{inst.id}_S")
+            DeleteNode(get_unique_id(inst.id))
+        HelpMarker("Delete")
+        Text("name: `{inst.name}`")      // todo: make editabe
+        for outp in inst.outputs
+            Text("-> {outp.name}:{outp._type}")
+            SameLine()
+            if outp._type==TYPE_SURFACE
+                if Button("[P]##{inst.id}_S")
+                    GeneratePreview(inst,outp.name)
+                HelpMarker("Preview")
+            else
+                if Button("[E]##{inst.id}_S")
+                    var surf <- inst->generate()
+                    delete surf
+                HelpMarker("Eval")
+        inst->edit()
+        TreePop()
+
 def SideChildWindow()
     SetCurrentEditor(g_Context)
 
@@ -692,10 +711,6 @@ def SideChildWindow()
         NavigateToContent(NAVIGATION_TIME)
     SameLine()
     HelpMarker("Navigate to content")
-    SameLine()
-    if Button("[.]")
-        NavigateToSelection(false, 0.5)
-    HelpMarker("Navigate to selection")
 
     if CollapsingHeader("New instruction")
         var prevCategory = ""
@@ -714,38 +729,33 @@ def SideChildWindow()
         if !collapsed
             TreePop()
     if CollapsingHeader("Project")
-        for inst,idx in g_Project.instructions,range(100500)
-            if TreeNode("side_{inst.id}","{inst.name}:{inst.id}")
-                if Button("[G]##goto_{inst.id}")
-                    SelectNode(get_unique_id(inst.id), false)
-                    NavigateToSelection(false, NAVIGATION_TIME)
-                    ClearSelection()
-                HelpMarker("Center")
-                SameLine()
-                if Button("<C>##{inst.id}_S")
-                    CenterNodeOnScreen(get_unique_id(inst.id))
-                HelpMarker("Center")
-                SameLine()
-                Text("id: `{inst.id}`")
-                SameLine()
-                if Button("[X]##{inst.id}_S")
-                    DeleteNode(get_unique_id(inst.id))
-                HelpMarker("Delete")
-                Text("name: `{inst.name}`")      // todo: make editabe
-                for outp in inst.outputs
-                    Text("-> {outp.name}:{outp._type}")
-                    SameLine()
-                    if outp._type==TYPE_SURFACE
-                        if Button("[P]##{inst.id}_S")
-                            GeneratePreview(inst,outp.name)
-                        HelpMarker("Preview")
-                    else
-                        if Button("[E]##{inst.id}_S")
-                            var surf <- inst->generate()
-                            delete surf
-                        HelpMarker("Eval")
-                inst->edit()
-                TreePop()
+        for inst in g_Project.instructions
+            SideEditInstance(inst)
+
+    var snc = GetSelectedObjectCount()
+    if snc != 0
+        if CollapsingHeader("Selection")
+            var sna : array<NodeId>
+            sna |> resize(snc)
+            unsafe
+                snc = GetSelectedNodes(addr(sna[0]),snc)
+            if Button("[X]##delete selection")
+                for ng in sna
+                    if ng != 0
+                        DeleteNode(ng)
+            HelpMarker("Delete selection")
+            SameLine()
+            if Button("[.]##navigate to selection")
+                NavigateToSelection(false, 0.5)
+            HelpMarker("Navigate to selection")
+            for ng in sna
+                if ng != 0
+                    let nid = id_2_guid[ng]
+                    var inst = g_Project->find_instruction(nid)
+                    if inst==null
+                        print("Not found {ng} -> '{nid}'\n")
+                    assert(inst!=null)
+                    SideEditInstance(inst)
 
     EndChild()
     imgui::PopStyleColor()
