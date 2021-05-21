@@ -667,8 +667,8 @@ def DeleteConnection ( id:LinkId )
     let inI = inL.inst->input_index(inL.pin)
     inL.inst.inputs[inI].src = null
 
-def SideEditInstance( var inst:Instruction? )
-    if TreeNode("side_{inst.id}","{inst.name}:{inst.id}")
+def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
+    if TreeNodeEx("side_{inst.id}{flags}",flags,"{inst.name}:{inst.id}")
         if Button("[G]##goto_{inst.id}")
             SelectNode(get_unique_id(inst.id), false)
             NavigateToSelection(false, NAVIGATION_TIME)
@@ -734,7 +734,7 @@ def SideChildWindow()
 
     var snc = GetSelectedObjectCount()
     if snc != 0
-        if CollapsingHeader("Selection")
+        if CollapsingHeader("Selection", ImGuiTreeNodeFlags DefaultOpen)
             var sna : array<NodeId>
             sna |> resize(snc)
             unsafe
@@ -755,7 +755,7 @@ def SideChildWindow()
                     if inst==null
                         print("Not found {ng} -> '{nid}'\n")
                     assert(inst!=null)
-                    SideEditInstance(inst)
+                    SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
 
     EndChild()
     imgui::PopStyleColor()
