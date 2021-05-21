@@ -10,6 +10,8 @@ require daslib/safe_addr
 require daslib/imgui_node_editor_boost
 require math
 require rtti
+require strings
+require daslib/strings_boost
 
 let NAVIGATION_TIME = 0.5
 
@@ -78,6 +80,9 @@ class Instruction
         inputs |> push([[Input name=iname]])
     def add_output ( iname : string )
         outputs |> push([[Output name=iname]])
+    def input_index ( iname:string ) : int
+        return inputs |> find_index_if <| $ ( val )
+            return val.name==iname
 
 // todo: cache
 def gen_input ( var from:Instruction? ): array<Surface>
@@ -222,6 +227,10 @@ class Project
         delete instructions
     def findalize
         self->clear()
+    def find_instruction ( id:string ) : Instruction?
+        let index = instructions |> find_index_if <| $ ( val )
+            return val.id==id
+        return index==-1 ? null : instructions[index]
     def add_new_insturction ( var i : Instruction? )
         i.id = generate_new_id()
         instructions |> push(i)
@@ -401,14 +410,20 @@ def get_unique_id ( guid:string ) : int
     return id
 
 def get_input_unique_id ( inst:Instruction?; inp:string ) : int
-    return get_unique_id("{inst.id} {inp}")
+    return get_unique_id("INPUT {inst.id} {inp}")
 
 def get_output_unique_id ( inst:Instruction?; outp:string ) : int
-    return get_unique_id("{inst.id} {outp}")
+    return get_unique_id("OUTPUT {inst.id} {outp}")
 
-
-def translate_input_id ( id:int )
-    pass
+def translate_input_output_id ( id:int; typ:string ) : tuple<inst:Instruction?; pin:string> const
+    assert(id_2_guid |> key_exists(id))
+    var note <- split(id_2_guid[id]," ")
+    assert(note[0]==typ)
+    let instr = g_Project->find_instruction(note[1])
+    assert(instr!=null)
+    let val = [[auto instr, note[2]]]
+    delete note
+    return val
 
 // COMMAND QUE
 
@@ -420,6 +435,12 @@ def post_event ( var evt : lambda<():void> )
 // NODE EDITOR WINDOW
 
 var g_Context : EditorContext?
+
+// TODO: move to builtin
+def swap ( var a,b:auto(TT)& )
+    var t : TT - & <- a
+    a <- b
+    b <- t
 
 def EditorChildWindow()
     SetCurrentEditor(g_Context)
@@ -459,6 +480,7 @@ def EditorChildWindow()
                             if Button("[G]##goto_{inp}_from_{inst.id}")
                                 SelectNode(get_unique_id(inp.src.id), false)
                                 NavigateToSelection(false, NAVIGATION_TIME)
+                                ClearSelection()
                 ImGuiEx_NextColumn()
                 for outp in inst.outputs
                     let outp_id = get_output_unique_id(inst,outp.name)
@@ -488,8 +510,14 @@ def EditorChildWindow()
             if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
                 if inputPinId!=0 && outputPinId!=0 // both are valid, let's accept link
                     if AcceptNewItem()
-                        pass
-                        // print("Connecting {id_2_guid[inputPinId]} -> {id_2_guid[outputPinId]} \n")
+                        if id_2_guid[inputPinId] |> starts_with("OUTPUT")
+                            swap(inputPinId,outputPinId)
+                        var inL = translate_input_output_id(inputPinId,"INPUT")
+                        var outL = translate_input_output_id(outputPinId,"OUTPUT")
+                        let inI = inL.inst->input_index(inL.pin)
+                        assert(inI!=-1)
+                        inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
+
 
         BeginDelete() <|
             var deletedLinkId : LinkId
@@ -541,12 +569,12 @@ def SideChildWindow()
     if CollapsingHeader("Project")
         for inst,idx in g_Project.instructions,range(100500)
             if TreeNode("side_{inst.id}","{inst.name}")
-                /*
-                if Button("[P]##{inst.id}_S")
-                    GeneratePreview(inst)
-                HelpMarker("Preview")
+                if Button("[G]##goto_{inst.id}")
+                    SelectNode(get_unique_id(inst.id), false)
+                    NavigateToSelection(false, NAVIGATION_TIME)
+                    ClearSelection()
+                HelpMarker("Center")
                 SameLine()
-                */
                 if Button("<C>##{inst.id}_S")
                     CenterNodeOnScreen(get_unique_id(inst.id))
                 HelpMarker("Center")
@@ -559,6 +587,12 @@ def SideChildWindow()
                         inst = null // so that lambda does not delete this pointer
                 HelpMarker("Delete")
                 Text("name: `{inst.name}`")      // todo: make editabe
+                for outp in inst.outputs
+                    Text("-> {outp.name}")
+                    SameLine()
+                    if Button("[P]##{inst.id}_S")
+                        GeneratePreview(inst,outp.name)
+                    HelpMarker("Preview")
                 inst->edit()
                 TreePop()
 
