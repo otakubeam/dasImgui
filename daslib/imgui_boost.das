@@ -262,3 +262,24 @@ def MenuItem ( lab,shortcut:string; selected:bool?; blk:block )
 def MenuItem ( lab,shortcut:string; selected:bool?; enabled:bool; blk:block )
     if MenuItem(lab,shortcut,selected,enabled)
         invoke(blk)
+
+def ImGuiEx_BeginColumn()
+    BeginGroup()
+
+def ImGuiEx_NextColumn()
+    EndGroup()
+    SameLine()
+    BeginGroup()
+
+def ImGuiEx_EndColumn()
+    EndGroup()
+
+def Combo ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
+    concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
+    if typeinfo(is_enum type<EnumT>)
+        var ti = typeinfo(rtti_typeinfo type<EnumT>)
+        var names : array<string>
+        for ef in *ti.enumType
+            names |> push(ef.name)
+        unsafe
+            Combo(name, reinterpret<int?> addr(ent), names, max_height_in_items)
