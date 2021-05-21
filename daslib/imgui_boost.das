@@ -283,3 +283,13 @@ def Combo ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
             names |> push(ef.name)
         unsafe
             Combo(name, reinterpret<int?> addr(ent), names, max_height_in_items)
+
+def ListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
+    concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
+    if typeinfo(is_enum type<EnumT>)
+        var ti = typeinfo(rtti_typeinfo type<EnumT>)
+        var names : array<string>
+        for ef in *ti.enumType
+            names |> push(ef.name)
+        unsafe
+            ListBox(name, reinterpret<int?> addr(ent), names, max_height_in_items)

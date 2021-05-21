@@ -54,39 +54,55 @@ def make_prewview_rgba_texture ( var s : Surface )
 struct Input
     name : string
     [[do_not_delete]] src  : Instruction?
+    output : string
+
+def connect ( var inp:Input; src:Instruction?; outp:string )
+    inp.src = src
+    inp.output = outp
+
+struct Output
+    name : string
 
 class Instruction
     id : string                         // unique ID of instruction (expecting GUID)
     name : string                       // user readable name. can be duplicate
     at : int2                           // position in the node editor
     firstFrame : bool = true
+    editing : bool = false
     size : int2 = int2(256,256)         // dimensions of the generated surface. never 0 or invalid
     inputs : array<Input>
-    def abstract generate : Surface
+    outputs : array<Output>
+    def abstract generate : array<Surface>
     def abstract edit : void
     def add_input ( iname : string )
         inputs |> push([[Input name=iname]])
-    def add_inputs ( inames : array<string> )
-        for iname in inames
-            inputs |> push([[Input name=iname]])
+    def add_output ( iname : string )
+        outputs |> push([[Output name=iname]])
 
 // todo: cache
-def gen_input ( var from:Instruction? ): Surface
+def gen_input ( var from:Instruction? ): array<Surface>
     return <- from->generate()
+
+def SafeColorEditor4(name:string;data:float?#)
+    SetNextItemWidth(300.)
+    ColorPicker4(name,data,ImGuiColorEditFlags NoTooltip)
 
 class Instruction_SolidColor : Instruction
     color : float4 = float4(.5,.5,.5,1.)
     def Instruction_SolidColor
         name = "Solid color"
-    def override generate : Surface
+        self->add_output("Out")
+    def override generate : array<Surface>
         var s : Surface
         s.size = size
         s.data |> resize(size.x*size.y)
         for c in s.data
             c = color
-        return <- s
+        var result : array<Surface>
+        result |> emplace(s)
+        return <- result
     def override edit : void
-        ColorEdit4("color",safe_addr(color.x))
+        SafeColorEditor4("color",safe_addr(color.x))
 
 class Instruction_Gradient : Instruction
     top_left : float4 = float4(1.,0.,0.,1.)
@@ -95,7 +111,8 @@ class Instruction_Gradient : Instruction
     bottom_right : float4 = float4(0.5,0.5,0.5,1.)
     def Instruction_Gradient
         name = "Gradient"
-    def override generate : Surface
+        self->add_output("Out")
+    def override generate : array<Surface>
         var s : Surface
         s.size = size
         s.data |> resize(size.x*size.y)
@@ -107,23 +124,41 @@ class Instruction_Gradient : Instruction
             for x in range(0,size.x)
                 let kx = float(x)/float(size.x-1)       // todo: optimize k calc; kx += dkx
                 s.data[index++] = lerp(left,right,float4(kx))
-        return <- s
+        var result : array<Surface>
+        result |> emplace(s)
+        return <- result
     def override edit : void
-        ColorEdit4("top-left",     safe_addr(top_left.x))
-        ColorEdit4("top-right",    safe_addr(top_right.x))
-        ColorEdit4("bottom-left",  safe_addr(bottom_left.x))
-        ColorEdit4("bottom-right", safe_addr(bottom_right.x))
+        SafeColorEditor4("top-left",     safe_addr(top_left.x))
+        SafeColorEditor4("top-right",    safe_addr(top_right.x))
+        SafeColorEditor4("bottom-left",  safe_addr(bottom_left.x))
+        SafeColorEditor4("bottom-right", safe_addr(bottom_right.x))
 
 enum BlendOp
     Add
     Multiply
 
+def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
+    concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
+    if typeinfo(is_enum type<EnumT>)
+        Text(name)
+        var ti = typeinfo(rtti_typeinfo type<EnumT>)
+        var max_tw = 0.
+        for ef in *ti.enumType
+            max_tw = max(max_tw, CalcTextSize(ef.name).x)
+        for ef in *ti.enumType
+            let isSelected = ef.value == int64(int(ent))
+            if Selectable(ef.name, isSelected, ImGuiSelectableFlags None, float2(max_tw,0.))
+                unsafe
+                    ent = reinterpret<EnumT> (ef.value)
+
 class Instruction_Blend : Instruction
     op  : BlendOp
     def Instruction_Blend
         name = "Blend"
-        self->add_inputs([{auto "Src"; "Dst"}])
-    def override generate : Surface
+        self->add_input("Src")
+        self->add_input("Dst")
+        self->add_output("Out")
+    def override generate : array<Surface>
         var src = inputs[0].src
         var dst = inputs[1].src
         var s : Surface
@@ -131,8 +166,10 @@ class Instruction_Blend : Instruction
         s.data |> resize(size.x*size.y)
         var error = true
         if src!=null && dst!=null
-            var src_s <- gen_input(src)
-            var dst_s <- gen_input(dst)
+            var src_r <- gen_input(src)
+            var dst_r <- gen_input(dst)
+            var src_s & = src_r[0]
+            var dst_s & = dst_r[0]
             if src_s.size==size && dst_s.size==size
                 if op==BlendOp Add
                     for c,sC,dC in s.data,src_s.data,dst_s.data
@@ -141,15 +178,16 @@ class Instruction_Blend : Instruction
                     for c,sC,dC in s.data,src_s.data,dst_s.data
                         c = sC * dC
                 error = false
-            delete src_s
-            delete dst_s
+            delete src_r
+            delete dst_r
         if error
             for c in s.data
                 c = float4(1,0,0,1)
-        return <- s
+        var result : array<Surface>
+        result |> emplace(s)
+        return <- result
     def override edit : void
-        unsafe
-            Combo("Operation", op)
+        EmbeddedListBox("Operation", op)
 
 // factory
 
@@ -193,8 +231,8 @@ class Project
         var src_node = new Instruction_SolidColor()
         var dst_node = new Instruction_Gradient()
         var blend_node = new Instruction_Blend()
-        blend_node.inputs[0].src = src_node
-        blend_node.inputs[1].src = dst_node
+        blend_node.inputs[0] |> connect(src_node,"Out")
+        blend_node.inputs[1] |> connect(dst_node,"Out")
         self->add_new_insturction(src_node)
         self->add_new_insturction(dst_node)
         self->add_new_insturction(blend_node)
@@ -218,9 +256,14 @@ var g_Project <- Project()
 
 var g_PreviewTexture : uint
 
-def GeneratePreview(var inst:Instruction?)
+def GeneratePreview(var inst:Instruction?; outp:string)
     var surf <- inst->generate()
-    var tex = make_prewview_rgba_texture(surf)
+    var tex = 0u
+    for op,opi in inst.outputs,range(100500)
+        if op.name==outp
+            tex = make_prewview_rgba_texture(surf[opi])
+            break
+    assert(tex!=0u,"could not generate preview")
     delete surf
     if g_PreviewTexture != 0u
         glDeleteTextures(1, safe_addr(g_PreviewTexture))
@@ -357,8 +400,12 @@ def get_unique_id ( guid:string ) : int
         id_2_guid[id] = guid
     return id
 
-def get_input_unique_id ( inst:Instruction?; inp:Input ) : int
-    return get_unique_id("{inst.id} {inp.name}")
+def get_input_unique_id ( inst:Instruction?; inp:string ) : int
+    return get_unique_id("{inst.id} {inp}")
+
+def get_output_unique_id ( inst:Instruction?; outp:string ) : int
+    return get_unique_id("{inst.id} {outp}")
+
 
 def translate_input_id ( id:int )
     pass
@@ -380,12 +427,10 @@ def EditorChildWindow()
         var g_FirstFrame = true
 
     var style & = imgui_node_editor::GetStyle()
-    /*
     style.NodeRounding = 0f
     style.GroupRounding = 0f
     style.PinRounding = 0f
     style.NodePadding = float4(4)
-    */
     style.Colors[int(StyleColor StyleColor_Bg)].w = 0.
     style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
 
@@ -393,9 +438,8 @@ def EditorChildWindow()
         for inst in g_Project.instructions
             let id = get_unique_id(inst.id)
             BeginNode(id) <|
-                if Button("[P]##{inst.id}_E")
-                    GeneratePreview(inst)
-                HelpMarker("Preview")
+                unsafe
+                    Checkbox("##embedded_{inst.id}",addr(inst.editing))
                 SameLine()
                 Text(inst.name)
                 SameLine()
@@ -403,13 +447,11 @@ def EditorChildWindow()
                     post_event() <| @
                         g_Project->delete_instruction(inst)
                         inst = null // so that lambda does not delete this pointer
-                HelpMarker("Delete")
-                if TreeNode("embedded_{inst.id}","")
+                if inst.editing
                     inst->edit()
-                    TreePop()
                 ImGuiEx_BeginColumn()
                 for inp in inst.inputs
-                    let inp_id = get_input_unique_id(inst,inp)
+                    let inp_id = get_input_unique_id(inst,inp.name)
                     BeginPin(inp_id, PinKind Input) <|
                         Text("-> {inp.name}")
                         if inp.src != null
@@ -417,17 +459,15 @@ def EditorChildWindow()
                             if Button("[G]##goto_{inp}_from_{inst.id}")
                                 SelectNode(get_unique_id(inp.src.id), false)
                                 NavigateToSelection(false, NAVIGATION_TIME)
-                            HelpMarker("Navigate to source")
                 ImGuiEx_NextColumn()
-                BeginPin(id, PinKind Output) <|
-                    Text("Out ->")
+                for outp in inst.outputs
+                    let outp_id = get_output_unique_id(inst,outp.name)
+                    BeginPin(outp_id, PinKind Output) <|
+                        Text("{outp.name} ->")
+                        SameLine()
+                        if Button("[P]##{inst.id}_E")
+                            GeneratePreview(inst,outp.name)
                 ImGuiEx_EndColumn()
-                /*
-            let nodePosition = GetNodePosition(id)
-            let screenPosition = CanvasToScreen(nodePosition)
-            let canvasPosition = ScreenToCanvas(nodePosition)
-            print("np={nodePosition} sp={screenPosition} cp={canvasPosition}\n")
-                */
 
             if inst.firstFrame
                 if inst.at==int2(0)
@@ -439,36 +479,24 @@ def EditorChildWindow()
         for inst in g_Project.instructions
             for inp in inst.inputs
                 if inp.src != null
-                    let inp_id = get_input_unique_id(inst,inp)
-                    let outp_id = get_unique_id(inp.src.id)
+                    let inp_id = get_input_unique_id(inst,inp.name)
+                    let outp_id = get_output_unique_id(inp.src,inp.output)
                     Link(inp_id, inp_id, outp_id)
 
         BeginCreate(float4(1), 1.0f) <|
-            print("Begin create")
             var inputPinId, outputPinId : PinId
             if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
                 if inputPinId!=0 && outputPinId!=0 // both are valid, let's accept link
                     if AcceptNewItem()
-                        print("Connecting {id_2_guid[inputPinId]} -> {id_2_guid[outputPinId]} \n")
+                        pass
+                        // print("Connecting {id_2_guid[inputPinId]} -> {id_2_guid[outputPinId]} \n")
 
-        /*
-        BeginCreate(float4(1), 1.0f) <|
-            var inputPinId, outputPinId : PinId
-            if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
-                if inputPinId!=0 && outputPinId!=0 // both are valid, let's accept link
-                    if AcceptNewItem()
-                        let newLinkId = g_NextLinkId++
-                        g_Links |> push([[LinkInfo Id=newLinkId, InputId=inputPinId, OutputId=outputPinId]])
-                        Link(newLinkId, inputPinId, outputPinId)
         BeginDelete() <|
             var deletedLinkId : LinkId
             while QueryDeletedLink(safe_addr(deletedLinkId),null,null)
                 if AcceptDeletedItem()
-                    let index = find_index_if(g_Links) <| $ ( lnk )
-                        return lnk.Id == deletedLinkId
-                    if index != -1
-                        g_Links |> erase(index)
-*/
+                    print("deleting link {deletedLinkId}\n")
+
 
     if g_FirstFrame
         NavigateToContent(0.)
@@ -513,10 +541,12 @@ def SideChildWindow()
     if CollapsingHeader("Project")
         for inst,idx in g_Project.instructions,range(100500)
             if TreeNode("side_{inst.id}","{inst.name}")
+                /*
                 if Button("[P]##{inst.id}_S")
                     GeneratePreview(inst)
                 HelpMarker("Preview")
                 SameLine()
+                */
                 if Button("<C>##{inst.id}_S")
                     CenterNodeOnScreen(get_unique_id(inst.id))
                 HelpMarker("Center")
@@ -551,8 +581,8 @@ def MainEditorScreen()
         SetWindowPos(float2(0.,0.), ImGuiCond Once)
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         MainMenu()
-        //SideChildWindow()
-        //SameLine()
+        SideChildWindow()
+        SameLine()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         EditorChildWindow()
         EndChild()
