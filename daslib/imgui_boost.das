@@ -295,3 +295,19 @@ def ListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
         unsafe
             return ListBox(name, reinterpret<int?> addr(ent), names, max_height_in_items)
     return false
+
+def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
+    concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
+    if typeinfo(is_enum type<EnumT>)
+        Text(name)
+        var ti = typeinfo(rtti_typeinfo type<EnumT>)
+        var max_tw = 0.
+        for ef in *ti.enumType
+            max_tw = max(max_tw, CalcTextSize(ef.name).x)
+        for ef in *ti.enumType
+            let isSelected = ef.value == int64(int(ent))
+            if Selectable(ef.name, isSelected, ImGuiSelectableFlags None, float2(max_tw,0.))
+                unsafe
+                    ent = reinterpret<EnumT> (ef.value)
+                return true
+    return false

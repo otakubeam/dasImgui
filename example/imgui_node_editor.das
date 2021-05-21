@@ -70,6 +70,9 @@ struct Output : Connection {}
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
 
+let CATEGORY_SCALAR_OPERATIONS = "Scalar operations"
+let CATEGORY_SURFACE_OPERATIONS = "Surface operations"
+
 variant Value
     surface : Surface
     scalar  : float
@@ -207,22 +210,6 @@ enum BlendOp
     Multiply
     Crossfade
 
-def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
-    concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
-    if typeinfo(is_enum type<EnumT>)
-        Text(name)
-        var ti = typeinfo(rtti_typeinfo type<EnumT>)
-        var max_tw = 0.
-        for ef in *ti.enumType
-            max_tw = max(max_tw, CalcTextSize(ef.name).x)
-        for ef in *ti.enumType
-            let isSelected = ef.value == int64(int(ent))
-            if Selectable(ef.name, isSelected, ImGuiSelectableFlags None, float2(max_tw,0.))
-                unsafe
-                    ent = reinterpret<EnumT> (ef.value)
-                return true
-    return false
-
 class Instruction_Blend : Instruction
     op  : BlendOp = BlendOp Add
     def Instruction_Blend
@@ -280,21 +267,29 @@ class Instruction_Blend : Instruction
 
 var g_instructionFactory : table < string; lambda<():Instruction?> >
 
+var g_instructionsByCategory : array < tuple<name:string;category:string> >
+
 [unused_argument(it_type)]
-def make_instruction_factory ( it_name:string; it_type:auto(InstType) )
+def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType) )
     g_instructionFactory[it_name] <- @ <| () : Instruction?
         return new InstType()
+    g_instructionsByCategory |> push([[auto it_name,it_category]])
 
 [init]
-def init_instruction_factory
-    // todo: turn into annotation
-// scalar
-    make_instruction_factory("Scalar", type<Instruction_Scalar>)
-    make_instruction_factory("Add scalar", type<Instruction_AddScalar>)
+def init_instruction_factory           // todo: turn into annotation
+ // scalar
+    make_instruction_factory("Scalar", CATEGORY_SCALAR_OPERATIONS, type<Instruction_Scalar>)
+    make_instruction_factory("Add scalar", CATEGORY_SCALAR_OPERATIONS, type<Instruction_AddScalar>)
 // surface
-    make_instruction_factory("Solid color", type<Instruction_SolidColor>)
-    make_instruction_factory("Gradient", type<Instruction_Gradient>)
-    make_instruction_factory("Blend", type<Instruction_Blend>)
+    make_instruction_factory("Solid color", CATEGORY_SURFACE_OPERATIONS, type<Instruction_SolidColor>)
+    make_instruction_factory("Gradient", CATEGORY_SURFACE_OPERATIONS, type<Instruction_Gradient>)
+    make_instruction_factory("Blend", CATEGORY_SURFACE_OPERATIONS, type<Instruction_Blend>)
+// and prepare for production
+    g_instructionsByCategory |> sort <| $(a,b)
+        if a.category != b.category
+            return a.category < b.category
+        else
+            return a.name < b.name
 
 // project
 
@@ -703,11 +698,21 @@ def SideChildWindow()
     HelpMarker("Navigate to selection")
 
     if CollapsingHeader("New instruction")
-        for ai in keys(g_instructionFactory)
-            if Button("{ai}##make_S")
-                post_event() <| @
-                    var inst = invoke(g_instructionFactory[ai])
-                    g_Project->add_new_insturction(inst)
+        var prevCategory = ""
+        var collapsed = true
+        for ai in g_instructionsByCategory
+            if prevCategory != ai.category
+                if !collapsed
+                    TreePop()
+                prevCategory = ai.category
+                collapsed = !TreeNode(ai.category)
+            if !collapsed
+                if Button("{ai.name}##make_S")
+                    post_event() <| @
+                        var inst = invoke(g_instructionFactory[ai.name])
+                        g_Project->add_new_insturction(inst)
+        if !collapsed
+            TreePop()
     if CollapsingHeader("Project")
         for inst,idx in g_Project.instructions,range(100500)
             if TreeNode("side_{inst.id}","{inst.name}:{inst.id}")
