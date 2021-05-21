@@ -53,8 +53,11 @@ def make_prewview_rgba_texture ( var s : Surface )
 
 // instructions
 
-struct Input
+struct Connection
     name : string
+    _type : string
+
+struct Input : Connection
     [[do_not_delete]] src  : Instruction?
     output : string
 
@@ -62,8 +65,14 @@ def connect ( var inp:Input; src:Instruction?; outp:string )
     inp.src = src
     inp.output = outp
 
-struct Output
-    name : string
+struct Output : Connection {}
+
+let TYPE_SURFACE = "surface"
+let TYPE_SCALAR = "scalar"
+
+variant Value
+    surface : Surface
+    scalar  : float
 
 class Instruction
     id : string                         // unique ID of instruction (expecting GUID)
@@ -74,40 +83,91 @@ class Instruction
     size : int2 = int2(256,256)         // dimensions of the generated surface. never 0 or invalid
     inputs : array<Input>
     outputs : array<Output>
-    def abstract generate : array<Surface>
+    def abstract generate : array<Value>
     def abstract edit : void
-    def add_input ( iname : string )
-        inputs |> push([[Input name=iname]])
-    def add_output ( iname : string )
-        outputs |> push([[Output name=iname]])
+    def add_input ( iname, itype : string )
+        inputs |> push([[Input name=iname,_type=itype]])
+    def add_output ( iname, itype : string )
+        outputs |> push([[Output name=iname,_type=itype]])
     def input_index ( iname:string ) : int
         return inputs |> find_index_if <| $ ( val )
             return val.name==iname
+    def output_index ( iname:string ) : int
+        return outputs |> find_index_if <| $ ( val )
+            return val.name==iname
 
 // todo: cache
-def gen_input ( var from:Instruction? ): array<Surface>
+def gen_input ( var from:Instruction? ): array<Value>
     return <- from->generate()
 
 def SafeColorEditor4(name:string;data:float?#)
     SetNextItemWidth(300.)
-    ColorPicker4(name,data,ImGuiColorEditFlags NoTooltip)
+    if ColorPicker4(name,data,ImGuiColorEditFlags NoTooltip)
+        UpdatePreview()
+        return true
+    else
+        return false
+
+class Instruction_Scalar : Instruction
+    value : float = 1.
+    def Instruction_Scalar
+        name = "Scalar"
+        self->add_output("Out",TYPE_SCALAR)
+    def override generate : array<Value>
+        var result : array<Value>
+        result |> emplace([[Value scalar=value]])
+        return <- result
+    def override edit : void
+        SetNextItemWidth(300.)
+        if DragFloat("value##{id}", safe_addr(value), 0.005f)
+            UpdatePreview()
+
+class Instruction_AddScalar : Instruction
+    log : bool = false
+    def Instruction_AddScalar
+        name = "Add Scalar"
+        self->add_input("In-1",TYPE_SCALAR)
+        self->add_input("In-2",TYPE_SCALAR)
+        self->add_output("Out",TYPE_SCALAR)
+    def override generate : array<Value>
+        var v1, v2 : float
+        if inputs[0].src != null
+            var outs <- gen_input(inputs[0].src)
+            assert(length(outs)==1)
+            assert(outs[0] is scalar)
+            v1 = outs[0] as scalar
+        if inputs[1].src != null
+            var outs <- gen_input(inputs[1].src)
+            assert(length(outs)==1)
+            assert(outs[0] is scalar)
+            v2 = outs[0] as scalar
+        let value = v1 + v2
+        if log
+            print("{name}:{id} value = {value}\n")
+        var result : array<Value>
+        result |> emplace([[Value scalar=value]])
+        return <- result
+    def override edit : void
+        Checkbox("log##{id}",safe_addr(log))
+
 
 class Instruction_SolidColor : Instruction
     color : float4 = float4(.5,.5,.5,1.)
     def Instruction_SolidColor
         name = "Solid color"
-        self->add_output("Out")
-    def override generate : array<Surface>
+        self->add_output("Out",TYPE_SURFACE)
+    def override generate : array<Value>
         var s : Surface
         s.size = size
         s.data |> resize(size.x*size.y)
         for c in s.data
             c = color
-        var result : array<Surface>
-        result |> emplace(s)
+        var result : array<Value>
+        result |> emplace([[Value surface<-s]])
         return <- result
     def override edit : void
-        SafeColorEditor4("color",safe_addr(color.x))
+        if SafeColorEditor4("color",safe_addr(color.x))
+            UpdatePreview()
 
 class Instruction_Gradient : Instruction
     top_left : float4 = float4(1.,0.,0.,1.)
@@ -116,8 +176,8 @@ class Instruction_Gradient : Instruction
     bottom_right : float4 = float4(0.5,0.5,0.5,1.)
     def Instruction_Gradient
         name = "Gradient"
-        self->add_output("Out")
-    def override generate : array<Surface>
+        self->add_output("Out",TYPE_SURFACE)
+    def override generate : array<Value>
         var s : Surface
         s.size = size
         s.data |> resize(size.x*size.y)
@@ -129,18 +189,23 @@ class Instruction_Gradient : Instruction
             for x in range(0,size.x)
                 let kx = float(x)/float(size.x-1)       // todo: optimize k calc; kx += dkx
                 s.data[index++] = lerp(left,right,float4(kx))
-        var result : array<Surface>
-        result |> emplace(s)
+        var result : array<Value>
+        result |> emplace([[Value surface<-s]])
         return <- result
     def override edit : void
-        SafeColorEditor4("top-left",     safe_addr(top_left.x))
-        SafeColorEditor4("top-right",    safe_addr(top_right.x))
-        SafeColorEditor4("bottom-left",  safe_addr(bottom_left.x))
-        SafeColorEditor4("bottom-right", safe_addr(bottom_right.x))
+        if SafeColorEditor4("top-left",     safe_addr(top_left.x))
+            UpdatePreview()
+        if SafeColorEditor4("top-right",    safe_addr(top_right.x))
+            UpdatePreview()
+        if SafeColorEditor4("bottom-left",  safe_addr(bottom_left.x))
+            UpdatePreview()
+        if SafeColorEditor4("bottom-right", safe_addr(bottom_right.x))
+            UpdatePreview()
 
 enum BlendOp
     Add
     Multiply
+    Crossfade
 
 def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int=-1 )
     concept_assert(typeinfo(is_enum type<EnumT>),"expecting enum")
@@ -155,15 +220,18 @@ def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int
             if Selectable(ef.name, isSelected, ImGuiSelectableFlags None, float2(max_tw,0.))
                 unsafe
                     ent = reinterpret<EnumT> (ef.value)
+                return true
+    return false
 
 class Instruction_Blend : Instruction
-    op  : BlendOp
+    op  : BlendOp = BlendOp Add
     def Instruction_Blend
         name = "Blend"
-        self->add_input("Src")
-        self->add_input("Dst")
-        self->add_output("Out")
-    def override generate : array<Surface>
+        self->add_input("Src",TYPE_SURFACE)
+        self->add_input("Dst",TYPE_SURFACE)
+        self->add_input("Factor",TYPE_SCALAR)
+        self->add_output("Out",TYPE_SURFACE)
+    def override generate : array<Value>
         var src = inputs[0].src
         var dst = inputs[1].src
         var s : Surface
@@ -173,8 +241,10 @@ class Instruction_Blend : Instruction
         if src!=null && dst!=null
             var src_r <- gen_input(src)
             var dst_r <- gen_input(dst)
-            var src_s & = src_r[0]
-            var dst_s & = dst_r[0]
+            assert((length(src_r)==1) && (src_r[0] is surface))
+            assert(length(dst_r)==1 && (dst_r[0] is surface))
+            var src_s & = src_r[0] as surface
+            var dst_s & = dst_r[0] as surface
             if src_s.size==size && dst_s.size==size
                 if op==BlendOp Add
                     for c,sC,dC in s.data,src_s.data,dst_s.data
@@ -182,17 +252,29 @@ class Instruction_Blend : Instruction
                 elif op==BlendOp Multiply
                     for c,sC,dC in s.data,src_s.data,dst_s.data
                         c = sC * dC
+                elif op==BlendOp Crossfade
+                    var factor = 0.5f
+                    if inputs[2].src != null
+                        var fact_r <- gen_input(inputs[2].src)
+                        assert((length(fact_r)==1) && (fact_r[0] is scalar))
+                        factor = clamp(fact_r[0] as scalar, 0., 1.)
+                        delete fact_r
+                    let ifactor = 1. - factor
+                    for c,sC,dC in s.data,src_s.data,dst_s.data
+                        c = sC*ifactor + dC*factor
                 error = false
             delete src_r
             delete dst_r
         if error
             for c in s.data
                 c = float4(1,0,0,1)
-        var result : array<Surface>
-        result |> emplace(s)
+        var result : array<Value>
+        result |> emplace([[Value surface<-s]])
         return <- result
+
     def override edit : void
-        EmbeddedListBox("Operation", op)
+        if EmbeddedListBox("Operation", op)
+            UpdatePreview()
 
 // factory
 
@@ -206,6 +288,10 @@ def make_instruction_factory ( it_name:string; it_type:auto(InstType) )
 [init]
 def init_instruction_factory
     // todo: turn into annotation
+// scalar
+    make_instruction_factory("Scalar", type<Instruction_Scalar>)
+    make_instruction_factory("Add scalar", type<Instruction_AddScalar>)
+// surface
     make_instruction_factory("Solid color", type<Instruction_SolidColor>)
     make_instruction_factory("Gradient", type<Instruction_Gradient>)
     make_instruction_factory("Blend", type<Instruction_Blend>)
@@ -264,13 +350,23 @@ var g_Project <- Project()
 // PREVIEW
 
 var g_PreviewTexture : uint
+var g_PreviewInstruction : Instruction?
+var g_PreviewOutput : string
+var g_LivePreview = true
+
+def UpdatePreview
+    if g_LivePreview && g_PreviewInstruction!=null
+        GeneratePreview(g_PreviewInstruction, g_PreviewOutput)
 
 def GeneratePreview(var inst:Instruction?; outp:string)
+    g_PreviewInstruction = inst
+    g_PreviewOutput = outp
     var surf <- inst->generate()
     var tex = 0u
     for op,opi in inst.outputs,range(100500)
         if op.name==outp
-            tex = make_prewview_rgba_texture(surf[opi])
+            assert(surf[opi] is surface)
+            tex = make_prewview_rgba_texture(surf[opi] as surface)
             break
     assert(tex!=0u,"could not generate preview")
     delete surf
@@ -391,7 +487,14 @@ def MainMenu()
                 pass
             MenuItem("Paste", "CTRL+V") <|
                 pass
-
+        var previewName = ""
+        if g_PreviewInstruction != null
+            previewName = " {g_PreviewInstruction.name}:{g_PreviewInstruction.id}"
+        BeginMenu("Preview{previewName}") <|
+            if Checkbox("Live preview",safe_addr(g_LivePreview))
+                UpdatePreview()
+            if MenuItem("Update", "")
+                UpdatePreview()
 
 // GUID TO IMGUI ID
 
@@ -466,7 +569,7 @@ def EditorChildWindow()
                 SameLine()
                 if Button("[X]##{inst.id}_E")
                     post_event() <| @
-                        g_Project->delete_instruction(inst)
+                        DeleteInstruction(inst)
                         inst = null // so that lambda does not delete this pointer
                 if inst.editing
                     inst->edit()
@@ -474,21 +577,31 @@ def EditorChildWindow()
                 for inp in inst.inputs
                     let inp_id = get_input_unique_id(inst,inp.name)
                     BeginPin(inp_id, PinKind Input) <|
-                        Text("-> {inp.name}")
+                        Text("-> {inp.name}:{inp._type}")
                         if inp.src != null
                             SameLine()
                             if Button("[G]##goto_{inp}_from_{inst.id}")
                                 SelectNode(get_unique_id(inp.src.id), false)
                                 NavigateToSelection(false, NAVIGATION_TIME)
                                 ClearSelection()
+                            SameLine()
+                            if Button("[X]##goto_{inp}_from_{inst.id}")
+                                inp.src = null
+                                inp.name = ""
                 ImGuiEx_NextColumn()
                 for outp in inst.outputs
                     let outp_id = get_output_unique_id(inst,outp.name)
                     BeginPin(outp_id, PinKind Output) <|
-                        Text("{outp.name} ->")
+                        Text("{outp.name}:{outp._type} ->")
                         SameLine()
-                        if Button("[P]##{inst.id}_E")
-                            GeneratePreview(inst,outp.name)
+                        if outp._type==TYPE_SURFACE
+                            if Button("[P]##{inst.id}_E")
+                                GeneratePreview(inst,outp.name)
+                        else
+                            if Button("[E]##{inst.id}_E")
+                                var surf <- inst->generate()
+                                delete surf
+
                 ImGuiEx_EndColumn()
 
             if inst.firstFrame
@@ -509,14 +622,26 @@ def EditorChildWindow()
             var inputPinId, outputPinId : PinId
             if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
                 if inputPinId!=0 && outputPinId!=0 // both are valid, let's accept link
-                    if AcceptNewItem()
+                    if inputPinId==outputPinId
+                        RejectNewItem()
+                    else
                         if id_2_guid[inputPinId] |> starts_with("OUTPUT")
                             swap(inputPinId,outputPinId)
-                        var inL = translate_input_output_id(inputPinId,"INPUT")
-                        var outL = translate_input_output_id(outputPinId,"OUTPUT")
-                        let inI = inL.inst->input_index(inL.pin)
-                        assert(inI!=-1)
-                        inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
+                        if !(id_2_guid[inputPinId] |> starts_with("INPUT")) || !(id_2_guid[outputPinId] |> starts_with("OUTPUT"))
+                            RejectNewItem()
+                        else
+                            var inL = translate_input_output_id(inputPinId,"INPUT")
+                            var outL = translate_input_output_id(outputPinId,"OUTPUT")
+                            let inI = inL.inst->input_index(inL.pin)
+                            assert(inI!=-1)
+                            let outI = outL.inst->output_index(outL.pin)
+                            assert(outI!=-1)
+                            if inL.inst==outL.inst                                              // linking to itself
+                                RejectNewItem()
+                            elif inL.inst.inputs[inI]._type != outL.inst.outputs[outI]._type    // type mismatch
+                                RejectNewItem()
+                            elif AcceptNewItem()
+                                inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
 
 
         BeginDelete() <|
@@ -544,6 +669,11 @@ def HelpMarker(desc:string; qsign:bool = false)
 
 // SIDE WINDOW
 
+def DeleteInstruction ( inst:Instruction? )
+    g_Project->delete_instruction(inst)
+    if g_PreviewInstruction==inst
+        g_PreviewInstruction = null
+
 def SideChildWindow()
     SetCurrentEditor(g_Context)
 
@@ -568,7 +698,7 @@ def SideChildWindow()
                     g_Project->add_new_insturction(inst)
     if CollapsingHeader("Project")
         for inst,idx in g_Project.instructions,range(100500)
-            if TreeNode("side_{inst.id}","{inst.name}")
+            if TreeNode("side_{inst.id}","{inst.name}:{inst.id}")
                 if Button("[G]##goto_{inst.id}")
                     SelectNode(get_unique_id(inst.id), false)
                     NavigateToSelection(false, NAVIGATION_TIME)
@@ -583,16 +713,22 @@ def SideChildWindow()
                 SameLine()
                 if Button("[X]##{inst.id}_S")
                     post_event() <| @
-                        g_Project->delete_instruction(inst)
+                        DeleteInstruction(inst)
                         inst = null // so that lambda does not delete this pointer
                 HelpMarker("Delete")
                 Text("name: `{inst.name}`")      // todo: make editabe
                 for outp in inst.outputs
-                    Text("-> {outp.name}")
+                    Text("-> {outp.name}:{outp._type}")
                     SameLine()
-                    if Button("[P]##{inst.id}_S")
-                        GeneratePreview(inst,outp.name)
-                    HelpMarker("Preview")
+                    if outp._type==TYPE_SURFACE
+                        if Button("[P]##{inst.id}_S")
+                            GeneratePreview(inst,outp.name)
+                        HelpMarker("Preview")
+                    else
+                        if Button("[E]##{inst.id}_S")
+                            var surf <- inst->generate()
+                            delete surf
+                        HelpMarker("Eval")
                 inst->edit()
                 TreePop()
 
