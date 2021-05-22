@@ -60,8 +60,11 @@ struct Connection
     _type : string
 
 struct Input : Connection
-    [[do_not_delete]] src  : Instruction?
+    src  : Instruction?
     output : string
+
+def finalize ( var inp: Input )
+    pass
 
 def connect ( var inp:Input; src:Instruction?; outp:string )
     inp.src = src
@@ -319,11 +322,8 @@ def generate_new_id()       // TODO: generate real GUID
 class Project
     instructions : array<Instruction?>
     def clear
-        for i in instructions
-            unsafe
-                delete i
         delete instructions
-    def findalize
+    def finalize
         self->clear()
     def find_instruction ( id:string ) : Instruction?
         let index = instructions |> find_index_if <| $ ( val )
@@ -392,6 +392,12 @@ var g_PreviewTexture : uint
 var g_PreviewInstruction : Instruction?
 var g_PreviewOutput : string
 var g_LivePreview = true
+
+def ClearPreview
+    g_PreviewInstruction = null
+    if g_PreviewTexture != 0u
+        glDeleteTextures(1, safe_addr(g_PreviewTexture))
+        g_PreviewTexture = 0u
 
 def UpdatePreview
     if g_LivePreview && g_PreviewInstruction!=null
@@ -510,14 +516,30 @@ def imgui_app ( title:string; blk : block )
 
 // MAIN MENU
 
+var g_SavedProject : string
+
+def SaveProject
+    var jv = g_Project->save()
+    g_SavedProject = write_json(jv)
+    print("\n\n\n{g_SavedProject}\n\n\n")
+    unsafe
+        delete jv
+
+def NewProject()
+    post_event <| @
+        DestroyEditor(g_Context)
+        g_Context = null
+        g_Project->clear()
+        reset_guids()
+        ClearPreview()
+
 def MainMenu()
     BeginMenuBar <|
         BeginMenu("File") <|
-            if MenuItem("Save")
-                var jv = g_Project->save()
-                print("\n\n\n{write_json(jv)}\n\n\n")
-                unsafe
-                    delete jv
+            if MenuItem("New##Project")
+                NewProject()
+            if MenuItem("Save##Project")
+                SaveProject()
         var previewName = ""
         if g_PreviewInstruction != null
             previewName = " {g_PreviewInstruction.name}:{g_PreviewInstruction.id}"
@@ -530,6 +552,11 @@ def MainMenu()
 var guid_2_id : table<string; int>
 var id_2_guid : table<int; string>
 var guid_2_id_next = 1000
+
+def reset_guids
+    delete guid_2_id
+    delete id_2_guid
+    guid_2_id_next = 1000
 
 def get_unique_id ( guid:string ) : int
     var id = 0
