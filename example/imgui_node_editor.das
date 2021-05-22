@@ -12,6 +12,8 @@ require math
 require rtti
 require strings
 require daslib/strings_boost
+require daslib/json
+require daslib/json_boost
 
 let NAVIGATION_TIME = 0.5
 
@@ -88,6 +90,8 @@ class Instruction
     outputs : array<Output>
     def abstract generate : array<Value>
     def abstract edit : void
+    def abstract save ( var node:table<string;JsonValue?> ) : void
+    def abstract load ( var node:table<string;JsonValue?> ) : void
     def add_input ( iname, itype : string )
         inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
@@ -124,6 +128,8 @@ class Instruction_Scalar : Instruction
         SetNextItemWidth(300.)
         if DragFloat("value##{id}", safe_addr(value), 0.005f)
             UpdatePreview()
+    def override save ( var node:table<string;JsonValue?> ) : void
+        node["value"] = JV(value)
 
 class Instruction_AddScalar : Instruction
     log : bool = false
@@ -152,6 +158,8 @@ class Instruction_AddScalar : Instruction
         return <- result
     def override edit : void
         Checkbox("log##{id}",safe_addr(log))
+    def override save ( var node:table<string;JsonValue?> ) : void
+        pass
 
 
 class Instruction_SolidColor : Instruction
@@ -171,6 +179,8 @@ class Instruction_SolidColor : Instruction
     def override edit : void
         if SafeColorEditor4("color",safe_addr(color.x))
             UpdatePreview()
+    def override save ( var node:table<string;JsonValue?> ) : void
+        node["color"] = JV(color)
 
 class Instruction_Gradient : Instruction
     top_left : float4 = float4(1.,0.,0.,1.)
@@ -204,6 +214,11 @@ class Instruction_Gradient : Instruction
             UpdatePreview()
         if SafeColorEditor4("bottom-right", safe_addr(bottom_right.x))
             UpdatePreview()
+    def override save ( var node:table<string;JsonValue?> ) : void
+        node["top-left"] = JV(top_left)
+        node["top-right"] = JV(top_right)
+        node["bottom-left"] = JV(bottom_left)
+        node["bottom-right"] = JV(bottom_right)
 
 enum BlendOp
     Add
@@ -258,22 +273,24 @@ class Instruction_Blend : Instruction
         var result : array<Value>
         result |> emplace([[Value surface<-s]])
         return <- result
-
     def override edit : void
         if EmbeddedListBox("Operation", op)
             UpdatePreview()
+    def override save ( var node:table<string;JsonValue?> ) : void
+        node["op"] = JV(op)
 
 // factory
 
 var g_instructionFactory : table < string; lambda<():Instruction?> >
 
-var g_instructionsByCategory : array < tuple<name:string;category:string> >
+var g_instructionsByCategory : array < tuple<name:string;category:string;tname:string> >
 
 [unused_argument(it_type)]
 def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType) )
-    g_instructionFactory[it_name] <- @ <| () : Instruction?
+    let tname = typeinfo(typename type<InstType>)
+    g_instructionFactory[tname] <- @ <| () : Instruction?
         return new InstType()
-    g_instructionsByCategory |> push([[auto it_name,it_category]])
+    g_instructionsByCategory |> push([[auto it_name,it_category,tname]])
 
 [init]
 def init_instruction_factory           // todo: turn into annotation
@@ -339,6 +356,33 @@ class Project
                     inp.src = null
         assert(idx!=-1)
         instructions |> erase(idx)
+    def save : JsonValue?
+        var nodes : array<JsonValue?>
+        for inst in instructions
+            var tname = class_info(*inst).name
+            var inode <- {{
+                "id" => JV(inst.id);
+                "name" => JV(inst.name);
+                "rtti" => JV(tname)
+            }}
+            inst->save(inode)
+            nodes |> push(JV(inode))
+        var links : array<JsonValue?>
+        for inst in instructions
+            for inp in inst.inputs
+                if inp.src != null
+                    var lnk <- {{
+                        "input_id"    => JV(inst.id);
+                        "input_name"  => JV(inp.name);
+                        "output_id"   => JV(inp.src.id);
+                        "output_name" => JV(inp.output)
+                    }}
+                    links |> push(JV(lnk))
+        var root <- {{
+            "nodes"=> JV(nodes);
+            "links" => JV(links)
+        }}
+        return JV(root)
 
 var g_Project <- Project()
 
@@ -469,7 +513,11 @@ def imgui_app ( title:string; blk : block )
 def MainMenu()
     BeginMenuBar <|
         BeginMenu("File") <|
-            pass
+            if MenuItem("Save")
+                var jv = g_Project->save()
+                print("\n\n\n{write_json(jv)}\n\n\n")
+                unsafe
+                    delete jv
         var previewName = ""
         if g_PreviewInstruction != null
             previewName = " {g_PreviewInstruction.name}:{g_PreviewInstruction.id}"
@@ -709,7 +757,6 @@ def SideChildWindow()
 
     if Button("[*]")
         NavigateToContent(NAVIGATION_TIME)
-    SameLine()
     HelpMarker("Navigate to content")
 
     if CollapsingHeader("New instruction")
@@ -724,13 +771,10 @@ def SideChildWindow()
             if !collapsed
                 if Button("{ai.name}##make_S")
                     post_event() <| @
-                        var inst = invoke(g_instructionFactory[ai.name])
+                        var inst = invoke(g_instructionFactory[ai.tname])
                         g_Project->add_new_insturction(inst)
         if !collapsed
             TreePop()
-    if CollapsingHeader("Project")
-        for inst in g_Project.instructions
-            SideEditInstance(inst)
 
     var snc = GetSelectedObjectCount()
     if snc != 0
@@ -756,6 +800,10 @@ def SideChildWindow()
                         print("Not found {ng} -> '{nid}'\n")
                     assert(inst!=null)
                     SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
+
+    if CollapsingHeader("Project")
+        for inst in g_Project.instructions
+            SideEditInstance(inst)
 
     EndChild()
     imgui::PopStyleColor()
