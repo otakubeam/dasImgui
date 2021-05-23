@@ -303,7 +303,7 @@ class Instruction_Blend : Instruction
     def override save ( var node:table<string;JsonValue?> ) : void
         node["op"] = JV(op)
     def override load ( var node:table<string;JsonValue?> ) : void
-        enum_from_JV(op, node["op"])
+        op = from_JV(node["op"],type<BlendOp>)
 
 // factory
 
