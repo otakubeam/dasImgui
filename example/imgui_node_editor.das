@@ -106,6 +106,15 @@ class Instruction
         return outputs |> find_index_if <| $ ( val )
             return val.name==iname
 
+def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input?#):void> ) : void
+    for i in inst.inputs
+        if i.name==iname
+            invoke(blk,safe_addr(i))
+            return
+    unsafe
+        invoke(blk,reinterpret<Input?#> null)
+
+
 // todo: cache
 def gen_input ( var from:Instruction? ): array<Value>
     return <- from->generate()
@@ -133,6 +142,8 @@ class Instruction_Scalar : Instruction
             UpdatePreview()
     def override save ( var node:table<string;JsonValue?> ) : void
         node["value"] = JV(value)
+    def override load ( var node:table<string;JsonValue?> ) : void
+        value = float(node["value"] as _number)
 
 class Instruction_AddScalar : Instruction
     log : bool = false
@@ -163,7 +174,8 @@ class Instruction_AddScalar : Instruction
         Checkbox("log##{id}",safe_addr(log))
     def override save ( var node:table<string;JsonValue?> ) : void
         pass
-
+    def override load ( var node:table<string;JsonValue?> ) : void
+        pass
 
 class Instruction_SolidColor : Instruction
     color : float4 = float4(.5,.5,.5,1.)
@@ -184,6 +196,8 @@ class Instruction_SolidColor : Instruction
             UpdatePreview()
     def override save ( var node:table<string;JsonValue?> ) : void
         node["color"] = JV(color)
+    def override load ( var node:table<string;JsonValue?> ) : void
+        color = float4_from_JV(node["color"])
 
 class Instruction_Gradient : Instruction
     top_left : float4 = float4(1.,0.,0.,1.)
@@ -222,6 +236,11 @@ class Instruction_Gradient : Instruction
         node["top-right"] = JV(top_right)
         node["bottom-left"] = JV(bottom_left)
         node["bottom-right"] = JV(bottom_right)
+    def override load ( var node:table<string;JsonValue?> ) : void
+        top_left = float4_from_JV(node["top-left"])
+        top_right = float4_from_JV(node["top-right"])
+        bottom_left = float4_from_JV(node["bottom-left"])
+        bottom_right = float4_from_JV(node["bottom-right"])
 
 enum BlendOp
     Add
@@ -281,6 +300,8 @@ class Instruction_Blend : Instruction
             UpdatePreview()
     def override save ( var node:table<string;JsonValue?> ) : void
         node["op"] = JV(op)
+    def override load ( var node:table<string;JsonValue?> ) : void
+        enum_from_JV(op, node["op"])
 
 // factory
 
@@ -289,11 +310,19 @@ var g_instructionFactory : table < string; lambda<():Instruction?> >
 var g_instructionsByCategory : array < tuple<name:string;category:string;tname:string> >
 
 [unused_argument(it_type)]
-def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType) )
+def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType)-const )
     let tname = typeinfo(typename type<InstType>)
     g_instructionFactory[tname] <- @ <| () : Instruction?
         return new InstType()
     g_instructionsByCategory |> push([[auto it_name,it_category,tname]])
+
+def make_instruction ( it_type:string )
+    if g_instructionFactory |> key_exists(it_type)
+        return invoke(g_instructionFactory[it_type])
+    else
+        print("available types are {g_instructionFactory}\n")
+        panic("making unknown instruction type {it_type}")
+        return null
 
 [init]
 def init_instruction_factory           // todo: turn into annotation
@@ -383,6 +412,28 @@ class Project
             "links" => JV(links)
         }}
         return JV(root)
+    def load ( var proot:JsonValue? ): void
+        var root & = proot.value as _object
+        var nodes & = root["nodes"].value as _array
+        for pnode in nodes
+            var node & = pnode.value as _object
+            let ntype = node["rtti"].value as _string
+            var inst = make_instruction(ntype)
+            inst.id = node["id"].value as _string
+            inst.name = node["name"].value as _string
+            (*inst)->load(node)
+            instructions |> push(inst)
+        var links & = root["links"].value as _array
+        for plink in links
+            var link & = plink.value as _object
+            let input_id = link["input_id"].value as _string
+            var inst = self->find_instruction(input_id)
+            assert(inst != null)
+            let input_name = link["input_name"].value as _string
+            inst |>find_input(input_name) <| $ ( inp )
+                inp.output = link["output_name"].value as _string
+                let output_id = link["output_id"].value as _string
+                inp.src = self->find_instruction(output_id)
 
 var g_Project <- Project()
 
@@ -525,19 +576,31 @@ def SaveProject
     unsafe
         delete jv
 
+def ClearProjectData()
+    DestroyEditor(g_Context)
+    g_Context = null
+    g_Project->clear()
+    reset_guids()
+    ClearPreview()
+
 def NewProject()
     post_event <| @
-        DestroyEditor(g_Context)
-        g_Context = null
-        g_Project->clear()
-        reset_guids()
-        ClearPreview()
+        ClearProjectData()
+
+def LoadProject()
+    post_event <| @
+        ClearProjectData()
+        var error : string
+        var jv = read_json(g_SavedProject,error)
+        g_Project->load(jv)
 
 def MainMenu()
     BeginMenuBar <|
         BeginMenu("File") <|
             if MenuItem("New##Project")
                 NewProject()
+            if MenuItem("Load##Project")
+                LoadProject()
             if MenuItem("Save##Project")
                 SaveProject()
         var previewName = ""
@@ -798,7 +861,7 @@ def SideChildWindow()
             if !collapsed
                 if Button("{ai.name}##make_S")
                     post_event() <| @
-                        var inst = invoke(g_instructionFactory[ai.tname])
+                        var inst = make_instruction(ai.tname)
                         g_Project->add_new_insturction(inst)
         if !collapsed
             TreePop()
