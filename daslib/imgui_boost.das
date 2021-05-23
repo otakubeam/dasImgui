@@ -268,8 +268,10 @@ def ImGuiEx_BeginColumn()
 
 def ImGuiEx_NextColumn()
     EndGroup()
+    let size = GetItemRectSize()
     SameLine()
     BeginGroup()
+    return size
 
 def ImGuiEx_EndColumn()
     EndGroup()

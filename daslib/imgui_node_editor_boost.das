@@ -35,3 +35,16 @@ def BeginDelete ( blk : block )
     if BeginDelete()
         invoke(blk)
     EndDelete()
+
+def GetSelectedNodes : array<NodeId>
+    var snc = GetSelectedObjectCount()
+    if snc != 0
+        var sna : array<void?>
+        sna |> resize(snc)
+        unsafe
+            snc = GetSelectedNodes(reinterpret<NodeId?> addr(sna[0]),snc)
+        return <- [{for x in range(snc); NodeId(intptr(sna[x]))}]
+    else
+        var empty : array<NodeId>
+        return <- empty
+

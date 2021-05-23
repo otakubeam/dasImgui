@@ -17,6 +17,8 @@ require daslib/json_boost
 
 let NAVIGATION_TIME = 0.5
 
+let DEFAULT_NODE_WIDTH  = 500.
+
 var window : GLFWwindow?
 
 def make_rgba_texture(width,height:int; data:void?)
@@ -664,6 +666,61 @@ def swap ( var a,b:auto(TT)& )
     a <- b
     b <- t
 
+def in_pin(id: int; blk: block<():void>)
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinArrowSize, 10f)
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinArrowWidth, 10f)
+    // imgui_node_editor::PushStyleColor(StyleColor StyleColor_PinRect, float4(1f, 0f, 0f, 1f))
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinCorners, 3f)
+    BeginPin(id, PinKind Input) <|
+        var io & = GetIO()
+        Dummy(float2(10. * io.FontGlobalScale))
+        let offset = float2(3, 3)
+        let min = GetItemRectMin() - float2(8, 0)
+        let max = GetItemRectMax() - float2(8, 0)
+        var drawList = GetWindowDrawList()
+        // *drawList |> AddRectFilled(min, max, 0xFFFFFFFF)
+        *drawList |> AddTriangleFilled(min, float2(max.x, (min.y + max.y) * 0.5), float2(min.x, max.y), 0xFFFFFFFF)
+        // *drawList |> AddCircleFilled((min + max) * 0.5, 5f, 0xFFFFFFFF)// 0xFFFFb032)
+        PinRect(min - offset, max + offset)
+        let pin = float2(min.x, (min.y + max.y) * 0.5) + float2(1, 0)
+        PinPivotRect(pin, pin)
+        blk |> invoke()
+    // imgui_node_editor::PopStyleVar(2)
+    // imgui_node_editor::PopStyleColor(1)
+
+def out_pin(id: int; text: string implicit; blk: block<():void>)
+    out_pin(id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x, blk)
+
+
+def out_pin(id: int; text: string implicit; indent: float; blk: block<():void>)
+    ImGuiEx_BeginColumn()
+    if indent > 0f
+        imgui::Indent(indent)
+    imgui::TextUnformatted(text)
+    blk |> invoke()
+    ImGuiEx_NextColumn()
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinArrowSize, 10f)
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinArrowWidth, 10f)
+    // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinCorners, 3f)
+    // let size = GetNodeSize()
+    // SetNextItemWidth(-FLT_MIN)
+    BeginPin(id, PinKind Output) <|
+        var io & = GetIO()
+        Dummy(float2(10. * io.FontGlobalScale))
+        let offset = float2(3, 3)
+        let min = GetItemRectMin() + float2(8, 3)
+        let max = GetItemRectMax() + float2(8, 3)
+        var drawList = GetWindowDrawList()
+        // *drawList |> AddRectFilled(min, max, 0xFFFFFFFF)
+        // *drawList |> AddCircleFilled((min + max) * 0.5, 5f, 0xFFFFFFFF)
+        *drawList |> AddTriangleFilled(min, float2(max.x, (min.y + max.y) * 0.5), float2(min.x, max.y), 0xFFFFFFFF)
+        PinRect(min - offset, max + offset)
+        let pin = float2(min.x, (min.y + max.y) * 0.5) + float2(9, 0)
+        PinPivotRect(pin, pin)
+    //blk |> invoke()
+    // imgui_node_editor::PopStyleVar(2)
+    ImGuiEx_EndColumn()
+
 def EditorChildWindow()
     SetCurrentEditor(g_Context)
     static_let <|
@@ -681,6 +738,7 @@ def EditorChildWindow()
         for inst in g_Project.instructions
             let id = get_unique_id(inst.id)
             BeginNode(id) <|
+                Dummy(float2(DEFAULT_NODE_WIDTH,0.))
                 unsafe
                     Checkbox("##embedded_{inst.id}",addr(inst.editing))
                 SameLine()
@@ -693,8 +751,10 @@ def EditorChildWindow()
                 ImGuiEx_BeginColumn()
                 for inp in inst.inputs
                     let inp_id = get_input_unique_id(inst,inp.name)
-                    BeginPin(inp_id, PinKind Input) <|
-                        Text("-> {inp.name}:{inp._type}")
+                    in_pin(inp_id) <|
+                        SameLine()
+                        Text("{inp.name}:{inp._type}")
+                        SameLine()
                         if inp.src != null
                             SameLine()
                             if Button("[G]##goto_{inp}_from_{inst.id}")
@@ -704,12 +764,11 @@ def EditorChildWindow()
                             SameLine()
                             if Button("[X]##goto_{inp}_from_{inst.id}")
                                 DeleteLink(inp_id)
-                ImGuiEx_NextColumn()
+                let lw = ImGuiEx_NextColumn()
                 for outp in inst.outputs
                     let outp_id = get_output_unique_id(inst,outp.name)
-                    BeginPin(outp_id, PinKind Output) <|
-                        Text("{outp.name}:{outp._type} ->")
-                        SameLine()
+                    let text = "{outp.name}:{outp._type}"
+                    out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
                         if outp._type==TYPE_SURFACE
                             if Button("[P]##{inst.id}_E")
                                 GeneratePreview(inst,outp.name)
@@ -868,11 +927,8 @@ def SideChildWindow()
 
     var snc = GetSelectedObjectCount()
     if snc != 0
+        var sna <- GetSelectedNodes()
         if CollapsingHeader("Selection", ImGuiTreeNodeFlags DefaultOpen)
-            var sna : array<NodeId>
-            sna |> resize(snc)
-            unsafe
-                snc = GetSelectedNodes(addr(sna[0]),snc)
             if Button("[X]##delete selection")
                 for ng in sna
                     if ng != 0
@@ -883,13 +939,12 @@ def SideChildWindow()
                 NavigateToSelection(false, 0.5)
             HelpMarker("Navigate to selection")
             for ng in sna
-                if ng != 0
-                    let nid = id_2_guid[ng]
-                    var inst = g_Project->find_instruction(nid)
-                    if inst==null
-                        print("Not found {ng} -> '{nid}'\n")
-                    assert(inst!=null)
-                    SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
+                let nid = id_2_guid[ng]
+                var inst = g_Project->find_instruction(nid)
+                if inst==null
+                    print("Not found {ng} -> '{nid}'\n")
+                assert(inst!=null)
+                SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
 
     if CollapsingHeader("Project")
         for inst in g_Project.instructions
