@@ -7,7 +7,7 @@ require imgui public
 require glfw
 require imgui_app
 require daslib/safe_addr
-require rtti
+require rtti public
 require strings
 require math
 
@@ -313,3 +313,14 @@ def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int
                     ent = reinterpret<EnumT> (ef.value)
                 return true
     return false
+
+def HelpMarker(desc:string; qsign:bool = false)
+    if qsign
+        SameLine()
+        TextDisabled("[?]")
+    if IsItemHovered()
+        BeginTooltip()
+        PushTextWrapPos(GetFontSize() * 35.0f)
+        TextUnformatted(desc)
+        PopTextWrapPos()
+        EndTooltip()
