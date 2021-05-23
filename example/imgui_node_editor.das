@@ -85,12 +85,12 @@ variant Value
     scalar  : float
 
 class Instruction
-    id : string                         // unique ID of instruction (expecting GUID)
-    name : string                       // user readable name. can be duplicate
-    at : int2                           // position in the node editor
+    id : string                             // unique ID of instruction (expecting GUID)
+    name : string                           // user readable name. can be duplicate
+    at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
     firstFrame : bool = true
     editing : bool = false
-    size : int2 = int2(256,256)         // dimensions of the generated surface. never 0 or invalid
+    size : int2 = int2(256,256)             // dimensions of the generated surface. never 0 or invalid
     inputs : array<Input>
     outputs : array<Output>
     def abstract generate : array<Value>
@@ -376,7 +376,7 @@ class Project
         self->add_new_insturction(blend_node)
         // now, lets sort everything vertically
         for i,t in instructions, range(100500)
-            i.at = int2(0, t*100)
+            i.at = float2(0, t*300)
     def delete_instruction ( dinst:Instruction? )
         var idx = -1
         for i,index in instructions,range(100500)
@@ -394,7 +394,8 @@ class Project
             var inode <- {{
                 "id" => JV(inst.id);
                 "name" => JV(inst.name);
-                "rtti" => JV(tname)
+                "rtti" => JV(tname);
+                "at" => JV(inst.at)
             }}
             inst->save(inode)
             nodes |> push(JV(inode))
@@ -415,6 +416,8 @@ class Project
         }}
         return JV(root)
     def load ( var proot:JsonValue? ): void
+        if proot==null
+            return
         var root & = proot.value as _object
         var nodes & = root["nodes"].value as _array
         for pnode in nodes
@@ -423,6 +426,7 @@ class Project
             var inst = make_instruction(ntype)
             inst.id = node["id"].value as _string
             inst.name = node["name"].value as _string
+            inst.at = from_JV(node["at"],type<float2>)
             (*inst)->load(node)
             instructions |> push(inst)
         var links & = root["links"].value as _array
@@ -438,6 +442,7 @@ class Project
                 inp.src = self->find_instruction(output_id)
 
 var g_Project <- Project()
+var g_FirstFrame = true
 
 // PREVIEW
 
@@ -572,6 +577,10 @@ def imgui_app ( title:string; blk : block )
 var g_SavedProject : string
 
 def SaveProject
+    SetCurrentEditor(g_Context)
+    for inst in g_Project.instructions
+        inst.at = GetNodePosition(get_unique_id(inst.id))
+    SetCurrentEditor(null)
     var jv = g_Project->save()
     g_SavedProject = write_json(jv)
     print("\n\n\n{g_SavedProject}\n\n\n")
@@ -584,6 +593,7 @@ def ClearProjectData()
     g_Project->clear()
     reset_guids()
     ClearPreview()
+    g_FirstFrame = true
 
 def NewProject()
     post_event <| @
@@ -723,8 +733,6 @@ def out_pin(id: int; text: string implicit; indent: float; blk: block<():void>)
 
 def EditorChildWindow()
     SetCurrentEditor(g_Context)
-    static_let <|
-        var g_FirstFrame = true
 
     var style & = imgui_node_editor::GetStyle()
     style.NodeRounding = 0f
@@ -780,10 +788,10 @@ def EditorChildWindow()
                 ImGuiEx_EndColumn()
 
             if inst.firstFrame
-                if inst.at==int2(0)
+                if inst.at.x==-FLT_MAX
                     CenterNodeOnScreen(get_unique_id(inst.id))
                 else
-                    SetNodePosition(id, float2(inst.at))
+                    SetNodePosition(id, inst.at)
                 inst.firstFrame = false
 
         for inst in g_Project.instructions
@@ -837,7 +845,7 @@ def EditorChildWindow()
 
 
     if g_FirstFrame
-        NavigateToContent(0.)
+        NavigateToContent(NAVIGATION_TIME)
     SetCurrentEditor(null)
     g_FirstFrame = false
 
@@ -962,6 +970,11 @@ def MainEditorScreen()
         var config = Config()
         config.SettingsFile = "Simple.json"
         g_Context = CreateEditor(safe_addr(config))
+        /*
+        SetCurrentEditor(g_Context)
+        EnableShortcuts(true)
+        SetCurrentEditor(null)
+        */
     PushStyleVar(ImGuiStyleVar WindowPadding, float2())
     Begin("Surface project editor",null,ImGuiWindowFlags MenuBar | ImGuiWindowFlags NoTitleBar | ImGuiWindowFlags NoResize | ImGuiWindowFlags NoMove | ImGuiWindowFlags NoBackground ) <|
         imgui::PopStyleVar(1)
