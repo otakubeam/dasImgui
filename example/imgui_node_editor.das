@@ -199,7 +199,7 @@ class Instruction_SolidColor : Instruction
     def override save ( var node:table<string;JsonValue?> ) : void
         node["color"] = JV(color)
     def override load ( var node:table<string;JsonValue?> ) : void
-        color = float4_from_JV(node["color"])
+        color = from_JV(node["color"],type<float4>)
 
 class Instruction_Gradient : Instruction
     top_left : float4 = float4(1.,0.,0.,1.)
@@ -239,10 +239,10 @@ class Instruction_Gradient : Instruction
         node["bottom-left"] = JV(bottom_left)
         node["bottom-right"] = JV(bottom_right)
     def override load ( var node:table<string;JsonValue?> ) : void
-        top_left = float4_from_JV(node["top-left"])
-        top_right = float4_from_JV(node["top-right"])
-        bottom_left = float4_from_JV(node["bottom-left"])
-        bottom_right = float4_from_JV(node["bottom-right"])
+        top_left = from_JV(node["top-left"],type<float4>)
+        top_right = from_JV(node["top-right"],type<float4>)
+        bottom_left = from_JV(node["bottom-left"],type<float4>)
+        bottom_right = from_JV(node["bottom-right"],type<float4>)
 
 enum BlendOp
     Add
