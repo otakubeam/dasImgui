@@ -13,8 +13,8 @@ require daslib/safe_addr
 require math
 
 let DEFAULT_NODE_WIDTH  = 500.
-let DEFAULT_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 50.
-let DEFAULT_NAMED_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 50.
+let DEFAULT_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 20.
+let DEFAULT_NAMED_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 20.
 
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
@@ -40,7 +40,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
         return false
 
 def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
-    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
     if InputInt2("{name}##{id}{mode}_DragFloat",safe_addr(data.x))
         update_preview()
         return true
@@ -48,7 +48,7 @@ def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
         return false
 
 def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.01f)
-    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
     if DragFloat("{name}##{id}{mode}_DragFloat",safe_addr(data),step)
         update_preview()
         return true
@@ -56,7 +56,7 @@ def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.0
         return false
 
 def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
-    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH -  - CalcTextSize(name).x)
     if Checkbox("{name}##{id}{mode}_Checkbox",safe_addr(data))
         update_preview()
         return true

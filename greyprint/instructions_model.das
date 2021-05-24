@@ -27,6 +27,7 @@ class Instruction_Scalar : Instruction
 class Instruction_AddScalar : Instruction
     override editing = true
     log : bool = false
+    last_eval : float = 0.
     def Instruction_AddScalar
         name = "Add Scalar"
         self->add_input("In-1",TYPE_SCALAR)
@@ -46,11 +47,16 @@ class Instruction_AddScalar : Instruction
             v2 = outs[0] as scalar
         var reg : Value
         scalar_add(reg,v1,v2)
+        last_eval = reg as scalar
         if log
             print("{name}:{id} value = {reg}\n")
         return <- [{Value reg}]
     def override edit ( mode:EditMode ) : void
+        let text = "-> {last_eval}"
+        Text(text)
+        SameLine(CalcTextSize(text).x + 5.)
         NodeCheckbox(mode,id,"log",log)
+
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction

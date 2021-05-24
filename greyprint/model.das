@@ -13,7 +13,7 @@ def scalar_scalar ( var reg:Value; value:float )
     reg <- [[Value scalar=value]]
 
 def scalar_add ( var reg:Value; a,b:float )
-    reg as scalar = a + b
+    reg <- [[Value scalar=a + b]]
 
 def surface_solid_color ( var reg:Value; color:float4 )
     for c in (reg as surface).data

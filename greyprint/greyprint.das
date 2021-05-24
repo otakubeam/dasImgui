@@ -23,6 +23,7 @@ require command_que
 require instructions_model
 
 let SIDE_PANNEL_WIDTH = 600.
+let CONTEXT_MENU_WIDTH = 400.
 let INSTRUCTION_PANNEL_HEIGHT = 350.
 let SELECTION_PANNEL_HEIGHT = 600.
 
@@ -396,7 +397,7 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
         Text("Create new instruction")
     static_let <|
         var filter = new ImGuiTextFilter
-    *filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
+    *filter |> Draw("",(fromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
     var prevCategory = ""
     var collapsed = true
     for ai in g_instructionsByCategory
