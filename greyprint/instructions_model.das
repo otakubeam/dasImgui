@@ -19,8 +19,8 @@ class Instruction_Scalar : Instruction
         var result : array<Value>
         result |> emplace([[Value scalar=value]])
         return <- result
-    def override edit : void
-        NodeDragFloat(id,"value",value)
+    def override edit ( mode:EditMode ) : void
+        NodeDragFloat(mode,id,"value",value)
 
 [instruction_node(name="Add scalar",category="Scalar operations")]
 class Instruction_AddScalar : Instruction
@@ -48,8 +48,8 @@ class Instruction_AddScalar : Instruction
         var result : array<Value>
         result |> emplace([[Value scalar=value]])
         return <- result
-    def override edit : void
-        NodeCheckbox(id,"log",log)
+    def override edit ( mode:EditMode ) : void
+        NodeCheckbox(mode,id,"log",log)
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction
@@ -66,8 +66,8 @@ class Instruction_SolidColor : Instruction
         var result : array<Value>
         result |> emplace([[Value surface<-s]])
         return <- result
-    def override edit : void
-        NodeColorEditor4(id,"color",color)
+    def override edit ( mode:EditMode ): void
+        NodeColorEditor4(mode,id,"color",color)
 
 [instruction_node(name="Gradient",category="Surface operations")]
 class Instruction_Gradient : Instruction
@@ -93,11 +93,11 @@ class Instruction_Gradient : Instruction
         var result : array<Value>
         result |> emplace([[Value surface<-s]])
         return <- result
-    def override edit : void
-        NodeColorEditor4(id,"top-left",top_left)
-        NodeColorEditor4(id,"top-right",top_right)
-        NodeColorEditor4(id,"bottom-left",bottom_left)
-        NodeColorEditor4(id,"bottom-right",bottom_right)
+    def override edit ( mode:EditMode ) : void
+        NodeColorEditor4(mode,id,"top-left",top_left)
+        NodeColorEditor4(mode,id,"top-right",top_right)
+        NodeColorEditor4(mode,id,"bottom-left",bottom_left)
+        NodeColorEditor4(mode,id,"bottom-right",bottom_right)
 
 enum BlendOp
     Add
@@ -153,6 +153,6 @@ class Instruction_Blend : Instruction
         var result : array<Value>
         result |> emplace([[Value surface<-s]])
         return <- result
-    def override edit : void
-        NodeEditEnumeration(id,"Operation",op)
+    def override edit ( mode:EditMode ) : void
+        NodeEditEnumeration(mode,id,"Operation",op)
 

@@ -16,32 +16,40 @@ let DEFAULT_NODE_WIDTH  = 500.
 let DEFAULT_ELEMENT_WIDTH = 450.
 let DEFAULT_NAMED_ELEMENT_WIDTH = 450.
 
-def NodeEditEnumeration(id,name:string; var op : auto&)
+def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    Text(name)
     if EmbeddedListBox("{name}##{id}_Enumeration", op)
         update_preview()
         return true
     else
         return false
 
-def NodeColorEditor4(id,name:string; var data:float4&)
-    SetNextItemWidth(DEFAULT_ELEMENT_WIDTH)
-    if ColorPicker4("{name}##{id}_ColorEditor4",safe_addr(data.x),ImGuiColorEditFlags NoTooltip)
+def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
+    Dummy(float2(DEFAULT_ELEMENT_WIDTH - CalcTextSize(name).x,0.))
+    SameLine()
+    Text(name)
+    SetNextItemWidth(DEFAULT_ELEMENT_WIDTH - 50.)
+    var flags : ImGuiColorEditFlags
+    if mode==EditMode Embedded
+        flags |= ImGuiColorEditFlags NoTooltip | ImGuiColorEditFlags NoOptions
+    if ColorPicker4("##{name}{id}_ColorEditor4",safe_addr(data.x),flags)
         update_preview()
         return true
     else
         return false
 
-def NodeDragFloat(id,name:string; var data:float&; step:float=0.01f)
+def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.01f)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
-    if DragFloat("value##{id}_DragFloat",safe_addr(data),step)
+    if DragFloat("{name}##{id}_DragFloat",safe_addr(data),step)
         update_preview()
         return true
     else
         return false
 
-def NodeCheckbox(id,name:string; var data:bool&)
+def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
-    if Checkbox("value##{id}_Checkbox",safe_addr(data))
+    if Checkbox("{name}##{id}_Checkbox",safe_addr(data))
         update_preview()
         return true
     else

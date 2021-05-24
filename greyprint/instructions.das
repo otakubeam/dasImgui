@@ -44,6 +44,10 @@ variant Value
     surface : Surface
     scalar  : float
 
+enum EditMode
+    Sidebar         // in the side menu
+    Embedded        // in the node
+
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
@@ -54,7 +58,7 @@ class Instruction
     inputs : array<Input>
     outputs : array<Output>
     def abstract generate : array<Value>
-    def abstract edit : void
+    def abstract edit ( mode:EditMode ) : void
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
     def add_input ( iname, itype : string )

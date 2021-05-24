@@ -38,8 +38,11 @@ def imgui_app ( title:string; blk : block )
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)
+
     var io & = GetIO()
-    io.FontGlobalScale = 2.0;   // BBATKIN: note - my monitor is HUGE
+    io.FontGlobalScale = 2.0
+    imgui::GetStyle() |> ScaleAllSizes(2.0)
+
     StyleColorsDark(null)
     ImGui_ImplGlfw_InitForOpenGL(window, true)
     ImGui_ImplOpenGL2_Init()
@@ -215,15 +218,18 @@ def editor_child_window()
             let id = get_unique_id(inst.id)
             BeginNode(id) <|
                 Dummy(float2(DEFAULT_NODE_WIDTH,0.))
+                ImGuiEx_BeginColumn()
                 unsafe
                     Checkbox("##embedded_{inst.id}",addr(inst.editing))
                 SameLine()
                 Text(inst.name)
-                SameLine()
+                let sz = ImGuiEx_NextColumn()
+                SameLine(DEFAULT_NODE_WIDTH - sz.x - CalcTextSize("[X]").x - 2.0)
                 if Button("[X]##{inst.id}_E")
                     DeleteNode(get_unique_id(inst.id))
+                ImGuiEx_EndColumn()
                 if inst.editing
-                    inst->edit()
+                    inst->edit(EditMode Embedded)
                 ImGuiEx_BeginColumn()
                 for inp in inst.inputs
                     let inp_id = get_input_unique_id(inst,inp.name)
@@ -350,7 +356,7 @@ def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTre
                     var surf <- inst->generate()
                     delete surf
                 HelpMarker("Eval")
-        inst->edit()
+        inst->edit(EditMode Sidebar)
         TreePop()
 
 def side_child_window()
