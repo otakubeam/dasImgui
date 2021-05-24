@@ -275,6 +275,21 @@ def editor_child_window()
                     let inp_id = get_input_unique_id(inst,inp.name)
                     let outp_id = get_output_unique_id(inp.src,inp.output)
                     Link(inp_id, inp_id, outp_id)
+
+        /*
+        if (ed::ShowNodeContextMenu(&contextNodeId))
+            ImGui::OpenPopup("Node Context Menu");
+        else if (ed::ShowPinContextMenu(&contextPinId))
+            ImGui::OpenPopup("Pin Context Menu");
+        else if (ed::ShowLinkContextMenu(&contextLinkId))
+            ImGui::OpenPopup("Link Context Menu");
+        else if (ed::ShowBackgroundContextMenu())
+        {
+            ImGui::OpenPopup("Create New Node");
+            newNodeLinkPin = nullptr;
+        }
+        */
+
         BeginCreate(float4(1), 1.0f) <|
             var inputPinId, outputPinId : PinId
             if QueryNewLink(safe_addr(inputPinId), safe_addr(outputPinId))
@@ -313,6 +328,19 @@ def editor_child_window()
                         let inst = g_Project->find_instruction(inst_id)
                         assert(inst!=null)
                         DeleteInstruction(inst)
+
+        Suspend()
+        if ShowBackgroundContextMenu()
+            OpenPopup("Create New Instruction")
+        Resume()
+
+        Suspend()
+        if BeginPopup("Create New Instruction")
+            let pos = ScreenToCanvas(GetWindowPos())
+            edit_instructions(true,pos)
+            EndPopup()
+        Resume()
+
     if g_FirstFrame
         NavigateToContent(NAVIGATION_TIME)
     SetCurrentEditor(null)
@@ -363,7 +391,9 @@ def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTre
         inst->edit(EditMode Sidebar)
         TreePop()
 
-def edit_instructions()
+def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
+    if fromContextMenu
+        Text("Create new instruction")
     static_let <|
         var filter = new ImGuiTextFilter
     *filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
@@ -377,9 +407,13 @@ def edit_instructions()
             collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
         if !collapsed && ((*filter) |> PassFilter(ai.name))
             if Button("{ai.name}##make_S")
+                if fromContextMenu
+                    CloseCurrentPopup()
                 post_event() <| @
                     var inst = make_instruction(ai.tname)
                     g_Project->add_new_insturction(inst)
+                    if fromContextMenu
+                        inst.at = pos
     if !collapsed
         TreePop()
 
