@@ -11,7 +11,7 @@ require math
 
 [instruction_node(name="Scalar",category="Scalar operations")]
 class Instruction_Scalar : Instruction
-    value : float = 1.
+    [[serialize]] value : float = 1.
     def Instruction_Scalar
         name = "Scalar"
         self->add_output("Out",TYPE_SCALAR)
@@ -21,10 +21,6 @@ class Instruction_Scalar : Instruction
         return <- result
     def override edit : void
         NodeDragFloat(id,"value",value)
-    def override save ( var node:table<string;JsonValue?> ) : void
-        node["value"] = JV(value)
-    def override load ( var node:table<string;JsonValue?> ) : void
-        value = float(node["value"] as _number)
 
 [instruction_node(name="Add scalar",category="Scalar operations")]
 class Instruction_AddScalar : Instruction
@@ -54,14 +50,10 @@ class Instruction_AddScalar : Instruction
         return <- result
     def override edit : void
         NodeCheckbox(id,"log",log)
-    def override save ( var node:table<string;JsonValue?> ) : void
-        pass
-    def override load ( var node:table<string;JsonValue?> ) : void
-        pass
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction
-    color : float4 = float4(.5,.5,.5,1.)
+    [[serialize]] color : float4 = float4(.5,.5,.5,1.)
     def Instruction_SolidColor
         name = "Solid color"
         self->add_output("Out",TYPE_SURFACE)
@@ -76,17 +68,13 @@ class Instruction_SolidColor : Instruction
         return <- result
     def override edit : void
         NodeColorEditor4(id,"color",color)
-    def override save ( var node:table<string;JsonValue?> ) : void
-        node["color"] = JV(color)
-    def override load ( var node:table<string;JsonValue?> ) : void
-        color = from_JV(node["color"],type<float4>)
 
 [instruction_node(name="Gradient",category="Surface operations")]
 class Instruction_Gradient : Instruction
-    top_left : float4 = float4(1.,0.,0.,1.)
-    top_right : float4 = float4(0.,1.,0.,1.)
-    bottom_left : float4 = float4(0.,0.,1.,1.)
-    bottom_right : float4 = float4(0.5,0.5,0.5,1.)
+    [[serialize]] top_left : float4 = float4(1.,0.,0.,1.)
+    [[serialize]] top_right : float4 = float4(0.,1.,0.,1.)
+    [[serialize]] bottom_left : float4 = float4(0.,0.,1.,1.)
+    [[serialize]] bottom_right : float4 = float4(0.5,0.5,0.5,1.)
     def Instruction_Gradient
         name = "Gradient"
         self->add_output("Out",TYPE_SURFACE)
@@ -110,16 +98,6 @@ class Instruction_Gradient : Instruction
         NodeColorEditor4(id,"top-right",top_right)
         NodeColorEditor4(id,"bottom-left",bottom_left)
         NodeColorEditor4(id,"bottom-right",bottom_right)
-    def override save ( var node:table<string;JsonValue?> ) : void
-        node["top-left"] = JV(top_left)
-        node["top-right"] = JV(top_right)
-        node["bottom-left"] = JV(bottom_left)
-        node["bottom-right"] = JV(bottom_right)
-    def override load ( var node:table<string;JsonValue?> ) : void
-        top_left = from_JV(node["top-left"],type<float4>)
-        top_right = from_JV(node["top-right"],type<float4>)
-        bottom_left = from_JV(node["bottom-left"],type<float4>)
-        bottom_right = from_JV(node["bottom-right"],type<float4>)
 
 enum BlendOp
     Add
@@ -128,7 +106,7 @@ enum BlendOp
 
 [instruction_node(name="Blend",category="Surface operations")]
 class Instruction_Blend : Instruction
-    op  : BlendOp = BlendOp Add
+    [[serialize]] op  : BlendOp = BlendOp Add
     def Instruction_Blend
         name = "Blend"
         self->add_input("Src",TYPE_SURFACE)
@@ -177,8 +155,4 @@ class Instruction_Blend : Instruction
         return <- result
     def override edit : void
         NodeEditEnumeration(id,"Operation",op)
-    def override save ( var node:table<string;JsonValue?> ) : void
-        node["op"] = JV(op)
-    def override load ( var node:table<string;JsonValue?> ) : void
-        op = from_JV(node["op"],type<BlendOp>)
 

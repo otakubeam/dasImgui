@@ -193,6 +193,108 @@ def seal_instruction_factory
         else
             return a.name < b.name
 
+def generate_node_init(name,category:string;var str:StructurePtr)
+    let fnname = "init`instruction`{str.name}"
+    var fn <- compiling_module() |> find_unique_function(fnname)
+    if fn == null
+        fn <- new [[Function() at=str.at, atDecl=str.at, name:=fnname]]
+        fn.flags |= FunctionFlags generated
+        fn.flags |= FunctionFlags init
+        fn.result <- new [[TypeDecl() baseType=Type autoinfer, at=str.at]]
+        var blk <- new [[ExprBlock() at=str.at]]
+        var cmt <- new [[TypeDecl() at=str.at, baseType=Type tStructure, structType=get_ptr(str)]]
+        var cmi <- new [[ExprCall() at=str.at, name:="make_instruction_factory"]]
+        cmi.arguments |> emplace_new() <| new [[ExprConstString() at=str.at, value:=name]]
+        cmi.arguments |> emplace_new() <| new [[ExprConstString() at=str.at, value:=category]]
+        cmi.arguments |> emplace_new() <| new [[ExprTypeDecl() at=str.at, typeexpr<-cmt]]
+        blk.list |> emplace(cmi)
+        fn.body <- blk
+        if !(compiling_module() |> add_function(fn))
+            panic("can't setup")
+
+// def {name} ( slef:{str._type}; var node:table<string;JsonValue> )
+def generate_serialize ( name : string; var str:StructurePtr )
+    var fn <- new [[Function() at=str.at, atDecl=str.at, name:=name]]
+    fn.flags |= FunctionFlags generated
+    fn.result <- new [[TypeDecl() baseType=Type autoinfer, at=str.at]]
+    fn.arguments |> emplace_new() <| new [[Variable() at=str.at,
+        name := "self",
+        _type <- new [[TypeDecl() at=str.at,
+            baseType=Type tStructure,
+            structType=get_ptr(str)
+        ]]
+    ]]
+    fn.arguments |> emplace_new() <| new  [[Variable() at=str.at,
+        name := "node",
+        _type <- clone_type() <| typeinfo(ast_typedecl type<table<string;json::JsonValue?> -const>)
+    ]]
+    return <- fn
+
+// def override save ( var node:table<string;json:JsonValue?> )
+def generate_node_save(var str:StructurePtr)
+    let name = "{str.name}`save"
+    var fn <- compiling_module() |> find_unique_function(name)
+    if fn == null
+        unsafe
+            fn <- generate_serialize(name,str)
+        var blk <- new [[ExprBlock() at=str.at]]
+        for fld in str.fields
+            for ann in fld.annotation
+                if "{ann.name}"=="serialize"
+                    // node["{fld.name}"] = JV(self.{fld.name})
+                    var cll <- new [[ExprCall() at=str.at, name:="JV"]]
+                    cll.arguments |> emplace_new() <| new [[ExprField() at=str.at,
+                        name := fld.name,
+                        value <- new [[ExprVar() at=str.at, name:="self"]]
+                    ]]
+                    var cpy <- new [[ExprCopy() at=str.at,
+                        left <- new [[ExprAt() at=str.at,
+                            subexpr <- new [[ExprVar() at=str.at, name:="node"]],
+                            index <- new [[ExprConstString() at=str.at, value:=fld.name]]
+                        ]],
+                        right <- cll
+                    ]]
+                    blk.list |> emplace(cpy)
+                    break
+        fn.body <- blk
+        if !(compiling_module() |> add_function(fn))
+            panic("can't setup")
+        override_method(str, "save", "_::{name}")
+
+// def override load ( var node:table<string;json:JsonValue?> )
+def generate_node_load(var str:StructurePtr)
+    let name = "{str.name}`load"
+    var fn <- compiling_module() |> find_unique_function(name)
+    if fn == null
+        unsafe
+            fn <- generate_serialize(name,str)
+        var blk <- new [[ExprBlock() at=str.at]]
+        for fld in str.fields
+            for ann in fld.annotation
+                if "{ann.name}"=="serialize"
+                    // self.{fld.name} = from_JV(node["{fld.name}"],type<fld.type>)
+                    var cll <- new [[ExprCall() at=str.at, name:="from_JV"]]
+                    cll.arguments |> emplace_new() <| new [[ExprAt() at=str.at,
+                        subexpr <- new [[ExprVar() at=str.at, name:="node"]],
+                        index <- new [[ExprConstString() at=str.at, value:=fld.name]]
+                    ]]
+                    cll.arguments |> emplace_new() <| new [[ExprTypeDecl() at=str.at,
+                        typeexpr <- clone_type(fld._type)
+                    ]]
+                    var cpy <- new [[ExprCopy() at=str.at,
+                        left <- new [[ExprField() at=str.at,
+                            name := fld.name,
+                            value <- new [[ExprVar() at=str.at, name:="self"]]
+                        ]],
+                        right <- cll
+                    ]]
+                    blk.list |> emplace(cpy)
+                    break
+        fn.body <- blk
+        if !(compiling_module() |> add_function(fn))
+            panic("can't setup")
+        override_method(str, "load", "_::{name}")
+
 // add instruction type registration function
 //  make_instruction_factory("Solid color", CATEGORY_SURFACE_OPERATIONS, type<Instruction_SolidColor>)
 [structure_macro(name="instruction_node")]
@@ -215,22 +317,8 @@ class InstructionNodeStructureAnnotation : AstStructureAnnotation
             else
                 errors := "invalid argument {arg.name}"
                 return false
-        // generate init function
-        var fn <- compiling_module() |> find_unique_function(name)
-        if fn == null
-            fn <- new [[Function() at=str.at, atDecl=str.at, name:="init`instruction`{str.name}"]]
-            fn.flags |= FunctionFlags generated
-            fn.flags |= FunctionFlags init
-            fn.result <- new [[TypeDecl() baseType=Type autoinfer, at=str.at]]
-            var blk <- new [[ExprBlock() at=str.at]]
-            var cmt <- new [[TypeDecl() at=str.at, baseType=Type tStructure, structType=get_ptr(str)]]
-            var cmi <- new [[ExprCall() at=str.at, name:="make_instruction_factory"]]
-            cmi.arguments |> emplace_new() <| new [[ExprConstString() at=str.at, value:=name]]
-            cmi.arguments |> emplace_new() <| new [[ExprConstString() at=str.at, value:=category]]
-            cmi.arguments |> emplace_new() <| new [[ExprTypeDecl() at=str.at, typeexpr<-cmt]]
-            blk.list |> emplace(cmi)
-            fn.body <- blk
-            if !(compiling_module() |> add_function(fn))
-                panic("can't setup")
+        generate_node_init(name,category,str)
+        generate_node_save(str)
+        generate_node_load(str)
         return true
 
