@@ -16,6 +16,11 @@ struct Surface
     size : int2
     data : array<float4>
 
+def Surface ( w,h:int )
+    var data : array<float4>
+    data |> resize(w*h)
+    return <- [[Surface size=int2(w,h), data<-data]]
+
 // instructions
 
 struct Connection
@@ -54,7 +59,6 @@ class Instruction
     at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
     firstFrame : bool = true
     editing : bool = false
-    size : int2 = int2(256,256)             // dimensions of the generated surface. never 0 or invalid
     inputs : array<Input>
     outputs : array<Output>
     def abstract generate : array<Value>

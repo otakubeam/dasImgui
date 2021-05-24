@@ -13,8 +13,8 @@ require daslib/safe_addr
 require math
 
 let DEFAULT_NODE_WIDTH  = 500.
-let DEFAULT_ELEMENT_WIDTH = 450.
-let DEFAULT_NAMED_ELEMENT_WIDTH = 450.
+let DEFAULT_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 50.
+let DEFAULT_NAMED_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 50.
 
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
@@ -34,6 +34,14 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
     if mode==EditMode Embedded
         flags |= ImGuiColorEditFlags NoTooltip | ImGuiColorEditFlags NoOptions
     if ColorPicker4("##{name}{id}{mode}_ColorEditor4",safe_addr(data.x),flags)
+        update_preview()
+        return true
+    else
+        return false
+
+def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    if InputInt2("{name}##{id}{mode}_DragFloat",safe_addr(data.x))
         update_preview()
         return true
     else
