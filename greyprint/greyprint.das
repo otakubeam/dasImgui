@@ -22,6 +22,10 @@ require command_que
 // note - can be different model for every new editor type
 require instructions_model
 
+let SIDE_PANNEL_WIDTH = 600.
+let INSTRUCTION_PANNEL_HEIGHT = 350.
+let SELECTION_PANNEL_HEIGHT = 600.
+
 let NAVIGATION_TIME = 0.5
 
 // window and app
@@ -359,54 +363,68 @@ def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTre
         inst->edit(EditMode Sidebar)
         TreePop()
 
+def edit_instructions()
+    static_let <|
+        var filter = new ImGuiTextFilter
+    *filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
+    var prevCategory = ""
+    var collapsed = true
+    for ai in g_instructionsByCategory
+        if prevCategory != ai.category
+            if !collapsed
+                TreePop()
+            prevCategory = ai.category
+            collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
+        if !collapsed && ((*filter) |> PassFilter(ai.name))
+            if Button("{ai.name}##make_S")
+                post_event() <| @
+                    var inst = make_instruction(ai.tname)
+                    g_Project->add_new_insturction(inst)
+    if !collapsed
+        TreePop()
+
 def side_child_window()
     SetCurrentEditor(g_Context)
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
-    BeginChild("Project", float2(600., -FLT_MIN), true)
-    if Button("[*]")
-        NavigateToContent(NAVIGATION_TIME)
-    HelpMarker("Navigate to content")
-    if CollapsingHeader("New instruction")
-        var prevCategory = ""
-        var collapsed = true
-        for ai in g_instructionsByCategory
-            if prevCategory != ai.category
-                if !collapsed
-                    TreePop()
-                prevCategory = ai.category
-                collapsed = !TreeNode(ai.category)
-            if !collapsed
-                if Button("{ai.name}##make_S")
-                    post_event() <| @
-                        var inst = make_instruction(ai.tname)
-                        g_Project->add_new_insturction(inst)
-        if !collapsed
-            TreePop()
+    BeginGroup()
+// instructions
+    BeginChild("Instructions", float2(SIDE_PANNEL_WIDTH, INSTRUCTION_PANNEL_HEIGHT), true)
+    if CollapsingHeader("New instruction",ImGuiTreeNodeFlags DefaultOpen)
+        edit_instructions()
+    EndChild()
+// selection
     var snc = GetSelectedObjectCount()
     if snc != 0
         var sna <- GetSelectedNodes()
-        if CollapsingHeader("Selection", ImGuiTreeNodeFlags DefaultOpen)
-            if Button("[X]##delete selection")
-                for ng in sna
-                    if ng != 0
-                        DeleteNode(ng)
-            HelpMarker("Delete selection")
-            SameLine()
-            if Button("[.]##navigate to selection")
-                NavigateToSelection(false, 0.5)
-            HelpMarker("Navigate to selection")
+        BeginChild("Selection", float2(SIDE_PANNEL_WIDTH, SELECTION_PANNEL_HEIGHT), true)
+        if Button("[X]##delete selection")
             for ng in sna
-                let nid = id_2_guid[ng]
-                var inst = g_Project->find_instruction(nid)
-                if inst==null
-                    print("Not found {ng} -> '{nid}'\n")
-                assert(inst!=null)
-                SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
-    if CollapsingHeader("Project")
-        for inst in g_Project.instructions
+                if ng != 0
+                    DeleteNode(ng)
+        HelpMarker("Delete selection")
+        SameLine()
+        if Button("[*]##navigate to selection")
+            NavigateToSelection(true, 0.5)
+        HelpMarker("Navigate to selection")
+        for ng in sna
+            let nid = id_2_guid[ng]
+            var inst = g_Project->find_instruction(nid)
+            SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
+        EndChild()
+// project
+    BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
+    if Button("[*]")
+        NavigateToContent(NAVIGATION_TIME)
+    static_let <|
+        var project_filter = new ImGuiTextFilter
+    *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
+    for inst in g_Project.instructions
+        if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
             SideEditInstance(inst)
     EndChild()
+// and done
+    EndGroup()
     imgui::PopStyleColor()
     SetCurrentEditor(null)
 
