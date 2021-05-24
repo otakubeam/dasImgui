@@ -19,7 +19,7 @@ let DEFAULT_NAMED_ELEMENT_WIDTH = 450.
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     Text(name)
-    if EmbeddedListBox("{name}##{id}_Enumeration", op)
+    if EmbeddedListBox("{name}##{id}{mode}_Enumeration", op)
         update_preview()
         return true
     else
@@ -30,10 +30,10 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
     SameLine()
     Text(name)
     SetNextItemWidth(DEFAULT_ELEMENT_WIDTH - 50.)
-    var flags : ImGuiColorEditFlags
+    var flags = ImGuiColorEditFlags AlphaBar
     if mode==EditMode Embedded
         flags |= ImGuiColorEditFlags NoTooltip | ImGuiColorEditFlags NoOptions
-    if ColorPicker4("##{name}{id}_ColorEditor4",safe_addr(data.x),flags)
+    if ColorPicker4("##{name}{id}{mode}_ColorEditor4",safe_addr(data.x),flags)
         update_preview()
         return true
     else
@@ -41,7 +41,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
 
 def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.01f)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
-    if DragFloat("{name}##{id}_DragFloat",safe_addr(data),step)
+    if DragFloat("{name}##{id}{mode}_DragFloat",safe_addr(data),step)
         update_preview()
         return true
     else
@@ -49,7 +49,7 @@ def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.0
 
 def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
-    if Checkbox("{name}##{id}_Checkbox",safe_addr(data))
+    if Checkbox("{name}##{id}{mode}_Checkbox",safe_addr(data))
         update_preview()
         return true
     else
