@@ -26,7 +26,6 @@ class Instruction_Scalar : Instruction
 [instruction_node(name="Add scalar",category="Scalar operations")]
 class Instruction_AddScalar : Instruction
     override editing = true
-    log : bool = false
     last_eval : float = 0.
     def Instruction_AddScalar
         name = "Add Scalar"
@@ -48,15 +47,25 @@ class Instruction_AddScalar : Instruction
         var reg : Value
         scalar_add(reg,v1,v2)
         last_eval = reg as scalar
-        if log
-            print("{name}:{id} value = {reg}\n")
         return <- [{Value reg}]
     def override edit ( mode:EditMode ) : void
-        let text = "-> {last_eval}"
-        Text(text)
-        SameLine(CalcTextSize(text).x + 5.)
-        NodeCheckbox(mode,id,"log",log)
+        Text("-> {last_eval}")
 
+[instruction_node(name="Output surface",category="Surface operations")]
+class Instruction_OutputSurface : Instruction
+    override flags = InstructionFlags Output
+    [[serialize]] size : int2 = int2(256,256)
+    def Instruction_OutputSurface
+        name = "Output surface"
+        self->add_input("In",TYPE_SURFACE)
+    def override generate : array<Value>
+        var inp <- gen_input(inputs[0].src)
+        // TODO: save somewhere
+        delete inp
+        var dummy : array<Value>
+        return <- dummy
+    def override edit ( mode:EditMode ): void
+        pass
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction

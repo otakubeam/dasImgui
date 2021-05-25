@@ -38,7 +38,8 @@ def connect ( var inp:Input; src:Instruction?; outp:string )
     inp.src = src
     inp.output = outp
 
-struct Output : Connection {}
+struct Output : Connection
+    preview : bool
 
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
@@ -53,10 +54,15 @@ enum EditMode
     Sidebar         // in the side menu
     Embedded        // in the node
 
+bitfield InstructionFlags
+    Output
+    HasEdit
+
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
     at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
+    flags : InstructionFlags = InstructionFlags HasEdit
     firstFrame : bool = true
     editing : bool = false
     inputs : array<Input>
@@ -127,7 +133,8 @@ class Project
                 "id" => JV(inst.id);
                 "name" => JV(inst.name);
                 "rtti" => JV(tname);
-                "at" => JV(inst.at)
+                "at" => JV(inst.at);
+                "flags" => JV(inst.flags)
             }}
             inst->save(inode)
             nodes |> push(JV(inode))
@@ -159,6 +166,7 @@ class Project
             inst.id = node["id"].value as _string
             inst.name = node["name"].value as _string
             inst.at = from_JV(node["at"],type<float2>)
+            inst.flags = from_JV(node["flags"],type<InstructionFlags>)
             (*inst)->load(node)
             instructions |> push(inst)
         var links & = root["links"].value as _array

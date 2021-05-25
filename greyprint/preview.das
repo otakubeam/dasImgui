@@ -8,10 +8,10 @@ require daslib/safe_addr
 require daslib/static_let
 
 require instructions
+require math
 
-var g_PreviewTexture : uint
-var g_PreviewInstruction : Instruction?
-var g_PreviewOutput : string
+var g_PreviewTexture : array<uint>
+var g_PreviewProject : Project?
 var g_LivePreview = true
 
 def make_rgba_texture(width,height:int; data:void?)
@@ -34,18 +34,18 @@ def make_checkerboard
     return make_rgba_texture(16,16,gl_array_ptr(cbt))
 
 def clear_preview
-    g_PreviewInstruction = null
-    if g_PreviewTexture != 0u
-        glDeleteTextures(1, safe_addr(g_PreviewTexture))
-        g_PreviewTexture = 0u
+    if length(g_PreviewTexture)!=0
+        unsafe
+            glDeleteTextures(length(g_PreviewTexture), addr(g_PreviewTexture[0]))
+        g_PreviewTexture |> clear()
 
 def draw_preview ( display_w, display_h : int )
     static_let <|
         var rot_cube = 0.
         var rot_tri = 0.
         var texture = 0u
-    if g_PreviewTexture==0u
-        g_PreviewTexture = make_checkerboard()
+    if length(g_PreviewTexture)==0
+        g_PreviewTexture |> push(make_checkerboard())
     static_let <|
         let vertices = [[float[]
             -0.5;  -0.5;  0.5;   0.5; -0.5;  0.5;   0.5;  0.5;  0.5; -0.5;  0.5;  0.5;
@@ -66,26 +66,41 @@ def draw_preview ( display_w, display_h : int )
     glLoadIdentity()
     gluPerspective(45.0lf, aspect, 0.1lf, 100.0lf)
     glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
-    glTranslatef(0.0f, 0.0f, -1.6f)
-    glRotatef(rot_tri * 0.25,1.0,0.0,0.0)
-    glRotatef(rot_cube,0.0,1.0,0.0)
     rot_cube += 1.0
     if rot_cube > 360.
         rot_cube -= 360.
     rot_tri += 0.5
     if rot_tri > 360.
         rot_tri -= 360.
-    glEnable(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, g_PreviewTexture)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    glColor3f(1.0f, 1.0f, 1.0f)
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-    glEnableClientState(GL_VERTEX_ARRAY)
-    glTexCoordPointer(2, GL_FLOAT, 0, gl_array_ptr(texcoords))
-    glVertexPointer(3, GL_FLOAT, 0, gl_array_ptr(vertices))
-    glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, gl_array_ptr(cubeIndices))
-    glDisableClientState(GL_VERTEX_ARRAY)
-    glDisable(GL_TEXTURE_2D)
+    let total = length(g_PreviewTexture)
+    let sqX = max(1,int(ceil(sqrt(float(total)))))
+    let sqY = max(1,(total+sqX-1)/sqX)
+    // print("sqX={sqX} sqY={sqY} total={total}\n")
+    assert(sqX * sqY >= total)
+    let stepX = 2.
+    let stepY = 2.
+    let halfX = -stepX*float(max(sqX-1,0))*0.5
+    let halfY = -stepY*float(max(sqY-1,0))*0.5
+    var index = 0
+    for y in range(sqY)
+        for x in range(sqX)
+            glLoadIdentity()
+            glTranslatef(float(x)*stepX+halfX, float(y)*stepY+halfY, -2. - float(sqX-1)*2. )
+            glRotatef(rot_tri * 0.25,1.0,0.0,0.0)
+            glRotatef(rot_cube,0.0,1.0,0.0)
+            glEnable(GL_TEXTURE_2D)
+            glBindTexture(GL_TEXTURE_2D, g_PreviewTexture[index])
+            glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+            glColor3f(1.0f, 1.0f, 1.0f)
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+            glEnableClientState(GL_VERTEX_ARRAY)
+            glTexCoordPointer(2, GL_FLOAT, 0, gl_array_ptr(texcoords))
+            glVertexPointer(3, GL_FLOAT, 0, gl_array_ptr(vertices))
+            glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, gl_array_ptr(cubeIndices))
+            glDisableClientState(GL_VERTEX_ARRAY)
+            glDisable(GL_TEXTURE_2D)
+            index ++
+            if index==total
+                break

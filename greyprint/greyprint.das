@@ -146,10 +146,7 @@ def main_menu()
                 load_project()
             if MenuItem("Save##Project")
                 save_project()
-        var previewName = ""
-        if g_PreviewInstruction != null
-            previewName = " {g_PreviewInstruction.name}:{g_PreviewInstruction.id}"
-        BeginMenu("Preview{previewName}") <|
+        BeginMenu("Preview") <|
             if Checkbox("Live preview",safe_addr(g_LivePreview))
                 update_preview()
 
@@ -224,9 +221,10 @@ def editor_child_window()
             BeginNode(id) <|
                 Dummy(float2(DEFAULT_NODE_WIDTH,0.))
                 ImGuiEx_BeginColumn()
-                unsafe
-                    Checkbox("##embedded_{inst.id}",addr(inst.editing))
-                SameLine()
+                if inst.flags.HasEdit
+                    unsafe
+                        Checkbox("##embedded_{inst.id}",addr(inst.editing))
+                    SameLine()
                 Text(inst.name)
                 let sz = ImGuiEx_NextColumn()
                 SameLine(DEFAULT_NODE_WIDTH - sz.x - CalcTextSize("[X]").x - 2.0)
@@ -234,7 +232,8 @@ def editor_child_window()
                     DeleteNode(get_unique_id(inst.id))
                 ImGuiEx_EndColumn()
                 if inst.editing
-                    inst->edit(EditMode Embedded)
+                    if inst.flags.HasEdit
+                        inst->edit(EditMode Embedded)
                 ImGuiEx_BeginColumn()
                 for inp in inst.inputs
                     let inp_id = get_input_unique_id(inst,inp.name)
@@ -256,13 +255,10 @@ def editor_child_window()
                     let outp_id = get_output_unique_id(inst,outp.name)
                     let text = "{outp.name}:{outp._type}"
                     out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
-                        if outp._type==TYPE_SURFACE
-                            if Button("[P]##{inst.id}_E")
-                                generate_preview(inst,outp.name)
-                        else
-                            if Button("[E]##{inst.id}_E")
-                                var surf <- inst->generate()
-                                delete surf
+                        SameLine()
+                        unsafe
+                            if Checkbox("##prewview_{inst.id}_{outp.name}_E",addr(outp.preview))
+                                update_preview()
                 ImGuiEx_EndColumn()
             if inst.firstFrame
                 if inst.at.x==-FLT_MAX
@@ -351,8 +347,6 @@ def editor_child_window()
 
 def DeleteInstruction ( inst:Instruction? )
     g_Project->delete_instruction(inst)
-    if g_PreviewInstruction==inst
-        g_PreviewInstruction = null
 
 def DeleteConnection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
@@ -365,7 +359,7 @@ def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTre
             SelectNode(get_unique_id(inst.id), false)
             NavigateToSelection(false, NAVIGATION_TIME)
             ClearSelection()
-        HelpMarker("Center")
+        HelpMarker("Navigate to node")
         SameLine()
         if Button("<C>##{inst.id}_S")
             CenterNodeOnScreen(get_unique_id(inst.id))
@@ -378,18 +372,13 @@ def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTre
         HelpMarker("Delete")
         Text("name: `{inst.name}`")      // todo: make editabe
         for outp in inst.outputs
-            Text("-> {outp.name}:{outp._type}")
+            unsafe
+                if Checkbox("##preview_{inst.id}_{outp.name}_S",addr(outp.preview))
+                    update_preview()
             SameLine()
-            if outp._type==TYPE_SURFACE
-                if Button("[P]##{inst.id}_S")
-                    generate_preview(inst,outp.name)
-                HelpMarker("Preview")
-            else
-                if Button("[E]##{inst.id}_S")
-                    var surf <- inst->generate()
-                    delete surf
-                HelpMarker("Eval")
-        inst->edit(EditMode Sidebar)
+            Text("-> {outp.name}:{outp._type}")
+        if inst.flags.HasEdit
+            inst->edit(EditMode Sidebar)
         TreePop()
 
 def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
@@ -492,6 +481,8 @@ def main_editor_screen()
 def main
     seal_instruction_factory()          // initialize everything greyprint related
     g_Project |> make_sample_project()  // make a sample project for now
+    unsafe
+        g_PreviewProject = addr(g_Project)
     imgui_app("Testing IMGUI") <|
         NewFrame()
         main_editor_screen()
