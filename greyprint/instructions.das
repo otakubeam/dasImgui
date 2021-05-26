@@ -1,7 +1,7 @@
 options indenting = 4
 options remove_unused_symbols = false
 
-module instructions
+module instructions shared
 
 require rtti
 require imgui
@@ -9,6 +9,7 @@ require daslib/json_boost public
 require daslib/safe_addr
 require daslib/ast_boost
 require daslib/static_let
+
 
 // surface
 
@@ -40,6 +41,7 @@ def connect ( var inp:Input; src:Instruction?; outp:string )
 
 struct Output : Connection
     preview : bool
+    reg : int
 
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
@@ -67,10 +69,10 @@ class Instruction
     editing : bool = false
     inputs : array<Input>
     outputs : array<Output>
-    def abstract generate : array<Value>
     def abstract edit ( mode:EditMode ) : void
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
+    def abstract produce ( var src_regs : array<int> ): array<string>
     def add_input ( iname, itype : string )
         inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
@@ -89,10 +91,6 @@ def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input
             return
     unsafe
         invoke(blk,reinterpret<Input?#> null)
-
-// todo: cache
-def gen_input ( var from:Instruction? ): array<Value>
-    return <- from->generate()
 
 // project
 

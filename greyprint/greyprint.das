@@ -5,6 +5,7 @@ require fio
 require imgui_app
 require math
 require rtti
+require debugapi
 
 require daslib/glfw_boost
 require daslib/imgui_boost
@@ -21,6 +22,7 @@ require command_que
 
 // note - can be different model for every new editor type
 require instructions_model
+require model_eval
 
 let SIDE_PANNEL_WIDTH = 600.
 let CONTEXT_MENU_WIDTH = 400.
@@ -94,11 +96,14 @@ def make_sample_project(var self:Project)
     var src_node = new Instruction_SolidColor()
     var dst_node = new Instruction_Gradient()
     var blend_node = new Instruction_Blend()
+    var out_node = new Instruction_OutputSurface()
     blend_node.inputs[0] |> connect(src_node,"Out")
     blend_node.inputs[1] |> connect(dst_node,"Out")
+    out_node.inputs[0] |> connect(blend_node,"Out")
     self->add_new_insturction(src_node)
     self->add_new_insturction(dst_node)
     self->add_new_insturction(blend_node)
+    self->add_new_insturction(out_node)
     // now, lets sort everything vertically
     for i,t in self.instructions, range(100500)
         i.at = float2(0, t*300)
@@ -407,6 +412,38 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
     if !collapsed
         TreePop()
 
+require imgui
+
+var g_ProjectErrors = ""
+
+def eval_project ( var proj:Project; popup:bool )
+    let src_code = produce_project_text(proj)
+    var failed = false
+    compile("project",src_code, CodeOfPolicies()) <| $ ( ok; prog; errors )
+        if ok
+            if popup
+                g_ProjectErrors = src_code
+            simulate(prog,false) <| $ ( sok; context; serrors ) // no aot for now
+                if sok
+                    unsafe
+                        invoke_in_context(context,"main")
+                        var pout = get_context_global_variable(context,"G_OUTPUT")
+                        var OUTPUT : array<Surface> & = * ( reinterpret<array<Surface>?> pout )
+                        clear_preview()
+                        for outp in OUTPUT
+                            g_PreviewTexture |> push(make_prewview_rgba_texture(outp))
+                else
+                    g_ProjectErrors = "{src_code}\n\nfailed to simulate\n{serrors}"
+                    failed = true
+        else
+            g_ProjectErrors = "{src_code}\n\nfailed to compile\n{errors}"
+            failed = true
+    if failed || popup
+        OpenPopup("EVAL")
+
+def preview_updater
+    eval_project(g_Project, false)
+
 def side_child_window()
     SetCurrentEditor(g_Context)
     var style & = imgui::GetStyle()
@@ -440,17 +477,32 @@ def side_child_window()
     BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
     if Button("[*]")
         NavigateToContent(NAVIGATION_TIME)
+    HelpMarker("Navigate to content")
+    SameLine()
+    if Button("[E]")
+        eval_project(g_Project,true)
+    HelpMarker("Preview generated das-script")
     static_let <|
         var project_filter = new ImGuiTextFilter
     *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
     for inst in g_Project.instructions
         if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
             SideEditInstance(inst)
+// there
+    if IsPopupOpen("EVAL")
+        SetNextWindowSize(float2(1280.,720.))
+        if BeginPopup("EVAL",ImGuiWindowFlags HorizontalScrollbar)
+            BeginGroup()
+            TextUnformatted(g_ProjectErrors)
+            EndGroup()
+            EndPopup()
     EndChild()
 // and done
     EndGroup()
     imgui::PopStyleColor()
     SetCurrentEditor(null)
+
+
 
 // MAIN WINDOW
 
@@ -479,6 +531,7 @@ def main_editor_screen()
 
 [export]
 def main
+    g_PreviewUpdater = @@preview_updater
     seal_instruction_factory()          // initialize everything greyprint related
     g_Project |> make_sample_project()  // make a sample project for now
     unsafe

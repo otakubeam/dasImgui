@@ -7,8 +7,8 @@ require daslib/glfw_boost
 require daslib/safe_addr
 require daslib/static_let
 
-require instructions
-require math
+require instructions public
+require math public
 
 var g_PreviewTexture : array<uint>
 var g_PreviewProject : Project?
@@ -38,6 +38,14 @@ def clear_preview
         unsafe
             glDeleteTextures(length(g_PreviewTexture), addr(g_PreviewTexture[0]))
         g_PreviewTexture |> clear()
+
+var g_PreviewUpdater : function<():void>
+
+def update_preview
+    if g_LivePreview
+        clear_preview()
+        if g_PreviewUpdater != null
+            invoke(g_PreviewUpdater)
 
 def draw_preview ( display_w, display_h : int )
     static_let <|

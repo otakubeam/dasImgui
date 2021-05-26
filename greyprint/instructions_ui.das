@@ -72,22 +72,4 @@ def make_prewview_rgba_texture ( var s : Surface )
     delete rgba
     return preview
 
-def generate_preview(var inst:Instruction?; outp:string)
-    var surf <- inst->generate()
-    var tex = 0u
-    for op,opi in inst.outputs,range(100500)
-        if op.name==outp
-            assert(surf[opi] is surface)
-            tex = make_prewview_rgba_texture(surf[opi] as surface)
-            break
-    assert(tex!=0u,"could not generate preview")
-    delete surf
-    g_PreviewTexture |> push(tex)
 
-def update_preview
-    if g_LivePreview
-        clear_preview()
-        for inst in g_PreviewProject.instructions
-            for outp in inst.outputs
-                if outp.preview
-                    generate_preview(inst, outp.name)

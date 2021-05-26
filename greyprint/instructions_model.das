@@ -7,6 +7,7 @@ require instructions public
 require model
 require preview
 require instructions_ui
+require produce
 
 [instruction_node(name="Scalar",category="Scalar operations")]
 class Instruction_Scalar : Instruction
@@ -15,13 +16,12 @@ class Instruction_Scalar : Instruction
     def Instruction_Scalar
         name = "Scalar"
         self->add_output("Out",TYPE_SCALAR)
-    def override generate : array<Value>
-        var result : array<Value>
-        var reg : Value
-        scalar_scalar(reg, value)
-        return <- [{Value reg}]
     def override edit ( mode:EditMode ) : void
         NodeDragFloat(mode,id,"value",value)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "{to_reg(outputs[0].reg)} = {to_produce(value)}"
+        }]
 
 [instruction_node(name="Add scalar",category="Scalar operations")]
 class Instruction_AddScalar : Instruction
@@ -32,40 +32,26 @@ class Instruction_AddScalar : Instruction
         self->add_input("In-1",TYPE_SCALAR)
         self->add_input("In-2",TYPE_SCALAR)
         self->add_output("Out",TYPE_SCALAR)
-    def override generate : array<Value>
-        var v1, v2 : float
-        if inputs[0].src != null
-            var outs <- gen_input(inputs[0].src)
-            assert(length(outs)==1)
-            assert(outs[0] is scalar)
-            v1 = outs[0] as scalar
-        if inputs[1].src != null
-            var outs <- gen_input(inputs[1].src)
-            assert(length(outs)==1)
-            assert(outs[0] is scalar)
-            v2 = outs[0] as scalar
-        var reg : Value
-        scalar_add(reg,v1,v2)
-        last_eval = reg as scalar
-        return <- [{Value reg}]
     def override edit ( mode:EditMode ) : void
         Text("-> {last_eval}")
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "{to_reg(outputs[0].reg)} = {to_reg(src_regs[0])} + {to_reg(src_regs[1])}"
+        }]
 
 [instruction_node(name="Output surface",category="Surface operations")]
 class Instruction_OutputSurface : Instruction
     override flags = InstructionFlags Output
-    [[serialize]] size : int2 = int2(256,256)
     def Instruction_OutputSurface
         name = "Output surface"
         self->add_input("In",TYPE_SURFACE)
-    def override generate : array<Value>
-        var inp <- gen_input(inputs[0].src)
-        // TODO: save somewhere
-        delete inp
-        var dummy : array<Value>
-        return <- dummy
     def override edit ( mode:EditMode ): void
         pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "output({to_reg(src_regs[0])})"
+        }]
+
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction
@@ -74,14 +60,15 @@ class Instruction_SolidColor : Instruction
     def Instruction_SolidColor
         name = "Solid color"
         self->add_output("Out",TYPE_SURFACE)
-    def override generate : array<Value>
-        var s : Value
-        create_surface(s, size.x, size.y)
-        surface_solid_color(s, color)
-        return <- [{Value s}]
     def override edit ( mode:EditMode ): void
         NodeInputInt2(mode,id,"size",size)
         NodeColorEditor4(mode,id,"color",color)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_solid_color({to_reg(outputs[0].reg)},{to_produce(color)})"
+        }]
+
 
 [instruction_node(name="Gradient",category="Surface operations")]
 class Instruction_Gradient : Instruction
@@ -93,17 +80,17 @@ class Instruction_Gradient : Instruction
     def Instruction_Gradient
         name = "Gradient"
         self->add_output("Out",TYPE_SURFACE)
-    def override generate : array<Value>
-        var s : Value
-        create_surface(s, size.x, size.y)
-        surface_gradient(s, top_left, top_right, bottom_left, bottom_right)
-        return <- [{Value s}]
     def override edit ( mode:EditMode ) : void
         NodeInputInt2(mode,id,"size",size)
         NodeColorEditor4(mode,id,"top-left",top_left)
         NodeColorEditor4(mode,id,"top-right",top_right)
         NodeColorEditor4(mode,id,"bottom-left",bottom_left)
         NodeColorEditor4(mode,id,"bottom-right",bottom_right)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_gradient({to_reg(outputs[0].reg)},{to_produce(top_left)},{to_produce(top_right)},{to_produce(bottom_left)},{to_produce(bottom_right)})"
+        }]
 
 enum BlendOp
     Add
@@ -120,37 +107,12 @@ class Instruction_Blend : Instruction
         self->add_input("Dst",TYPE_SURFACE)
         self->add_input("Factor",TYPE_SCALAR)
         self->add_output("Out",TYPE_SURFACE)
-    def override generate : array<Value>
-        var src = inputs[0].src
-        var dst = inputs[1].src
-        var s : Value
-        create_surface(s, size.x, size.y)
-        var error = true
-        if src!=null && dst!=null
-            var src_r <- gen_input(src)
-            var dst_r <- gen_input(dst)
-            assert((length(src_r)==1) && (src_r[0] is surface))
-            assert(length(dst_r)==1 && (dst_r[0] is surface))
-            if (src_r[0] as surface).size==size && (dst_r[0] as surface).size==size
-                if op==BlendOp Add
-                    surface_blend_add(s,src_r[0],dst_r[0])
-                elif op==BlendOp Multiply
-                    surface_blend_mul(s,src_r[0],dst_r[0])
-                elif op==BlendOp Crossfade
-                    if inputs[2].src != null
-                        var fact_r <- gen_input(inputs[2].src)
-                        assert((length(fact_r)==1) && (fact_r[0] is scalar))
-                        surface_blend_crossfade(s,src_r[0],dst_r[0],fact_r[0])
-                        delete fact_r
-                    else
-                        surface_blend_crossfade(s,src_r[0],dst_r[0],0.5)
-                error = false
-            delete src_r
-            delete dst_r
-        if error
-            surface_solid_color(s,float4(1,0,0,1))
-        return <- [{Value s}]
     def override edit ( mode:EditMode ) : void
         NodeInputInt2(mode,id,"size",size)
         NodeEditEnumeration(mode,id,"Operation",op)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
+            "surface_blend_{op}({to_reg(outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg(src_regs[2],"0.5f")})"
+        }]
 
