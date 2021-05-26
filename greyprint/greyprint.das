@@ -7,6 +7,8 @@ require math
 require rtti
 require debugapi
 
+require stddlg
+
 require daslib/glfw_boost
 require daslib/imgui_boost
 require daslib/static_let
@@ -108,16 +110,18 @@ def make_sample_project(var self:Project)
     for i,t in self.instructions, range(100500)
         i.at = float2(0, t*300)
 
-var g_SavedProject : string
-
-def save_project
+def save_project(fname:string)
     SetCurrentEditor(g_Context)
     for inst in g_Project.instructions
         inst.at = GetNodePosition(get_unique_id(inst.id))
     SetCurrentEditor(null)
     var jv = g_Project->save()
-    g_SavedProject = write_json(jv)
-    print("\n\n\n{g_SavedProject}\n\n\n")
+    let save_text = write_json(jv)
+    fopen(fname,"wb") <| $ ( json_file )
+        if json_file != null
+            fwrite(json_file, save_text)
+        else
+            get_dlg_ok_from_user("Error","Can't save {fname}")
     unsafe
         delete jv
 
@@ -133,12 +137,22 @@ def new_project()
     post_event <| @
         clear_project_data()
 
-def load_project()
-    post_event <| @
-        clear_project_data()
-        var error : string
-        var jv = read_json(g_SavedProject,error)
-        g_Project->load(jv)
+def load_project(fname:string)
+    var text : string
+    fopen(fname,"rb") <| $ ( json_file )
+        if json_file != null
+            fmap(json_file) <| $ ( data )
+                text := data
+        else
+            get_dlg_ok_from_user("Error","Can't load {fname}")
+    if !empty(text)
+        post_event <| @
+            clear_project_data()
+            var error : string
+            var jv = read_json(text,error)
+            g_Project->load(jv)
+            unsafe
+                delete jv
 
 // MAIN MENU
 
@@ -146,11 +160,16 @@ def main_menu()
     BeginMenuBar <|
         BeginMenu("File") <|
             if MenuItem("New##Project")
-                new_project()
+                if get_dlg_ok_from_user("caption","body")
+                    new_project()
             if MenuItem("Load##Project")
-                load_project()
+                let fname = get_dlg_open_file("","greyprint")
+                if !empty(fname)
+                    load_project(fname)
             if MenuItem("Save##Project")
-                save_project()
+                let fname = get_dlg_save_file("new_name.greyprint","","greyprint")
+                if !empty(fname)
+                    save_project(fname)
         BeginMenu("Preview") <|
             if Checkbox("Live preview",safe_addr(g_LivePreview))
                 update_preview()
