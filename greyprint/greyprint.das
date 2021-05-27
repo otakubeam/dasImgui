@@ -92,24 +92,6 @@ def translate_input_output_id ( id:int; typ:string ) : tuple<inst:Instruction?; 
     delete note
     return val
 
-def make_sample_project(var self:Project)
-    self->clear()
-    // 1st example
-    var src_node = new Instruction_SolidColor()
-    var dst_node = new Instruction_Gradient()
-    var blend_node = new Instruction_Blend()
-    var out_node = new Instruction_OutputSurface()
-    blend_node.inputs[0] |> connect(src_node,"Out")
-    blend_node.inputs[1] |> connect(dst_node,"Out")
-    out_node.inputs[0] |> connect(blend_node,"Out")
-    self->add_new_insturction(src_node)
-    self->add_new_insturction(dst_node)
-    self->add_new_insturction(blend_node)
-    self->add_new_insturction(out_node)
-    // now, lets sort everything vertically
-    for i,t in self.instructions, range(100500)
-        i.at = float2(0, t*300)
-
 def save_project(fname:string)
     SetCurrentEditor(g_Context)
     for inst in g_Project.instructions
@@ -166,25 +148,29 @@ def load_project(fname:string)
 
 def main_menu()
     BeginMenuBar <|
-        BeginMenu("File") <|
-            if MenuItem("New##Project")
+        BeginMenu("File##Main menu") <|
+            if MenuItem("New##File")
                 //if get_dlg_ok_from_user("caption","body")
                 new_project()
-            if MenuItem("Load##Project")
+            if MenuItem("Load##File")
                 let fname = get_dlg_open_file("","greyprint")
                 if !empty(fname)
                     load_project(fname)
-            if MenuItem("Save##Project")
+            if MenuItem("Save##File")
                 let fname = get_dlg_save_file("new_name.greyprint","","greyprint")
                 if !empty(fname)
                     save_project(fname)
-            if MenuItem("Export##Project")
+            if MenuItem("Export##File")
                 let fname = get_dlg_save_file("new_name.das","","greyprint")
                 if !empty(fname)
                     export_project(fname)
-        BeginMenu("Preview") <|
-            if Checkbox("Live preview",safe_addr(g_LivePreview))
+        BeginMenu("Preview##Main menu") <|
+            if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()
+            if MenuItem("View generated code##Preview")
+                g_ProjectSource = produce_project_text(g_Project)
+                post_event <| @
+                    OpenPopup("PREVIEW SOURCE")
 
 // NODE EDITOR WINDOW
 
@@ -365,6 +351,7 @@ def editor_child_window()
                                     RejectNewItem(float4(1,0,0,1),3.)
                                 else
                                     AcceptNewItem()
+                                    update_preview()
 
         BeginDelete() <|
             var deletedLinkId : LinkId
@@ -402,13 +389,15 @@ def editor_child_window()
 
 def delete_instruction ( var inst:Instruction? )
     g_Project->delete_instruction(inst)
+    update_preview()
 
 def delete_connection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
     let inI = inL.inst->input_index(inL.pin)
     inL.inst.inputs[inI].src = null
+    update_preview()
 
-def SideEditInstance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
+def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
     if TreeNodeEx("side_{inst.id}{flags}",flags,"{inst.name}:{inst.id}")
         if Button("[G]##goto_{inst.id}")
             SelectNode(get_unique_id(inst.id), false)
@@ -459,20 +448,23 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
                     g_Project->add_new_insturction(inst)
                     if fromContextMenu
                         inst.at = pos
+                    update_preview()
     if !collapsed
         TreePop()
 
 require imgui
 
+var g_ProjectSource = ""
 var g_ProjectErrors = ""
+var g_ProjectErrorsMessage = ""
 
-def eval_project ( var proj:Project; popup:bool )
-    let src_code = produce_project_text(proj)
+def eval_project ( var proj:Project )
     var failed = false
-    compile("project",src_code, CodeOfPolicies()) <| $ ( ok; prog; errors )
+    g_ProjectSource = produce_project_text(proj)
+    g_ProjectErrors = ""
+    g_ProjectErrorsMessage = ""
+    compile("project",g_ProjectSource, CodeOfPolicies()) <| $ ( ok; prog; errors )
         if ok
-            if popup
-                g_ProjectErrors = src_code
             simulate(prog,false) <| $ ( sok; context; serrors ) // no aot for now
                 if sok
                     unsafe
@@ -483,16 +475,17 @@ def eval_project ( var proj:Project; popup:bool )
                         for outp in OUTPUT
                             g_PreviewTexture |> push(make_prewview_rgba_texture(outp))
                 else
-                    g_ProjectErrors = "{src_code}\n\nfailed to simulate\n{serrors}"
+                    g_ProjectErrorsMessage = "generated code failed to simulate"
+                    g_ProjectErrors = "{serrors}"
                     failed = true
         else
-            g_ProjectErrors = "{src_code}\n\nfailed to compile\n{errors}"
+            g_ProjectErrorsMessage = "generated code failed to compile"
+            g_ProjectErrors = "{errors}"
             failed = true
-    if failed || popup
-        OpenPopup("EVAL")
+
 
 def preview_updater
-    eval_project(g_Project, false)
+    eval_project(g_Project)
 
 def side_child_window()
     SetCurrentEditor(g_Context)
@@ -521,7 +514,7 @@ def side_child_window()
         for ng in sna
             let nid = id_2_guid[ng]
             var inst = g_Project->find_instruction(nid)
-            SideEditInstance(inst, ImGuiTreeNodeFlags DefaultOpen)
+            side_edit_instance(inst, ImGuiTreeNodeFlags DefaultOpen)
         EndChild()
 // project
     BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
@@ -529,29 +522,44 @@ def side_child_window()
         NavigateToContent(NAVIGATION_TIME)
     HelpMarker("Navigate to content")
     SameLine()
-    if Button("[E]")
-        eval_project(g_Project,true)
-    HelpMarker("Preview generated das-script")
     static_let <|
         var project_filter = new ImGuiTextFilter
     *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
     for inst in g_Project.instructions
         if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
-            SideEditInstance(inst)
-// there
-    if IsPopupOpen("EVAL")
-        SetNextWindowSize(float2(1280.,720.))
-        if BeginPopup("EVAL",ImGuiWindowFlags HorizontalScrollbar)
-            BeginGroup()
-            TextUnformatted(g_ProjectErrors)
-            EndGroup()
-            EndPopup()
+            side_edit_instance(inst)
     EndChild()
 // and done
     EndGroup()
     imgui::PopStyleColor()
     SetCurrentEditor(null)
 
+// error preview
+
+def preview_errors
+    if !empty(g_ProjectErrors)
+        if Button("[!]##PROJECT ERRORS")
+            OpenPopup("EVAL")
+        SameLine()
+        TextColored(float4(1.,0.5,0.,1.),g_ProjectErrorsMessage)
+    if IsPopupOpen("EVAL")
+        SetNextWindowSize(float2(1280.,800.0))
+        if BeginPopup("EVAL",ImGuiWindowFlags HorizontalScrollbar)
+            BeginGroup()
+            TextUnformatted(g_ProjectSource)
+            TextUnformatted("")
+            TextColored(float4(1.,0.5,0.,1.0),g_ProjectErrorsMessage)
+            TextUnformatted("")
+            TextUnformatted(g_ProjectErrors)
+            EndGroup()
+            EndPopup()
+    if IsPopupOpen("PREVIEW SOURCE")
+        SetNextWindowSize(float2(1280.,800.0))
+        if BeginPopup("PREVIEW SOURCE",ImGuiWindowFlags HorizontalScrollbar)
+            BeginGroup()
+            TextUnformatted(g_ProjectSource)
+            EndGroup()
+            EndPopup()
 
 
 // MAIN WINDOW
@@ -573,23 +581,23 @@ def main_editor_screen()
         SetWindowPos(float2(0.,0.), ImGuiCond Once)
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         main_menu()
+        preview_errors()
         side_child_window()
         SameLine()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         editor_child_window()
         EndChild()
+        post_invoke_que()
 
 [export]
 def main
     g_PreviewUpdater = @@preview_updater
     seal_instruction_factory()          // initialize everything greyprint related
-    g_Project |> make_sample_project()  // make a sample project for now
     unsafe
         g_PreviewProject = addr(g_Project)
     imgui_app("Testing IMGUI") <|
         NewFrame()
         main_editor_screen()
         Render()
-        post_invoke_que()
     DestroyEditor(g_Context)
 

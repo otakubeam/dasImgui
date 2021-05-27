@@ -11,6 +11,9 @@ require daslib/contracts
 def to_reg(v:int;vdef:string="r_nop")
     return v==-1 ? vdef : "r_{v}"
 
+def to_reg_scalar(v:int)
+    return v==-1 ? "0.0f" : "r_{v}"
+
 def to_reg_surface(v:int)
     return to_reg(v,"empty_surface()")
 

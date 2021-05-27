@@ -25,11 +25,12 @@ def Surface ( w,h:int )
 // instructions
 
 struct Connection
-    name : string
-    _type : string
+    name    : string
+    _type   : string
+    primary : bool
 
 struct Input : Connection
-    src  : Instruction?
+    src    : Instruction?
     output : string
 
 def finalize ( var inp: Input )
@@ -41,16 +42,12 @@ def connect ( var inp:Input; src:Instruction?; outp:string )
 
 struct Output : Connection
     preview : bool
-    reg : int
+    reg     : int
 
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
 
 let CATEGORY_UNCATEGORIZED = "Uncategorized"
-
-variant Value
-    surface : Surface
-    scalar  : float
 
 enum EditMode
     Sidebar         // in the side menu
@@ -74,9 +71,13 @@ class Instruction
     def abstract load ( var node:table<string;JsonValue?> ) : void
     def abstract produce ( var src_regs : array<int> ): array<string>
     def add_input ( iname, itype : string )
-        inputs |> push([[Input name=iname,_type=itype]])
+        inputs |> push([[Input name=iname,_type=itype, primary=false]])
+    def add_primary_input ( iname, itype : string )
+        inputs |> push([[Input name=iname,_type=itype, primary=true]])
     def add_output ( iname, itype : string )
-        outputs |> push([[Output name=iname,_type=itype]])
+        outputs |> push([[Output name=iname,_type=itype,primary=false]])
+    def add_primary_output ( iname, itype : string )
+        outputs |> push([[Output name=iname,_type=itype,primary=true]])
     def input_index ( iname:string ) : int
         return inputs |> find_index_if <| $ ( val )
             return val.name==iname
@@ -183,25 +184,23 @@ class Project
                 let output_id = link["output_id"].value as _string
                 inp.src = self->find_instruction(output_id)
 
-def find_loop ( inst:Instruction?; var visited:table<Instruction?;bool> )
+def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
     if visited |> key_exists(inst)
-        return true
+        return false
     visited[inst] = true
     for inp in inst.inputs
-        if inp.src!=null && find_loop(inp.src, visited)
-            return true
+        if inp.src!=null
+            if inp.src==src
+                return true
+            if find_loop(src,inp.src,visited)
+                return true
     return false
 
 def find_loop ( proj:Project )
-    var visited : table<Instruction?; bool>
     for inst in proj.instructions
-        if ! visited |> key_exists(inst)
-            var has_links = false
-            for inp in inst.inputs
-                if inp.src != null
-                    has_links = true
-            if has_links && find_loop(inst, visited)
-                return true
+        var visited : table<Instruction?; bool>
+        if find_loop(inst, inst, visited)
+            return true
     return false
 
 // factory

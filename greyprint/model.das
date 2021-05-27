@@ -63,3 +63,6 @@ def preview ( var reg:Surface )
 
 def output ( var reg:Surface )
     G_OUTPUT |> push_clone(reg)
+
+def output ( var reg:float )
+    print("{reg}\n")

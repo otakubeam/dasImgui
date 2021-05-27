@@ -90,6 +90,8 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
         let irt = join([{for r in inp_regs; "{to_reg(r)}"}],",")
         let ort = join([{for r in inst.outputs; "{to_reg(r.reg)}"}],",")
         eval |> push("    // eval {inst.__rtti} -> {inst.name}:{inst.id} [[inputs {irt}]] [[outputs {ort}]]")
+    if length(reval)==0
+        eval |> push("    pass")
     // now back to normal order
     reverse(eval)
     return <- eval

@@ -9,35 +9,7 @@ require preview
 require instructions_ui
 require produce
 
-[instruction_node(name="Scalar",category="Scalar operations")]
-class Instruction_Scalar : Instruction
-    override editing = true
-    [[serialize]] value : float = 1.
-    def Instruction_Scalar
-        name = "Scalar"
-        self->add_output("Out",TYPE_SCALAR)
-    def override edit ( mode:EditMode ) : void
-        NodeDragFloat(mode,id,"value",value)
-    def override produce ( var src_regs : array<int> ): array<string>
-        return <- [{string
-            "{to_reg(outputs[0].reg)} = {to_produce(value)}"
-        }]
-
-[instruction_node(name="Add scalar",category="Scalar operations")]
-class Instruction_AddScalar : Instruction
-    override editing = true
-    last_eval : float = 0.
-    def Instruction_AddScalar
-        name = "Add Scalar"
-        self->add_input("In-1",TYPE_SCALAR)
-        self->add_input("In-2",TYPE_SCALAR)
-        self->add_output("Out",TYPE_SCALAR)
-    def override edit ( mode:EditMode ) : void
-        Text("-> {last_eval}")
-    def override produce ( var src_regs : array<int> ): array<string>
-        return <- [{string
-            "{to_reg(outputs[0].reg)} = {to_reg(src_regs[0])} + {to_reg(src_regs[1])}"
-        }]
+require instructions_scalar public
 
 [instruction_node(name="Output surface",category="Surface operations")]
 class Instruction_OutputSurface : Instruction
