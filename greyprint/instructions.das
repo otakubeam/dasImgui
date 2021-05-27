@@ -102,18 +102,19 @@ def generate_new_id()       // TODO: generate real GUID
 
 class Project
     instructions : array<Instruction?>
+    lookup : table<string; Instruction?>
     def clear
         delete instructions
+        clear(lookup)
     def finalize
         self->clear()
     def find_instruction ( id:string ) : Instruction?
-        let index = instructions |> find_index_if <| $ ( val )
-            return val.id==id
-        return index==-1 ? null : instructions[index]
+        return lookup?[id] ?? null
     def add_new_insturction ( var i : Instruction? )
         i.id = generate_new_id()
         instructions |> push(i)
-    def delete_instruction ( dinst:Instruction? )
+        lookup[i.id] = i
+    def delete_instruction ( var dinst:Instruction? )
         var idx = -1
         for i,index in instructions,range(100500)
             if i == dinst
@@ -123,6 +124,9 @@ class Project
                     inp.src = null
         assert(idx!=-1)
         instructions |> erase(idx)
+        lookup |> erase(dinst.id)
+        unsafe
+            delete dinst
     def save : JsonValue?
         var nodes : array<JsonValue?>
         for inst in instructions
@@ -178,6 +182,27 @@ class Project
                 inp.output = link["output_name"].value as _string
                 let output_id = link["output_id"].value as _string
                 inp.src = self->find_instruction(output_id)
+
+def find_loop ( inst:Instruction?; var visited:table<Instruction?;bool> )
+    if visited |> key_exists(inst)
+        return true
+    visited[inst] = true
+    for inp in inst.inputs
+        if inp.src!=null && find_loop(inp.src, visited)
+            return true
+    return false
+
+def find_loop ( proj:Project )
+    var visited : table<Instruction?; bool>
+    for inst in proj.instructions
+        if ! visited |> key_exists(inst)
+            var has_links = false
+            for inp in inst.inputs
+                if inp.src != null
+                    has_links = true
+            if has_links && find_loop(inst, visited)
+                return true
+    return false
 
 // factory
 

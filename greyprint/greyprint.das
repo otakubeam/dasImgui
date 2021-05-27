@@ -125,6 +125,14 @@ def save_project(fname:string)
     unsafe
         delete jv
 
+def export_project(fname:string)
+    let save_text = produce_project_text(g_Project)
+    fopen(fname,"wb") <| $ ( das_file )
+        if das_file != null
+            fwrite(das_file, save_text)
+        else
+            get_dlg_ok_from_user("Error","Can't export {fname}")
+
 def clear_project_data()
     DestroyEditor(g_Context)
     g_Context = null
@@ -160,8 +168,8 @@ def main_menu()
     BeginMenuBar <|
         BeginMenu("File") <|
             if MenuItem("New##Project")
-                if get_dlg_ok_from_user("caption","body")
-                    new_project()
+                //if get_dlg_ok_from_user("caption","body")
+                new_project()
             if MenuItem("Load##Project")
                 let fname = get_dlg_open_file("","greyprint")
                 if !empty(fname)
@@ -170,6 +178,10 @@ def main_menu()
                 let fname = get_dlg_save_file("new_name.greyprint","","greyprint")
                 if !empty(fname)
                     save_project(fname)
+            if MenuItem("Export##Project")
+                let fname = get_dlg_save_file("new_name.das","","greyprint")
+                if !empty(fname)
+                    export_project(fname)
         BeginMenu("Preview") <|
             if Checkbox("Live preview",safe_addr(g_LivePreview))
                 update_preview()
@@ -229,6 +241,15 @@ def out_pin(id: int; text: string implicit; indent: float; blk: block<():void>)
     //blk |> invoke()
     // imgui_node_editor::PopStyleVar(2)
     ImGuiEx_EndColumn()
+
+def editor_hint(desc:string)
+    Suspend()
+    BeginTooltip()
+    PushTextWrapPos(GetFontSize() * 35.0f)
+    TextUnformatted(desc)
+    PopTextWrapPos()
+    EndTooltip()
+    Resume()
 
 def editor_child_window()
     SetCurrentEditor(g_Context)
@@ -330,25 +351,35 @@ def editor_child_window()
                             let outI = outL.inst->output_index(outL.pin)
                             assert(outI!=-1)
                             if inL.inst==outL.inst                                              // linking to itself
-                                RejectNewItem()
+                                editor_hint("Error: can't link to itself")
+                                RejectNewItem(float4(1,0,0,1),3.)
                             elif inL.inst.inputs[inI]._type != outL.inst.outputs[outI]._type    // type mismatch
-                                RejectNewItem()
-                            elif AcceptNewItem()
+                                editor_hint("Error: can't link {inL.inst.inputs[inI]._type} to {outL.inst.outputs[outI]._type}")
+                                RejectNewItem(float4(1,0,0,1),3.)
+                            else
+                                var old_input = inL.inst.inputs[inI]
                                 inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
+                                if g_Project |> find_loop()
+                                    inL.inst.inputs[inI] = old_input
+                                    editor_hint("Error: link creates loop")
+                                    RejectNewItem(float4(1,0,0,1),3.)
+                                else
+                                    AcceptNewItem()
+
         BeginDelete() <|
             var deletedLinkId : LinkId
             while QueryDeletedLink(safe_addr(deletedLinkId),null,null)
                 if AcceptDeletedItem()
                     post_event <| @
-                        DeleteConnection(deletedLinkId)
+                        delete_connection(deletedLinkId)
             var deletedNodeId : NodeId
             while QueryDeletedNode(safe_addr(deletedNodeId))
                 if AcceptDeletedItem()
                     post_event <| @
                         let inst_id = id_2_guid[deletedNodeId]
-                        let inst = g_Project->find_instruction(inst_id)
+                        var inst = g_Project->find_instruction(inst_id)
                         assert(inst!=null)
-                        DeleteInstruction(inst)
+                        delete_instruction(inst)
 
         Suspend()
         if ShowBackgroundContextMenu()
@@ -369,10 +400,10 @@ def editor_child_window()
 
 // SIDE WINDOW
 
-def DeleteInstruction ( inst:Instruction? )
+def delete_instruction ( var inst:Instruction? )
     g_Project->delete_instruction(inst)
 
-def DeleteConnection ( id:LinkId )
+def delete_connection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
     let inI = inL.inst->input_index(inL.pin)
     inL.inst.inputs[inI].src = null
