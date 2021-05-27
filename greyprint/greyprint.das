@@ -141,6 +141,7 @@ def load_project(fname:string)
             var error : string
             var jv = read_json(text,error)
             g_Project->load(jv)
+            update_preview()
             unsafe
                 delete jv
 

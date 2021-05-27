@@ -29,8 +29,8 @@ class Instruction_OpScalar : Instruction
     def Instruction_OpScalar(Op:string)
         name = "{Op} scalar"
         op = Op
-        self->add_primary_input("In",TYPE_SCALAR)
-        self->add_primary_output("Out",TYPE_SCALAR)
+        self->add_input("In",TYPE_SCALAR)
+        self->add_output("Out",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
         pass
     def override produce ( var src_regs : array<int> ): array<string>
@@ -43,9 +43,9 @@ class Instruction_Op2Scalar : Instruction
     def Instruction_Op2Scalar(Op2:string)
         name = "{Op2} scalar"
         op = Op2
-        self->add_primary_input("In-1",TYPE_SCALAR)
+        self->add_input("In-1",TYPE_SCALAR)
         self->add_input("In-2",TYPE_SCALAR)
-        self->add_primary_output("Out",TYPE_SCALAR)
+        self->add_output("Out",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
         pass
     def override produce ( var src_regs : array<int> ): array<string>

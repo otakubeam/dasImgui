@@ -27,7 +27,6 @@ def Surface ( w,h:int )
 struct Connection
     name    : string
     _type   : string
-    primary : bool
 
 struct Input : Connection
     src    : Instruction?
@@ -71,13 +70,9 @@ class Instruction
     def abstract load ( var node:table<string;JsonValue?> ) : void
     def abstract produce ( var src_regs : array<int> ): array<string>
     def add_input ( iname, itype : string )
-        inputs |> push([[Input name=iname,_type=itype, primary=false]])
-    def add_primary_input ( iname, itype : string )
-        inputs |> push([[Input name=iname,_type=itype, primary=true]])
+        inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
-        outputs |> push([[Output name=iname,_type=itype,primary=false]])
-    def add_primary_output ( iname, itype : string )
-        outputs |> push([[Output name=iname,_type=itype,primary=true]])
+        outputs |> push([[Output name=iname,_type=itype]])
     def input_index ( iname:string ) : int
         return inputs |> find_index_if <| $ ( val )
             return val.name==iname
@@ -172,6 +167,7 @@ class Project
             inst.flags = from_JV(node["flags"],type<InstructionFlags>)
             (*inst)->load(node)
             instructions |> push(inst)
+            lookup[inst.id] = inst
         var links & = root["links"].value as _array
         for plink in links
             var link & = plink.value as _object
