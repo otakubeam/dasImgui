@@ -11,14 +11,14 @@ require produce
 
 require instructions_scalar public
 
-
 [instruction_node(name="Comment",category="Miscellaneous")]
 class Instruction_Comment : Instruction
-    override flags = InstructionFlags Comment
+    [[serialize]] comment : string = "Comment"
+    override flags = InstructionFlags Comment | InstructionFlags HasEdit
     def Instruction_Comment
         name = "Comment"
     def override edit ( mode:EditMode ): void
-        pass
+        NodeTextMultiline(mode,id,"comment",comment,256)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 

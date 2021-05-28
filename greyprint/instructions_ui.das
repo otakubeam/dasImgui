@@ -16,6 +16,30 @@ let DEFAULT_NODE_WIDTH  = 500.
 let DEFAULT_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 20.
 let DEFAULT_NAMED_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 20.
 
+// text buffers
+
+var g_InputTextBuffers : array<ImGuiInputTextBuffer?>
+
+def get_next_text_buffer ( txt:string; maxlen:int=128 )
+    var buf = new ImGuiInputTextBuffer(txt,maxlen)
+    g_InputTextBuffers |> push(buf)
+    return buf
+
+def clear_text_buffers
+    delete g_InputTextBuffers
+
+// editing
+
+def NodeTextMultiline(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
+    var buf = get_next_text_buffer(text,maxlen)
+    if InputTextMultiline("{name}##{id}{mode}_Text",*buf,float2(0),ImGuiInputTextFlags Multiline)
+        text = to_string(*buf)
+
+def NodeText(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
+    var buf = get_next_text_buffer(text,maxlen)
+    if InputText("{name}##{id}{mode}_Text",*buf)
+        text = to_string(*buf)
+
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     Text(name)

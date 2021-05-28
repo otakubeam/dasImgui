@@ -295,10 +295,14 @@ def editor_child_window()
                                     update_preview()
                     ImGuiEx_EndColumn()
             else
+                var comment : string
+                unsafe
+                    let cinst = upcast<Instruction_Comment?> inst
+                    comment = cinst.comment
                 let commentAlpha = 0.75f
                 PushStyleVar(ImGuiStyleVar Alpha, commentAlpha)
                 imgui_node_editor::BeginNode(id);
-                Text(inst.name)
+                Text(comment)
                 Group(inst.extents)
                 EndNode()
                 imgui::PopStyleVar(1)
@@ -444,12 +448,13 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             CenterNodeOnScreen(get_unique_id(inst.id))
         HelpMarker("Center")
         SameLine()
-        Text("id: `{inst.id}`")
-        SameLine()
         if Button("[X]##{inst.id}_S")
             DeleteNode(get_unique_id(inst.id))
         HelpMarker("Delete")
-        Text("name: `{inst.name}`")      // todo: make editabe
+        Text("id: `{inst.id}`")
+        var buf = get_next_text_buffer(inst.name)
+        if InputText("name##{inst.id}_EDIT",*buf)
+            inst.name = to_string(*buf)
         for outp in inst.outputs
             unsafe
                 if Checkbox("##preview_{inst.id}_{outp.name}_S",addr(outp.preview))
@@ -634,5 +639,6 @@ def main
         NewFrame()
         main_editor_screen()
         Render()
+        clear_text_buffers()
     DestroyEditor(g_Context)
 
