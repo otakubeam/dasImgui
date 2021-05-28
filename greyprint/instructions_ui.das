@@ -32,12 +32,16 @@ def clear_text_buffers
 
 def NodeTextMultiline(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
     var buf = get_next_text_buffer(text,maxlen)
-    if InputTextMultiline("{name}##{id}{mode}_Text",*buf,float2(0),ImGuiInputTextFlags Multiline)
+    Text(name)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    if InputTextMultiline("##{name}{id}{mode}_Text",*buf,float2(0),ImGuiInputTextFlags Multiline)
         text = to_string(*buf)
 
 def NodeText(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
     var buf = get_next_text_buffer(text,maxlen)
-    if InputText("{name}##{id}{mode}_Text",*buf)
+    Text(name)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    if InputText("##{name}{id}{mode}_Text",*buf)
         text = to_string(*buf)
 
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
