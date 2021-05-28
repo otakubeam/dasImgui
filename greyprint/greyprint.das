@@ -250,54 +250,88 @@ def editor_child_window()
     Begin("My Editor", float2(0.0, 0.0f)) <|
         for inst in g_Project.instructions
             let id = get_unique_id(inst.id)
-            BeginNode(id) <|
-                Dummy(float2(DEFAULT_NODE_WIDTH,0.))
-                ImGuiEx_BeginColumn()
-                if inst.flags.HasEdit
-                    unsafe
-                        Checkbox("##embedded_{inst.id}",addr(inst.editing))
-                    SameLine()
-                Text(inst.name)
-                let sz = ImGuiEx_NextColumn()
-                SameLine(DEFAULT_NODE_WIDTH - sz.x - CalcTextSize("[X]").x - 2.0)
-                if Button("[X]##{inst.id}_E")
-                    DeleteNode(get_unique_id(inst.id))
-                ImGuiEx_EndColumn()
-                if inst.editing
+            if !inst.flags.Comment
+                // REGULAR NODE
+                BeginNode(id) <|
+                    Dummy(float2(DEFAULT_NODE_WIDTH,0.))
+                    ImGuiEx_BeginColumn()
                     if inst.flags.HasEdit
-                        inst->edit(EditMode Embedded)
-                ImGuiEx_BeginColumn()
-                for inp in inst.inputs
-                    let inp_id = get_input_unique_id(inst,inp.name)
-                    in_pin(inp_id) <|
-                        SameLine()
-                        Text("{inp.name}:{inp._type}")
-                        SameLine()
-                        if inp.src != null
-                            SameLine()
-                            if Button("[G]##goto_{inp}_from_{inst.id}")
-                                SelectNode(get_unique_id(inp.src.id), false)
-                                NavigateToSelection(false, NAVIGATION_TIME)
-                                ClearSelection()
-                            SameLine()
-                            if Button("[X]##goto_{inp}_from_{inst.id}")
-                                DeleteLink(inp_id)
-                let lw = ImGuiEx_NextColumn()
-                for outp in inst.outputs
-                    let outp_id = get_output_unique_id(inst,outp.name)
-                    let text = "{outp.name}:{outp._type}"
-                    out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
-                        SameLine()
                         unsafe
-                            if Checkbox("##prewview_{inst.id}_{outp.name}_E",addr(outp.preview))
-                                update_preview()
-                ImGuiEx_EndColumn()
+                            Checkbox("##embedded_{inst.id}",addr(inst.editing))
+                        SameLine()
+                    Text(inst.name)
+                    let sz = ImGuiEx_NextColumn()
+                    SameLine(DEFAULT_NODE_WIDTH - sz.x - CalcTextSize("[X]").x - 2.0)
+                    if Button("[X]##{inst.id}_E")
+                        DeleteNode(get_unique_id(inst.id))
+                    ImGuiEx_EndColumn()
+                    if inst.editing
+                        if inst.flags.HasEdit
+                            inst->edit(EditMode Embedded)
+                    ImGuiEx_BeginColumn()
+                    for inp in inst.inputs
+                        let inp_id = get_input_unique_id(inst,inp.name)
+                        in_pin(inp_id) <|
+                            SameLine()
+                            Text("{inp.name}:{inp._type}")
+                            SameLine()
+                            if inp.src != null
+                                SameLine()
+                                if Button("[G]##goto_{inp}_from_{inst.id}")
+                                    SelectNode(get_unique_id(inp.src.id), false)
+                                    NavigateToSelection(false, NAVIGATION_TIME)
+                                    ClearSelection()
+                                SameLine()
+                                if Button("[X]##goto_{inp}_from_{inst.id}")
+                                    DeleteLink(inp_id)
+                    let lw = ImGuiEx_NextColumn()
+                    for outp in inst.outputs
+                        let outp_id = get_output_unique_id(inst,outp.name)
+                        let text = "{outp.name}:{outp._type}"
+                        out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
+                            SameLine()
+                            unsafe
+                                if Checkbox("##prewview_{inst.id}_{outp.name}_E",addr(outp.preview))
+                                    update_preview()
+                    ImGuiEx_EndColumn()
+            else
+                let commentAlpha = 0.75f
+                PushStyleVar(ImGuiStyleVar Alpha, commentAlpha)
+                imgui_node_editor::BeginNode(id);
+                Text(inst.name)
+                Group(inst.extents)
+                EndNode()
+                imgui::PopStyleVar(1)
+                inst.extents = GetNodeSize(id)
+                if BeginGroupHint(id)
+                    let bgAlpha = int(imgui::GetStyle().Alpha * 255.)
+                    imgui::PushStyleVar(ImGuiStyleVar Alpha, commentAlpha * imgui::GetStyle().Alpha)
+                    let minR = GetGroupMin()
+                    SetCursorScreenPos(minR - float2(-8., GetTextLineHeightWithSpacing() + 4.))
+                    BeginGroup();
+                    TextUnformatted(inst.name)
+                    EndGroup()
+                    var drawList = GetHintBackgroundDrawList()
+                    var hintBounds      = ImGui_GetItemRect()
+                    var hintFrameBounds = ImRect_Expanded(hintBounds, 8., 4.)
+                    (*drawList) |> AddRectFilled(
+                        hintFrameBounds |> GetTL(),
+                        hintFrameBounds |> GetBR(),
+                        IM_COL32(255, 255, 255, 64 * bgAlpha / 255), 4.0f)
+                    (*drawList) |> AddRect(
+                        hintFrameBounds |> GetTL(),
+                        hintFrameBounds |> GetBR(),
+                        IM_COL32(255, 255, 255, 128 * bgAlpha / 255), 4.0f)
+                    imgui::PopStyleVar()
+                EndGroupHint()
+
             if inst.firstFrame
                 if inst.at.x==-FLT_MAX
                     CenterNodeOnScreen(get_unique_id(inst.id))
                 else
                     SetNodePosition(id, inst.at)
                 inst.firstFrame = false
+
         for inst in g_Project.instructions
             for inp in inst.inputs
                 if inp.src != null
@@ -399,7 +433,7 @@ def delete_connection ( id:LinkId )
     update_preview()
 
 def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
-    if TreeNodeEx("side_{inst.id}{flags}",flags,"{inst.name}:{inst.id}")
+    if TreeNodeEx("side_{inst.id}{flags}",flags,"{inst.name}")
         if Button("[G]##goto_{inst.id}")
             SelectNode(get_unique_id(inst.id), false)
             NavigateToSelection(false, NAVIGATION_TIME)

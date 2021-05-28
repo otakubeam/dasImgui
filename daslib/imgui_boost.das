@@ -324,3 +324,29 @@ def HelpMarker(desc:string; qsign:bool = false)
         TextUnformatted(desc)
         PopTextWrapPos()
         EndTooltip()
+
+def ImGui_GetItemRect()
+    let minR = GetItemRectMin()
+    let maxR = GetItemRectMax()
+    return float4(minR.x, minR.y, maxR.x, maxR.y)
+
+
+def ImRect_Expanded(rect:float4&; x,y:float)
+    var result = rect
+    result.x -= x
+    result.y -= y
+    result.z += x
+    result.w += y
+    return result
+
+def GetTL(rect:float4)
+    return rect.xy
+
+def GetTR(rect:float4)
+    return rect.zy
+
+def GetBL(rect:float4)
+    return rect.xw
+
+def GetBR(rect:float4)
+    return rect.zw

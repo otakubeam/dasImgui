@@ -11,6 +11,17 @@ require produce
 
 require instructions_scalar public
 
+
+[instruction_node(name="Comment",category="Miscellaneous")]
+class Instruction_Comment : Instruction
+    override flags = InstructionFlags Comment
+    def Instruction_Comment
+        name = "Comment"
+    def override edit ( mode:EditMode ): void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
 [instruction_node(name="Output surface",category="Surface operations")]
 class Instruction_OutputSurface : Instruction
     override flags = InstructionFlags Output

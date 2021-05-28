@@ -5,6 +5,7 @@ module instructions shared
 
 require rtti
 require imgui
+require uriparser
 require daslib/json_boost public
 require daslib/safe_addr
 require daslib/ast_boost
@@ -55,11 +56,13 @@ enum EditMode
 bitfield InstructionFlags
     Output
     HasEdit
+    Comment
 
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
     at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
+    extents : float2 = float2(256.,256.)    // size in the node editor (for relevant nodes)
     flags : InstructionFlags = InstructionFlags HasEdit
     firstFrame : bool = true
     editing : bool = false
@@ -90,11 +93,8 @@ def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input
 
 // project
 
-def generate_new_id()       // TODO: generate real GUID
-    static_let <|
-        var uuid = 0
-    uuid ++
-    return "GUID_{uuid}"
+def generate_new_id()
+    return uriparser::make_new_guid()
 
 class Project
     instructions : array<Instruction?>
@@ -132,6 +132,7 @@ class Project
                 "name" => JV(inst.name);
                 "rtti" => JV(tname);
                 "at" => JV(inst.at);
+                "extents" => JV(inst.extents);
                 "flags" => JV(inst.flags)
             }}
             inst->save(inode)
@@ -164,6 +165,7 @@ class Project
             inst.id = node["id"].value as _string
             inst.name = node["name"].value as _string
             inst.at = from_JV(node["at"],type<float2>)
+            inst.extents = from_JV(node["extents"],type<float2>)
             inst.flags = from_JV(node["flags"],type<InstructionFlags>)
             (*inst)->load(node)
             instructions |> push(inst)
