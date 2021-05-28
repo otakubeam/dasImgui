@@ -411,15 +411,25 @@ def editor_child_window()
                         assert(inst!=null)
                         delete_instruction(inst)
 
+        static_let <|
+            var link_inst : Instruction?
+            var link_pin : string
         Suspend()
         if ShowBackgroundContextMenu()
             OpenPopup("Create New Instruction")
-        Resume()
-
-        Suspend()
+            link_inst = null
+        var context_link_id = 0
+        if ShowLinkContextMenu(safe_addr(context_link_id))
+            OpenPopup("Create New Instruction")
+            var inL = translate_input_output_id(context_link_id,"INPUT")
+            link_inst = inL.inst
+            link_pin = inL.pin
         if BeginPopup("Create New Instruction")
             let pos = ScreenToCanvas(GetWindowPos())
-            edit_instructions(true,pos)
+            if link_inst==null
+                edit_instructions(true,pos)
+            else
+                edit_link_instructions(pos,link_inst,link_pin)
             EndPopup()
         Resume()
 
@@ -469,7 +479,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             inst->edit(EditMode Sidebar)
         TreePop()
 
-def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
+def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
     if fromContextMenu
         Text("Create new instruction")
     static_let <|
@@ -483,7 +493,9 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
                 TreePop()
             prevCategory = ai.category
             collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
-        if !collapsed && ((*filter) |> PassFilter(ai.name))
+        if !collapsed
+            if ! ((*filter) |> PassFilter(ai.name))
+                continue
             if Button("{ai.name}##make_S")
                 if fromContextMenu
                     CloseCurrentPopup()
@@ -495,6 +507,27 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.))
                     update_preview()
     if !collapsed
         TreePop()
+
+def edit_link_instructions(pos:float2;var inst:Instruction?;pin:string )
+    Text("Create new link instruction")
+    let pid = inst->input_index(pin)
+    assert(pid!=-1)
+    let iotype = inst.inputs[pid]._type
+    for ai in g_instructionsByCategory
+        if ai.main_in!=iotype || ai.main_out!=iotype
+            continue
+        if Button("{ai.name}##make_S")
+            CloseCurrentPopup()
+            post_event() <| @
+                var link_inst = make_instruction(ai.tname)
+                g_Project->add_new_insturction(link_inst)
+                link_inst.at = pos
+                link_inst.inputs[0].src = inst.inputs[pid].src
+                link_inst.inputs[0].output = inst.inputs[pid].output
+                inst.inputs[pid].src = link_inst
+                inst.inputs[pid].output = link_inst.outputs[0].name
+                update_preview()
+                inst = null
 
 require imgui
 

@@ -216,14 +216,20 @@ def find_loop ( proj:Project )
 
 var g_instructionFactory : table < string; lambda<():Instruction?> >
 
-var g_instructionsByCategory : array < tuple<name:string;category:string;tname:string> >
+var g_instructionsByCategory : array < tuple<name:string;category:string;tname:string;main_in:string;main_out:string> >
 
 [unused_argument(it_type)]
 def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType)-const )
     let tname = typeinfo(undecorated_typename type<InstType>)
-    g_instructionFactory[tname] <- @ <| () : Instruction?
+    var factory <- @ <| () : Instruction?
         return new InstType()
-    g_instructionsByCategory |> push([[auto it_name,it_category,tname]])
+    var dummy = invoke(factory)
+    g_instructionFactory[tname] <- factory
+    var main_in  = (length(dummy.inputs)>0) ? dummy.inputs[0]._type : ""
+    var main_out = (length(dummy.outputs)>0) ? dummy.outputs[0]._type : ""
+    unsafe
+        delete dummy
+    g_instructionsByCategory |> push([[auto it_name,it_category,tname,main_in,main_out]])
 
 def make_instruction ( it_type:string )
     if g_instructionFactory |> key_exists(it_type)
