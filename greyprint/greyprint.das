@@ -265,6 +265,8 @@ def editor_child_window()
                     if Button("[X]##{inst.id}_E")
                         DeleteNode(get_unique_id(inst.id))
                     ImGuiEx_EndColumn()
+                    if inst.tex != null
+                        Image(inst.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
                     if inst.editing
                         if inst.flags.HasEdit
                             inst->edit(EditMode Embedded)
@@ -293,6 +295,8 @@ def editor_child_window()
                             unsafe
                                 if Checkbox("##prewview_{inst.id}_{outp.name}_E",addr(outp.preview))
                                     update_preview()
+                            if outp.tex != null
+                                Image(outp.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
                     ImGuiEx_EndColumn()
             else
                 var comment : string
@@ -510,10 +514,23 @@ def eval_project ( var proj:Project )
                     unsafe
                         invoke_in_context(context,"main")
                         var pout = get_context_global_variable(context,"G_OUTPUT")
-                        var OUTPUT : array<Surface> & = * ( reinterpret<array<Surface>?> pout )
+                        var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
                         clear_preview()
-                        for outp in OUTPUT
-                            g_PreviewTexture |> push(make_prewview_rgba_texture(outp))
+                        for inst in g_Project.instructions
+                            inst.tex = null
+                            for outp in inst.outputs
+                                outp.tex = null
+                        for outprev in OUTPUT
+                            let tex = make_prewview_rgba_texture(outprev.surf)
+                            g_PreviewTexture |> push(tex)
+                            var pinst = g_Project->find_instruction(outprev.id)
+                            assert(pinst!=null)
+                            if !empty(outprev.outp)
+                                pinst |> find_output(outprev.outp) <| $ ( outp )
+                                    if outp != null
+                                        outp.tex = reinterpret<void?> tex
+                            else
+                                pinst.tex = reinterpret<void?> tex
                 else
                     g_ProjectErrorsMessage = "generated code failed to simulate"
                     g_ProjectErrors = "{serrors}"

@@ -56,13 +56,15 @@ def surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var factor:floa
     for c,sC,dC in reg.data,src.data,dst.data
         c = sC*ifactor + dC*factor
 
-var G_OUTPUT : array<Surface>
+var G_OUTPUT : array<tuple<Surface;string;string;string>>
 
-def preview ( var reg:Surface )
-    G_OUTPUT |> push_clone(reg)
+def preview ( var reg:Surface; name,id,outp:string )
+    var creg := reg
+    G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
-def output ( var reg:Surface )
-    G_OUTPUT |> push_clone(reg)
+def output ( var reg:Surface; name,id,outp:string )
+    var creg := reg
+    G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
-def output ( var reg:float )
-    print("{reg}\n")
+def output ( var reg:float; name,id,outp:string )
+    print(" {name}:{outp} = {reg} // {id}\n")

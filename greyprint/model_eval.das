@@ -74,7 +74,7 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
         // preview
         for outp in inst.outputs
             if outp.preview
-                eval |> push("    preview({to_reg(outp.reg)})")
+                eval |> push("    preview({to_reg(outp.reg)},\"{inst.name}\",\"{inst.id}\",\"{outp.name}\")")
         // instruction produces generation, we invert again
         var ipod <- inst->produce(inp_regs)
         reverse(ipod)

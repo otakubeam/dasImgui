@@ -43,6 +43,7 @@ def connect ( var inp:Input; src:Instruction?; outp:string )
 struct Output : Connection
     preview : bool
     reg     : int
+    tex     : void?
 
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
@@ -68,6 +69,7 @@ class Instruction
     editing : bool = false
     inputs : array<Input>
     outputs : array<Output>
+    tex : void?
     def abstract edit ( mode:EditMode ) : void
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
@@ -90,6 +92,15 @@ def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input
             return
     unsafe
         invoke(blk,reinterpret<Input?#> null)
+
+
+def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Output?#):void> ) : void
+    for i in inst.outputs
+        if i.name==iname
+            invoke(blk,safe_addr(i))
+            return
+    unsafe
+        invoke(blk,reinterpret<Output?#> null)
 
 // project
 

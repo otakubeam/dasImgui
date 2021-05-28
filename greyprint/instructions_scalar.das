@@ -21,7 +21,7 @@ class Instruction_DebugScalar : Instruction
             update_preview()
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "output({to_reg_scalar(src_regs[0])})"
+            "output({to_reg_scalar(src_regs[0])},\"{name}\",\"{id}\",\"\")"
         }]
 
 class Instruction_OpScalar : Instruction
