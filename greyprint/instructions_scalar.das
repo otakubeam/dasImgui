@@ -69,7 +69,12 @@ class Instruction_Scalar : Instruction
 
 // op1
 
-[instruction_node(name="Negate",category="Scalar operations")]
+[instruction_node(name="Route scalar",category="Scalar operations")]
+class Instruction_RouteScalar : Instruction_OpScalar
+    def Instruction_RouteScalar
+        Instruction_OpScalar`Instruction_OpScalar(self," ")
+
+[instruction_node(name="Negate scalar",category="Scalar operations")]
 class Instruction_Negate : Instruction_OpScalar
     def Instruction_Negate
         Instruction_OpScalar`Instruction_OpScalar(self,"-")
