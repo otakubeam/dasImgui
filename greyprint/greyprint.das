@@ -6,7 +6,6 @@ require imgui_app
 require math
 require rtti
 require debugapi
-
 require stddlg
 
 require daslib/glfw_boost
@@ -341,7 +340,8 @@ def editor_child_window()
                 inst.firstFrame = false
             if inst.select
                 SelectNode(get_unique_id(inst.id))
-                NavigateToSelection(false,0.001)
+                if inst.navigate
+                    NavigateToSelection(false,NAVIGATION_TIME)
                 inst.select = false
 
         for inst in g_Project.instructions
@@ -415,55 +415,7 @@ def editor_child_window()
                         assert(inst!=null)
                         delete_instruction(inst)
 
-        static_let <|
-            var link_inst : Instruction?
-            var link_pin : string
-        Suspend()
-        if ShowBackgroundContextMenu()
-            OpenPopup("Create New Instruction")
-            link_inst = null
-        var context_link_id = 0
-        if ShowLinkContextMenu(safe_addr(context_link_id))
-            OpenPopup("Create New Instruction")
-            var inL = translate_input_output_id(context_link_id,"INPUT")
-            link_inst = inL.inst
-            link_pin = inL.pin
-        if !IsPopupOpen("Create New Instruction")
-            if IsKeyPressed(GetKeyIndex(ImGuiKey Tab)) || IsKeyPressed(GetKeyIndex(ImGuiKey Space))
-                var snc = GetSelectedObjectCount()
-                if snc==1
-                    var sna <- GetSelectedNodes()
-                    var snl <- GetSelectedLinks()
-                    if length(sna)==1
-                        let nid = id_2_guid[sna[0]]
-                        var outL = g_Project->find_instruction(nid)
-                        assert(outL!=null)
-                        if length(outL.outputs)>=1
-                            OpenPopup("Create New Instruction")
-                            link_inst = outL
-                            link_pin = ""
-                    elif length(snl)==1
-                        context_link_id = snl[0]
-                        OpenPopup("Create New Instruction")
-                        var inL = translate_input_output_id(context_link_id,"INPUT")
-                        link_inst = inL.inst
-                        link_pin = inL.pin
-                    delete sna
-                    delete snl
-                elif snc==0
-                    OpenPopup("Create New Instruction")
-                    link_inst = null
-        if BeginPopup("Create New Instruction")
-            let pos = ScreenToCanvas(GetWindowPos())
-            if link_inst==null
-                edit_instructions(true,pos)
-            elif !empty(link_pin)
-                edit_link_instructions(pos,link_inst,link_pin)
-            else
-                edit_tab_instructions(link_inst,link_inst.outputs[0].name)
-            EndPopup()
-        Resume()
-
+        instruction_context_menu()
 
     if g_FirstFrame
         NavigateToContent(NAVIGATION_TIME)
@@ -511,115 +463,176 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             inst->edit(EditMode Sidebar)
         TreePop()
 
-def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
-    if fromContextMenu
+// context menu
+
+def instruction_context_menu
+    let icm = "Create New Instruction"
+    static_let <|
+        var link_inst : Instruction?
+        var link_pin : string
+        var node_pos : float2
+    Suspend()
+    if ShowBackgroundContextMenu()
+        OpenPopup(icm)  // contextless node
+        link_inst = null
+        node_pos = GetMousePos()
+    var context_link_id = 0
+    if ShowLinkContextMenu(safe_addr(context_link_id))
+        OpenPopup(icm)  // link node
+        var inL = translate_input_output_id(context_link_id,"INPUT")
+        link_inst = inL.inst
+        link_pin = inL.pin
+    if !IsPopupOpen(icm)
+        if IsKeyPressed(GetKeyIndex(ImGuiKey Tab)) || IsKeyPressed(GetKeyIndex(ImGuiKey Space))
+            var snc = GetSelectedObjectCount()
+            if snc==1
+                var sna <- GetSelectedNodes()
+                var snl <- GetSelectedLinks()
+                if length(sna)==1
+                    let nid = id_2_guid[sna[0]]
+                    var outL = g_Project->find_instruction(nid)
+                    assert(outL!=null)
+                    if length(outL.outputs)>=1
+                        OpenPopup(icm)  // tab node
+                        link_inst = outL
+                        link_pin = ""
+                elif length(snl)==1
+                    OpenPopup(icm)  // link node
+                    context_link_id = snl[0]
+                    var inL = translate_input_output_id(context_link_id,"INPUT")
+                    link_inst = inL.inst
+                    link_pin = inL.pin
+                delete sna
+                delete snl
+            elif snc==0
+                OpenPopup(icm)  // contextless node
+                link_inst = null
+                node_pos = float2(-FLT_MAX)
+    if BeginPopup(icm)
+        let pos = ScreenToCanvas(node_pos)
+        if link_inst==null
+            edit_instructions_contextless(pos)
+        elif !empty(link_pin)
+            edit_link_instructions(link_inst,link_pin)
+        else
+            edit_tab_instructions(link_inst,link_inst.outputs[0].name)
+        EndPopup()
+    Resume()
+
+bitfield EditInstructionsFlags
+    FromContextMenu
+    DisplayCategories
+
+def edit_instructions_ex(flags:EditInstructionsFlags;evt:lambda<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
+    if flags.FromContextMenu
         Text("Create new instruction")
     static_let <|
         var filter = new ImGuiTextFilter
-    *filter |> Draw("##edit_instruction",(fromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
-    if fromContextMenu
+    *filter |> Draw("##edit_instruction",(flags.FromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
+    if flags.FromContextMenu
         if IsWindowAppearing()
             SetKeyboardFocusHere()
         if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
             CloseCurrentPopup()
     var make_first = false
-    if fromContextMenu && IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
+    if flags.FromContextMenu && IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
         make_first = true
     var prevCategory = ""
     var collapsed = true
     for ai in g_instructionsByCategory
         if prevCategory != ai.category
-            if !collapsed
-                TreePop()
             prevCategory = ai.category
-            collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
-        if !collapsed
+            if flags.DisplayCategories
+                if !collapsed
+                    TreePop()
+                collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
+        if !collapsed || !flags.DisplayCategories
             if ! ((*filter) |> PassFilter(ai.name))
+                continue
+            if skip |> invoke(safe_addr(ai))
                 continue
             if Button("{ai.name}##make_S") || make_first
                 make_first = false
-                if fromContextMenu
+                if flags.FromContextMenu
                     CloseCurrentPopup()
-                post_event() <| @
-                    var inst = make_instruction(ai.tname)
-                    g_Project->add_new_insturction(inst)
-                    inst.select = true
-                    if fromContextMenu
-                        inst.at = pos
-                    update_preview()
-    if !collapsed
-        TreePop()
+                invoke(evt, safe_addr(ai))
+    if flags.DisplayCategories
+        if !collapsed
+            TreePop()
 
-def edit_link_instructions(pos:float2;var inst:Instruction?;pin:string )
-    Text("Create new link instruction")
-    static_let <|
-        var filter = new ImGuiTextFilter
-    *filter |> Draw("##edit_link_instruction",CONTEXT_MENU_WIDTH-10.)
-    if IsWindowAppearing()
-        SetKeyboardFocusHere()
-    if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
-        CloseCurrentPopup()
-    var make_first = false
-    if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
-        make_first = true
+def edit_instructions_side_menu()
+    var evt <- @ <| ( ai : InstructionCategory?# )
+        let type_name = ai.tname
+        post_event() <| @   // context free instruction which will be centered
+            var inst = make_instruction(type_name)
+            g_Project->add_new_insturction(inst)
+            inst.select = true
+            update_preview()
+    edit_instructions_ex(EditInstructionsFlags DisplayCategories,evt) <| $ ( ai )
+        return false
+    delete evt
+
+def edit_instructions_contextless(pos:float2)
+    var evt <- @ <| ( ai : InstructionCategory?# )
+        let type_name = ai.tname
+        post_event() <| @   // context free instruction at mouse position
+            var inst = make_instruction(type_name)
+            g_Project->add_new_insturction(inst)
+            inst.select = true
+            inst.at = pos
+            update_preview()
+    edit_instructions_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+        return false
+    delete evt
+
+def edit_link_instructions(var inst:Instruction?;pin:string )
     let pid = inst->input_index(pin)
     assert(pid!=-1)
     let iotype = inst.inputs[pid]._type
-    for ai in g_instructionsByCategory
-        if ! ((*filter) |> PassFilter(ai.name))
-            continue
-        if ai.main_in!=iotype || ai.main_out!=iotype
-            continue
-        if Button("{ai.name}##make_S") || make_first
-            make_first = false
-            CloseCurrentPopup()
-            post_event() <| @
-                var link_inst = make_instruction(ai.tname)
-                g_Project->add_new_insturction(link_inst)
-                link_inst.select = true
-                link_inst.at = pos
-                link_inst.inputs[0].src = inst.inputs[pid].src
-                link_inst.inputs[0].output = inst.inputs[pid].output
-                inst.inputs[pid].src = link_inst
-                inst.inputs[pid].output = link_inst.outputs[0].name
-                update_preview()
-                inst = null
+    var evt <- @ <| ( ai : InstructionCategory?# )
+        let type_name = ai.tname
+        post_event() <| @   // link between input and output
+            var link_inst = make_instruction(type_name)
+            g_Project->add_new_insturction(link_inst)
+            link_inst.select = true
+            let p0 = GetNodePosition(guid_2_id[inst.id])
+            let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
+            link_inst.at = (p0+p1) * 0.5
+            link_inst.inputs[0].src = inst.inputs[pid].src
+            link_inst.inputs[0].output = inst.inputs[pid].output
+            inst.inputs[pid].src = link_inst
+            inst.inputs[pid].output = link_inst.outputs[0].name
+            update_preview()
+        finally
+            inst = null
+    finally
+        inst = null
+    edit_instructions_ex(EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+        return ai.main_in!=iotype || ai.main_out!=iotype
+    delete evt
 
 def edit_tab_instructions(var inst:Instruction?;pin:string )
-    Text("Create new output instruction")
-    static_let <|
-        var filter = new ImGuiTextFilter
-    *filter |> Draw("##edit_output_instruction",CONTEXT_MENU_WIDTH-10.)
-    if IsWindowAppearing()
-        SetKeyboardFocusHere()
-    if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
-        CloseCurrentPopup()
-    var make_first = false
-    if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
-        make_first = true
     let pid = inst->output_index(pin)
     assert(pid!=-1)
     let iotype = inst.outputs[pid]._type
-    for ai in g_instructionsByCategory
-        if ! ((*filter) |> PassFilter(ai.name))
-            continue
-        if ai.main_in!=iotype
-            continue
-        if Button("{ai.name}##make_S") || make_first
-            make_first = false
-            CloseCurrentPopup()
-            post_event() <| @
-                var out_inst = make_instruction(ai.tname)
-                g_Project->add_new_insturction(out_inst)
-                out_inst.select = true
-                out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
-                out_inst.inputs[0].src = inst
-                out_inst.inputs[0].output = pin
-                update_preview()
-                inst = null
-
-
-require imgui
+    var evt <- @ <| ( ai : InstructionCategory?# )
+        let type_name = ai.tname
+        post_event() <| @   // link to main output
+            var out_inst = make_instruction(type_name)
+            g_Project->add_new_insturction(out_inst)
+            out_inst.select = true
+            out_inst.navigate = true
+            out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
+            out_inst.inputs[0].src = inst
+            out_inst.inputs[0].output = pin
+            update_preview()
+        finally
+            inst = null
+    finally
+        inst = null
+    edit_instructions_ex(EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+        return ai.main_in!=iotype
+    delete evt
 
 var g_ProjectSource = ""
 var g_ProjectErrors = ""
@@ -675,7 +688,7 @@ def side_child_window()
 // instructions
     BeginChild("Instructions", float2(SIDE_PANNEL_WIDTH, INSTRUCTION_PANNEL_HEIGHT), true)
     if CollapsingHeader("New instruction",ImGuiTreeNodeFlags DefaultOpen)
-        edit_instructions()
+        edit_instructions_side_menu()
     EndChild()
 // selection
     var snc = GetSelectedObjectCount()

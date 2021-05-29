@@ -67,6 +67,7 @@ class Instruction
     flags : InstructionFlags = InstructionFlags HasEdit
     firstFrame : bool = true
     select : bool = false
+    navigate : bool = false
     editing : bool = false
     inputs : array<Input>
     outputs : array<Output>
@@ -215,9 +216,16 @@ def find_loop ( proj:Project )
 
 // factory
 
+struct InstructionCategory
+    name:string
+    category:string
+    tname:string
+    main_in:string
+    main_out:string
+
 var g_instructionFactory : table < string; lambda<():Instruction?> >
 
-var g_instructionsByCategory : array < tuple<name:string;category:string;tname:string;main_in:string;main_out:string> >
+var g_instructionsByCategory : array<InstructionCategory>
 
 [unused_argument(it_type)]
 def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType)-const )
@@ -230,9 +238,15 @@ def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType
     var main_out = (length(dummy.outputs)>0) ? dummy.outputs[0]._type : ""
     unsafe
         delete dummy
-    g_instructionsByCategory |> push([[auto it_name,it_category,tname,main_in,main_out]])
+    g_instructionsByCategory |> push([[InstructionCategory
+        name=it_name,
+        category=it_category,
+        tname=tname,
+        main_in=main_in,
+        main_out=main_out
+    ]])
 
-def make_instruction ( it_type:string )
+def make_instruction ( it_type:string implicit )
     if g_instructionFactory |> key_exists(it_type)
         return invoke(g_instructionFactory[it_type])
     else

@@ -32,7 +32,7 @@ class Instruction_OutputSurface : Instruction
         pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "output({to_reg(src_regs[0])},\"{name}\",\"{id}\",\"\")"
+            "output({to_reg_surface(src_regs[0])},\"{name}\",\"{id}\",\"\")"
         }]
 
 [instruction_node(name="Solid color",category="Surface operations")]

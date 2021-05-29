@@ -6,21 +6,11 @@ module model shared
 require instructions public
 require math
 
-
-/*
-// bin_op_arg1
-// bin_op_arg2
-// ...
-
-def bin_op ( var a,b:Value; var res:Value; name:string )
-    if name=="add"
-        pass
-    elif name=="sub"
-        pass
-*/
-
 def create_surface ( var reg:Surface; sz:int2 )
     reg <- Surface(sz.x,sz.y)
+
+def empty_surface()
+    return <- [[Surface]]
 
 def delete_surface ( var reg:Surface )
     delete reg
@@ -59,12 +49,14 @@ def surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var factor:floa
 var G_OUTPUT : array<tuple<Surface;string;string;string>>
 
 def preview ( var reg:Surface; name,id,outp:string )
-    var creg := reg
-    G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
+    if reg.size.x!=0 && reg.size.y!=0
+        var creg := reg
+        G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
 def output ( var reg:Surface; name,id,outp:string )
-    var creg := reg
-    G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
+    if reg.size.x!=0 && reg.size.y!=0
+        var creg := reg
+        G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
 def output ( var reg:float; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")

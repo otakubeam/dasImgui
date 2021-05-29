@@ -1,0 +1,138 @@
+{
+	"nodes" : [
+		{
+			"size" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"id" : "3ec50d48-084a-471f-a743-d04e3c82e2bc",
+			"color" : {
+				"x" : 0.5,
+				"z" : 0.5,
+				"w" : 1,
+				"y" : 0.5
+			},
+			"at" : {
+				"y" : 633,
+				"x" : -31
+			},
+			"rtti" : "Instruction_SolidColor",
+			"name" : "Solid color",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 2
+		},
+		{
+			"size" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"id" : "067ad95f-15c5-41f5-9ebd-8e78b03abec4",
+			"at" : {
+				"y" : 739,
+				"x" : 691
+			},
+			"op" : "Multiply",
+			"rtti" : "Instruction_Blend",
+			"name" : "Blend",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 2
+		},
+		{
+			"id" : "7aa64261-158b-404e-92f0-db86a04cbc48",
+			"at" : {
+				"y" : 761,
+				"x" : 1508
+			},
+			"rtti" : "Instruction_OutputSurface",
+			"name" : "Output surface",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 1
+		},
+		{
+			"size" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"id" : "00399b02-1204-4faf-8c98-caf3266fd33d",
+			"bottom_right" : {
+				"x" : 0.5,
+				"z" : 0.5,
+				"w" : 1,
+				"y" : 0.5
+			},
+			"at" : {
+				"y" : 1049,
+				"x" : -31
+			},
+			"bottom_left" : {
+				"x" : 0,
+				"z" : 1,
+				"w" : 1,
+				"y" : 0
+			},
+			"rtti" : "Instruction_Gradient",
+			"name" : "Gradient",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 2,
+			"top_right" : {
+				"x" : 0,
+				"z" : 0,
+				"w" : 1,
+				"y" : 1
+			},
+			"top_left" : {
+				"x" : 1,
+				"z" : 0,
+				"w" : 1,
+				"y" : 0
+			}
+		},
+		{
+			"id" : "302bbf06-21c6-41e5-982c-3e6215b824ca",
+			"at" : {
+				"y" : 544,
+				"x" : -80
+			},
+			"comment" : "Blend solid color with gradient\n",
+			"rtti" : "Instruction_Comment",
+			"name" : "SolidColor * Gradient",
+			"extents" : {
+				"y" : 802,
+				"x" : 1440
+			},
+			"flags" : 6
+		}
+	],
+	"links" : [
+		{
+			"input_name" : "Src",
+			"input_id" : "067ad95f-15c5-41f5-9ebd-8e78b03abec4",
+			"output_id" : "3ec50d48-084a-471f-a743-d04e3c82e2bc",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Dst",
+			"input_id" : "067ad95f-15c5-41f5-9ebd-8e78b03abec4",
+			"output_id" : "00399b02-1204-4faf-8c98-caf3266fd33d",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In",
+			"input_id" : "7aa64261-158b-404e-92f0-db86a04cbc48",
+			"output_id" : "067ad95f-15c5-41f5-9ebd-8e78b03abec4",
+			"output_name" : "Out"
+		}
+	]
+}
