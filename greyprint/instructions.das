@@ -66,6 +66,7 @@ class Instruction
     extents : float2 = float2(256.,256.)    // size in the node editor (for relevant nodes)
     flags : InstructionFlags = InstructionFlags HasEdit
     firstFrame : bool = true
+    select : bool = false
     editing : bool = false
     inputs : array<Input>
     outputs : array<Output>

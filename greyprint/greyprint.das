@@ -339,6 +339,10 @@ def editor_child_window()
                 else
                     SetNodePosition(id, inst.at)
                 inst.firstFrame = false
+            if inst.select
+                SelectNode(get_unique_id(inst.id))
+                NavigateToSelection(false,0.001)
+                inst.select = false
 
         for inst in g_Project.instructions
             for inp in inst.inputs
@@ -424,14 +428,32 @@ def editor_child_window()
             var inL = translate_input_output_id(context_link_id,"INPUT")
             link_inst = inL.inst
             link_pin = inL.pin
+        if !IsPopupOpen("Create New Instruction")
+            if IsKeyReleased(GetKeyIndex(ImGuiKey Tab)) || IsKeyReleased(GetKeyIndex(ImGuiKey Space))
+                var snc = GetSelectedObjectCount()
+                if snc==1
+                    var sna <- GetSelectedNodes()
+                    let nid = id_2_guid[sna[0]]
+                    var outL = g_Project->find_instruction(nid)
+                    assert(outL!=null)
+                    if length(outL.outputs)>=1
+                        OpenPopup("Create New Instruction")
+                        link_inst = outL
+                        link_pin = ""
+                elif snc==0
+                    OpenPopup("Create New Instruction")
+                    link_inst = null
         if BeginPopup("Create New Instruction")
             let pos = ScreenToCanvas(GetWindowPos())
             if link_inst==null
                 edit_instructions(true,pos)
-            else
+            elif !empty(link_pin)
                 edit_link_instructions(pos,link_inst,link_pin)
+            else
+                edit_tab_instructions(link_inst,link_inst.outputs[0].name)
             EndPopup()
         Resume()
+
 
     if g_FirstFrame
         NavigateToContent(NAVIGATION_TIME)
@@ -484,7 +506,10 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
         Text("Create new instruction")
     static_let <|
         var filter = new ImGuiTextFilter
-    *filter |> Draw("",(fromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
+    *filter |> Draw("##edit_instruction",(fromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
+    var make_first = false
+    if fromContextMenu && IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
+        make_first = true
     var prevCategory = ""
     var collapsed = true
     for ai in g_instructionsByCategory
@@ -496,12 +521,14 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
         if !collapsed
             if ! ((*filter) |> PassFilter(ai.name))
                 continue
-            if Button("{ai.name}##make_S")
+            if Button("{ai.name}##make_S") || make_first
+                make_first = false
                 if fromContextMenu
                     CloseCurrentPopup()
                 post_event() <| @
                     var inst = make_instruction(ai.tname)
                     g_Project->add_new_insturction(inst)
+                    inst.select = true
                     if fromContextMenu
                         inst.at = pos
                     update_preview()
@@ -510,17 +537,27 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
 
 def edit_link_instructions(pos:float2;var inst:Instruction?;pin:string )
     Text("Create new link instruction")
+    static_let <|
+        var filter = new ImGuiTextFilter
+    *filter |> Draw("##edit_link_instruction",CONTEXT_MENU_WIDTH-10.)
+    var make_first = false
+    if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
+        make_first = true
     let pid = inst->input_index(pin)
     assert(pid!=-1)
     let iotype = inst.inputs[pid]._type
     for ai in g_instructionsByCategory
+        if ! ((*filter) |> PassFilter(ai.name))
+            continue
         if ai.main_in!=iotype || ai.main_out!=iotype
             continue
-        if Button("{ai.name}##make_S")
+        if Button("{ai.name}##make_S") || make_first
+            make_first = false
             CloseCurrentPopup()
             post_event() <| @
                 var link_inst = make_instruction(ai.tname)
                 g_Project->add_new_insturction(link_inst)
+                link_inst.select = true
                 link_inst.at = pos
                 link_inst.inputs[0].src = inst.inputs[pid].src
                 link_inst.inputs[0].output = inst.inputs[pid].output
@@ -528,6 +565,36 @@ def edit_link_instructions(pos:float2;var inst:Instruction?;pin:string )
                 inst.inputs[pid].output = link_inst.outputs[0].name
                 update_preview()
                 inst = null
+
+def edit_tab_instructions(var inst:Instruction?;pin:string )
+    Text("Create new output instruction")
+    static_let <|
+        var filter = new ImGuiTextFilter
+    *filter |> Draw("##edit_output_instruction",CONTEXT_MENU_WIDTH-10.)
+    var make_first = false
+    if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
+        make_first = true
+    let pid = inst->output_index(pin)
+    assert(pid!=-1)
+    let iotype = inst.outputs[pid]._type
+    for ai in g_instructionsByCategory
+        if ! ((*filter) |> PassFilter(ai.name))
+            continue
+        if ai.main_in!=iotype
+            continue
+        if Button("{ai.name}##make_S") || make_first
+            make_first = false
+            CloseCurrentPopup()
+            post_event() <| @
+                var out_inst = make_instruction(ai.tname)
+                g_Project->add_new_insturction(out_inst)
+                out_inst.select = true
+                out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
+                out_inst.inputs[0].src = inst
+                out_inst.inputs[0].output = pin
+                update_preview()
+                inst = null
+
 
 require imgui
 
@@ -677,7 +744,9 @@ def main_editor_screen()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         editor_child_window()
         EndChild()
+        SetCurrentEditor(g_Context)
         post_invoke_que()
+        SetCurrentEditor(null)
 
 [export]
 def main

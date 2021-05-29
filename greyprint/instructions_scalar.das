@@ -38,6 +38,14 @@ class Instruction_OpScalar : Instruction
             "{to_reg_scalar(outputs[0].reg)} = {op} {to_reg_scalar(src_regs[0])}"
         }]
 
+class Instruction_FunScalar : Instruction_OpScalar
+    def Instruction_FunScalar(Op:string)
+        Instruction_OpScalar`Instruction_OpScalar(self,Op)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "{to_reg_scalar(outputs[0].reg)} = {op}({to_reg_scalar(src_regs[0])})"
+        }]
+
 class Instruction_Op2Scalar : Instruction
     op : string
     def Instruction_Op2Scalar(Op2:string)
@@ -53,12 +61,12 @@ class Instruction_Op2Scalar : Instruction
             "{to_reg_scalar(outputs[0].reg)} = {to_reg_scalar(src_regs[0])} {op} {to_reg_scalar(src_regs[1])}"
         }]
 
-[instruction_node(name="Scalar",category="Scalar operations")]
+[instruction_node(name="Scalar constant",category="Scalar operations")]
 class Instruction_Scalar : Instruction
     override editing = true
     [[serialize]] value : float = 1.
     def Instruction_Scalar
-        name = "Scalar"
+        name = "Scalar constant"
         self->add_output("Out",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
         NodeDragFloat(mode,id,"value",value)
@@ -66,6 +74,18 @@ class Instruction_Scalar : Instruction
         return <- [{string
             "{to_reg_scalar(outputs[0].reg)} = {to_produce(value)}"
         }]
+
+// fun1
+
+[instruction_node(name="Sin scalar",category="Scalar operations")]
+class Instruction_SinScalar : Instruction_FunScalar
+    def Instruction_SinScalar
+        Instruction_FunScalar`Instruction_FunScalar(self,"sin")
+
+[instruction_node(name="Cos scalar",category="Scalar operations")]
+class Instruction_CosScalar : Instruction_FunScalar
+    def Instruction_CosScalar
+        Instruction_FunScalar`Instruction_FunScalar(self,"cos")
 
 // op1
 
@@ -100,3 +120,7 @@ class Instruction_MulScalar : Instruction_Op2Scalar
 class Instruction_DivScalar : Instruction_Op2Scalar
     def Instruction_DivScalar
         Instruction_Op2Scalar`Instruction_Op2Scalar(self,"/")
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "{to_reg_scalar(outputs[0].reg)} = ({to_reg_scalar(src_regs[1])}!=0.) ? {to_reg_scalar(src_regs[0])} / {to_reg_scalar(src_regs[1])} : 0."
+        }]
