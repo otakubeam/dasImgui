@@ -14,6 +14,7 @@ require daslib/static_let
 require daslib/safe_addr
 require daslib/imgui_node_editor_boost
 require daslib/strings_boost
+require daslib/lpipe
 
 require instructions
 require instructions_ui
@@ -523,7 +524,7 @@ bitfield EditInstructionsFlags
     FromContextMenu
     DisplayCategories
 
-def edit_instructions_ex(flags:EditInstructionsFlags;evt:lambda<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
+def edit_instructions_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
     if flags.FromContextMenu
         Text("Create new instruction")
     static_let <|
@@ -561,19 +562,18 @@ def edit_instructions_ex(flags:EditInstructionsFlags;evt:lambda<(ai:InstructionC
             TreePop()
 
 def edit_instructions_side_menu()
-    var evt <- @ <| ( ai : InstructionCategory?# )
+    edit_instructions_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction which will be centered
             var inst = make_instruction(type_name)
             g_Project->add_new_insturction(inst)
             inst.select = true
             update_preview()
-    edit_instructions_ex(EditInstructionsFlags DisplayCategories,evt) <| $ ( ai )
+    lpipe() <| $ ( ai )
         return false
-    delete evt
 
 def edit_instructions_contextless(pos:float2)
-    var evt <- @ <| ( ai : InstructionCategory?# )
+    edit_instructions_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction at mouse position
             var inst = make_instruction(type_name)
@@ -581,15 +581,14 @@ def edit_instructions_contextless(pos:float2)
             inst.select = true
             inst.at = pos
             update_preview()
-    edit_instructions_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+    lpipe <| $ ( ai )
         return false
-    delete evt
 
 def edit_link_instructions(var inst:Instruction?;pin:string )
     let pid = inst->input_index(pin)
     assert(pid!=-1)
     let iotype = inst.inputs[pid]._type
-    var evt <- @ <| ( ai : InstructionCategory?# )
+    edit_instructions_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link between input and output
             var link_inst = make_instruction(type_name)
@@ -605,17 +604,14 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
             update_preview()
         finally
             inst = null
-    finally
-        inst = null
-    edit_instructions_ex(EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+    lpipe <| $ ( ai )
         return ai.main_in!=iotype || ai.main_out!=iotype
-    delete evt
 
 def edit_tab_instructions(var inst:Instruction?;pin:string )
     let pid = inst->output_index(pin)
     assert(pid!=-1)
     let iotype = inst.outputs[pid]._type
-    var evt <- @ <| ( ai : InstructionCategory?# )
+    edit_instructions_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link to main output
             var out_inst = make_instruction(type_name)
@@ -628,11 +624,8 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
             update_preview()
         finally
             inst = null
-    finally
-        inst = null
-    edit_instructions_ex(EditInstructionsFlags FromContextMenu,evt) <| $ ( ai )
+    lpipe <| $ ( ai )
         return ai.main_in!=iotype
-    delete evt
 
 var g_ProjectSource = ""
 var g_ProjectErrors = ""
