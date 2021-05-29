@@ -433,13 +433,23 @@ def editor_child_window()
                 var snc = GetSelectedObjectCount()
                 if snc==1
                     var sna <- GetSelectedNodes()
-                    let nid = id_2_guid[sna[0]]
-                    var outL = g_Project->find_instruction(nid)
-                    assert(outL!=null)
-                    if length(outL.outputs)>=1
+                    var snl <- GetSelectedLinks()
+                    if length(sna)==1
+                        let nid = id_2_guid[sna[0]]
+                        var outL = g_Project->find_instruction(nid)
+                        assert(outL!=null)
+                        if length(outL.outputs)>=1
+                            OpenPopup("Create New Instruction")
+                            link_inst = outL
+                            link_pin = ""
+                    elif length(snl)==1
+                        context_link_id = snl[0]
                         OpenPopup("Create New Instruction")
-                        link_inst = outL
-                        link_pin = ""
+                        var inL = translate_input_output_id(context_link_id,"INPUT")
+                        link_inst = inL.inst
+                        link_pin = inL.pin
+                    delete sna
+                    delete snl
                 elif snc==0
                     OpenPopup("Create New Instruction")
                     link_inst = null
@@ -507,8 +517,11 @@ def edit_instructions(fromContextMenu:bool=false;pos:float2=float2(0.) )
     static_let <|
         var filter = new ImGuiTextFilter
     *filter |> Draw("##edit_instruction",(fromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
-    if IsWindowAppearing()
-        SetKeyboardFocusHere()
+    if fromContextMenu
+        if IsWindowAppearing()
+            SetKeyboardFocusHere()
+        if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
+            CloseCurrentPopup()
     var make_first = false
     if fromContextMenu && IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
         make_first = true
@@ -544,6 +557,8 @@ def edit_link_instructions(pos:float2;var inst:Instruction?;pin:string )
     *filter |> Draw("##edit_link_instruction",CONTEXT_MENU_WIDTH-10.)
     if IsWindowAppearing()
         SetKeyboardFocusHere()
+    if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
+        CloseCurrentPopup()
     var make_first = false
     if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
         make_first = true
@@ -577,6 +592,8 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
     *filter |> Draw("##edit_output_instruction",CONTEXT_MENU_WIDTH-10.)
     if IsWindowAppearing()
         SetKeyboardFocusHere()
+    if IsKeyPressed(GetKeyIndex(ImGuiKey Escape))
+        CloseCurrentPopup()
     var make_first = false
     if IsKeyPressed(GetKeyIndex(ImGuiKey Enter))
         make_first = true

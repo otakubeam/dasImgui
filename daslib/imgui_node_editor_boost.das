@@ -48,3 +48,14 @@ def GetSelectedNodes : array<NodeId>
         var empty : array<NodeId>
         return <- empty
 
+def GetSelectedLinks : array<LinkId>
+    var snc = GetSelectedObjectCount()
+    if snc != 0
+        var sna : array<void?>
+        sna |> resize(snc)
+        unsafe
+            snc = GetSelectedLinks(reinterpret<LinkId?> addr(sna[0]),snc)
+        return <- [{for x in range(snc); LinkId(intptr(sna[x]))}]
+    else
+        var empty : array<LinkId>
+        return <- empty
