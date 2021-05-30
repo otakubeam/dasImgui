@@ -265,7 +265,8 @@ def editor_child_window()
                         SameLine()
                     Text(inst.name)
                     let sz = ImGuiEx_NextColumn()
-                    SameLine(DEFAULT_NODE_WIDTH - sz.x - CalcTextSize("[X]").x - 2.0)
+                    Dummy(float2(DEFAULT_NODE_WIDTH - sz.x,0.))
+                    SameLine()
                     if Button("[X]##{inst.id}_E")
                         DeleteNode(get_unique_id(inst.id))
                     ImGuiEx_EndColumn()
@@ -518,7 +519,7 @@ def instruction_context_menu
                 link_inst = null
                 node_pos = float2(-FLT_MAX)
     if BeginPopup(icm)
-        let pos = ScreenToCanvas(node_pos)
+        let pos = node_pos==float2(-FLT_MAX) ? float2(-FLT_MAX) : ScreenToCanvas(node_pos)
         if link_inst==null
             edit_instructions_contextless(pos)
         elif !empty(link_pin)
