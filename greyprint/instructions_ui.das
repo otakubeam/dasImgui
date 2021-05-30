@@ -5,6 +5,7 @@ module instructions_ui
 
 require instructions public
 require preview
+require undo_stack
 
 require rtti
 require daslib/imgui_boost public
@@ -36,6 +37,8 @@ def NodeTextMultiline(mode:EditMode; id,name:string; var text:string&; maxlen:in
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     if InputTextMultiline("##{name}{id}{mode}_Text",*buf,float2(0),ImGuiInputTextFlags Multiline)
         text = to_string(*buf)
+        undo_instruction(id,name)
+        update_preview()
 
 def NodeText(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
     var buf = get_next_text_buffer(text,maxlen)
@@ -43,11 +46,14 @@ def NodeText(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     if InputText("##{name}{id}{mode}_Text",*buf)
         text = to_string(*buf)
+        undo_instruction(id,name)
+        update_preview()
 
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     Text(name)
     if EmbeddedListBox("{name}##{id}{mode}_Enumeration", op)
+        undo_instruction(id,name)
         update_preview()
         return true
     else
@@ -62,6 +68,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
     if mode==EditMode Embedded
         flags |= ImGuiColorEditFlags NoTooltip | ImGuiColorEditFlags NoOptions
     if ColorPicker4("##{name}{id}{mode}_ColorEditor4",safe_addr(data.x),flags)
+        undo_instruction(id,name)
         update_preview()
         return true
     else
@@ -70,6 +77,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
 def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
     if InputInt2("{name}##{id}{mode}_DragFloat",safe_addr(data.x))
+        undo_instruction(id,name)
         update_preview()
         return true
     else
@@ -78,6 +86,7 @@ def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
 def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.01f)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
     if DragFloat("{name}##{id}{mode}_DragFloat",safe_addr(data),step)
+        undo_instruction(id,name)
         update_preview()
         return true
     else
@@ -86,6 +95,7 @@ def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.0
 def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH -  - CalcTextSize(name).x)
     if Checkbox("{name}##{id}{mode}_Checkbox",safe_addr(data))
+        undo_instruction(id,name)
         update_preview()
         return true
     else

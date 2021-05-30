@@ -21,6 +21,7 @@ require instructions_ui
 require preview
 require guid_2_id
 require command_que
+require undo_stack
 
 // note - can be different model for every new editor type
 require instructions_model
@@ -116,6 +117,7 @@ def export_project(fname:string)
             get_dlg_ok_from_user("Error","Can't export {fname}")
 
 def clear_project_data()
+    clear_undo_stack()          // TODO: undo stack between projects
     DestroyEditor(g_Context)
     g_Context = null
     g_Project->clear()
@@ -165,6 +167,11 @@ def main_menu()
                 let fname = get_dlg_save_file("new_name.das","","greyprint")
                 if !empty(fname)
                     export_project(fname)
+        BeginMenu("Edit##Main menu") <|
+            if MenuItem("Undo##Edit")
+                undo()
+            if MenuItem("Redo##Edit")
+                redo()
         BeginMenu("Preview##Main menu") <|
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()
@@ -172,6 +179,13 @@ def main_menu()
                 g_ProjectSource = produce_project_text(g_Project)
                 post_event <| @
                     OpenPopup("PREVIEW SOURCE")
+
+    var IO & = GetIO()
+    if IO.KeyCtrl
+        if IsKeyPressed(GetKeyIndex(ImGuiKey Z))
+            undo()
+        if IsKeyPressed(GetKeyIndex(ImGuiKey Y))
+            redo()
 
 // NODE EDITOR WINDOW
 
@@ -269,6 +283,7 @@ def editor_child_window()
                         Image(inst.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
                     if inst.editing
                         if inst.flags.HasEdit
+                            before_instruction(inst)
                             inst->edit(EditMode Embedded)
                     ImGuiEx_BeginColumn()
                     for inp in inst.inputs
@@ -451,9 +466,12 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             DeleteNode(get_unique_id(inst.id))
         HelpMarker("Delete")
         Text("id: `{inst.id}`")
+        before_instruction(inst)
         var buf = get_next_text_buffer(inst.name)
         if InputText("name##{inst.id}_EDIT",*buf)
             inst.name = to_string(*buf)
+            undo_instruction(inst.id,"name")
+            update_preview()
         for outp in inst.outputs
             unsafe
                 if Checkbox("##preview_{inst.id}_{outp.name}_S",addr(outp.preview))
@@ -670,9 +688,6 @@ def eval_project ( var proj:Project )
             failed = true
 
 
-def preview_updater
-    eval_project(g_Project)
-
 def side_child_window()
     SetCurrentEditor(g_Context)
     var style & = imgui::GetStyle()
@@ -777,9 +792,16 @@ def main_editor_screen()
         post_invoke_que()
         SetCurrentEditor(null)
 
+def preview_updater
+    eval_project(g_Project)
+
+def undo_find_instruction ( id:string )
+    return g_Project->find_instruction(id)
+
 [export]
 def main
     g_PreviewUpdater = @@preview_updater
+    g_UndoFindInstruction = @@undo_find_instruction
     seal_instruction_factory()          // initialize everything greyprint related
     unsafe
         g_PreviewProject = addr(g_Project)

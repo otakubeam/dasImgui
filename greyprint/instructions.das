@@ -86,6 +86,26 @@ class Instruction
     def output_index ( iname:string ) : int
         return outputs |> find_index_if <| $ ( val )
             return val.name==iname
+    def JV
+        var tname = class_info(self).name
+        var inode <- {{
+            "id" => JV(id);
+            "name" => JV(name);
+            "rtti" => JV(tname);
+            "at" => JV(at);
+            "extents" => JV(extents);
+            "flags" => JV(flags)
+        }}
+        self->save(inode)
+        return JV(inode)
+    def from_JV ( var pnode:JsonValue? )
+        var node & = pnode.value as _object
+        id = node["id"].value as _string
+        name = node["name"].value as _string
+        at = from_JV(node["at"],type<float2>)
+        extents = from_JV(node["extents"],type<float2>)
+        flags = from_JV(node["flags"],type<InstructionFlags>)
+        self->load(node)
 
 def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input?#):void> ) : void
     for i in inst.inputs
@@ -139,17 +159,7 @@ class Project
     def save : JsonValue?
         var nodes : array<JsonValue?>
         for inst in instructions
-            var tname = class_info(*inst).name
-            var inode <- {{
-                "id" => JV(inst.id);
-                "name" => JV(inst.name);
-                "rtti" => JV(tname);
-                "at" => JV(inst.at);
-                "extents" => JV(inst.extents);
-                "flags" => JV(inst.flags)
-            }}
-            inst->save(inode)
-            nodes |> push(JV(inode))
+            nodes |> push(inst->JV())
         var links : array<JsonValue?>
         for inst in instructions
             for inp in inst.inputs
@@ -175,12 +185,7 @@ class Project
             var node & = pnode.value as _object
             let ntype = node["rtti"].value as _string
             var inst = make_instruction(ntype)
-            inst.id = node["id"].value as _string
-            inst.name = node["name"].value as _string
-            inst.at = from_JV(node["at"],type<float2>)
-            inst.extents = from_JV(node["extents"],type<float2>)
-            inst.flags = from_JV(node["flags"],type<InstructionFlags>)
-            (*inst)->load(node)
+            (*inst)->from_JV(pnode)
             instructions |> push(inst)
             lookup[inst.id] = inst
         var links & = root["links"].value as _array
