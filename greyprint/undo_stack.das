@@ -13,10 +13,9 @@ struct UndoRedo
     undo : lambda
     redo : lambda
 
-var g_UndoStack : array<UndoRedo>
-var g_UndoStackTop = 0
-var g_UndoLastInstruction : string
-var g_UndoFindInstruction : function<(id:string):Instruction?>
+var private g_UndoStack : array<UndoRedo>
+var private g_UndoStackTop = 0
+var private g_UndoLastInstruction : string
 
 def create_undo ( var ur:UndoRedo )
     var l = length(g_UndoStack)
@@ -59,29 +58,25 @@ def before_instruction ( var inst:Instruction? )
         delete jv
 
 [private]
-def find_undo_instruction(id:string)
-    var res = invoke(g_UndoFindInstruction, id)
-    assert(res!=null,"instruction not found")
-    return res
-
-[private]
 def restore_instruction(id:string;json:string)
-    var inst = find_undo_instruction(id)
+    var inst = (*g_CurrentProject)->find_instruction(id)
     var error = ""
     var jv = read_json(json,error)
     if jv!=null
-        inst->from_JV(jv)
+        (*inst)->from_JV(jv)
     else
         // TODO: better error reporting
         print("{error}\nfailed to restore {id} from {json}\n")
+    inst.select = true
+    inst.navigate = true
     unsafe
         delete jv
 
 def undo_instruction(id,name:string)
     let before = g_UndoLastInstruction
     var ur : UndoRedo
-    var inst = find_undo_instruction(id)
-    var jv = inst->JV()
+    var inst = (*g_CurrentProject)->find_instruction(id)
+    var jv = (*inst)->JV()
     var after = write_json(jv)
     unsafe
         delete jv

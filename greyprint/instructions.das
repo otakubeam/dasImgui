@@ -62,6 +62,7 @@ bitfield InstructionFlags
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
+    category : string                       // instruction category
     at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
     extents : float2 = float2(256.,256.)    // size in the node editor (for relevant nodes)
     flags : InstructionFlags = InstructionFlags HasEdit
@@ -219,6 +220,12 @@ def find_loop ( proj:Project )
             return true
     return false
 
+var g_CurrentProject : Project?
+
+def set_current_project ( var proj:Project )
+    unsafe
+        g_CurrentProject = addr(proj)
+
 // factory
 
 struct InstructionCategory
@@ -228,7 +235,7 @@ struct InstructionCategory
     main_in:string
     main_out:string
 
-var g_instructionFactory : table < string; lambda<():Instruction?> >
+var private g_instructionFactory : table < string; lambda<():Instruction?> >
 
 var g_instructionsByCategory : array<InstructionCategory>
 
@@ -236,7 +243,10 @@ var g_instructionsByCategory : array<InstructionCategory>
 def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType)-const )
     let tname = typeinfo(undecorated_typename type<InstType>)
     var factory <- @ <| () : Instruction?
-        return new InstType()
+        var inst = new InstType()
+        inst.name = it_name
+        inst.category = it_category
+        return inst
     var dummy = invoke(factory)
     g_instructionFactory[tname] <- factory
     var main_in  = (length(dummy.inputs)>0) ? dummy.inputs[0]._type : ""

@@ -8,10 +8,10 @@ require daslib/safe_addr
 require daslib/static_let
 
 require instructions public
-require math public
+require model_eval
+require math
 
 var g_PreviewTexture : array<uint>
-var g_PreviewProject : Project?
 var g_LivePreview = true
 
 def make_rgba_texture(width,height:int; data:void?)

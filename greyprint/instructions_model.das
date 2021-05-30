@@ -16,7 +16,7 @@ class Instruction_Comment : Instruction
     [[serialize]] comment : string = "Comment"
     override flags = InstructionFlags Comment | InstructionFlags HasEdit
     def Instruction_Comment
-        name = "Comment"
+        pass
     def override edit ( mode:EditMode ): void
         NodeTextMultiline(mode,id,"comment",comment,256)
     def override produce ( var src_regs : array<int> ): array<string>
@@ -26,7 +26,6 @@ class Instruction_Comment : Instruction
 class Instruction_OutputSurface : Instruction
     override flags = InstructionFlags Output
     def Instruction_OutputSurface
-        name = "Output surface"
         self->add_input("In",TYPE_SURFACE)
     def override edit ( mode:EditMode ): void
         pass
@@ -40,7 +39,6 @@ class Instruction_SolidColor : Instruction
     [[serialize]] size : int2 = int2(256,256)
     [[serialize]] color : float4 = float4(.5,.5,.5,1.)
     def Instruction_SolidColor
-        name = "Solid color"
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ): void
         NodeInputInt2(mode,id,"size",size)
@@ -60,7 +58,6 @@ class Instruction_Gradient : Instruction
     [[serialize]] bottom_left : float4 = float4(0.,0.,1.,1.)
     [[serialize]] bottom_right : float4 = float4(0.5,0.5,0.5,1.)
     def Instruction_Gradient
-        name = "Gradient"
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
         NodeInputInt2(mode,id,"size",size)
@@ -84,7 +81,6 @@ class Instruction_Blend : Instruction
     [[serialize]] size : int2 = int2(256,256)
     [[serialize]] op  : BlendOp = BlendOp Add
     def Instruction_Blend
-        name = "Blend"
         self->add_input("Src",TYPE_SURFACE)
         self->add_input("Dst",TYPE_SURFACE)
         self->add_input("Factor",TYPE_SCALAR)

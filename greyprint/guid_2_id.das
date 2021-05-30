@@ -32,3 +32,12 @@ def get_input_unique_id ( inst:Instruction?; inp:string ) : int
 def get_output_unique_id ( inst:Instruction?; outp:string ) : int
     return get_unique_id("OUTPUT {inst.id} {outp}")
 
+def translate_input_output_id ( id:int; typ:string ) : tuple<inst:Instruction?; pin:string> const
+    assert(id_2_guid |> key_exists(id))
+    var note <- split(id_2_guid[id]," ")
+    assert(note[0]==typ)
+    let instr = (*g_CurrentProject)->find_instruction(note[1])
+    assert(instr!=null)
+    let val = [[auto instr, note[2]]]
+    delete note
+    return val

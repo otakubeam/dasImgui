@@ -14,7 +14,6 @@ class Instruction_DebugScalar : Instruction
     override editing = true
     override flags = InstructionFlags Output | InstructionFlags HasEdit
     def Instruction_DebugScalar
-        name = "Debug scalar"
         self->add_input("In",TYPE_SCALAR)
     def override edit ( mode:EditMode ): void
         if Button("Debug")
@@ -27,7 +26,6 @@ class Instruction_DebugScalar : Instruction
 class Instruction_OpScalar : Instruction
     op : string
     def Instruction_OpScalar(Op:string)
-        name = "{Op} scalar"
         op = Op
         self->add_input("In",TYPE_SCALAR)
         self->add_output("Out",TYPE_SCALAR)
@@ -49,7 +47,6 @@ class Instruction_FunScalar : Instruction_OpScalar
 class Instruction_Op2Scalar : Instruction
     op : string
     def Instruction_Op2Scalar(Op2:string)
-        name = "{Op2} scalar"
         op = Op2
         self->add_input("In-1",TYPE_SCALAR)
         self->add_input("In-2",TYPE_SCALAR)
@@ -66,7 +63,6 @@ class Instruction_Scalar : Instruction
     override editing = true
     [[serialize]] value : float = 1.
     def Instruction_Scalar
-        name = "Scalar constant"
         self->add_output("Out",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
         NodeDragFloat(mode,id,"value",value)

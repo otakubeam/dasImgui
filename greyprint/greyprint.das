@@ -83,16 +83,6 @@ def imgui_app ( title:string; blk : block )
 var g_Project <- Project()
 var g_FirstFrame = true
 
-def translate_input_output_id ( id:int; typ:string ) : tuple<inst:Instruction?; pin:string> const
-    assert(id_2_guid |> key_exists(id))
-    var note <- split(id_2_guid[id]," ")
-    assert(note[0]==typ)
-    let instr = g_Project->find_instruction(note[1])
-    assert(instr!=null)
-    let val = [[auto instr, note[2]]]
-    delete note
-    return val
-
 def save_project(fname:string)
     SetCurrentEditor(g_Context)
     for inst in g_Project.instructions
@@ -128,6 +118,7 @@ def clear_project_data()
 def new_project()
     post_event <| @
         clear_project_data()
+        update_preview()
 
 def load_project(fname:string)
     var text : string
@@ -795,16 +786,11 @@ def main_editor_screen()
 def preview_updater
     eval_project(g_Project)
 
-def undo_find_instruction ( id:string )
-    return g_Project->find_instruction(id)
-
 [export]
 def main
+    set_current_project(g_Project)
     g_PreviewUpdater = @@preview_updater
-    g_UndoFindInstruction = @@undo_find_instruction
     seal_instruction_factory()          // initialize everything greyprint related
-    unsafe
-        g_PreviewProject = addr(g_Project)
     imgui_app("Testing IMGUI") <|
         NewFrame()
         main_editor_screen()
