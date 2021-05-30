@@ -80,15 +80,14 @@ def imgui_app ( title:string; blk : block )
 
 // PROJECT
 
-var g_Project <- Project()
 var g_FirstFrame = true
 
 def save_project(fname:string)
     SetCurrentEditor(g_Context)
-    for inst in g_Project.instructions
+    for inst in g_CurrentProject.instructions
         inst.at = GetNodePosition(get_unique_id(inst.id))
     SetCurrentEditor(null)
-    var jv = g_Project->save()
+    var jv = (*g_CurrentProject)->save()
     let save_text = write_json(jv)
     fopen(fname,"wb") <| $ ( json_file )
         if json_file != null
@@ -99,7 +98,7 @@ def save_project(fname:string)
         delete jv
 
 def export_project(fname:string)
-    let save_text = produce_project_text(g_Project)
+    let save_text = produce_project_text()
     fopen(fname,"wb") <| $ ( das_file )
         if das_file != null
             fwrite(das_file, save_text)
@@ -110,7 +109,7 @@ def clear_project_data()
     clear_undo_stack()          // TODO: undo stack between projects
     DestroyEditor(g_Context)
     g_Context = null
-    g_Project->clear()
+    (*g_CurrentProject)->clear()
     reset_guids()
     clear_preview()
     g_FirstFrame = true
@@ -133,7 +132,7 @@ def load_project(fname:string)
             clear_project_data()
             var error : string
             var jv = read_json(text,error)
-            g_Project->load(jv)
+            (*g_CurrentProject)->load(jv)
             update_preview()
             unsafe
                 delete jv
@@ -167,7 +166,7 @@ def main_menu()
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()
             if MenuItem("View generated code##Preview")
-                g_ProjectSource = produce_project_text(g_Project)
+                g_ProjectSource = produce_project_text()
                 post_event <| @
                     OpenPopup("PREVIEW SOURCE")
 
@@ -253,7 +252,7 @@ def editor_child_window()
     style.Colors[int(StyleColor StyleColor_Bg)].w = 0.
     style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
     Begin("My Editor", float2(0.0, 0.0f)) <|
-        for inst in g_Project.instructions
+        for inst in g_CurrentProject.instructions
             let id = get_unique_id(inst.id)
             if !inst.flags.Comment
                 // REGULAR NODE
@@ -351,7 +350,7 @@ def editor_child_window()
                     NavigateToSelection(false,NAVIGATION_TIME)
                 inst.select = false
 
-        for inst in g_Project.instructions
+        for inst in g_CurrentProject.instructions
             for inp in inst.inputs
                 if inp.src != null
                     let inp_id = get_input_unique_id(inst,inp.name)
@@ -399,7 +398,7 @@ def editor_child_window()
                             else
                                 var old_input = inL.inst.inputs[inI]
                                 inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
-                                if g_Project |> find_loop()
+                                if g_CurrentProject |> find_loop()
                                     inL.inst.inputs[inI] = old_input
                                     editor_hint("Error: link creates loop")
                                     RejectNewItem(float4(1,0,0,1),3.)
@@ -418,7 +417,7 @@ def editor_child_window()
                 if AcceptDeletedItem()
                     post_event <| @
                         let inst_id = id_2_guid[deletedNodeId]
-                        var inst = g_Project->find_instruction(inst_id)
+                        var inst = (*g_CurrentProject)->find_instruction(inst_id)
                         assert(inst!=null)
                         delete_instruction(inst)
 
@@ -432,7 +431,7 @@ def editor_child_window()
 // SIDE WINDOW
 
 def delete_instruction ( var inst:Instruction? )
-    g_Project->delete_instruction(inst)
+    (*g_CurrentProject)->delete_instruction(inst)
     update_preview()
 
 def delete_connection ( id:LinkId )
@@ -500,7 +499,7 @@ def instruction_context_menu
                 var snl <- GetSelectedLinks()
                 if length(sna)==1
                     let nid = id_2_guid[sna[0]]
-                    var outL = g_Project->find_instruction(nid)
+                    var outL = (*g_CurrentProject)->find_instruction(nid)
                     assert(outL!=null)
                     if length(outL.outputs)>=1
                         OpenPopup(icm)  // tab node
@@ -575,7 +574,7 @@ def edit_instructions_side_menu()
         let type_name = ai.tname
         post_event() <| @   // context free instruction which will be centered
             var inst = make_instruction(type_name)
-            g_Project->add_new_insturction(inst)
+            (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
             update_preview()
     lpipe() <| $ ( ai )
@@ -586,7 +585,7 @@ def edit_instructions_contextless(pos:float2)
         let type_name = ai.tname
         post_event() <| @   // context free instruction at mouse position
             var inst = make_instruction(type_name)
-            g_Project->add_new_insturction(inst)
+            (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
             inst.at = pos
             update_preview()
@@ -601,7 +600,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
         let type_name = ai.tname
         post_event() <| @   // link between input and output
             var link_inst = make_instruction(type_name)
-            g_Project->add_new_insturction(link_inst)
+            (*g_CurrentProject)->add_new_insturction(link_inst)
             link_inst.select = true
             let p0 = GetNodePosition(guid_2_id[inst.id])
             let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
@@ -624,7 +623,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
         let type_name = ai.tname
         post_event() <| @   // link to main output
             var out_inst = make_instruction(type_name)
-            g_Project->add_new_insturction(out_inst)
+            (*g_CurrentProject)->add_new_insturction(out_inst)
             out_inst.select = true
             out_inst.navigate = true
             out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
@@ -640,9 +639,9 @@ var g_ProjectSource = ""
 var g_ProjectErrors = ""
 var g_ProjectErrorsMessage = ""
 
-def eval_project ( var proj:Project )
+def eval_project ()
     var failed = false
-    g_ProjectSource = produce_project_text(proj)
+    g_ProjectSource = produce_project_text()
     g_ProjectErrors = ""
     g_ProjectErrorsMessage = ""
     compile("project",g_ProjectSource, CodeOfPolicies()) <| $ ( ok; prog; errors )
@@ -654,14 +653,14 @@ def eval_project ( var proj:Project )
                         var pout = get_context_global_variable(context,"G_OUTPUT")
                         var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
                         clear_preview()
-                        for inst in g_Project.instructions
+                        for inst in g_CurrentProject.instructions
                             inst.tex = null
                             for outp in inst.outputs
                                 outp.tex = null
                         for outprev in OUTPUT
                             let tex = make_prewview_rgba_texture(outprev.surf)
                             g_PreviewTexture |> push(tex)
-                            var pinst = g_Project->find_instruction(outprev.id)
+                            var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
                             assert(pinst!=null)
                             if !empty(outprev.outp)
                                 pinst |> find_output(outprev.outp) <| $ ( outp )
@@ -677,7 +676,6 @@ def eval_project ( var proj:Project )
             g_ProjectErrorsMessage = "generated code failed to compile"
             g_ProjectErrors = "{errors}"
             failed = true
-
 
 def side_child_window()
     SetCurrentEditor(g_Context)
@@ -705,7 +703,7 @@ def side_child_window()
         HelpMarker("Navigate to selection")
         for ng in sna
             let nid = id_2_guid[ng]
-            var inst = g_Project->find_instruction(nid)
+            var inst = (*g_CurrentProject)->find_instruction(nid)
             side_edit_instance(inst, ImGuiTreeNodeFlags DefaultOpen)
         EndChild()
 // project
@@ -717,7 +715,7 @@ def side_child_window()
     static_let <|
         var project_filter = new ImGuiTextFilter
     *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
-    for inst in g_Project.instructions
+    for inst in g_CurrentProject.instructions
         if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
             side_edit_instance(inst)
     EndChild()
@@ -784,11 +782,11 @@ def main_editor_screen()
         SetCurrentEditor(null)
 
 def preview_updater
-    eval_project(g_Project)
+    eval_project()
 
 [export]
 def main
-    set_current_project(g_Project)
+    g_CurrentProject = new Project()
     g_PreviewUpdater = @@preview_updater
     seal_instruction_factory()          // initialize everything greyprint related
     imgui_app("Testing IMGUI") <|

@@ -213,7 +213,7 @@ def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
                 return true
     return false
 
-def find_loop ( proj:Project )
+def find_loop ( proj:Project? )
     for inst in proj.instructions
         var visited : table<Instruction?; bool>
         if find_loop(inst, inst, visited)
@@ -221,10 +221,6 @@ def find_loop ( proj:Project )
     return false
 
 var g_CurrentProject : Project?
-
-def set_current_project ( var proj:Project )
-    unsafe
-        g_CurrentProject = addr(proj)
 
 // factory
 

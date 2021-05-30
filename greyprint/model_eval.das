@@ -20,10 +20,10 @@ def collect_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; 
         if inp.src!=null
             collect_instruction(inp.src, used, reval)
 
-def collect_instructions ( proj:Project )
+def collect_instructions
     var reval : array<Instruction?>
     var used : table<Instruction?;bool>
-    for inst in proj.instructions
+    for inst in g_CurrentProject.instructions
         if inst.flags.Output
             var ireval : array<Instruction?>
             collect_instruction(inst, used, ireval)
@@ -94,16 +94,16 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
     reverse(eval)
     return <- eval
 
-def produce_eval ( var proj:Project )
-    for inst in proj.instructions
+def produce_eval
+    for inst in g_CurrentProject.instructions
         for outp in inst.outputs
             outp.reg = -1
-    var reval <- collect_instructions(proj)
+    var reval <- collect_instructions()
     let nreg = assign_registers(reval)
     return <- produce_eval(reval, nreg)
 
-def produce_project_text ( var proj:Project )
-    var evl <- produce_eval(proj)
+def produce_project_text
+    var evl <- produce_eval()
     let st = build_string() <| $ (var writer)
         write(writer,"require instructions\n")
         write(writer,"require model\n")
