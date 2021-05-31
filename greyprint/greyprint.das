@@ -268,7 +268,7 @@ def editor_child_window()
                     Dummy(float2(DEFAULT_NODE_WIDTH - sz.x,0.))
                     SameLine()
                     if Button("[X]##{inst.id}_E")
-                        DeleteNode(get_unique_id(inst.id))
+                        DeleteNode(id)
                     ImGuiEx_EndColumn()
                     if inst.tex != null
                         Image(inst.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
@@ -286,7 +286,7 @@ def editor_child_window()
                             if inp.src != null
                                 SameLine()
                                 if Button("[G]##goto_{inp}_from_{inst.id}")
-                                    SelectNode(get_unique_id(inp.src.id), false)
+                                    SelectNode(id, false)
                                     NavigateToSelection(false, NAVIGATION_TIME)
                                     ClearSelection()
                                 SameLine()
@@ -341,12 +341,19 @@ def editor_child_window()
 
             if inst.firstFrame
                 if inst.at.x==-FLT_MAX
-                    CenterNodeOnScreen(get_unique_id(inst.id))
+                    CenterNodeOnScreen(id)
+                    inst.at = GetNodePosition(id)
                 else
                     SetNodePosition(id, inst.at)
+                    inst.at = GetNodePosition(id)
                 inst.firstFrame = false
+            else
+                let newAt = GetNodePosition(id)
+                if inst.at != newAt
+                    undo_move_instruction(inst.id,inst.at,newAt)
+                    inst.at = newAt
             if inst.select
-                SelectNode(get_unique_id(inst.id))
+                SelectNode(id)
                 if inst.navigate
                     NavigateToSelection(false,NAVIGATION_TIME)
                 inst.select = false
@@ -461,7 +468,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
         var buf = get_next_text_buffer(inst.name)
         if InputText("name##{inst.id}_EDIT",*buf)
             inst.name = to_string(*buf)
-            undo_instruction(inst.id,"name")
+            undo_edit_instruction(inst.id,"name")
             update_preview()
         for outp in inst.outputs
             unsafe
@@ -521,7 +528,7 @@ def instruction_context_menu
     if BeginPopup(icm)
         let pos = node_pos==float2(-FLT_MAX) ? float2(-FLT_MAX) : ScreenToCanvas(node_pos)
         if link_inst==null
-            edit_instructions_contextless(pos)
+            create_instruction_contextless(pos)
         elif !empty(link_pin)
             edit_link_instructions(link_inst,link_pin)
         else
@@ -533,7 +540,7 @@ bitfield EditInstructionsFlags
     FromContextMenu
     DisplayCategories
 
-def edit_instructions_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
+def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
     if flags.FromContextMenu
         Text("Create new instruction")
     static_let <|
@@ -570,8 +577,8 @@ def edit_instructions_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCa
         if !collapsed
             TreePop()
 
-def edit_instructions_side_menu()
-    edit_instructions_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
+def create_instruction_side_menu()
+    create_instruction_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction which will be centered
             var inst = make_instruction(type_name)
@@ -581,8 +588,8 @@ def edit_instructions_side_menu()
     lpipe() <| $ ( ai )
         return false
 
-def edit_instructions_contextless(pos:float2)
-    edit_instructions_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
+def create_instruction_contextless(pos:float2)
+    create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction at mouse position
             var inst = make_instruction(type_name)
@@ -597,7 +604,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
     let pid = inst->input_index(pin)
     assert(pid!=-1)
     let iotype = inst.inputs[pid]._type
-    edit_instructions_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
+    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link between input and output
             var link_inst = make_instruction(type_name)
@@ -620,7 +627,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
     let pid = inst->output_index(pin)
     assert(pid!=-1)
     let iotype = inst.outputs[pid]._type
-    edit_instructions_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
+    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link to main output
             var out_inst = make_instruction(type_name)
@@ -686,7 +693,7 @@ def side_child_window()
 // instructions
     BeginChild("Instructions", float2(SIDE_PANNEL_WIDTH, INSTRUCTION_PANNEL_HEIGHT), true)
     if CollapsingHeader("New instruction",ImGuiTreeNodeFlags DefaultOpen)
-        edit_instructions_side_menu()
+        create_instruction_side_menu()
     EndChild()
 // selection
     var snc = GetSelectedObjectCount()

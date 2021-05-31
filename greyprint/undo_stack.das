@@ -72,7 +72,7 @@ def restore_instruction(id:string;json:string)
     unsafe
         delete jv
 
-def undo_instruction(id,name:string)
+def undo_edit_instruction(id,name:string)
     let before = g_UndoLastInstruction
     var ur : UndoRedo
     var inst = (*g_CurrentProject)->find_instruction(id)
@@ -87,4 +87,21 @@ def undo_instruction(id,name:string)
     ur.redo <- @ <|
         restore_instruction(id,after)  // select and navigate?
         update_preview()
+    create_undo(ur)
+
+def undo_move_instruction(id:string;before,after:float2)
+    var ur : UndoRedo
+    ur.what = "move instruction {id}"
+    ur.undo <- @ <|
+        var inst = (*g_CurrentProject)->find_instruction(id)
+        inst.at = before
+        inst.firstFrame = true
+        inst.select = true
+        inst.navigate = true
+    ur.redo <- @ <|
+        var inst = (*g_CurrentProject)->find_instruction(id)
+        inst.at = after
+        inst.firstFrame = true
+        inst.select = true
+        inst.navigate = true
     create_undo(ur)
