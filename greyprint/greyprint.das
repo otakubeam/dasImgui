@@ -83,10 +83,8 @@ def imgui_app ( title:string; blk : block )
 var g_FirstFrame = true
 
 def save_project(fname:string)
-    SetCurrentEditor(g_Context)
     for inst in g_CurrentProject.instructions
         inst.at = GetNodePosition(get_unique_id(inst.id))
-    SetCurrentEditor(null)
     var jv = (*g_CurrentProject)->save()
     let save_text = write_json(jv)
     fopen(fname,"wb") <| $ ( json_file )
@@ -107,6 +105,7 @@ def export_project(fname:string)
 
 def clear_project_data()
     clear_undo_stack()          // TODO: undo stack between projects
+    SetCurrentEditor(null)
     DestroyEditor(g_Context)
     g_Context = null
     (*g_CurrentProject)->clear()
@@ -159,8 +158,10 @@ def main_menu()
                     export_project(fname)
         BeginMenu("Edit##Main menu") <|
             if MenuItem("Undo##Edit")
+                ClearSelection()
                 undo()
             if MenuItem("Redo##Edit")
+                ClearSelection()
                 redo()
         BeginMenu("Preview##Main menu") <|
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
@@ -173,8 +174,10 @@ def main_menu()
     var IO & = GetIO()
     if IO.KeyCtrl
         if IsKeyPressed(GetKeyIndex(ImGuiKey Z))
+            ClearSelection()
             undo()
         if IsKeyPressed(GetKeyIndex(ImGuiKey Y))
+            ClearSelection()
             redo()
 
 // NODE EDITOR WINDOW
@@ -243,7 +246,6 @@ def editor_hint(desc:string)
     Resume()
 
 def editor_child_window()
-    SetCurrentEditor(g_Context)
     var style & = imgui_node_editor::GetStyle()
     style.NodeRounding = 0f
     style.GroupRounding = 0f
@@ -433,19 +435,22 @@ def editor_child_window()
 
     if g_FirstFrame
         NavigateToContent(NAVIGATION_TIME)
-    SetCurrentEditor(null)
     g_FirstFrame = false
 
 // SIDE WINDOW
 
 def delete_instruction ( var inst:Instruction? )
+    before_instruction(inst)
+    undo_delete_instruction(inst)
     (*g_CurrentProject)->delete_instruction(inst)
     update_preview()
 
 def delete_connection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
     let inI = inL.inst->input_index(inL.pin)
-    inL.inst.inputs[inI].src = null
+    var inp & =  inL.inst.inputs[inI]
+    undo_delete_connecction(inL.inst.id,inL.pin,inp.src.id,inp.output)
+    inp.src = null
     update_preview()
 
 def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
@@ -686,7 +691,6 @@ def eval_project ()
             failed = true
 
 def side_child_window()
-    SetCurrentEditor(g_Context)
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
@@ -730,7 +734,6 @@ def side_child_window()
 // and done
     EndGroup()
     imgui::PopStyleColor()
-    SetCurrentEditor(null)
 
 // error preview
 
@@ -767,6 +770,7 @@ def main_editor_screen()
         var config = Config()
         config.SettingsFile = "Simple.json"
         g_Context = CreateEditor(safe_addr(config))
+        SetCurrentEditor(g_Context)
         /*
         SetCurrentEditor(g_Context)
         EnableShortcuts(true)
@@ -785,9 +789,7 @@ def main_editor_screen()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         editor_child_window()
         EndChild()
-        SetCurrentEditor(g_Context)
         post_invoke_que()
-        SetCurrentEditor(null)
 
 def preview_updater
     eval_project()
@@ -802,5 +804,7 @@ def main
         main_editor_screen()
         Render()
         clear_text_buffers()
-    DestroyEditor(g_Context)
+    if g_Context != null
+        SetCurrentEditor(null)
+        DestroyEditor(g_Context)
 

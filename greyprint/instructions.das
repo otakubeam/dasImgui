@@ -157,6 +157,14 @@ class Project
         lookup |> erase(dinst.id)
         unsafe
             delete dinst
+    def save_link ( var inst:Instruction?; inp:Input ) : JsonValue?
+        var lnk <- {{
+            "input_id"    => JV(inst.id);
+            "input_name"  => JV(inp.name);
+            "output_id"   => JV(inp.src.id);
+            "output_name" => JV(inp.output)
+        }}
+        return JV(lnk)
     def save : JsonValue?
         var nodes : array<JsonValue?>
         for inst in instructions
@@ -165,41 +173,40 @@ class Project
         for inst in instructions
             for inp in inst.inputs
                 if inp.src != null
-                    var lnk <- {{
-                        "input_id"    => JV(inst.id);
-                        "input_name"  => JV(inp.name);
-                        "output_id"   => JV(inp.src.id);
-                        "output_name" => JV(inp.output)
-                    }}
-                    links |> push(JV(lnk))
+                    links |> push(self->save_link(inst,inp))
         var root <- {{
             "nodes"=> JV(nodes);
             "links" => JV(links)
         }}
         return JV(root)
-    def load ( var proot:JsonValue? ): void
-        if proot==null
-            return
-        var root & = proot.value as _object
-        var nodes & = root["nodes"].value as _array
-        for pnode in nodes
-            var node & = pnode.value as _object
-            let ntype = node["rtti"].value as _string
-            var inst = make_instruction(ntype)
-            (*inst)->from_JV(pnode)
-            instructions |> push(inst)
-            lookup[inst.id] = inst
-        var links & = root["links"].value as _array
+    def load_instruction ( var pnode : JsonValue? )
+        var node & = pnode.value as _object
+        let ntype = node["rtti"].value as _string
+        var inst = make_instruction(ntype)
+        (*inst)->from_JV(pnode)
+        instructions |> push(inst)
+        lookup[inst.id] = inst
+        return inst
+    def load_links ( var rlinks : JsonValue? ): void
+        var links & = rlinks.value as _array
         for plink in links
             var link & = plink.value as _object
             let input_id = link["input_id"].value as _string
             var inst = self->find_instruction(input_id)
             assert(inst != null)
             let input_name = link["input_name"].value as _string
-            inst |>find_input(input_name) <| $ ( inp )
+            inst |> find_input(input_name) <| $ ( inp )
                 inp.output = link["output_name"].value as _string
                 let output_id = link["output_id"].value as _string
                 inp.src = self->find_instruction(output_id)
+    def load ( var proot:JsonValue? ) : void
+        if proot==null
+            return
+        var root & = proot.value as _object
+        var nodes & = root["nodes"].value as _array
+        for pnode in nodes
+            self->load_instruction(pnode)
+        self->load_links(root["links"])
 
 def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
     if visited |> key_exists(inst)

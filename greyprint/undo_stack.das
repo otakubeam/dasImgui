@@ -5,6 +5,9 @@ module undo_stack
 
 require instructions public
 require preview
+require guid_2_id
+require imgui_node_editor
+require command_que
 
 require daslib/json_boost public
 
@@ -80,13 +83,11 @@ def undo_edit_instruction(id,name:string)
     var after = write_json(jv)
     unsafe
         delete jv
-    ur.what = "instruction {id} {name}"
+    ur.what = "edit instruction {id} {name}"
     ur.undo <- @ <|
-        restore_instruction(id,before) // select and navigate?
-        update_preview()
+        restore_instruction(id,before)
     ur.redo <- @ <|
-        restore_instruction(id,after)  // select and navigate?
-        update_preview()
+        restore_instruction(id,after)
     create_undo(ur)
 
 def undo_move_instruction(id:string;before,after:float2)
@@ -104,4 +105,51 @@ def undo_move_instruction(id:string;before,after:float2)
         inst.firstFrame = true
         inst.select = true
         inst.navigate = true
+    create_undo(ur)
+
+[private]
+def restore_instruction(json:string)
+    var inst : Instruction?
+    var error = ""
+    var jv = read_json(json,error)
+    if jv!=null
+        inst = (*g_CurrentProject)->load_instruction(jv)
+    else
+        // TODO: better error reporting
+        print("{error}\nfailed to restore from {json}\n")
+        return
+    inst.firstFrame = true
+    inst.select = true
+    inst.navigate = true
+    unsafe
+        delete jv
+
+def undo_delete_instruction(inst:Instruction?)
+    let before = g_UndoLastInstruction
+    let id = inst.id
+    var ur : UndoRedo
+    ur.what = "delete instruction {id}"
+    ur.undo <- @ <|
+        restore_instruction(before)
+    ur.redo <- @ <|
+        post_event <| @
+            var inst = (*g_CurrentProject)->find_instruction(id)
+            (*g_CurrentProject)->delete_instruction(inst)
+    create_undo(ur)
+
+def undo_delete_connecction(id,pin,lid,loutput:string)
+    var ur : UndoRedo
+    ur.what = "delete link {id} {pin} {lid}"
+    ur.undo <- @ <|
+        var inst = (*g_CurrentProject)->find_instruction(id)
+        let inI = (*inst)->input_index(pin)
+        var linst = (*g_CurrentProject)->find_instruction(lid)
+        inst.inputs[inI].src = linst
+        inst.inputs[inI].output = loutput
+    ur.redo <- @ <|
+        post_event <| @
+            var inst = (*g_CurrentProject)->find_instruction(id)
+            var inI = (*inst)->input_index(pin)
+            var inp & =  inst.inputs[inI]
+            inp.src = null
     create_undo(ur)
