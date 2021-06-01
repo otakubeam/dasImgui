@@ -11,6 +11,9 @@ require command_que
 
 require daslib/json_boost public
 
+let DEBUG_UNDO = false
+let DEBUG_UNDO_STACK = false
+
 struct UndoRedo
     what : string
     undo : lambda
@@ -37,28 +40,49 @@ def create_undo ( var ur:UndoRedo )
     g_UndoStack |> emplace(ur)
     g_UndoStackTop = length(g_UndoStack)
 
+def create_undo ( what:string; blk:block<(var ur:UndoRedo)> )
+    var ur : UndoRedo
+    ur.what = what
+    invoke(blk, ur)
+    create_undo(ur)
+
 def clear_undo_stack
     g_UndoLastInstruction = ""
     delete g_UndoStack
     g_UndoStackTop = 0
 
 def undo
+    static_if DEBUG_UNDO_STACK
+        debug(g_UndoStack, "undo = ")
+        debug(g_UndoStackTop, "undo sp = ")
     if g_UndoStackTop > 0
         g_UndoStackTop --
         invoke ( g_UndoStack[g_UndoStackTop].undo )
         update_preview()
 
 def redo
+    static_if DEBUG_UNDO_STACK
+        debug(g_UndoStack, "redo = ")
+        debug(g_UndoStackTop, "undo sp = ")
     if g_UndoStackTop != length(g_UndoStack)
         invoke ( g_UndoStack[g_UndoStackTop].redo )
         g_UndoStackTop ++
         update_preview()
 
-def before_instruction ( var inst:Instruction? )
+def save_to_json ( var inst:Instruction? )
     var jv = inst->JV()
-    g_UndoLastInstruction = write_json(jv)
+    var txt = write_json(jv)
     unsafe
         delete jv
+    return txt
+
+def before_instruction ( var inst:Instruction? )
+    g_UndoLastInstruction = save_to_json(inst)
+
+def select_and_navigate ( var inst:Instruction?; fframe:bool=true )
+    inst.firstFrame = fframe
+    inst.select = true
+    inst.navigate = true
 
 [private]
 def restore_instruction(id:string;json:string)
@@ -67,89 +91,87 @@ def restore_instruction(id:string;json:string)
     var jv = read_json(json,error)
     if jv!=null
         (*inst)->from_JV(jv)
+        select_and_navigate(inst,false)
     else
-        // TODO: better error reporting
-        print("{error}\nfailed to restore {id} from {json}\n")
-    inst.select = true
-    inst.navigate = true
+        print("{error}\nfailed to restore {id} from {json}\n")  // TODO: better error reporting
     unsafe
         delete jv
-
-def undo_edit_instruction(id,name:string)
-    let before = g_UndoLastInstruction
-    var ur : UndoRedo
-    var inst = (*g_CurrentProject)->find_instruction(id)
-    var jv = (*inst)->JV()
-    var after = write_json(jv)
-    unsafe
-        delete jv
-    ur.what = "edit instruction {id} {name}"
-    ur.undo <- @ <|
-        restore_instruction(id,before)
-    ur.redo <- @ <|
-        restore_instruction(id,after)
-    create_undo(ur)
-
-def undo_move_instruction(id:string;before,after:float2)
-    var ur : UndoRedo
-    ur.what = "move instruction {id}"
-    ur.undo <- @ <|
-        var inst = (*g_CurrentProject)->find_instruction(id)
-        inst.at = before
-        inst.firstFrame = true
-        inst.select = true
-        inst.navigate = true
-    ur.redo <- @ <|
-        var inst = (*g_CurrentProject)->find_instruction(id)
-        inst.at = after
-        inst.firstFrame = true
-        inst.select = true
-        inst.navigate = true
-    create_undo(ur)
 
 [private]
-def restore_instruction(json:string)
+def create_and_restore_instruction(json:string)
     var inst : Instruction?
     var error = ""
     var jv = read_json(json,error)
     if jv!=null
         inst = (*g_CurrentProject)->load_instruction(jv)
+        select_and_navigate(inst)
     else
-        // TODO: better error reporting
-        print("{error}\nfailed to restore from {json}\n")
-        return
-    inst.firstFrame = true
-    inst.select = true
-    inst.navigate = true
+        print("{error}\nfailed create and to restore from {json}\n")   // TODO: better error reporting
     unsafe
         delete jv
 
-def undo_delete_instruction(inst:Instruction?)
+def undo_edit_instruction(id,name:string)
+    let before = g_UndoLastInstruction
+    var inst = (*g_CurrentProject)->find_instruction(id)
+    var after = save_to_json(inst)
+    create_undo("edit instruction {id} {name}") <| $ ( ur )
+        ur.undo <- @ <|
+            restore_instruction(id,before)
+        ur.redo <- @ <|
+            restore_instruction(id,after)
+
+def undo_move_instruction(id:string;before,after:float2)
+    create_undo("move instruction {id}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("undo move {id} {before}\n")
+            var inst = (*g_CurrentProject)->find_instruction(id)
+            inst.at = before
+            select_and_navigate(inst)
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("redo move {id} {after}\n")
+            var inst = (*g_CurrentProject)->find_instruction(id)
+            inst.at = after
+            select_and_navigate(inst)
+
+def undo_delete_instruction(var inst:Instruction?)
     let before = g_UndoLastInstruction
     let id = inst.id
-    var ur : UndoRedo
-    ur.what = "delete instruction {id}"
-    ur.undo <- @ <|
-        restore_instruction(before)
-    ur.redo <- @ <|
-        post_event <| @
-            var inst = (*g_CurrentProject)->find_instruction(id)
-            (*g_CurrentProject)->delete_instruction(inst)
-    create_undo(ur)
+    create_undo("delete instruction {id}") <| $ ( ur )
+        ur.undo <- @ <|
+            create_and_restore_instruction(before)
+        ur.redo <- @ <|
+            post_event <| @
+                var inst = (*g_CurrentProject)->find_instruction(id)
+                (*g_CurrentProject)->delete_instruction(inst)
+
+def undo_create_instruction(var inst:Instruction?)
+    let before = save_to_json(inst)
+    let id = inst.id
+    create_undo("create instruction {id}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("undo create instruction {id}\n")
+            post_event <| @
+                var inst = (*g_CurrentProject)->find_instruction(id)
+                (*g_CurrentProject)->delete_instruction(inst)
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("redo create instruction {id} {before}\n")
+            create_and_restore_instruction(before)
 
 def undo_delete_connecction(id,pin,lid,loutput:string)
-    var ur : UndoRedo
-    ur.what = "delete link {id} {pin} {lid}"
-    ur.undo <- @ <|
-        var inst = (*g_CurrentProject)->find_instruction(id)
-        let inI = (*inst)->input_index(pin)
-        var linst = (*g_CurrentProject)->find_instruction(lid)
-        inst.inputs[inI].src = linst
-        inst.inputs[inI].output = loutput
-    ur.redo <- @ <|
-        post_event <| @
+    create_undo("delete link {id} {pin} {lid}") <| $ ( ur )
+        ur.undo <- @ <|
             var inst = (*g_CurrentProject)->find_instruction(id)
-            var inI = (*inst)->input_index(pin)
-            var inp & =  inst.inputs[inI]
-            inp.src = null
-    create_undo(ur)
+            let inI = (*inst)->input_index(pin)
+            var linst = (*g_CurrentProject)->find_instruction(lid)
+            inst.inputs[inI].src = linst
+            inst.inputs[inI].output = loutput
+        ur.redo <- @ <|
+            post_event <| @
+                var inst = (*g_CurrentProject)->find_instruction(id)
+                var inI = (*inst)->input_index(pin)
+                var inp & =  inst.inputs[inI]
+                inp.src = null

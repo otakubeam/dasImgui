@@ -342,7 +342,7 @@ def editor_child_window()
                 EndGroupHint()
 
             if inst.firstFrame
-                if inst.at.x==-FLT_MAX
+                if !inst.hasPosition
                     CenterNodeOnScreen(id)
                     inst.at = GetNodePosition(id)
                 else
@@ -497,7 +497,7 @@ def instruction_context_menu
     if ShowBackgroundContextMenu()
         OpenPopup(icm)  // contextless node
         link_inst = null
-        node_pos = GetMousePos()
+        node_pos = ScreenToCanvas(GetMousePos())
     var context_link_id = 0
     if ShowLinkContextMenu(safe_addr(context_link_id))
         OpenPopup(icm)  // link node
@@ -531,9 +531,8 @@ def instruction_context_menu
                 link_inst = null
                 node_pos = float2(-FLT_MAX)
     if BeginPopup(icm)
-        let pos = node_pos==float2(-FLT_MAX) ? float2(-FLT_MAX) : ScreenToCanvas(node_pos)
         if link_inst==null
-            create_instruction_contextless(pos)
+            create_instruction_contextless(node_pos)
         elif !empty(link_pin)
             edit_link_instructions(link_inst,link_pin)
         else
@@ -589,6 +588,7 @@ def create_instruction_side_menu()
             var inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
+            undo_create_instruction(inst)
             update_preview()
     lpipe() <| $ ( ai )
         return false
@@ -601,6 +601,7 @@ def create_instruction_contextless(pos:float2)
             (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
             inst.at = pos
+            inst.hasPosition = true
             update_preview()
     lpipe <| $ ( ai )
         return false
@@ -618,6 +619,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
             let p0 = GetNodePosition(guid_2_id[inst.id])
             let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
             link_inst.at = (p0+p1) * 0.5
+            link_inst.hasPosition = true
             link_inst.inputs[0].src = inst.inputs[pid].src
             link_inst.inputs[0].output = inst.inputs[pid].output
             inst.inputs[pid].src = link_inst
@@ -640,6 +642,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
             out_inst.select = true
             out_inst.navigate = true
             out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
+            out_inst.hasPosition = true
             out_inst.inputs[0].src = inst
             out_inst.inputs[0].output = pin
             update_preview()
@@ -768,7 +771,7 @@ def preview_errors
 def main_editor_screen()
     if g_Context == null
         var config = Config()
-        config.SettingsFile = "Simple.json"
+        config.SettingsFile = ""
         g_Context = CreateEditor(safe_addr(config))
         SetCurrentEditor(g_Context)
         /*

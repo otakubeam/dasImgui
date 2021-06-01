@@ -63,10 +63,11 @@ class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
     category : string                       // instruction category
-    at : float2 = float2(-FLT_MAX,-FLT_MAX) // position in the node editor
+    at : float2                             // position in the node editor
     extents : float2 = float2(256.,256.)    // size in the node editor (for relevant nodes)
     flags : InstructionFlags = InstructionFlags HasEdit
     firstFrame : bool = true
+    hasPosition : bool = false
     select : bool = false
     navigate : bool = false
     editing : bool = false
@@ -184,6 +185,7 @@ class Project
         let ntype = node["rtti"].value as _string
         var inst = make_instruction(ntype)
         (*inst)->from_JV(pnode)
+        inst.hasPosition = true
         instructions |> push(inst)
         lookup[inst.id] = inst
         return inst
