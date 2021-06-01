@@ -90,11 +90,6 @@ def save_to_json ( var inst:Instruction? )
 def before_instruction ( var inst:Instruction? )
     g_UndoLastInstruction = save_to_json(inst)
 
-def select_and_navigate ( var inst:Instruction?; fframe:bool=true )
-    inst.firstFrame = fframe
-    inst.select = true
-    inst.navigate = true
-
 [private]
 def restore_instruction(id:string;json:string)
     var inst = (*g_CurrentProject)->find_instruction(id)
@@ -102,7 +97,6 @@ def restore_instruction(id:string;json:string)
     var jv = read_json(json,error)
     if jv!=null
         (*inst)->from_JV(jv)
-        select_and_navigate(inst,false)
     else
         print("{error}\nfailed to restore {id} from {json}\n")  // TODO: better error reporting
     unsafe
@@ -115,7 +109,6 @@ def create_and_restore_instruction(json:string)
     var jv = read_json(json,error)
     if jv!=null
         inst = (*g_CurrentProject)->load_instruction(jv)
-        select_and_navigate(inst)
     else
         print("{error}\nfailed create and to restore from {json}\n")   // TODO: better error reporting
     unsafe
@@ -138,13 +131,13 @@ def undo_move_instruction(id:string;before,after:float2)
                 print("undo move {id} {before}\n")
             var inst = (*g_CurrentProject)->find_instruction(id)
             inst.at = before
-            select_and_navigate(inst)
+            inst.firstFrame = true
         ur.redo <- @ <|
             static_if DEBUG_UNDO
                 print("redo move {id} {after}\n")
             var inst = (*g_CurrentProject)->find_instruction(id)
             inst.at = after
-            select_and_navigate(inst)
+            inst.firstFrame = true
 
 def undo_delete_instruction(var inst:Instruction?)
     let before = g_UndoLastInstruction
