@@ -270,6 +270,7 @@ def editor_child_window()
                     Dummy(float2(DEFAULT_NODE_WIDTH - sz.x,0.))
                     SameLine()
                     if Button("[X]##{inst.id}_E")
+                        next_undo_action()
                         DeleteNode(id)
                     ImGuiEx_EndColumn()
                     if inst.tex != null
@@ -293,6 +294,7 @@ def editor_child_window()
                                     ClearSelection()
                                 SameLine()
                                 if Button("[X]##goto_{inp}_from_{inst.id}")
+                                    next_undo_action()
                                     DeleteLink(inp_id)
                     let lw = ImGuiEx_NextColumn()
                     for outp in inst.outputs
@@ -466,6 +468,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
         HelpMarker("Center")
         SameLine()
         if Button("[X]##{inst.id}_S")
+            next_undo_action()
             DeleteNode(get_unique_id(inst.id))
         HelpMarker("Delete")
         Text("id: `{inst.id}`")
@@ -585,6 +588,7 @@ def create_instruction_side_menu()
     create_instruction_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction which will be centered
+            next_undo_action()
             var inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
@@ -597,6 +601,7 @@ def create_instruction_contextless(pos:float2)
     create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // context free instruction at mouse position
+            next_undo_action()
             var inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(inst)
             inst.select = true
@@ -613,6 +618,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link between input and output
+            next_undo_action()
             var link_inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(link_inst)
             link_inst.select = true
@@ -637,6 +643,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name = ai.tname
         post_event() <| @   // link to main output
+            next_undo_action()
             var out_inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(out_inst)
             out_inst.select = true
@@ -708,9 +715,9 @@ def side_child_window()
         var sna <- GetSelectedNodes()
         BeginChild("Selection", float2(SIDE_PANNEL_WIDTH, SELECTION_PANNEL_HEIGHT), true)
         if Button("[X]##delete selection")
+            next_undo_action()
             for ng in sna
-                if ng != 0
-                    DeleteNode(ng)
+                DeleteNode(ng)
         HelpMarker("Delete selection")
         SameLine()
         if Button("[*]##navigate to selection")

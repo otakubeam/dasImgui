@@ -15,6 +15,7 @@ let DEBUG_UNDO = false
 let DEBUG_UNDO_STACK = false
 
 struct UndoRedo
+    action : int
     what : string
     undo : lambda
     redo : lambda
@@ -22,6 +23,7 @@ struct UndoRedo
 var private g_UndoStack : array<UndoRedo>
 var private g_UndoStackTop = 0
 var private g_UndoLastInstruction : string
+var private g_UndoAction = 0
 
 def create_undo ( var ur:UndoRedo )
     var l = length(g_UndoStack)
@@ -40,8 +42,12 @@ def create_undo ( var ur:UndoRedo )
     g_UndoStack |> emplace(ur)
     g_UndoStackTop = length(g_UndoStack)
 
+def next_undo_action
+    g_UndoAction ++
+
 def create_undo ( what:string; blk:block<(var ur:UndoRedo)> )
     var ur : UndoRedo
+    ur.action = g_UndoAction
     ur.what = what
     invoke(blk, ur)
     create_undo(ur)
@@ -50,14 +56,17 @@ def clear_undo_stack
     g_UndoLastInstruction = ""
     delete g_UndoStack
     g_UndoStackTop = 0
+    g_UndoAction = 0
 
 def undo
     static_if DEBUG_UNDO_STACK
         debug(g_UndoStack, "undo = ")
         debug(g_UndoStackTop, "undo sp = ")
     if g_UndoStackTop > 0
-        g_UndoStackTop --
-        invoke ( g_UndoStack[g_UndoStackTop].undo )
+        let action = g_UndoStack[g_UndoStackTop-1].action
+        while g_UndoStackTop>0 && g_UndoStack[g_UndoStackTop-1].action==action
+            g_UndoStackTop --
+            invoke ( g_UndoStack[g_UndoStackTop].undo )
         update_preview()
 
 def redo
@@ -65,8 +74,10 @@ def redo
         debug(g_UndoStack, "redo = ")
         debug(g_UndoStackTop, "undo sp = ")
     if g_UndoStackTop != length(g_UndoStack)
-        invoke ( g_UndoStack[g_UndoStackTop].redo )
-        g_UndoStackTop ++
+        let action = g_UndoStack[g_UndoStackTop].action
+        while g_UndoStackTop!=length(g_UndoStack) && g_UndoStack[g_UndoStackTop].action==action
+            invoke ( g_UndoStack[g_UndoStackTop].redo )
+            g_UndoStackTop ++
         update_preview()
 
 def save_to_json ( var inst:Instruction? )
