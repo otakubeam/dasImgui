@@ -20,9 +20,16 @@ struct UndoRedo
     undo : lambda
     redo : lambda
 
+struct SavedConnection
+    id : string
+    pin : string
+    lid : string
+    loutput : string
+
 var private g_UndoStack : array<UndoRedo>
 var private g_UndoStackTop = 0
 var private g_UndoLastInstruction : string
+var private g_UndoLastLink : SavedConnection
 var private g_UndoAction = 0
 
 def create_undo ( var ur:UndoRedo )
@@ -54,6 +61,7 @@ def create_undo ( what:string; blk:block<(var ur:UndoRedo)> )
 
 def clear_undo_stack
     g_UndoLastInstruction = ""
+    g_UndoLastLink = [[SavedConnection]]
     delete g_UndoStack
     g_UndoStackTop = 0
     g_UndoAction = 0
@@ -80,6 +88,12 @@ def redo
             g_UndoStackTop ++
         update_preview()
 
+def redo_last
+    static_if DEBUG_UNDO_STACK
+        debug(g_UndoStack, "undo last = ")
+        debug(g_UndoStackTop, "undo sp = ")
+    invoke ( g_UndoStack[g_UndoStackTop-1].redo )
+
 def save_to_json ( var inst:Instruction? )
     var jv = inst->JV()
     var txt = write_json(jv)
@@ -89,6 +103,9 @@ def save_to_json ( var inst:Instruction? )
 
 def before_instruction ( var inst:Instruction? )
     g_UndoLastInstruction = save_to_json(inst)
+
+def before_link ( id,pin:string )
+    g_UndoLastLink = describe_connection(id,pin)
 
 [private]
 def restore_instruction(id:string;json:string)
@@ -165,17 +182,55 @@ def undo_create_instruction(var inst:Instruction?)
                 print("redo create instruction {id} {before}\n")
             create_and_restore_instruction(before)
 
-def undo_delete_connecction(id,pin,lid,loutput:string)
-    create_undo("delete link {id} {pin} {lid}") <| $ ( ur )
+[private]
+def describe_connection (id,pin:string) : SavedConnection
+    var inst = (*g_CurrentProject)->find_instruction(id)
+    var inI = (*inst)->input_index(pin)
+    var inp & =  inst.inputs[inI]
+    if inp.src != null
+        return [[SavedConnection id=id,pin=pin,lid=inp.src.id,loutput=inp.output]]
+    else
+        return [[SavedConnection id=id,pin=pin]]
+
+[private]
+def restore_connection ( before:SavedConnection )
+    var inst = (*g_CurrentProject)->find_instruction(before.id)
+    var inI = (*inst)->input_index(before.pin)
+    var inp & =  inst.inputs[inI]
+    if before.lid==""
+        inp.src = null
+    else
+        inp.src = (*g_CurrentProject)->find_instruction(before.lid)
+        inp.output = before.loutput
+
+[private]
+def destroy_connection ( before:SavedConnection )
+    var inst = (*g_CurrentProject)->find_instruction(before.id)
+    var inI = (*inst)->input_index(before.pin)
+    var inp & =  inst.inputs[inI]
+    inp.src = null
+
+def undo_delete_connecction(id,pin:string)
+    var before = describe_connection(id,pin)
+    create_undo("delete link {id} {pin}") <| $ ( ur )
         ur.undo <- @ <|
-            var inst = (*g_CurrentProject)->find_instruction(id)
-            let inI = (*inst)->input_index(pin)
-            var linst = (*g_CurrentProject)->find_instruction(lid)
-            inst.inputs[inI].src = linst
-            inst.inputs[inI].output = loutput
+            static_if DEBUG_UNDO
+                print("restore connection from {before}\n")
+            restore_connection(before)
         ur.redo <- @ <|
-            post_event <| @
-                var inst = (*g_CurrentProject)->find_instruction(id)
-                var inI = (*inst)->input_index(pin)
-                var inp & =  inst.inputs[inI]
-                inp.src = null
+            static_if DEBUG_UNDO
+                print("destroy connection from {before}\n")
+            destroy_connection(before)
+
+def undo_create_connection(id,pin:string)
+    var before = g_UndoLastLink
+    var after = describe_connection(id,pin)
+    create_undo("create link {id} {pin}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("restore connection from {before}\n")
+            restore_connection(before)
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("restore connection from {after}\n")
+            restore_connection(after)

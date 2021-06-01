@@ -346,10 +346,9 @@ def editor_child_window()
             if inst.firstFrame
                 if !inst.hasPosition
                     CenterNodeOnScreen(id)
-                    inst.at = GetNodePosition(id)
                 else
-                    SetNodePosition(id, inst.at)
-                    inst.at = GetNodePosition(id)
+                    SetNodePosition(id, inst.at)    // note: what we set and what gets returned differs (via m_Bounds.floor())
+                inst.at = GetNodePosition(id)
                 inst.firstFrame = false
             else
                 let newAt = GetNodePosition(id)
@@ -408,6 +407,7 @@ def editor_child_window()
                                 editor_hint("Error: can't link {inL.inst.inputs[inI]._type} to {outL.inst.outputs[outI]._type}")
                                 RejectNewItem(float4(1,0,0,1),3.)
                             else
+                                before_link(inL.inst.id, inL.pin)
                                 var old_input = inL.inst.inputs[inI]
                                 inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
                                 if g_CurrentProject |> find_loop()
@@ -416,6 +416,8 @@ def editor_child_window()
                                     RejectNewItem(float4(1,0,0,1),3.)
                                 else
                                     AcceptNewItem()
+                                    next_undo_action()
+                                    undo_create_connection(inL.inst.id,inL.pin)
                                     update_preview()
 
         BeginDelete() <|
@@ -444,15 +446,13 @@ def editor_child_window()
 def delete_instruction ( var inst:Instruction? )
     before_instruction(inst)
     undo_delete_instruction(inst)
-    (*g_CurrentProject)->delete_instruction(inst)
+    redo_last()
     update_preview()
 
 def delete_connection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
-    let inI = inL.inst->input_index(inL.pin)
-    var inp & =  inL.inst.inputs[inI]
-    undo_delete_connecction(inL.inst.id,inL.pin,inp.src.id,inp.output)
-    inp.src = null
+    undo_delete_connecction(inL.inst.id,inL.pin)
+    redo_last()
     update_preview()
 
 def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiTreeNodeFlags None )
@@ -607,6 +607,7 @@ def create_instruction_contextless(pos:float2)
             inst.select = true
             inst.at = pos
             inst.hasPosition = true
+            undo_create_instruction(inst)
             update_preview()
     lpipe <| $ ( ai )
         return false
