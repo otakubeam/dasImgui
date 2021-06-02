@@ -85,15 +85,12 @@ var g_FirstFrame = true
 def save_project(fname:string)
     for inst in g_CurrentProject.instructions
         inst.at = GetNodePosition(get_unique_id(inst.id))
-    var jv = (*g_CurrentProject)->save()
-    let save_text = write_json(jv)
+    let save_text = save_current_project()
     fopen(fname,"wb") <| $ ( json_file )
         if json_file != null
             fwrite(json_file, save_text)
         else
             get_dlg_ok_from_user("Error","Can't save {fname}")
-    unsafe
-        delete jv
 
 def export_project(fname:string)
     let save_text = produce_project_text()
@@ -104,7 +101,6 @@ def export_project(fname:string)
             get_dlg_ok_from_user("Error","Can't export {fname}")
 
 def clear_project_data()
-    clear_undo_stack()          // TODO: undo stack between projects
     SetCurrentEditor(null)
     DestroyEditor(g_Context)
     g_Context = null
@@ -114,6 +110,8 @@ def clear_project_data()
     g_FirstFrame = true
 
 def new_project()
+    next_undo_action()
+    undo_new_project()
     post_event <| @
         clear_project_data()
         update_preview()
@@ -128,13 +126,12 @@ def load_project(fname:string)
             get_dlg_ok_from_user("Error","Can't load {fname}")
     if !empty(text)
         post_event <| @
+            next_undo_action()
+            before_project()
             clear_project_data()
-            var error : string
-            var jv = read_json(text,error)
-            (*g_CurrentProject)->load(jv)
+            restore_current_project(text)
+            undo_load_project()
             update_preview()
-            unsafe
-                delete jv
 
 // MAIN MENU
 
@@ -812,13 +809,11 @@ def main_editor_screen()
         EndChild()
         post_invoke_que()
 
-def preview_updater
-    eval_project()
-
 [export]
 def main
     g_CurrentProject = new Project()
-    g_PreviewUpdater = @@preview_updater
+    g_PreviewUpdater = @@ <|
+        eval_project()
     seal_instruction_factory()          // initialize everything greyprint related
     imgui_app("Testing IMGUI") <|
         NewFrame()

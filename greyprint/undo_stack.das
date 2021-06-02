@@ -28,7 +28,7 @@ struct SavedConnection
 
 var private g_UndoStack : array<UndoRedo>
 var private g_UndoStackTop = 0
-var private g_UndoLastInstruction : string
+var private g_UndoLastElement : string
 var private g_UndoLastLink : SavedConnection
 var private g_UndoAction = 0
 
@@ -60,7 +60,7 @@ def create_undo ( what:string; blk:block<(var ur:UndoRedo)> )
     create_undo(ur)
 
 def clear_undo_stack
-    g_UndoLastInstruction = ""
+    g_UndoLastElement = ""
     g_UndoLastLink = [[SavedConnection]]
     delete g_UndoStack
     g_UndoStackTop = 0
@@ -102,7 +102,7 @@ def save_to_json ( var inst:Instruction? )
     return txt
 
 def before_instruction ( var inst:Instruction? )
-    g_UndoLastInstruction = save_to_json(inst)
+    g_UndoLastElement = save_to_json(inst)
 
 def before_link ( id,pin:string )
     g_UndoLastLink = describe_connection(id,pin)
@@ -133,7 +133,7 @@ def create_and_restore_instruction(json:string)
 
 def undo_edit_instruction(id,name:string)
     next_undo_action()
-    let before = g_UndoLastInstruction
+    let before = g_UndoLastElement
     var inst = (*g_CurrentProject)->find_instruction(id)
     var after = save_to_json(inst)
     create_undo("edit instruction {id} {name}") <| $ ( ur )
@@ -158,7 +158,7 @@ def undo_move_instruction(id:string;before,after:float2)
             inst.firstFrame = true
 
 def undo_delete_instruction(var inst:Instruction?)
-    let before = g_UndoLastInstruction
+    let before = g_UndoLastElement
     let id = inst.id
     create_undo("delete instruction {id}") <| $ ( ur )
         ur.undo <- @ <|
@@ -235,3 +235,60 @@ def undo_create_connection(id,pin:string)
             static_if DEBUG_UNDO
                 print("restore connection from {after}\n")
             restore_connection(after)
+
+def restore_current_project(json:string)
+    var error : string
+    var jv = read_json(json,error)
+    if jv!=null
+        (*g_CurrentProject)->load(jv)
+    else
+        print("{error}\nfailed to restore project} from {json}\n")  // TODO: better error reporting
+    unsafe
+        delete jv
+
+def save_current_project
+    var jv = (*g_CurrentProject)->save()
+    let before = write_json(jv)
+    unsafe
+        delete jv
+    return before
+
+def before_project
+    g_UndoLastElement = save_current_project()
+
+[generic]
+def undo_new_project()
+    let before = save_current_project()
+    create_undo("new project {g_UndoAction}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("restore project from {before}\n")
+            post_event <| @
+                _::clear_project_data()
+                restore_current_project(before)
+                update_preview()
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("new project\n")
+            post_event <| @
+                _::clear_project_data()
+
+[generic]
+def undo_load_project()
+    let before = g_UndoLastElement
+    let after  = save_current_project()
+    create_undo("load project {g_UndoAction}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("restore project from {before}\n")
+            post_event <| @
+                _::clear_project_data()
+                restore_current_project(before)
+                update_preview()
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("new project\n")
+            post_event <| @
+                _::clear_project_data()
+                restore_current_project(after)
+                update_preview()
