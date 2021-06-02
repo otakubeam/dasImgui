@@ -353,6 +353,7 @@ def editor_child_window()
             else
                 let newAt = GetNodePosition(id)
                 if inst.at != newAt
+                    next_undo_action()
                     undo_move_instruction(inst.id,inst.at,newAt)
                     inst.at = newAt
             if inst.select
@@ -451,7 +452,7 @@ def delete_instruction ( var inst:Instruction? )
 
 def delete_connection ( id:LinkId )
     var inL = translate_input_output_id(id,"INPUT")
-    undo_delete_connecction(inL.inst.id,inL.pin)
+    undo_delete_connection(inL.inst.id,inL.pin)
     redo_last()
     update_preview()
 
@@ -627,10 +628,15 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
             let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
             link_inst.at = (p0+p1) * 0.5
             link_inst.hasPosition = true
+            before_link(link_inst.id,link_inst.inputs[0].name)
             link_inst.inputs[0].src = inst.inputs[pid].src
             link_inst.inputs[0].output = inst.inputs[pid].output
+            undo_create_instruction(link_inst)
+            undo_create_connection(link_inst.id,link_inst.inputs[0].name)
+            before_link(inst.id,pin)
             inst.inputs[pid].src = link_inst
             inst.inputs[pid].output = link_inst.outputs[0].name
+            undo_create_connection(inst.id,pin)
             update_preview()
         finally
             inst = null
@@ -651,8 +657,12 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
             out_inst.navigate = true
             out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
             out_inst.hasPosition = true
+            let srcpin = out_inst.inputs[0].name
+            before_link(out_inst.id, srcpin)
             out_inst.inputs[0].src = inst
             out_inst.inputs[0].output = pin
+            undo_create_instruction(out_inst)
+            undo_create_connection(out_inst.id,srcpin)
             update_preview()
         finally
             inst = null

@@ -132,6 +132,7 @@ def create_and_restore_instruction(json:string)
         delete jv
 
 def undo_edit_instruction(id,name:string)
+    next_undo_action()
     let before = g_UndoLastInstruction
     var inst = (*g_CurrentProject)->find_instruction(id)
     var after = save_to_json(inst)
@@ -210,7 +211,7 @@ def destroy_connection ( before:SavedConnection )
     var inp & =  inst.inputs[inI]
     inp.src = null
 
-def undo_delete_connecction(id,pin:string)
+def undo_delete_connection(id,pin:string)
     var before = describe_connection(id,pin)
     create_undo("delete link {id} {pin}") <| $ ( ur )
         ur.undo <- @ <|
