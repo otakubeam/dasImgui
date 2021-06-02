@@ -109,12 +109,22 @@ def clear_project_data()
     clear_preview()
     g_FirstFrame = true
 
+def check_save_project
+    if is_undo_dirty()
+        if get_dlg_ok_cancel_from_user("Warning.","You have unsaved changes. Save project?")
+            let fname = get_dlg_save_file("new_name.greyprint","","greyprint")
+            if empty(fname)
+                return false
+            save_project(fname)
+    return true
+
 def new_project()
     next_undo_action()
     undo_new_project()
     post_event <| @
         clear_project_data()
         update_preview()
+        clear_undo_dirty()
 
 def load_project(fname:string)
     var text : string
@@ -132,6 +142,7 @@ def load_project(fname:string)
             restore_current_project(text)
             undo_load_project()
             update_preview()
+            clear_undo_dirty()
 
 // MAIN MENU
 
@@ -139,25 +150,31 @@ def main_menu()
     BeginMenuBar <|
         BeginMenu("File##Main menu") <|
             if MenuItem("New##File")
-                //if get_dlg_ok_from_user("caption","body")
-                new_project()
+                if check_save_project()
+                    new_project()
             if MenuItem("Load##File")
-                let fname = get_dlg_open_file("","greyprint")
-                if !empty(fname)
-                    load_project(fname)
+                if check_save_project()
+                    let fname = get_dlg_open_file("","greyprint")
+                    if !empty(fname)
+                        load_project(fname)
             if MenuItem("Save##File")
                 let fname = get_dlg_save_file("new_name.greyprint","","greyprint")
                 if !empty(fname)
                     save_project(fname)
+                    clear_undo_dirty()
             if MenuItem("Export##File")
                 let fname = get_dlg_save_file("new_name.das","","greyprint")
                 if !empty(fname)
                     export_project(fname)
+            Separator()
+            if MenuItem("Exit")
+                if check_save_project()
+                    glfwSetWindowShouldClose(window,1)
         BeginMenu("Edit##Main menu") <|
-            if MenuItem("Undo##Edit")
+            if MenuItem("Undo##Edit","CTRL+Z")
                 ClearSelection()
                 undo()
-            if MenuItem("Redo##Edit")
+            if MenuItem("Redo##Edit","CTRL+Y")
                 ClearSelection()
                 redo()
         BeginMenu("Preview##Main menu") <|

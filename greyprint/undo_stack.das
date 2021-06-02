@@ -31,6 +31,13 @@ var private g_UndoStackTop = 0
 var private g_UndoLastElement : string
 var private g_UndoLastLink : SavedConnection
 var private g_UndoAction = 0
+var private g_UndoDirty = false
+
+def is_undo_dirty
+    return g_UndoDirty
+
+def clear_undo_dirty
+    g_UndoDirty = false
 
 def create_undo ( var ur:UndoRedo )
     var l = length(g_UndoStack)
@@ -48,6 +55,7 @@ def create_undo ( var ur:UndoRedo )
             return
     g_UndoStack |> emplace(ur)
     g_UndoStackTop = length(g_UndoStack)
+    g_UndoDirty = true
 
 def next_undo_action
     g_UndoAction ++
@@ -65,6 +73,7 @@ def clear_undo_stack
     delete g_UndoStack
     g_UndoStackTop = 0
     g_UndoAction = 0
+    g_UndoDirty = false
 
 def undo
     static_if DEBUG_UNDO_STACK
