@@ -48,11 +48,10 @@ def imgui_app ( title:string; blk : block )
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)
-
+    dlg_init()
     var io & = GetIO()
     io.FontGlobalScale = 2.0
     imgui::GetStyle() |> ScaleAllSizes(2.0)
-
     StyleColorsDark(null)
     ImGui_ImplGlfw_InitForOpenGL(window, true)
     ImGui_ImplOpenGL2_Init()

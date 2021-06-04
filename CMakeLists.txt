@@ -107,7 +107,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 	SETUP_CPP11(libDasModuleImGui)
 	# GENERATED IMGUI
 	FIND_FILE(IMGUI_H "imgui.h" ${imgui_INCLUDE_DIR})
-	CPP_BIND_AST(
+	DAS_CPP_BIND_AST(
 		IMGUI_GENERATE
 		generate_imgui.das
 		${DAS_IMGUI_DIR}/src/imgui_headers.h
@@ -187,7 +187,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			SETUP_CPP11(libDasModuleImGuiVulkan)
 
 			# GENERATED IMGUI VULKAN
-			CPP_BIND_AST(
+			DAS_CPP_BIND_AST(
 				IMGUI_GENERATE_VULKAN
 				generate_vulkan.das
 				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
