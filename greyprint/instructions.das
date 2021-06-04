@@ -256,8 +256,9 @@ def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType
     g_instructionFactory[tname] <- factory
     var main_in  = (length(dummy.inputs)>0) ? dummy.inputs[0]._type : ""
     var main_out = (length(dummy.outputs)>0) ? dummy.outputs[0]._type : ""
-    unsafe
-        delete dummy
+//  note: this causes crash on linux, todo: run with asan
+//    unsafe
+//        delete dummy
     g_instructionsByCategory |> push([[InstructionCategory
         name=it_name,
         category=it_category,
