@@ -3,8 +3,8 @@
 #include "imgui_stub.h"
 #include <GLFW/glfw3.h>
 
-#include "..\imgui\backends\imgui_impl_opengl2.h"
-#include "..\imgui\backends\imgui_impl_glfw.h"
+#include "../imgui/backends/imgui_impl_opengl2.h"
+#include "../imgui/backends/imgui_impl_glfw.h"
 
 using namespace das;
 
