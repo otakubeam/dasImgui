@@ -600,7 +600,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
 
 def create_instruction_side_menu()
     create_instruction_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
-        let type_name = ai.tname
+        let type_name : string := ai.tname
         post_event() <| @   // context free instruction which will be centered
             next_undo_action()
             var inst = make_instruction(type_name)
@@ -613,7 +613,7 @@ def create_instruction_side_menu()
 
 def create_instruction_contextless(pos:float2)
     create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
-        let type_name = ai.tname
+        let type_name : string := ai.tname
         post_event() <| @   // context free instruction at mouse position
             next_undo_action()
             var inst = make_instruction(type_name)
@@ -631,7 +631,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
     assert(pid!=-1)
     let iotype = inst.inputs[pid]._type
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
-        let type_name = ai.tname
+        let type_name : string := ai.tname
         post_event() <| @   // link between input and output
             next_undo_action()
             var link_inst = make_instruction(type_name)
@@ -661,7 +661,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
     assert(pid!=-1)
     let iotype = inst.outputs[pid]._type
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
-        let type_name = ai.tname
+        let type_name : string := ai.tname
         post_event() <| @   // link to main output
             next_undo_action()
             var out_inst = make_instruction(type_name)
