@@ -388,6 +388,10 @@ def editor_child_window()
                     imgui::PopStyleVar()
                 EndGroupHint()
 
+
+        var moves : array<tuple<string;float2;float2>>
+        for inst in g_CurrentProject.instructions
+            let id = get_unique_id(inst.id)
             if inst.firstFrame
                 if !inst.hasPosition
                     CenterNodeOnScreen(id)
@@ -398,14 +402,17 @@ def editor_child_window()
             else
                 let newAt = GetNodePosition(id)
                 if inst.at != newAt
-                    next_undo_action()
-                    undo_move_instruction(inst.id,inst.at,newAt)
+                    moves |> push([[auto inst.id,inst.at,newAt]])
                     inst.at = newAt
             if inst.select
                 SelectNode(id,true)
                 if inst.navigate
                     NavigateToSelection(false,NAVIGATION_TIME)
                 inst.select = false
+        if length(moves)!=0
+            next_undo_action()
+            undo_move_instructions(moves)
+            delete moves
 
         for inst in g_CurrentProject.instructions
             for inp in inst.inputs

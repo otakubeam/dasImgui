@@ -8,6 +8,7 @@ require preview
 require guid_2_id
 require imgui_node_editor
 require command_que
+require strings
 
 require daslib/json_boost public
 
@@ -151,20 +152,28 @@ def undo_edit_instruction(id,name:string)
         ur.redo <- @ <|
             restore_instruction(id,after)
 
-def undo_move_instruction(id:string;before,after:float2)
-    create_undo("move instruction {id}") <| $ ( ur )
-        ur.undo <- @ <|
+def undo_move_instructions( var moves:array<tuple<id:string;before:float2;after:float2>>)
+    let move_name = build_string() <| $ (var writer)
+        for mv in moves
+            write(writer,mv.id)
+            write(writer," ")
+    create_undo("move instructions {move_name}") <| $ ( ur )
+        ur.undo <- @ <| [[:=moves]]
             static_if DEBUG_UNDO
-                print("undo move {id} {before}\n")
-            var inst = (*g_CurrentProject)->find_instruction(id)
-            inst.at = before
-            inst.firstFrame = true
-        ur.redo <- @ <|
+                print("undo move {moves}\n")
+            for mv in moves
+                var inst = (*g_CurrentProject)->find_instruction(mv.id)
+                inst.at = mv.before
+                inst.hasPosition = true
+                inst.firstFrame = true
+        ur.redo <- @ <| [[:=moves]]
             static_if DEBUG_UNDO
-                print("redo move {id} {after}\n")
-            var inst = (*g_CurrentProject)->find_instruction(id)
-            inst.at = after
-            inst.firstFrame = true
+                print("redo move {moves}\n")
+            for mv in moves
+                var inst = (*g_CurrentProject)->find_instruction(mv.id)
+                inst.at = mv.after
+                inst.hasPosition = true
+                inst.firstFrame = true
 
 def undo_delete_instruction(var inst:Instruction?)
     let before = g_UndoLastElement
