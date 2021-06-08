@@ -139,9 +139,31 @@ def load_project(fname:string)
             before_project()
             clear_project_data()
             restore_current_project(text)
-            undo_load_project()
+            undo_replace_project("load")
             update_preview()
             clear_undo_dirty()
+
+var g_ClipboardProject : Project?
+
+def copy
+    var snc = GetSelectedObjectCount()
+    if snc != 0
+        var sna <- GetSelectedNodes()
+        if length(sna) > 0
+            var selection : table<string; bool>
+            for ng in sna
+                let nid = id_2_guid[ng]
+                selection[nid] = true
+            unsafe
+                delete g_ClipboardProject
+            g_ClipboardProject = create_selection_project(g_CurrentProject, selection)
+
+def paste
+    if g_ClipboardProject != null
+        next_undo_action()
+        before_project()
+        merge_project(g_CurrentProject, g_ClipboardProject, float2(200.,200.))
+        undo_replace_project("paste")   // note: at some point more specified undo is preferable
 
 // MAIN MENU
 
@@ -176,6 +198,11 @@ def main_menu()
             if MenuItem("Redo##Edit","CTRL+Y")
                 ClearSelection()
                 redo()
+            if MenuItem("Copy##Edit","CTRL+C")
+                copy()
+            if MenuItem("Paste##Edit","CTRL+V")
+                ClearSelection()
+                paste()
         BeginMenu("Preview##Main menu") <|
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()
@@ -192,6 +219,11 @@ def main_menu()
         if IsKeyPressed(GetKeyIndex(ImGuiKey Y))
             ClearSelection()
             redo()
+        if IsKeyPressed(GetKeyIndex(ImGuiKey C))
+            copy()
+        if IsKeyPressed(GetKeyIndex(ImGuiKey V))
+            ClearSelection()
+            paste()
 
 // NODE EDITOR WINDOW
 
@@ -370,7 +402,7 @@ def editor_child_window()
                     undo_move_instruction(inst.id,inst.at,newAt)
                     inst.at = newAt
             if inst.select
-                SelectNode(id)
+                SelectNode(id,true)
                 if inst.navigate
                     NavigateToSelection(false,NAVIGATION_TIME)
                 inst.select = false
@@ -605,6 +637,7 @@ def create_instruction_side_menu()
             next_undo_action()
             var inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(inst)
+            ClearSelection()
             inst.select = true
             undo_create_instruction(inst)
             update_preview()
@@ -618,6 +651,7 @@ def create_instruction_contextless(pos:float2)
             next_undo_action()
             var inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(inst)
+            ClearSelection()
             inst.select = true
             inst.at = pos
             inst.hasPosition = true
@@ -636,6 +670,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
             next_undo_action()
             var link_inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(link_inst)
+            ClearSelection()
             link_inst.select = true
             let p0 = GetNodePosition(guid_2_id[inst.id])
             let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
@@ -666,6 +701,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
             next_undo_action()
             var out_inst = make_instruction(type_name)
             (*g_CurrentProject)->add_new_insturction(out_inst)
+            ClearSelection()
             out_inst.select = true
             out_inst.navigate = true
             out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)

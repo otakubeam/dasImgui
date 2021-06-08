@@ -255,12 +255,15 @@ def restore_current_project(json:string)
     unsafe
         delete jv
 
-def save_current_project
-    var jv = (*g_CurrentProject)->save()
+def save_project(var proj:Project?)
+    var jv = (*proj)->save()
     let before = write_json(jv)
     unsafe
         delete jv
     return before
+
+def save_current_project
+    return save_project(g_CurrentProject)
 
 def before_project
     g_UndoLastElement = save_current_project()
@@ -283,10 +286,10 @@ def undo_new_project()
                 _::clear_project_data()
 
 [generic]
-def undo_load_project()
+def undo_replace_project(event_name:string)
     let before = g_UndoLastElement
     let after  = save_current_project()
-    create_undo("load project {g_UndoAction}") <| $ ( ur )
+    create_undo("{event_name} project {g_UndoAction}") <| $ ( ur )
         ur.undo <- @ <|
             static_if DEBUG_UNDO
                 print("restore project from {before}\n")

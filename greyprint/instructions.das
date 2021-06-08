@@ -141,10 +141,12 @@ class Project
         self->clear()
     def find_instruction ( id:string ) : Instruction?
         return lookup?[id] ?? null
-    def add_new_insturction ( var i : Instruction? )
-        i.id = generate_new_id()
+    def add_insturction ( var i : Instruction? )
         instructions |> push(i)
         lookup[i.id] = i
+    def add_new_insturction ( var i : Instruction? )
+        i.id = generate_new_id()
+        self->add_insturction(i)
     def delete_instruction ( var dinst:Instruction? )
         var idx = -1
         for i,index in instructions,range(100500)
@@ -228,6 +230,52 @@ def find_loop ( proj:Project? )
         if find_loop(inst, inst, visited)
             return true
     return false
+
+def clone_instruction ( var inst:Instruction? ) : Instruction?
+    var jvi = inst->JV()
+    var newI = make_instruction((jvi as _object)["rtti"] as _string)
+    (*newI)->from_JV(jvi)
+    unsafe
+        delete jvi
+    return newI
+
+def create_selection_project ( var proj:Project?; selection:table<string;bool> ) : Project?
+    var newProject = new Project()
+    var i2ni : table<string; Instruction?>
+    for inst in proj.instructions
+        if selection |> key_exists(inst.id)
+            var newI = clone_instruction(inst)
+            (*newProject)->add_insturction(newI)
+            i2ni[inst.id] = newI
+    for ninst in newProject.instructions
+        var inst = (*proj)->find_instruction(ninst.id)
+        for inp,ninp in inst.inputs,ninst.inputs
+            if inp.src!=null && selection |> key_exists(inp.src.id)
+                assert(i2ni |> key_exists(inp.src.id))
+                ninp.src = i2ni[inp.src.id]
+                ninp.output = inp.output
+    i2ni |> clear()
+    delete i2ni
+    return newProject
+
+def merge_project ( var proj,sel:Project?; offset:float2 )
+    var i2ni : table<string; Instruction?>
+    for inst in sel.instructions
+        var ninst = clone_instruction(inst)
+        i2ni[inst.id] = ninst
+        ninst.at += offset
+        ninst.firstFrame = true
+        ninst.hasPosition = true
+        ninst.select = true
+        (*proj)->add_new_insturction(ninst)
+    for inst in sel.instructions
+        var ninst = i2ni[inst.id]
+        for inp,ninp in inst.inputs,ninst.inputs
+            if inp.src != null
+                ninp.src = i2ni[inp.src.id]
+                ninp.output = inp.output
+    i2ni |> clear()
+    delete i2ni
 
 var g_CurrentProject : Project?
 
