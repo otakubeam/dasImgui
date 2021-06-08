@@ -99,14 +99,14 @@ def export_project(fname:string)
         else
             get_dlg_ok_from_user("Error","Can't export {fname}")
 
-def clear_project_data()
+def clear_project_data
+    g_FirstFrame = true
     SetCurrentEditor(null)
     DestroyEditor(g_Context)
     g_Context = null
-    (*g_CurrentProject)->clear()
     reset_guids()
+    (*g_CurrentProject)->clear()
     clear_preview()
-    g_FirstFrame = true
 
 def check_save_project
     if is_undo_dirty()
@@ -139,7 +139,7 @@ def load_project(fname:string)
             before_project()
             clear_project_data()
             restore_current_project(text)
-            undo_replace_project("load")
+            undo_load_project()
             update_preview()
             clear_undo_dirty()
 
@@ -162,8 +162,8 @@ def paste
     if g_ClipboardProject != null
         next_undo_action()
         before_project()
-        merge_project(g_CurrentProject, g_ClipboardProject, float2(200.,200.))
-        undo_replace_project("paste")   // note: at some point more specified undo is preferable
+        undo_paste_project(g_ClipboardProject)
+        redo_last()
 
 // MAIN MENU
 
@@ -390,6 +390,7 @@ def editor_child_window()
 
 
         var moves : array<tuple<string;float2;float2>>
+        var nav = false
         for inst in g_CurrentProject.instructions
             let id = get_unique_id(inst.id)
             if inst.firstFrame
@@ -406,13 +407,14 @@ def editor_child_window()
                     inst.at = newAt
             if inst.select
                 SelectNode(id,true)
-                if inst.navigate
-                    NavigateToSelection(false,NAVIGATION_TIME)
+                nav ||= inst.navigate
                 inst.select = false
         if length(moves)!=0
             next_undo_action()
             undo_move_instructions(moves)
             delete moves
+        if nav
+            NavigateToSelection(false,NAVIGATION_TIME)
 
         for inst in g_CurrentProject.instructions
             for inp in inst.inputs

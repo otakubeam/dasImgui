@@ -254,15 +254,18 @@ def undo_create_connection(id,pin:string)
                 print("restore connection from {after}\n")
             restore_connection(after)
 
-def restore_current_project(json:string)
+def load_project_from_json(var proj:Project?;json:string)
     var error : string
     var jv = read_json(json,error)
     if jv!=null
-        (*g_CurrentProject)->load(jv)
+        (*proj)->load(jv)
     else
-        print("{error}\nfailed to restore project} from {json}\n")  // TODO: better error reporting
+        print("{error}\nfailed to load project from {json}\n")  // TODO: better error reporting
     unsafe
         delete jv
+
+def restore_current_project(json:string)
+    load_project_from_json(g_CurrentProject,json)
 
 def save_project(var proj:Project?)
     var jv = (*proj)->save()
@@ -295,10 +298,10 @@ def undo_new_project()
                 _::clear_project_data()
 
 [generic]
-def undo_replace_project(event_name:string)
+def undo_load_project
     let before = g_UndoLastElement
     let after  = save_current_project()
-    create_undo("{event_name} project {g_UndoAction}") <| $ ( ur )
+    create_undo("load project {g_UndoAction}") <| $ ( ur )
         ur.undo <- @ <|
             static_if DEBUG_UNDO
                 print("restore project from {before}\n")
@@ -313,3 +316,27 @@ def undo_replace_project(event_name:string)
                 _::clear_project_data()
                 restore_current_project(after)
                 update_preview()
+
+def undo_paste_project(var clipboard:Project?)
+    let before = g_UndoLastElement
+    let pasta = save_project(clipboard)
+    create_undo("paste project {g_UndoAction}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("restore project from {before}\n")
+            post_event <| @
+                (*g_CurrentProject)->clear()
+                clear_preview()
+                restore_current_project(before)
+                update_preview()
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("paste project from {pasta}\n")
+            post_event <| @
+                var cb = new Project()
+                load_project_from_json(cb,pasta)
+                merge_project(g_CurrentProject, cb, float2(200.,200.))
+                unsafe
+                    delete cb
+                update_preview()
+
