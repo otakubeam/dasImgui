@@ -1,4 +1,5 @@
 {
+	"actions" : [],
 	"nodes" : [
 		{
 			"size" : {
@@ -18,6 +19,7 @@
 			},
 			"rtti" : "Instruction_SolidColor",
 			"name" : "Solid color",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -37,6 +39,7 @@
 			"op" : "Multiply",
 			"rtti" : "Instruction_Blend",
 			"name" : "Blend",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -51,6 +54,7 @@
 			},
 			"rtti" : "Instruction_OutputSurface",
 			"name" : "Output surface",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -81,6 +85,7 @@
 			},
 			"rtti" : "Instruction_Gradient",
 			"name" : "Gradient",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -108,6 +113,7 @@
 			"comment" : "Blend solid color with gradient\n",
 			"rtti" : "Instruction_Comment",
 			"name" : "SolidColor * Gradient",
+			"action" : "",
 			"extents" : {
 				"y" : 802,
 				"x" : 1440

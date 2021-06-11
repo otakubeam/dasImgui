@@ -317,7 +317,7 @@ def undo_load_project
                 restore_current_project(after)
                 update_preview()
 
-def undo_paste_project(var clipboard:Project?)
+def undo_paste_project(var clipboard:Project?; action:string)
     let before = g_UndoLastElement
     let pasta = save_project(clipboard)
     create_undo("paste project {g_UndoAction}") <| $ ( ur )
@@ -335,7 +335,7 @@ def undo_paste_project(var clipboard:Project?)
             post_event <| @
                 var cb = new Project()
                 load_project_from_json(cb,pasta)
-                merge_project(g_CurrentProject, cb, float2(200.,200.))
+                merge_project(g_CurrentProject, cb, float2(200.,200.), action)
                 unsafe
                     delete cb
                 update_preview()

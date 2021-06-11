@@ -63,6 +63,7 @@ class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
     category : string                       // instruction category
+    action : string
     at : float2                             // position in the node editor
     extents : float2 = float2(256.,256.)    // size in the node editor (for relevant nodes)
     flags : InstructionFlags = InstructionFlags HasEdit
@@ -93,6 +94,7 @@ class Instruction
         var inode <- {{
             "id" => JV(id);
             "name" => JV(name);
+            "action" => JV(action);
             "rtti" => JV(tname);
             "at" => JV(at);
             "extents" => JV(extents);
@@ -104,6 +106,7 @@ class Instruction
         var node & = pnode.value as _object
         id = node["id"].value as _string
         name = node["name"].value as _string
+        action = node["action"].value as _string
         at = from_JV(node["at"],type<float2>)
         extents = from_JV(node["extents"],type<float2>)
         flags = from_JV(node["flags"],type<InstructionFlags>)
@@ -126,6 +129,22 @@ def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Outp
     unsafe
         invoke(blk,reinterpret<Output?#> null)
 
+// instance
+
+class Instance : Instruction
+    def Instance
+        name = "Instance"
+        category = CATEGORY_UNCATEGORIZED
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override save ( var node:table<string;JsonValue?> ) : void
+        pass
+    def override load ( var node:table<string;JsonValue?> ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        var dummy : array<string>
+        return <- dummy
+
 // project
 
 def generate_new_id()
@@ -134,7 +153,9 @@ def generate_new_id()
 class Project
     instructions : array<Instruction?>
     lookup : table<string; Instruction?>
+    actions : array<string>
     def clear
+        delete actions
         delete instructions
         clear(lookup)
     def finalize
@@ -177,9 +198,11 @@ class Project
             for inp in inst.inputs
                 if inp.src != null
                     links |> push(self->save_link(inst,inp))
+        var acts <- [{for action in actions; JV(action)}]
         var root <- {{
             "nodes"=> JV(nodes);
-            "links" => JV(links)
+            "links" => JV(links);
+            "actions" => JV(acts)
         }}
         return JV(root)
     def load_instruction ( var pnode : JsonValue? )
@@ -211,6 +234,8 @@ class Project
         for pnode in nodes
             self->load_instruction(pnode)
         self->load_links(root["links"])
+        var acts & = root["actions"].value as _array
+        actions <- [{for action in acts; action as _string}]
 
 def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
     if visited |> key_exists(inst)
@@ -258,11 +283,12 @@ def create_selection_project ( var proj:Project?; selection:table<string;bool> )
     delete i2ni
     return newProject
 
-def merge_project ( var proj,sel:Project?; offset:float2 )
+def merge_project ( var proj,sel:Project?; offset:float2; action:string )
     var i2ni : table<string; Instruction?>
     for inst in sel.instructions
         var ninst = clone_instruction(inst)
         i2ni[inst.id] = ninst
+        ninst.action = action
         ninst.at += offset
         ninst.firstFrame = true
         ninst.hasPosition = true
@@ -277,7 +303,11 @@ def merge_project ( var proj,sel:Project?; offset:float2 )
     i2ni |> clear()
     delete i2ni
 
+def make_unique_action_name
+    return "Action {uriparser::make_new_guid()}"
+
 var g_CurrentProject : Project?
+
 
 // factory
 

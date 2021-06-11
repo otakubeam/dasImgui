@@ -1,4 +1,5 @@
 {
+	"actions" : [],
 	"nodes" : [
 		{
 			"id" : "02598e1c-0bc1-40a7-ae78-4620c6f98116",
@@ -8,6 +9,7 @@
 			},
 			"rtti" : "Instruction_AddScalar",
 			"name" : "+ scalar",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -23,6 +25,7 @@
 			},
 			"rtti" : "Instruction_Scalar",
 			"name" : "Scalar",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -38,6 +41,7 @@
 			},
 			"rtti" : "Instruction_Scalar",
 			"name" : "Scalar",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -52,6 +56,7 @@
 			},
 			"rtti" : "Instruction_DebugScalar",
 			"name" : "Debug scalar",
+			"action" : "",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
@@ -67,6 +72,7 @@
 			"comment" : "Comment",
 			"rtti" : "Instruction_Comment",
 			"name" : "Comment",
+			"action" : "",
 			"extents" : {
 				"y" : 960,
 				"x" : 1792

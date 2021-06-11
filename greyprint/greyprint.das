@@ -80,6 +80,7 @@ def imgui_app ( title:string; blk : block )
 // PROJECT
 
 var g_FirstFrame = true
+var g_CurrentAction = ""
 
 def save_project(fname:string)
     for inst in g_CurrentProject.instructions
@@ -101,6 +102,7 @@ def export_project(fname:string)
 
 def clear_project_data
     g_FirstFrame = true
+    g_CurrentAction = ""
     SetCurrentEditor(null)
     DestroyEditor(g_Context)
     g_Context = null
@@ -162,7 +164,7 @@ def paste
     if g_ClipboardProject != null
         next_undo_action()
         before_project()
-        undo_paste_project(g_ClipboardProject)
+        undo_paste_project(g_ClipboardProject,g_CurrentAction)
         redo_last()
 
 // MAIN MENU
@@ -203,6 +205,13 @@ def main_menu()
             if MenuItem("Paste##Edit","CTRL+V")
                 ClearSelection()
                 paste()
+        BeginMenu("Action##Main menu") <|
+            if MenuItem("New##Action")
+                g_CurrentProject.actions |> push(make_unique_action_name())
+            if MenuItem("Import##Action")
+                pass
+            if MenuItem("Export##Action")
+                pass
         BeginMenu("Preview##Main menu") <|
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()
@@ -300,6 +309,8 @@ def editor_child_window()
     style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
     Begin("My Editor", float2(0.0, 0.0f)) <|
         for inst in g_CurrentProject.instructions
+            if inst.action != g_CurrentAction
+                continue
             let id = get_unique_id(inst.id)
             if !inst.flags.Comment
                 // REGULAR NODE
@@ -387,11 +398,11 @@ def editor_child_window()
                         IM_COL32(255, 255, 255, 128 * bgAlpha / 255), 4.0f)
                     imgui::PopStyleVar()
                 EndGroupHint()
-
-
         var moves : array<tuple<string;float2;float2>>
         var nav = false
         for inst in g_CurrentProject.instructions
+            if inst.action != g_CurrentAction
+                continue
             let id = get_unique_id(inst.id)
             if inst.firstFrame
                 if !inst.hasPosition
@@ -417,6 +428,8 @@ def editor_child_window()
             NavigateToSelection(false,NAVIGATION_TIME)
 
         for inst in g_CurrentProject.instructions
+            if inst.action != g_CurrentAction
+                continue
             for inp in inst.inputs
                 if inp.src != null
                     let inp_id = get_input_unique_id(inst,inp.name)
@@ -645,6 +658,7 @@ def create_instruction_side_menu()
         post_event() <| @   // context free instruction which will be centered
             next_undo_action()
             var inst = make_instruction(type_name)
+            inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(inst)
             ClearSelection()
             inst.select = true
@@ -659,6 +673,7 @@ def create_instruction_contextless(pos:float2)
         post_event() <| @   // context free instruction at mouse position
             next_undo_action()
             var inst = make_instruction(type_name)
+            inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(inst)
             ClearSelection()
             inst.select = true
@@ -678,6 +693,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
         post_event() <| @   // link between input and output
             next_undo_action()
             var link_inst = make_instruction(type_name)
+            link_inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(link_inst)
             ClearSelection()
             link_inst.select = true
@@ -709,6 +725,7 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
         post_event() <| @   // link to main output
             next_undo_action()
             var out_inst = make_instruction(type_name)
+            out_inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(out_inst)
             ClearSelection()
             out_inst.select = true
@@ -798,7 +815,7 @@ def side_child_window()
             side_edit_instance(inst, ImGuiTreeNodeFlags DefaultOpen)
         EndChild()
 // project
-    BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
+    BeginChild(empty(g_CurrentAction) ? "Project" : g_CurrentAction, float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
     if Button("[*]")
         NavigateToContent(NAVIGATION_TIME)
     HelpMarker("Navigate to content")
@@ -807,6 +824,8 @@ def side_child_window()
         var project_filter = new ImGuiTextFilter
     *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
     for inst in g_CurrentProject.instructions
+        if inst.action != g_CurrentAction
+            continue
         if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
             side_edit_instance(inst)
     EndChild()
@@ -866,8 +885,19 @@ def main_editor_screen()
         side_child_window()
         SameLine()
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
-        editor_child_window()
+        if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
+            if BeginTabItem("Project")
+                g_CurrentAction = ""
+                editor_child_window()
+                EndTabItem()
+            for act in g_CurrentProject.actions
+                if BeginTabItem(act)
+                    g_CurrentAction = act
+                    editor_child_window()
+                    EndTabItem()
+            EndTabBar()
         EndChild()
+
         post_invoke_que()
 
 [export]
