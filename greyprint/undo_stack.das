@@ -205,7 +205,7 @@ def undo_create_instruction(var inst:Instruction?)
 def describe_connection (id,pin:string) : SavedConnection
     var inst = (*g_CurrentProject)->find_instruction(id)
     var inI = (*inst)->input_index(pin)
-    var inp & =  inst.inputs[inI]
+    var inp & =  inst.pins.inputs[inI]
     if inp.src != null
         return [[SavedConnection id=id,pin=pin,lid=inp.src.id,loutput=inp.output]]
     else
@@ -215,7 +215,7 @@ def describe_connection (id,pin:string) : SavedConnection
 def restore_connection ( before:SavedConnection )
     var inst = (*g_CurrentProject)->find_instruction(before.id)
     var inI = (*inst)->input_index(before.pin)
-    var inp & =  inst.inputs[inI]
+    var inp & =  inst.pins.inputs[inI]
     if before.lid==""
         inp.src = null
     else
@@ -226,7 +226,7 @@ def restore_connection ( before:SavedConnection )
 def destroy_connection ( before:SavedConnection )
     var inst = (*g_CurrentProject)->find_instruction(before.id)
     var inI = (*inst)->input_index(before.pin)
-    var inp & =  inst.inputs[inI]
+    var inp & =  inst.pins.inputs[inI]
     inp.src = null
 
 def undo_delete_connection(id,pin:string)

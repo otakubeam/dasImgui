@@ -98,8 +98,8 @@ class Instruction_SolidColor : Instruction
         NodeColorEditor4(mode,id,"color",color)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
-            "surface_gen_solid_color({to_reg(outputs[0].reg)},{to_produce(color)})"
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_solid_color({to_reg(pins.outputs[0].reg)},{to_produce(color)})"
         }]
 
 
@@ -120,8 +120,8 @@ class Instruction_Gradient : Instruction
         NodeColorEditor4(mode,id,"bottom-right",bottom_right)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
-            "surface_gen_gradient({to_reg(outputs[0].reg)},{to_produce(top_left)},{to_produce(top_right)},{to_produce(bottom_left)},{to_produce(bottom_right)})"
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_gradient({to_reg(pins.outputs[0].reg)},{to_produce(top_left)},{to_produce(top_right)},{to_produce(bottom_left)},{to_produce(bottom_right)})"
         }]
 
 enum BlendOp
@@ -143,7 +143,7 @@ class Instruction_Blend : Instruction
         NodeEditEnumeration(mode,id,"Operation",op)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(outputs[0].reg)},{to_produce(size)})";
-            "surface_blend_{op}({to_reg(outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg(src_regs[2],"0.5f")})"
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_blend_{op}({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg(src_regs[2],"0.5f")})"
         }]
 

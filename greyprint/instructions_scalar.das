@@ -33,7 +33,7 @@ class Instruction_OpScalar : Instruction
         pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(outputs[0].reg)} = {op} {to_reg_scalar(src_regs[0])}"
+            "{to_reg_scalar(pins.outputs[0].reg)} = {op} {to_reg_scalar(src_regs[0])}"
         }]
 
 class Instruction_FunScalar : Instruction_OpScalar
@@ -41,7 +41,7 @@ class Instruction_FunScalar : Instruction_OpScalar
         Instruction_OpScalar`Instruction_OpScalar(self,Op)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(outputs[0].reg)} = {op}({to_reg_scalar(src_regs[0])})"
+            "{to_reg_scalar(pins.outputs[0].reg)} = {op}({to_reg_scalar(src_regs[0])})"
         }]
 
 class Instruction_Op2Scalar : Instruction
@@ -55,7 +55,7 @@ class Instruction_Op2Scalar : Instruction
         pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(outputs[0].reg)} = {to_reg_scalar(src_regs[0])} {op} {to_reg_scalar(src_regs[1])}"
+            "{to_reg_scalar(pins.outputs[0].reg)} = {to_reg_scalar(src_regs[0])} {op} {to_reg_scalar(src_regs[1])}"
         }]
 
 [instruction_node(name="Scalar constant",category="Scalar operations")]
@@ -68,7 +68,7 @@ class Instruction_Scalar : Instruction
         NodeDragFloat(mode,id,"value",value)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(outputs[0].reg)} = {to_produce(value)}"
+            "{to_reg_scalar(pins.outputs[0].reg)} = {to_produce(value)}"
         }]
 
 // fun1
@@ -118,5 +118,5 @@ class Instruction_DivScalar : Instruction_Op2Scalar
         Instruction_Op2Scalar`Instruction_Op2Scalar(self,"/")
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(outputs[0].reg)} = ({to_reg_scalar(src_regs[1])}!=0.) ? {to_reg_scalar(src_regs[0])} / {to_reg_scalar(src_regs[1])} : 0."
+            "{to_reg_scalar(pins.outputs[0].reg)} = ({to_reg_scalar(src_regs[1])}!=0.) ? {to_reg_scalar(src_regs[0])} / {to_reg_scalar(src_regs[1])} : 0."
         }]

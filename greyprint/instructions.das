@@ -60,6 +60,10 @@ bitfield InstructionFlags
     Comment
     Input
 
+struct Pins
+    inputs : array<Input>
+    outputs : array<Output>
+
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
     name : string                           // user readable name. can be duplicate
@@ -73,22 +77,21 @@ class Instruction
     select : bool = false
     navigate : bool = false
     editing : bool = false
-    inputs : array<Input>
-    outputs : array<Output>
+    pins : Pins
     tex : void?
     def abstract edit ( mode:EditMode ) : void
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
     def abstract produce ( var src_regs : array<int> ): array<string>
     def add_input ( iname, itype : string )
-        inputs |> push([[Input name=iname,_type=itype]])
+        pins.inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
-        outputs |> push([[Output name=iname,_type=itype]])
+        pins.outputs |> push([[Output name=iname,_type=itype]])
     def input_index ( iname:string ) : int
-        return inputs |> find_index_if <| $ ( val )
+        return pins.inputs |> find_index_if <| $ ( val )
             return val.name==iname
     def output_index ( iname:string ) : int
-        return outputs |> find_index_if <| $ ( val )
+        return pins.outputs |> find_index_if <| $ ( val )
             return val.name==iname
     def JV
         var tname = class_info(self).name
@@ -98,8 +101,7 @@ class Instruction
             "action" => JV(action);
             "rtti" => JV(tname);
             "at" => JV(at);
-            "extents" => JV(extents);
-            "flags" => JV(flags)
+            "extents" => JV(extents)
         }}
         self->save(inode)
         return JV(inode)
@@ -110,11 +112,10 @@ class Instruction
         action = node["action"].value as _string
         at = from_JV(node["at"],type<float2>)
         extents = from_JV(node["extents"],type<float2>)
-        flags = from_JV(node["flags"],type<InstructionFlags>)
         self->load(node)
 
 def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input?#):void> ) : void
-    for i in inst.inputs
+    for i in inst.pins.inputs
         if i.name==iname
             invoke(blk,safe_addr(i))
             return
@@ -123,7 +124,7 @@ def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input
 
 
 def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Output?#):void> ) : void
-    for i in inst.outputs
+    for i in inst.pins.outputs
         if i.name==iname
             invoke(blk,safe_addr(i))
             return
@@ -158,7 +159,7 @@ class Project
         for i,index in instructions,range(100500)
             if i == dinst
                 idx = index
-            for inp in i.inputs
+            for inp in i.pins.inputs
                 if inp.src==dinst
                     inp.src = null
         assert(idx!=-1)
@@ -180,7 +181,7 @@ class Project
             nodes |> push(inst->JV())
         var links : array<JsonValue?>
         for inst in instructions
-            for inp in inst.inputs
+            for inp in inst.pins.inputs
                 if inp.src != null
                     links |> push(self->save_link(inst,inp))
         var acts <- [{for action in actions; JV(action)}]
@@ -226,7 +227,7 @@ def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
     if visited |> key_exists(inst)
         return false
     visited[inst] = true
-    for inp in inst.inputs
+    for inp in inst.pins.inputs
         if inp.src!=null
             if inp.src==src
                 return true
@@ -259,7 +260,7 @@ def create_selection_project ( var proj:Project?; selection:table<string;bool> )
             i2ni[inst.id] = newI
     for ninst in newProject.instructions
         var inst = (*proj)->find_instruction(ninst.id)
-        for inp,ninp in inst.inputs,ninst.inputs
+        for inp,ninp in inst.pins.inputs,ninst.pins.inputs
             if inp.src!=null && selection |> key_exists(inp.src.id)
                 assert(i2ni |> key_exists(inp.src.id))
                 ninp.src = i2ni[inp.src.id]
@@ -281,7 +282,7 @@ def merge_project ( var proj,sel:Project?; offset:float2; action:string )
         (*proj)->add_new_insturction(ninst)
     for inst in sel.instructions
         var ninst = i2ni[inst.id]
-        for inp,ninp in inst.inputs,ninst.inputs
+        for inp,ninp in inst.pins.inputs,ninst.pins.inputs
             if inp.src != null
                 ninp.src = i2ni[inp.src.id]
                 ninp.output = inp.output
@@ -303,6 +304,11 @@ def rename_action ( var proj:Project?; oldName,newName:string )
         if inst.action==oldName
             inst.action==newName
     return true
+
+def collect_action_io ( var proj:Project?; action:string )
+    let idx = proj.actions |> find_index(action)
+    if idx==-1
+        return
 
 var g_CurrentProject : Project?
 
@@ -330,8 +336,8 @@ def make_instruction_factory ( it_name,it_category:string; it_type:auto(InstType
         return inst
     var dummy = invoke(factory)
     g_instructionFactory[tname] <- factory
-    var main_in  = (length(dummy.inputs)>0) ? dummy.inputs[0]._type : ""
-    var main_out = (length(dummy.outputs)>0) ? dummy.outputs[0]._type : ""
+    var main_in  = (length(dummy.pins.inputs)>0) ? dummy.pins.inputs[0]._type : ""
+    var main_out = (length(dummy.pins.outputs)>0) ? dummy.pins.outputs[0]._type : ""
 //  note: this causes crash on linux, todo: run with asan
 //    unsafe
 //        delete dummy

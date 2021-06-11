@@ -340,7 +340,7 @@ def editor_child_window()
                             before_instruction(inst)
                             inst->edit(EditMode Embedded)
                     ImGuiEx_BeginColumn()
-                    for inp in inst.inputs
+                    for inp in inst.pins.inputs
                         let inp_id = get_input_unique_id(inst,inp.name)
                         in_pin(inp_id) <|
                             SameLine()
@@ -357,7 +357,7 @@ def editor_child_window()
                                     next_undo_action()
                                     DeleteLink(inp_id)
                     let lw = ImGuiEx_NextColumn()
-                    for outp in inst.outputs
+                    for outp in inst.pins.outputs
                         let outp_id = get_output_unique_id(inst,outp.name)
                         let text = "{outp.name}:{outp._type}"
                         out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
@@ -434,7 +434,7 @@ def editor_child_window()
         for inst in g_CurrentProject.instructions
             if inst.action != g_CurrentAction
                 continue
-            for inp in inst.inputs
+            for inp in inst.pins.inputs
                 if inp.src != null
                     let inp_id = get_input_unique_id(inst,inp.name)
                     let outp_id = get_output_unique_id(inp.src,inp.output)
@@ -475,15 +475,15 @@ def editor_child_window()
                             if inL.inst==outL.inst                                              // linking to itself
                                 editor_hint("Error: can't link to itself")
                                 RejectNewItem(float4(1,0,0,1),3.)
-                            elif inL.inst.inputs[inI]._type != outL.inst.outputs[outI]._type    // type mismatch
-                                editor_hint("Error: can't link {inL.inst.inputs[inI]._type} to {outL.inst.outputs[outI]._type}")
+                            elif inL.inst.pins.inputs[inI]._type != outL.inst.pins.outputs[outI]._type    // type mismatch
+                                editor_hint("Error: can't link {inL.inst.pins.inputs[inI]._type} to {outL.inst.pins.outputs[outI]._type}")
                                 RejectNewItem(float4(1,0,0,1),3.)
                             else
                                 before_link(inL.inst.id, inL.pin)
-                                var old_input = inL.inst.inputs[inI]
-                                inL.inst.inputs[inI] |> connect(outL.inst, outL.pin)
+                                var old_input = inL.inst.pins.inputs[inI]
+                                inL.inst.pins.inputs[inI] |> connect(outL.inst, outL.pin)
                                 if g_CurrentProject |> find_loop()
-                                    inL.inst.inputs[inI] = old_input
+                                    inL.inst.pins.inputs[inI] = old_input
                                     editor_hint("Error: link creates loop")
                                     RejectNewItem(float4(1,0,0,1),3.)
                                 else
@@ -550,7 +550,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             inst.name = to_string(*buf)
             undo_edit_instruction(inst.id,"name")
             update_preview()
-        for outp in inst.outputs
+        for outp in inst.pins.outputs
             unsafe
                 if Checkbox("##preview_{inst.id}_{outp.name}_S",addr(outp.preview))
                     update_preview()
@@ -589,7 +589,7 @@ def instruction_context_menu
                     let nid = id_2_guid[sna[0]]
                     var outL = (*g_CurrentProject)->find_instruction(nid)
                     assert(outL!=null)
-                    if length(outL.outputs)>=1
+                    if length(outL.pins.outputs)>=1
                         OpenPopup(icm)  // tab node
                         link_inst = outL
                         link_pin = ""
@@ -611,7 +611,7 @@ def instruction_context_menu
         elif !empty(link_pin)
             edit_link_instructions(link_inst,link_pin)
         else
-            edit_tab_instructions(link_inst,link_inst.outputs[0].name)
+            edit_tab_instructions(link_inst,link_inst.pins.outputs[0].name)
         EndPopup()
     Resume()
 
@@ -691,7 +691,7 @@ def create_instruction_contextless(pos:float2)
 def edit_link_instructions(var inst:Instruction?;pin:string )
     let pid = inst->input_index(pin)
     assert(pid!=-1)
-    let iotype = inst.inputs[pid]._type
+    let iotype = inst.pins.inputs[pid]._type
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name : string := ai.tname
         post_event() <| @   // link between input and output
@@ -702,17 +702,17 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
             ClearSelection()
             link_inst.select = true
             let p0 = GetNodePosition(guid_2_id[inst.id])
-            let p1 = GetNodePosition(guid_2_id[inst.inputs[pid].src.id])
+            let p1 = GetNodePosition(guid_2_id[inst.pins.inputs[pid].src.id])
             link_inst.at = (p0+p1) * 0.5
             link_inst.hasPosition = true
-            before_link(link_inst.id,link_inst.inputs[0].name)
-            link_inst.inputs[0].src = inst.inputs[pid].src
-            link_inst.inputs[0].output = inst.inputs[pid].output
+            before_link(link_inst.id,link_inst.pins.inputs[0].name)
+            link_inst.pins.inputs[0].src = inst.pins.inputs[pid].src
+            link_inst.pins.inputs[0].output = inst.pins.inputs[pid].output
             undo_create_instruction(link_inst)
-            undo_create_connection(link_inst.id,link_inst.inputs[0].name)
+            undo_create_connection(link_inst.id,link_inst.pins.inputs[0].name)
             before_link(inst.id,pin)
-            inst.inputs[pid].src = link_inst
-            inst.inputs[pid].output = link_inst.outputs[0].name
+            inst.pins.inputs[pid].src = link_inst
+            inst.pins.inputs[pid].output = link_inst.pins.outputs[0].name
             undo_create_connection(inst.id,pin)
             update_preview()
         finally
@@ -723,7 +723,7 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
 def edit_tab_instructions(var inst:Instruction?;pin:string )
     let pid = inst->output_index(pin)
     assert(pid!=-1)
-    let iotype = inst.outputs[pid]._type
+    let iotype = inst.pins.outputs[pid]._type
     create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
         let type_name : string := ai.tname
         post_event() <| @   // link to main output
@@ -736,10 +736,10 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
             out_inst.navigate = true
             out_inst.at = inst.at + float2(DEFAULT_NODE_WIDTH + 200.0,0.)
             out_inst.hasPosition = true
-            let srcpin = out_inst.inputs[0].name
+            let srcpin = out_inst.pins.inputs[0].name
             before_link(out_inst.id, srcpin)
-            out_inst.inputs[0].src = inst
-            out_inst.inputs[0].output = pin
+            out_inst.pins.inputs[0].src = inst
+            out_inst.pins.inputs[0].output = pin
             undo_create_instruction(out_inst)
             undo_create_connection(out_inst.id,srcpin)
             update_preview()
@@ -768,7 +768,7 @@ def eval_project ()
                         clear_preview()
                         for inst in g_CurrentProject.instructions
                             inst.tex = null
-                            for outp in inst.outputs
+                            for outp in inst.pins.outputs
                                 outp.tex = null
                         for outprev in OUTPUT
                             let tex = make_prewview_rgba_texture(outprev.surf)

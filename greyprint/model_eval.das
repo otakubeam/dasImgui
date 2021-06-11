@@ -16,7 +16,7 @@ def collect_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; 
         return
     used[inst] = true
     reval |> push(inst)
-    for inp in inst.inputs
+    for inp in inst.pins.inputs
         if inp.src!=null
             collect_instruction(inp.src, used, reval)
 
@@ -34,7 +34,7 @@ def collect_instructions
 def assign_registers ( var reval:array<Instruction?> ) : int
     var reg_total = 0
     for inst in reval
-        for outp in inst.outputs
+        for outp in inst.pins.outputs
             outp.reg = reg_total ++
     return reg_total ++
 
@@ -58,11 +58,11 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
     for inst in reval
         // first time seeing means last its used, and needs to be deleted
         var inp_regs : array<int>
-        for inp in inst.inputs
+        for inp in inst.pins.inputs
             if inp.src != null
                 let oidx = inp.src->output_index(inp.output)
                 assert(oidx!=-1)
-                var outp & = inp.src.outputs[oidx]
+                var outp & = inp.src.pins.outputs[oidx]
                 let reg = outp.reg
                 inp_regs |> push(reg)
                 if !reg_used[reg]
@@ -72,7 +72,7 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
             else
                 inp_regs |> push(-1)
         // preview
-        for outp in inst.outputs
+        for outp in inst.pins.outputs
             if outp.preview
                 eval |> push("    preview({to_reg(outp.reg)},\"{inst.name}\",\"{inst.id}\",\"{outp.name}\")")
         // instruction produces generation, we invert again
@@ -82,12 +82,12 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
             eval |> push("    {ib}")
         delete ipod
         // register declaration
-        for outp in inst.outputs
+        for outp in inst.pins.outputs
             eval |> push("    var {to_reg(outp.reg)} : {reg_type(outp._type)}")
         // comment
         let irt = join([{for r in inp_regs; "{to_reg(r)}"}],",")
-        let ort = join([{for r in inst.outputs; "{to_reg(r.reg)}"}],",")
-        // eval |> push("    // eval {inst.__rtti} -> {inst.name}:{inst.id} [[inputs {irt}]] [[outputs {ort}]]")
+        let ort = join([{for r in inst.pins.outputs; "{to_reg(r.reg)}"}],",")
+        // eval |> push("    // eval {inst.__rtti} -> {inst.name}:{inst.id} [[pins.inputs {irt}]] [[pins.outputs {ort}]]")
     if length(reval)==0
         eval |> push("    pass")
     // now back to normal order
@@ -96,7 +96,7 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
 
 def produce_eval
     for inst in g_CurrentProject.instructions
-        for outp in inst.outputs
+        for outp in inst.pins.outputs
             outp.reg = -1
     var reval <- collect_instructions()
     let nreg = assign_registers(reval)
