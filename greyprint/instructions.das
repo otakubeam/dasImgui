@@ -55,10 +55,10 @@ enum EditMode
     Embedded        // in the node
 
 bitfield InstructionFlags
-    Input
     Output
     HasEdit
     Comment
+    Input
 
 class Instruction
     id : string                             // unique ID of instruction (expecting GUID)
