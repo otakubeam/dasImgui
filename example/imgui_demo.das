@@ -415,7 +415,7 @@ def DasShowDemoWindowPopups()
             let names <- [{auto[] "Bream"; "Haddock"; "Mackerel"; "Pollock"; "Tilefish"}]
 
         if Button("Select..")
-            OpenPopup("my_select_popup")
+            up("my_select_popup")
         SameLine()
         TextUnformatted(selected_fish == -1 ? "<None>" : names[selected_fish])
         if BeginPopup("my_select_popup")

@@ -1,0 +1,108 @@
+{
+	"nodes" : [
+		{
+			"id" : "8e276475-82d8-4130-adab-06bdbf5dc30f",
+			"at" : {
+				"y" : 569,
+				"x" : 337
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 1,
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
+			"at" : {
+				"y" : 777,
+				"x" : 337
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 1,
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "dfc2cf95-38c9-41fd-b917-2951673635f8",
+			"at" : {
+				"y" : 985,
+				"x" : 337
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 1,
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"at" : {
+				"y" : 793,
+				"x" : 1779
+			},
+			"rtti" : "Instruction_AddScalar",
+			"name" : "Add scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 4,
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"at" : {
+				"y" : 652,
+				"x" : 1073
+			},
+			"rtti" : "Instruction_MulScalar",
+			"name" : "Mul scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"flags" : 4,
+			"action" : "Madd, scalar"
+		}
+	],
+	"actions" : [
+		"Madd, scalar"
+	],
+	"links" : [
+		{
+			"input_name" : "In-1",
+			"input_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"output_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In-2",
+			"input_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"output_id" : "dfc2cf95-38c9-41fd-b917-2951673635f8",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In-1",
+			"input_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"output_id" : "8e276475-82d8-4130-adab-06bdbf5dc30f",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In-2",
+			"input_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"output_id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
+			"output_name" : "Out"
+		}
+	]
+}

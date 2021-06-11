@@ -11,6 +11,59 @@ require produce
 
 require instructions_scalar public
 
+// actions
+
+[instruction_node(name="Instance",category="Actions")]
+class Instruction_ActionInstance : Instruction
+    def Instruction_ActionInstance
+        pass
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
+[instruction_node(name="Argument, scalar",category="Actions")]
+class Instruction_ActionArgumentScalar : Instruction
+    override flags = InstructionFlags Input
+    def Instruction_ActionArgumentScalar
+        self->add_output("Out",TYPE_SCALAR)
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
+[instruction_node(name="Argument, surface",category="Actions")]
+class Instruction_ActionArgumentSurface : Instruction
+    override flags = InstructionFlags Input
+    def Instruction_ActionArgumentSurface
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
+[instruction_node(name="Result, scalar",category="Actions")]
+class Instruction_ActionResultScalar : Instruction
+    override flags = InstructionFlags Output
+    def Instruction_ActionResultScalar
+        self->add_input("In",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
+[instruction_node(name="Result, surface",category="Actions")]
+class Instruction_ActionResultSurface : Instruction
+    override flags = InstructionFlags Output
+    def Instruction_ActionResultSurface
+        self->add_input("In",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        pass
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [[array<string>]]
+
+// comment
+
 [instruction_node(name="Comment",category="Miscellaneous")]
 class Instruction_Comment : Instruction
     [[serialize]] comment : string = "Comment"

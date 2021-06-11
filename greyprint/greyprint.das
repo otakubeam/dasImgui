@@ -27,7 +27,7 @@ require undo_stack
 require instructions_model
 require model_eval
 
-let SIDE_PANNEL_WIDTH = 600.
+var SIDE_PANNEL_WIDTH = 600.
 let CONTEXT_MENU_WIDTH = 400.
 let INSTRUCTION_PANNEL_HEIGHT = 350.
 let SELECTION_PANNEL_HEIGHT = 600.
@@ -208,6 +208,10 @@ def main_menu()
         BeginMenu("Action##Main menu") <|
             if MenuItem("New##Action")
                 g_CurrentProject.actions |> push(make_unique_action_name())
+            if MenuItem("New from selection##Action")
+                g_CurrentProject.actions |> push(make_unique_action_name())
+                // TODO: replace selection with action instance
+            Separator()
             if MenuItem("Import##Action")
                 pass
             if MenuItem("Export##Action")
@@ -575,7 +579,7 @@ def instruction_context_menu
         var inL = translate_input_output_id(context_link_id,"INPUT")
         link_inst = inL.inst
         link_pin = inL.pin
-    if !IsPopupOpen(icm)
+    if !IsPopupOpen("",int(ImGuiPopupFlags_ ImGuiPopupFlags_AnyPopupId))
         if IsKeyPressed(GetKeyIndex(ImGuiKey Tab)) || IsKeyPressed(GetKeyIndex(ImGuiKey Space))
             var snc = GetSelectedObjectCount()
             if snc==1
@@ -786,6 +790,24 @@ def eval_project ()
             g_ProjectErrors = "{errors}"
             failed = true
 
+var g_RenameAction = ""
+
+def rename_action_dialog()
+    if BeginPopup("RENAME ACTION")
+        Text("Rename action")
+        var buf = get_next_text_buffer(g_RenameAction,128)
+        SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+        if InputText("##action_name",*buf)
+            g_RenameAction = to_string(*buf)
+        if Button("OK##action_name")
+            if g_CurrentProject |> rename_action(g_CurrentAction,g_RenameAction)
+                g_CurrentAction = g_RenameAction
+            CloseCurrentPopup()
+        SameLine()
+        if Button("CANCEL##action_name")
+            CloseCurrentPopup()
+        EndPopup()
+
 def side_child_window()
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
@@ -815,8 +837,15 @@ def side_child_window()
             side_edit_instance(inst, ImGuiTreeNodeFlags DefaultOpen)
         EndChild()
 // project
-    BeginChild(empty(g_CurrentAction) ? "Project" : g_CurrentAction, float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
-    if Button("[*]")
+    BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
+    if !empty(g_CurrentAction)
+        if Button("Rename##rename_action")
+            g_RenameAction = g_CurrentAction
+            OpenPopup("RENAME ACTION")
+        SameLine()
+        Text(g_CurrentAction)
+    rename_action_dialog()
+    if Button("[*]##navigate_to_content")
         NavigateToContent(NAVIGATION_TIME)
     HelpMarker("Navigate to content")
     SameLine()
@@ -883,20 +912,48 @@ def main_editor_screen()
         main_menu()
         preview_errors()
         side_child_window()
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
         SameLine()
+        imgui::PopStyleVar(1)
+
+        // vertical separator
+        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
+        static_let <|
+            var resizing_vertical = false
+        let sz = GetItemRectSize()
+        InvisibleButton("##vertical_separator", float2(10.,sz.y))
+        if IsItemHovered()
+            SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+            if IsMouseDown(ImGuiMouseButton Left)
+                resizing_vertical = true
+        if resizing_vertical
+            SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+            if IsMouseDragging(ImGuiMouseButton Left)
+                SIDE_PANNEL_WIDTH = max(SIDE_PANNEL_WIDTH + IO.MouseDelta.x, 200.)
+            elif !IsMouseDown(ImGuiMouseButton Left)
+                resizing_vertical = false
+        SameLine()
+        imgui::PopStyleVar(1)
+
+        PushStyleVar(ImGuiStyleVar ChildBorderSize, 0.)
         BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
-        if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
-            if BeginTabItem("Project")
-                g_CurrentAction = ""
-                editor_child_window()
-                EndTabItem()
-            for act in g_CurrentProject.actions
-                if BeginTabItem(act)
-                    g_CurrentAction = act
+        if length(g_CurrentProject.actions)>0
+            if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
+                if BeginTabItem("Project")
+                    g_CurrentAction = ""
                     editor_child_window()
                     EndTabItem()
-            EndTabBar()
+                for act in g_CurrentProject.actions
+                    if BeginTabItem(act)
+                        g_CurrentAction = act
+                        editor_child_window()
+                        EndTabItem()
+                EndTabBar()
+        else
+            g_CurrentAction = ""
+            editor_child_window()
         EndChild()
+        imgui::PopStyleVar(1)
 
         post_invoke_que()
 

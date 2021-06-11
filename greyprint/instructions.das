@@ -6,11 +6,11 @@ module instructions shared
 require rtti
 require imgui
 require uriparser
+require strings
 require daslib/json_boost public
 require daslib/safe_addr
 require daslib/ast_boost
 require daslib/static_let
-
 
 // surface
 
@@ -55,6 +55,7 @@ enum EditMode
     Embedded        // in the node
 
 bitfield InstructionFlags
+    Input
     Output
     HasEdit
     Comment
@@ -128,22 +129,6 @@ def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Outp
             return
     unsafe
         invoke(blk,reinterpret<Output?#> null)
-
-// instance
-
-class Instance : Instruction
-    def Instance
-        name = "Instance"
-        category = CATEGORY_UNCATEGORIZED
-    def override edit ( mode:EditMode ) : void
-        pass
-    def override save ( var node:table<string;JsonValue?> ) : void
-        pass
-    def override load ( var node:table<string;JsonValue?> ) : void
-        pass
-    def override produce ( var src_regs : array<int> ): array<string>
-        var dummy : array<string>
-        return <- dummy
 
 // project
 
@@ -305,6 +290,19 @@ def merge_project ( var proj,sel:Project?; offset:float2; action:string )
 
 def make_unique_action_name
     return "Action {uriparser::make_new_guid()}"
+
+def rename_action ( var proj:Project?; oldName,newName:string )
+    if empty(newName)
+        return false
+    if proj.actions |> find_index(newName) != -1
+        return false
+    var oidx = proj.actions |> find_index(oldName)
+    assert(oidx!=-1, "can't find action which we are trying to rename")
+    proj.actions[oidx] = newName
+    for inst in proj.instructions
+        if inst.action==oldName
+            inst.action==newName
+    return true
 
 var g_CurrentProject : Project?
 
