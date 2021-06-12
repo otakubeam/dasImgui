@@ -49,6 +49,16 @@ def NodeText(mode:EditMode; id,name:string; var text:string&; maxlen:int=128)
         undo_edit_instruction(id,name)
         update_preview()
 
+def NodeArgumentName(mode:EditMode; id,name:string; var text:string&; var proj:Project?; maxlen:int=128)
+    var buf = get_next_text_buffer(text,maxlen)
+    Text(name)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
+    if InputText("##{name}{id}{mode}_Text",*buf)
+        text = to_string(*buf)
+        // TODO: rename argument
+        undo_edit_instruction(id,name)
+        update_preview()
+
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     Text(name)

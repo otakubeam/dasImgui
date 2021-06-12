@@ -1,6 +1,7 @@
 {
 	"nodes" : [
 		{
+			"argument_name" : "X",
 			"id" : "8e276475-82d8-4130-adab-06bdbf5dc30f",
 			"at" : {
 				"y" : 569,
@@ -12,10 +13,10 @@
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 1,
 			"action" : "Madd, scalar"
 		},
 		{
+			"argument_name" : "Y",
 			"id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
 			"at" : {
 				"y" : 777,
@@ -27,10 +28,10 @@
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 1,
 			"action" : "Madd, scalar"
 		},
 		{
+			"argument_name" : "Z",
 			"id" : "dfc2cf95-38c9-41fd-b917-2951673635f8",
 			"at" : {
 				"y" : 985,
@@ -42,7 +43,6 @@
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 1,
 			"action" : "Madd, scalar"
 		},
 		{
@@ -57,7 +57,6 @@
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 4,
 			"action" : "Madd, scalar"
 		},
 		{
@@ -72,7 +71,21 @@
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 4,
+			"action" : "Madd, scalar"
+		},
+		{
+			"argument_name" : "X*Y+Z",
+			"id" : "bf432ef1-bcb7-4474-9cf1-8fc086c6d829",
+			"at" : {
+				"y" : 793,
+				"x" : 2479
+			},
+			"rtti" : "Instruction_ActionResultScalar",
+			"name" : "Result, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
 			"action" : "Madd, scalar"
 		}
 	],
@@ -102,6 +115,12 @@
 			"input_name" : "In-2",
 			"input_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
 			"output_id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In",
+			"input_id" : "bf432ef1-bcb7-4474-9cf1-8fc086c6d829",
+			"output_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
 			"output_name" : "Out"
 		}
 	]

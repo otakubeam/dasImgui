@@ -1,163 +1,141 @@
 {
 	"nodes" : [
 		{
-			"id" : "02598e1c-0bc1-40a7-ae78-4620c6f98116",
+			"argument_name" : "X",
+			"id" : "8e276475-82d8-4130-adab-06bdbf5dc30f",
 			"at" : {
-				"y" : 1321,
-				"x" : 707
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"action" : "Madd, scalar"
+		},
+		{
+			"argument_name" : "Y",
+			"id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
+			"at" : {
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"action" : "Madd, scalar"
+		},
+		{
+			"argument_name" : "Z",
+			"id" : "dfc2cf95-38c9-41fd-b917-2951673635f8",
+			"at" : {
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
+			},
+			"rtti" : "Instruction_ActionArgumentScalar",
+			"name" : "Argument, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"at" : {
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
 			},
 			"rtti" : "Instruction_AddScalar",
-			"name" : "+ scalar",
+			"name" : "Add scalar",
 			"extents" : {
 				"y" : 256,
 				"x" : 256
 			},
-			"flags" : 2,
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"at" : {
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
+			},
+			"rtti" : "Instruction_MulScalar",
+			"name" : "Mul scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"action" : "Madd, scalar"
+		},
+		{
+			"argument_name" : "X*Y+Z",
+			"id" : "bf432ef1-bcb7-4474-9cf1-8fc086c6d829",
+			"at" : {
+				"y" : 3.40282e+38,
+				"x" : 3.40282e+38
+			},
+			"rtti" : "Instruction_ActionResultScalar",
+			"name" : "Result, scalar",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
+			"action" : "Madd, scalar"
+		},
+		{
+			"id" : "3876fdb0-6e19-4343-8cde-ad1363c0eaf7",
+			"at" : {
+				"y" : 861,
+				"x" : 1252
+			},
+			"fn" : "Madd, scalar",
+			"rtti" : "Instruction_CallAction",
+			"name" : "Call action",
+			"extents" : {
+				"y" : 256,
+				"x" : 256
+			},
 			"action" : ""
-		},
-		{
-			"id" : "039759ac-88e6-41dc-a4b6-7451c82ef42c",
-			"value" : 1,
-			"at" : {
-				"y" : 1035,
-				"x" : -207
-			},
-			"rtti" : "Instruction_Scalar",
-			"name" : "Scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 2,
-			"action" : ""
-		},
-		{
-			"id" : "1aef7d77-bd0e-4ae5-ba92-0ad7a8bc9065",
-			"value" : 1,
-			"at" : {
-				"y" : 1531,
-				"x" : -239
-			},
-			"rtti" : "Instruction_Scalar",
-			"name" : "Scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 2,
-			"action" : ""
-		},
-		{
-			"id" : "e3fea453-8b58-490a-b772-5d23a880a00d",
-			"at" : {
-				"y" : 1342,
-				"x" : 1635
-			},
-			"rtti" : "Instruction_DebugScalar",
-			"name" : "Debug scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 3,
-			"action" : ""
-		},
-		{
-			"id" : "c2959b0c-16fa-4b40-8f28-28f8da3cb950",
-			"at" : {
-				"y" : 848,
-				"x" : -352
-			},
-			"comment" : "Comment",
-			"rtti" : "Instruction_Comment",
-			"name" : "Comment",
-			"extents" : {
-				"y" : 1010,
-				"x" : 1800
-			},
-			"flags" : 6,
-			"action" : ""
-		},
-		{
-			"id" : "abc754e2-de9c-4eb8-a0e3-e43b06ec7d66",
-			"at" : {
-				"y" : 1521,
-				"x" : 907
-			},
-			"rtti" : "Instruction_AddScalar",
-			"name" : "+ scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 2,
-			"action" : "Action 07bdbe77-0b41-427d-a75f-6ca013a66c34"
-		},
-		{
-			"id" : "b5373887-7d52-42ec-89a5-d866af293658",
-			"value" : 1,
-			"at" : {
-				"y" : 1235,
-				"x" : -7
-			},
-			"rtti" : "Instruction_Scalar",
-			"name" : "Scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 2,
-			"action" : "Action 07bdbe77-0b41-427d-a75f-6ca013a66c34"
-		},
-		{
-			"id" : "b5a3d78e-c435-457a-bf63-7fa7554980e4",
-			"value" : 1,
-			"at" : {
-				"y" : 1731,
-				"x" : -39
-			},
-			"rtti" : "Instruction_Scalar",
-			"name" : "Scalar",
-			"extents" : {
-				"y" : 256,
-				"x" : 256
-			},
-			"flags" : 2,
-			"action" : "Action 07bdbe77-0b41-427d-a75f-6ca013a66c34"
 		}
 	],
 	"actions" : [
-		"Action 07bdbe77-0b41-427d-a75f-6ca013a66c34"
+		"Madd, scalar"
 	],
 	"links" : [
 		{
 			"input_name" : "In-1",
-			"input_id" : "02598e1c-0bc1-40a7-ae78-4620c6f98116",
-			"output_id" : "039759ac-88e6-41dc-a4b6-7451c82ef42c",
+			"input_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"output_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
 			"output_name" : "Out"
 		},
 		{
 			"input_name" : "In-2",
-			"input_id" : "02598e1c-0bc1-40a7-ae78-4620c6f98116",
-			"output_id" : "1aef7d77-bd0e-4ae5-ba92-0ad7a8bc9065",
-			"output_name" : "Out"
-		},
-		{
-			"input_name" : "In",
-			"input_id" : "e3fea453-8b58-490a-b772-5d23a880a00d",
-			"output_id" : "02598e1c-0bc1-40a7-ae78-4620c6f98116",
+			"input_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
+			"output_id" : "dfc2cf95-38c9-41fd-b917-2951673635f8",
 			"output_name" : "Out"
 		},
 		{
 			"input_name" : "In-1",
-			"input_id" : "abc754e2-de9c-4eb8-a0e3-e43b06ec7d66",
-			"output_id" : "b5373887-7d52-42ec-89a5-d866af293658",
+			"input_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"output_id" : "8e276475-82d8-4130-adab-06bdbf5dc30f",
 			"output_name" : "Out"
 		},
 		{
 			"input_name" : "In-2",
-			"input_id" : "abc754e2-de9c-4eb8-a0e3-e43b06ec7d66",
-			"output_id" : "b5a3d78e-c435-457a-bf63-7fa7554980e4",
+			"input_id" : "d2e7e439-f786-4419-8abb-d4f4c3453076",
+			"output_id" : "4d1c8b18-8347-49b5-95cd-cbbb52382705",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In",
+			"input_id" : "bf432ef1-bcb7-4474-9cf1-8fc086c6d829",
+			"output_id" : "1f61c98a-78ee-4b1b-85e3-5ec8a3fe95fe",
 			"output_name" : "Out"
 		}
 	]

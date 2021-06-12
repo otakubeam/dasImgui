@@ -13,52 +13,69 @@ require instructions_scalar public
 
 // actions
 
-[instruction_node(name="Instance",category="Actions")]
-class Instruction_ActionInstance : Instruction
-    def Instruction_ActionInstance
+[instruction_node(name="Call action",category="Actions")]
+class Instruction_CallAction : Instruction
+    override editing = true
+    [[serialize]] fn : string
+    def Instruction_CallAction
         pass
+    def update_action
+        pins <- collect_action_pins(g_CurrentProject, fn)
     def override edit ( mode:EditMode ) : void
-        pass
+        assert(owner!=null)
+        Text("Action: {fn}")
+        if EmbeddedListBox ( "##action_{id}{mode}_CallAction",fn,owner.actions )
+            self->update_action()
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 
+// action arguments
+
 [instruction_node(name="Argument, scalar",category="Actions")]
-class Instruction_ActionArgumentScalar : Instruction
-    override flags = InstructionFlags Input
+class Instruction_ActionArgumentScalar : Instruction_Argument
+    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Input
+    override argument_name = "Arg"
+    override argument_type = TYPE_SCALAR
     def Instruction_ActionArgumentScalar
         self->add_output("Out",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
-        pass
+        NodeArgumentName(mode,id,"Argument name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 
 [instruction_node(name="Argument, surface",category="Actions")]
-class Instruction_ActionArgumentSurface : Instruction
-    override flags = InstructionFlags Input
+class Instruction_ActionArgumentSurface : Instruction_Argument
+    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Input
+    override argument_name = "Arg"
+    override argument_type = TYPE_SURFACE
     def Instruction_ActionArgumentSurface
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        pass
+        NodeArgumentName(mode,id,"Argument name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 
 [instruction_node(name="Result, scalar",category="Actions")]
-class Instruction_ActionResultScalar : Instruction
-    override flags = InstructionFlags Output
+class Instruction_ActionResultScalar : Instruction_Argument
+    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Output
+    override argument_name = "Res"
+    override argument_type = TYPE_SCALAR
     def Instruction_ActionResultScalar
-        self->add_input("In",TYPE_SURFACE)
+        self->add_input("In",TYPE_SCALAR)
     def override edit ( mode:EditMode ) : void
-        pass
+        NodeArgumentName(mode,id,"Result name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 
 [instruction_node(name="Result, surface",category="Actions")]
-class Instruction_ActionResultSurface : Instruction
-    override flags = InstructionFlags Output
+class Instruction_ActionResultSurface : Instruction_Argument
+    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Output
+    override argument_name = "Res"
+    override argument_type = TYPE_SURFACE
     def Instruction_ActionResultSurface
         self->add_input("In",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        pass
+        NodeArgumentName(mode,id,"Result name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 

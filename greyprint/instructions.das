@@ -30,11 +30,8 @@ struct Connection
     _type   : string
 
 struct Input : Connection
-    src    : Instruction?
+    [[do_not_delete]] src : Instruction?
     output : string
-
-def finalize ( var inp: Input )
-    pass
 
 def connect ( var inp:Input; src:Instruction?; outp:string )
     inp.src = src
@@ -59,6 +56,7 @@ bitfield InstructionFlags
     HasEdit
     Comment
     Input
+    Argument
 
 struct Pins
     inputs : array<Input>
@@ -79,6 +77,7 @@ class Instruction
     editing : bool = false
     pins : Pins
     tex : void?
+    [[do_not_delete]] owner : Project?
     def abstract edit ( mode:EditMode ) : void
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
@@ -131,6 +130,13 @@ def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Outp
     unsafe
         invoke(blk,reinterpret<Output?#> null)
 
+class Instruction_Argument : Instruction
+    override flags = InstructionFlags HasEdit | InstructionFlags Argument
+    [[serialize]] argument_name : string
+    argument_type : string
+    def Instruction_Argument
+        pass
+
 // project
 
 def generate_new_id()
@@ -149,6 +155,8 @@ class Project
     def find_instruction ( id:string ) : Instruction?
         return lookup?[id] ?? null
     def add_insturction ( var i : Instruction? )
+        unsafe
+            i.owner = addr(self)
         instructions |> push(i)
         lookup[i.id] = i
     def add_new_insturction ( var i : Instruction? )
@@ -197,8 +205,7 @@ class Project
         var inst = make_instruction(ntype)
         (*inst)->from_JV(pnode)
         inst.hasPosition = true
-        instructions |> push(inst)
-        lookup[inst.id] = inst
+        self->add_insturction(inst)
         return inst
     def load_links ( var rlinks : JsonValue? ): void
         var links & = rlinks.value as _array
@@ -305,13 +312,23 @@ def rename_action ( var proj:Project?; oldName,newName:string )
             inst.action==newName
     return true
 
-def collect_action_io ( var proj:Project?; action:string )
-    let idx = proj.actions |> find_index(action)
-    if idx==-1
-        return
+def collect_action_pins ( var proj:Project?; action:string )
+    var pins : Pins
+    var input_index = 1
+    var output_index = 1
+    for inst in proj.instructions
+        if inst.action==action && inst.flags.Argument
+            unsafe
+                let arg_inst = upcast<Instruction_Argument?> inst
+                if inst.flags.Input
+                    let name = "{arg_inst.argument_name}, {input_index++}"
+                    pins.inputs |> push([[Input name=name,_type=arg_inst.argument_type]])
+                if inst.flags.Output
+                    let name = "{arg_inst.argument_name}, {output_index++}"
+                    pins.outputs |> push([[Output name=name,_type=arg_inst.argument_type]])
+    return <- pins
 
 var g_CurrentProject : Project?
-
 
 // factory
 

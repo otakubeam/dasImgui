@@ -314,6 +314,18 @@ def EmbeddedListBox ( name:string; var ent:auto(EnumT)&; max_height_in_items:int
                 return true
     return false
 
+[unused_argument(name)]
+def EmbeddedListBox ( name:string; var ent:string&; var items:array<string>; max_height_in_items:int=-1 )
+    var max_tw = 0.
+    for ef in items
+        max_tw = max(max_tw, CalcTextSize(ef).x)
+    for ef in items
+        let isSelected = ent==ef
+        if Selectable("{ent}##{name}", isSelected, ImGuiSelectableFlags None, float2(max_tw,0.))
+            ent = ef
+            return true
+    return false
+
 def HelpMarker(desc:string; qsign:bool = false)
     if qsign
         SameLine()
