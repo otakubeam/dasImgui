@@ -82,10 +82,22 @@ def imgui_app ( title:string; blk : block )
 var g_FirstFrame = true
 var g_CurrentAction = ""
 
-def save_project(fname:string)
+def update_insturction_positions
     for inst in g_CurrentProject.instructions
         inst.at = GetNodePosition(get_unique_id(inst.id))
+
+def save_project(fname:string)
+    update_insturction_positions()
     let save_text = save_current_project()
+    fopen(fname,"wb") <| $ ( json_file )
+        if json_file != null
+            fwrite(json_file, save_text)
+        else
+            get_dlg_ok_from_user("Error","Can't save {fname}")
+
+def export_action(aname,fname:string)
+    update_insturction_positions()
+    let save_text = export_action(g_CurrentProject,aname)
     fopen(fname,"wb") <| $ ( json_file )
         if json_file != null
             fwrite(json_file, save_text)
@@ -144,6 +156,30 @@ def load_project(fname:string)
             undo_load_project()
             update_preview()
             clear_undo_dirty()
+
+def import_action(fname:string)
+    var text : string
+    fopen(fname,"rb") <| $ ( json_file )
+        if json_file != null
+            fmap(json_file) <| $ ( data )
+                text := data
+        else
+            get_dlg_ok_from_user("Error","Can't load {fname}")
+    if !empty(text)
+        post_event <| @
+            next_undo_action()
+            before_project()
+            var proj = new Project()
+            var action = load_project_from_json(proj,text,true)
+            if g_CurrentProject.actions |> find_index(action) == -1
+                merge_project (g_CurrentProject, proj, float2(0.0), action )
+                g_CurrentProject.actions |> push(action)
+                unsafe
+                    delete proj
+                undo_load_project()
+                update_preview()
+            else
+                get_dlg_ok_from_user("Error","Action {action} already exists")
 
 var g_ClipboardProject : Project?
 
@@ -213,9 +249,14 @@ def main_menu()
                 // TODO: replace selection with action instance
             Separator()
             if MenuItem("Import##Action")
-                pass
+                let fname = get_dlg_open_file("","action")
+                if !empty(fname)
+                    import_action(fname)
             if MenuItem("Export##Action")
-                pass
+                if !empty(g_CurrentAction)
+                    let fname = get_dlg_save_file("new_name.action","","action")
+                    if !empty(fname)
+                        export_action(g_CurrentAction,fname)
         BeginMenu("Preview##Main menu") <|
             if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
                 update_preview()

@@ -19,13 +19,13 @@ class Instruction_CallAction : Instruction
     [[serialize]] fn : string
     def Instruction_CallAction
         pass
-    def update_action
+    def override sync : void
         pins <- collect_action_pins(g_CurrentProject, fn)
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
         Text("Action: {fn}")
         if EmbeddedListBox ( "##action_{id}{mode}_CallAction",fn,owner.actions )
-            self->update_action()
+            self->sync()
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 

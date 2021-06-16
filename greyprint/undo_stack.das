@@ -85,6 +85,7 @@ def undo
         while g_UndoStackTop>0 && g_UndoStack[g_UndoStackTop-1].action==action
             g_UndoStackTop --
             invoke ( g_UndoStack[g_UndoStackTop].undo )
+        (*g_CurrentProject)->sync()
         update_preview()
 
 def redo
@@ -96,6 +97,7 @@ def redo
         while g_UndoStackTop!=length(g_UndoStack) && g_UndoStack[g_UndoStackTop].action==action
             invoke ( g_UndoStack[g_UndoStackTop].redo )
             g_UndoStackTop ++
+        (*g_CurrentProject)->sync()
         update_preview()
 
 def redo_last
@@ -103,6 +105,7 @@ def redo_last
         debug(g_UndoStack, "undo last = ")
         debug(g_UndoStackTop, "undo sp = ")
     invoke ( g_UndoStack[g_UndoStackTop-1].redo )
+    (*g_CurrentProject)->sync()
 
 def save_to_json ( var inst:Instruction? )
     var jv = inst->JV()
@@ -254,21 +257,34 @@ def undo_create_connection(id,pin:string)
                 print("restore connection from {after}\n")
             restore_connection(after)
 
-def load_project_from_json(var proj:Project?;json:string)
+def load_project_from_json(var proj:Project?;json:string; checkAction:bool = false)
     var error : string
+    var action : string
     var jv = read_json(json,error)
     if jv!=null
         (*proj)->load(jv)
+        if checkAction
+            action = from_JV((jv.value as _object)["action"], type<string>)
     else
         print("{error}\nfailed to load project from {json}\n")  // TODO: better error reporting
     unsafe
         delete jv
+    return action
 
 def restore_current_project(json:string)
     load_project_from_json(g_CurrentProject,json)
 
 def save_project(var proj:Project?)
     var jv = (*proj)->save()
+    let before = write_json(jv)
+    unsafe
+        delete jv
+    return before
+
+def export_action(var proj:Project?;aname:string)
+    var jv = (*proj)->save_with_filter(false) <| $ ( inst : Instruction? )
+        return inst.action==aname
+    (jv.value as _object)["action"] = JV(aname)
     let before = write_json(jv)
     unsafe
         delete jv

@@ -82,6 +82,8 @@ class Instruction
     def abstract save ( var node:table<string;JsonValue?> ) : void
     def abstract load ( var node:table<string;JsonValue?> ) : void
     def abstract produce ( var src_regs : array<int> ): array<string>
+    def sync : void
+        pass
     def add_input ( iname, itype : string )
         pins.inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
@@ -183,22 +185,30 @@ class Project
             "output_name" => JV(inp.output)
         }}
         return JV(lnk)
-    def save : JsonValue?
+    def save_with_filter ( export_actions:bool; filter : block<(inst:Instruction?):bool> ) : JsonValue?
         var nodes : array<JsonValue?>
         for inst in instructions
-            nodes |> push(inst->JV())
+            if invoke(filter,inst)
+                nodes |> push(inst->JV())
         var links : array<JsonValue?>
         for inst in instructions
-            for inp in inst.pins.inputs
-                if inp.src != null
-                    links |> push(self->save_link(inst,inp))
-        var acts <- [{for action in actions; JV(action)}]
+            if invoke(filter,inst)
+                for inp in inst.pins.inputs
+                    if inp.src != null
+                        if invoke(filter,inp.src)
+                            links |> push(self->save_link(inst,inp))
         var root <- {{
             "nodes"=> JV(nodes);
-            "links" => JV(links);
-            "actions" => JV(acts)
+            "links" => JV(links)
         }}
+        var act <- export_actions ? JV([{for action in actions; JV(action)}]) : JV([[array<JsonValue?>]])
+        root["actions"] <- act
+        unsafe
+            delete act
         return JV(root)
+    def save : JsonValue?
+        return self->save_with_filter(true) <| $ ( inst : Instruction? )
+            return true
     def load_instruction ( var pnode : JsonValue? )
         var node & = pnode.value as _object
         let ntype = node["rtti"].value as _string
@@ -229,6 +239,10 @@ class Project
         self->load_links(root["links"])
         var acts & = root["actions"].value as _array
         actions <- [{for action in acts; action as _string}]
+        self->sync()
+    def sync : void
+        for inst in instructions
+            (*inst)->sync()
 
 def find_loop ( src,inst:Instruction?; var visited:table<Instruction?;bool> )
     if visited |> key_exists(inst)
