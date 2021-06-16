@@ -10,23 +10,26 @@ require produce
 require daslib/strings_boost
 require daslib/static_let
 require daslib/algorithm
+require daslib/defer
 
-def collect_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; var reval:array<Instruction?> )
+def collect_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; var reval:array<Instruction?>; action:string )
     if used |> key_exists(inst)
+        return
+    if inst.action!=action
         return
     used[inst] = true
     reval |> push(inst)
     for inp in inst.pins.inputs
         if inp.src!=null
-            collect_instruction(inp.src, used, reval)
+            collect_instruction(inp.src, used, reval, action)
 
-def collect_instructions
+def collect_instructions(action:string)
     var reval : array<Instruction?>
     var used : table<Instruction?;bool>
     for inst in g_CurrentProject.instructions
         if inst.flags.Output
             var ireval : array<Instruction?>
-            collect_instruction(inst, used, ireval)
+            collect_instruction(inst, used, ireval, action)
             var neval <- combine(ireval, reval)
             swap(reval, neval)
     return <- reval
@@ -94,28 +97,48 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
     reverse(eval)
     return <- eval
 
-def produce_eval
+def produce_eval(action:string="")
     for inst in g_CurrentProject.instructions
         for outp in inst.pins.outputs
             outp.reg = -1
-    var reval <- collect_instructions()
+    var reval <- collect_instructions(action)
     let nreg = assign_registers(reval)
     return <- produce_eval(reval, nreg)
 
 def produce_project_text
-    var evl <- produce_eval()
     let st = build_string() <| $ (var writer)
-        write(writer,"require instructions\n")
-        write(writer,"require model\n")
-        write(writer,"require math")
-        write(writer,"\n")
-        write(writer,"[export]\n")
-        write(writer,"def main\n")
+        writer |> write("require instructions\n")
+        writer |> write("require model\n")
+        writer |> write("require math\n")
+        writer |> write("\n")
+        for act in g_CurrentProject.actions
+            var pins <- collect_action_pins(g_CurrentProject,act)
+            defer_delete(pins)
+            write(writer,"def {decorate_name(act)}(")
+            var eidx = 0
+            for inp in pins.inputs
+                eidx ++
+                if eidx != 1
+                    writer |> write("; ")
+                writer |> write("{decorate_name(inp.name)}:{reg_type(inp._type)}")
+            for outp in pins.outputs
+                eidx ++
+                if eidx != 1
+                    writer |> write("; ")
+                writer |> write("var {decorate_name(outp.name)}:{reg_type(outp._type)}")
+                if outp._type==TYPE_SCALAR
+                    writer |> write("&");
+            writer |> write(")\n")
+            var aevl <- produce_eval(act)
+            defer_delete(aevl)
+            for t in aevl
+                writer |> write("{t}\n")
+            writer |> write("\n")
+        writer |> write("[export]\n")
+        writer |> write("def main\n")
+        var evl <- produce_eval()
+        defer_delete(evl)
         for t in evl
-            write(writer,"{t}\n")
-        write(writer,"\n")
-    delete evl
+            writer |> write("{t}\n")
+        writer |> write("\n")
     return st
-
-
-

@@ -11,23 +11,48 @@ require produce
 
 require instructions_scalar public
 
+require daslib/strings_boost
+
 // actions
 
 [instruction_node(name="Call action",category="Actions")]
 class Instruction_CallAction : Instruction
     override editing = true
     [[serialize]] fn : string
+    pin_fn : string
     def Instruction_CallAction
         pass
-    def override sync : void
+    def override pre_sync : void
+        unsafe
+            delete pins
         pins <- collect_action_pins(g_CurrentProject, fn)
+        pin_fn = fn
+    def override sync : void
+        if pin_fn == fn
+            var new_pins <- collect_action_pins(g_CurrentProject, fn)
+            for i,ni in pins.inputs,new_pins.inputs
+                if ni.name==i.name && ni._type==i._type
+                    ni.src = i.src
+                    ni.output = i.output
+            unsafe
+                delete pins
+            pins <- new_pins
+        else
+            self->pre_sync()
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
         Text("Action: {fn}")
         if EmbeddedListBox ( "##action_{id}{mode}_CallAction",fn,owner.actions )
             self->sync()
     def override produce ( var src_regs : array<int> ): array<string>
-        return <- [[array<string>]]
+        var args <- [{for reg,inp in src_regs,pins.inputs; to_reg_any(reg,inp._type)}]
+        for oreg in pins.outputs
+            if oreg.reg != -1
+                args |> push(to_reg(oreg.reg))  // always real register
+        var astr = join(args, ",")
+        return <- [{string
+            "{decorate_name(fn)}({astr})"
+        }]
 
 // action arguments
 
@@ -41,7 +66,9 @@ class Instruction_ActionArgumentScalar : Instruction_Argument
     def override edit ( mode:EditMode ) : void
         NodeArgumentName(mode,id,"Argument name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
-        return <- [[array<string>]]
+        return <- [{string
+            "{to_reg_scalar(pins.outputs[0].reg)} = {decorate_name(argument_name)}"
+        }]
 
 [instruction_node(name="Argument, surface",category="Actions")]
 class Instruction_ActionArgumentSurface : Instruction_Argument
@@ -65,7 +92,9 @@ class Instruction_ActionResultScalar : Instruction_Argument
     def override edit ( mode:EditMode ) : void
         NodeArgumentName(mode,id,"Result name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
-        return <- [[array<string>]]
+        return <- [{string
+            "{decorate_name(argument_name)} = {to_reg_scalar(src_regs[0])}"
+        }]
 
 [instruction_node(name="Result, surface",category="Actions")]
 class Instruction_ActionResultSurface : Instruction_Argument

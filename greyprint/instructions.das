@@ -84,6 +84,8 @@ class Instruction
     def abstract produce ( var src_regs : array<int> ): array<string>
     def sync : void
         pass
+    def pre_sync : void
+        pass
     def add_input ( iname, itype : string )
         pins.inputs |> push([[Input name=iname,_type=itype]])
     def add_output ( iname, itype : string )
@@ -138,6 +140,22 @@ class Instruction_Argument : Instruction
     argument_type : string
     def Instruction_Argument
         pass
+
+def decorate_name(an:string)
+    static_let <|
+        let repl <- {{
+            ' ' => "_";
+            ',' => "_comma_";
+            '*' => "_times_";
+            '+' => "_plus_"
+        }}
+    let st = build_string() <| $ (var writer)
+        for ch in an
+            if repl |> key_exists(ch)
+                writer |> write(repl?[ch] ?? "")
+            else
+                writer |> write_char(ch)
+    return st
 
 // project
 
@@ -226,9 +244,10 @@ class Project
             assert(inst != null)
             let input_name = link["input_name"].value as _string
             inst |> find_input(input_name) <| $ ( inp )
-                inp.output = link["output_name"].value as _string
-                let output_id = link["output_id"].value as _string
-                inp.src = self->find_instruction(output_id)
+                if inp != null
+                    inp.output = link["output_name"].value as _string
+                    let output_id = link["output_id"].value as _string
+                    inp.src = self->find_instruction(output_id)
     def load ( var proot:JsonValue? ) : void
         if proot==null
             return
@@ -236,10 +255,14 @@ class Project
         var nodes & = root["nodes"].value as _array
         for pnode in nodes
             self->load_instruction(pnode)
+        self->pre_sync()
         self->load_links(root["links"])
         var acts & = root["actions"].value as _array
         actions <- [{for action in acts; action as _string}]
         self->sync()
+    def pre_sync : void
+        for inst in instructions
+            (*inst)->pre_sync()
     def sync : void
         for inst in instructions
             (*inst)->sync()
@@ -335,10 +358,10 @@ def collect_action_pins ( var proj:Project?; action:string )
             unsafe
                 let arg_inst = upcast<Instruction_Argument?> inst
                 if inst.flags.Input
-                    let name = "{arg_inst.argument_name}, {input_index++}"
+                    let name = "{arg_inst.argument_name}"
                     pins.inputs |> push([[Input name=name,_type=arg_inst.argument_type]])
                 if inst.flags.Output
-                    let name = "{arg_inst.argument_name}, {output_index++}"
+                    let name = "{arg_inst.argument_name}"
                     pins.outputs |> push([[Output name=name,_type=arg_inst.argument_type]])
     return <- pins
 

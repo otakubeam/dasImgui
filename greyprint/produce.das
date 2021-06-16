@@ -5,6 +5,7 @@ module produce
 
 require strings
 require daslib/contracts
+require instructions
 
 // produce
 
@@ -16,6 +17,14 @@ def to_reg_scalar(v:int)
 
 def to_reg_surface(v:int)
     return to_reg(v,"empty_surface()")
+
+def to_reg_any(v:int;_type:string)
+    if _type==TYPE_SCALAR
+        return to_reg_scalar(v)
+    elif _type==TYPE_SURFACE
+        return to_reg_surface(v)
+    else
+        return to_reg(v)
 
 def to_produce(v:int)
     return string(v)

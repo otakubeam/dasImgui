@@ -82,12 +82,7 @@ def imgui_app ( title:string; blk : block )
 var g_FirstFrame = true
 var g_CurrentAction = ""
 
-def update_insturction_positions
-    for inst in g_CurrentProject.instructions
-        inst.at = GetNodePosition(get_unique_id(inst.id))
-
 def save_project(fname:string)
-    update_insturction_positions()
     let save_text = save_current_project()
     fopen(fname,"wb") <| $ ( json_file )
         if json_file != null
@@ -96,7 +91,6 @@ def save_project(fname:string)
             get_dlg_ok_from_user("Error","Can't save {fname}")
 
 def export_action(aname,fname:string)
-    update_insturction_positions()
     let save_text = export_action(g_CurrentProject,aname)
     fopen(fname,"wb") <| $ ( json_file )
         if json_file != null
