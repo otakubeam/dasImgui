@@ -9,7 +9,7 @@ require preview
 require instructions_ui
 require produce
 
-require instructions_scalar public
+require instructions_math public
 
 require daslib/strings_boost
 

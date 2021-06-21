@@ -60,3 +60,12 @@ def output ( var reg:Surface; name,id,outp:string )
 
 def output ( var reg:float; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")
+
+def output ( var reg:float2; name,id,outp:string )
+    print(" {name}:{outp} = {reg} // {id}\n")
+
+def output ( var reg:float3; name,id,outp:string )
+    print(" {name}:{outp} = {reg} // {id}\n")
+
+def output ( var reg:float4; name,id,outp:string )
+    print(" {name}:{outp} = {reg} // {id}\n")

@@ -48,6 +48,9 @@ def reg_type ( outptype:string )
     static_let <|
         let reg_type <- {{
             "scalar" => "float";
+            "vector2" => "float2";
+            "vector3" => "float3";
+            "vector4" => "float4";
             "surface" => "Surface"
         }}
     return reg_type?[outptype] ?? "unknown"
@@ -126,7 +129,7 @@ def produce_project_text
                 if eidx != 1
                     writer |> write("; ")
                 writer |> write("var {decorate_name(outp.name)}:{reg_type(outp._type)}")
-                if outp._type==TYPE_SCALAR
+                if outp._type!=TYPE_SURFACE
                     writer |> write("&");
             writer |> write(")\n")
             var aevl <- produce_eval(act)

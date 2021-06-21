@@ -44,6 +44,9 @@ struct Output : Connection
 
 let TYPE_SURFACE = "surface"
 let TYPE_SCALAR = "scalar"
+let TYPE_VECTOR2 = "vector2"
+let TYPE_VECTOR3 = "vector3"
+let TYPE_VECTOR4 = "vector4"
 
 let CATEGORY_UNCATEGORIZED = "Uncategorized"
 

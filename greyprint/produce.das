@@ -15,12 +15,27 @@ def to_reg(v:int;vdef:string="r_nop")
 def to_reg_scalar(v:int)
     return v==-1 ? "0.0f" : "r_{v}"
 
+def to_reg_vector2(v:int)
+    return v==-1 ? "float2(0.0f)" : "r_{v}"
+
+def to_reg_vector3(v:int)
+    return v==-1 ? "float3(0.0f)" : "r_{v}"
+
+def to_reg_vector4(v:int)
+    return v==-1 ? "float4(0.0f)" : "r_{v}"
+
 def to_reg_surface(v:int)
     return to_reg(v,"empty_surface()")
 
 def to_reg_any(v:int;_type:string)
     if _type==TYPE_SCALAR
         return to_reg_scalar(v)
+    elif _type==TYPE_VECTOR2
+        return to_reg_vector2(v)
+    elif _type==TYPE_VECTOR3
+        return to_reg_vector3(v)
+    elif _type==TYPE_VECTOR4
+        return to_reg_vector4(v)
     elif _type==TYPE_SURFACE
         return to_reg_surface(v)
     else
