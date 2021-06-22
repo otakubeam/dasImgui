@@ -141,8 +141,6 @@ class Instruction_Argument : Instruction
     override flags = InstructionFlags HasEdit | InstructionFlags Argument
     [[serialize]] argument_name : string
     argument_type : string
-    def Instruction_Argument
-        pass
 
 def decorate_name(an:string)
     static_let <|

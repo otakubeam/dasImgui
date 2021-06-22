@@ -56,57 +56,83 @@ class Instruction_CallAction : Instruction
 
 // action arguments
 
-[instruction_node(name="Argument, scalar",category="Actions")]
-class Instruction_ActionArgumentScalar : Instruction_Argument
+class Instruction_ActionArgumentAny : Instruction_Argument
     override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Input
     override argument_name = "Arg"
-    override argument_type = TYPE_SCALAR
-    def Instruction_ActionArgumentScalar
-        self->add_output("Out",TYPE_SCALAR)
+    def Instruction_ActionArgumentAny(argt:string)
+        argument_type = argt
+        self->add_output("Out",argument_type)
     def override edit ( mode:EditMode ) : void
         NodeArgumentName(mode,id,"Argument name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_scalar(pins.outputs[0].reg)} = {decorate_name(argument_name)}"
+            "{to_reg_any(pins.outputs[0].reg,argument_type)} = {decorate_name(argument_name)}"
         }]
+
+[instruction_node(name="Argument, scalar",category="Actions")]
+class Instruction_ActionArgumentScalar : Instruction_ActionArgumentAny
+    def Instruction_ActionArgumentScalar
+        Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_SCALAR)
+
+[instruction_node(name="Argument, vector2",category="Actions")]
+class Instruction_ActionArgumentVector2 : Instruction_ActionArgumentAny
+    def Instruction_ActionArgumentVector2
+        Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_VECTOR2)
+
+[instruction_node(name="Argument, vector3",category="Actions")]
+class Instruction_ActionArgumentVector3 : Instruction_ActionArgumentAny
+    def Instruction_ActionArgumentVector3
+        Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_VECTOR3)
+
+[instruction_node(name="Argument, vector4",category="Actions")]
+class Instruction_ActionArgumentVector4 : Instruction_ActionArgumentAny
+    def Instruction_ActionArgumentVector4
+        Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_VECTOR4)
 
 [instruction_node(name="Argument, surface",category="Actions")]
-class Instruction_ActionArgumentSurface : Instruction_Argument
-    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Input
-    override argument_name = "Arg"
-    override argument_type = TYPE_SURFACE
+class Instruction_ActionArgumentSurface : Instruction_ActionArgumentAny
     def Instruction_ActionArgumentSurface
-        self->add_output("Out",TYPE_SURFACE)
-    def override edit ( mode:EditMode ) : void
-        NodeArgumentName(mode,id,"Argument name",argument_name,owner)
-    def override produce ( var src_regs : array<int> ): array<string>
-        return <- [[array<string>]]
+        Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_SURFACE)
 
-[instruction_node(name="Result, scalar",category="Actions")]
-class Instruction_ActionResultScalar : Instruction_Argument
+// action results
+
+class Instruction_ActionResultAny : Instruction_Argument
     override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Output
     override argument_name = "Res"
-    override argument_type = TYPE_SCALAR
-    def Instruction_ActionResultScalar
-        self->add_input("In",TYPE_SCALAR)
+    def Instruction_ActionResultAny(argt:string)
+        argument_type = argt
+        self->add_input("In",argument_type)
     def override edit ( mode:EditMode ) : void
         NodeArgumentName(mode,id,"Result name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{decorate_name(argument_name)} = {to_reg_scalar(src_regs[0])}"
+            "{decorate_name(argument_name)} = {to_reg_any(src_regs[0],argument_type)}"
         }]
 
+[instruction_node(name="Result, scalar",category="Actions")]
+class Instruction_ActionResultScalar : Instruction_ActionResultAny
+    def Instruction_ActionResultScalar
+        Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_SCALAR)
+
+[instruction_node(name="Result, vector2",category="Actions")]
+class Instruction_ActionResultVector2 : Instruction_ActionResultAny
+    def Instruction_ActionResultVector2
+        Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_VECTOR2)
+
+[instruction_node(name="Result, vector3",category="Actions")]
+class Instruction_ActionResultVector3 : Instruction_ActionResultAny
+    def Instruction_ActionResultVector3
+        Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_VECTOR3)
+
+[instruction_node(name="Result, vector4",category="Actions")]
+class Instruction_ActionResultVector4 : Instruction_ActionResultAny
+    def Instruction_ActionResultVector4
+        Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_VECTOR4)
+
 [instruction_node(name="Result, surface",category="Actions")]
-class Instruction_ActionResultSurface : Instruction_Argument
-    override flags = InstructionFlags HasEdit | InstructionFlags Argument | InstructionFlags Output
-    override argument_name = "Res"
-    override argument_type = TYPE_SURFACE
+class Instruction_ActionResultSurface : Instruction_ActionResultAny
     def Instruction_ActionResultSurface
-        self->add_input("In",TYPE_SURFACE)
-    def override edit ( mode:EditMode ) : void
-        NodeArgumentName(mode,id,"Result name",argument_name,owner)
-    def override produce ( var src_regs : array<int> ): array<string>
-        return <- [[array<string>]]
+        Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_SURFACE)
 
 // comment
 
@@ -121,6 +147,8 @@ class Instruction_Comment : Instruction
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [[array<string>]]
 
+// output
+
 [instruction_node(name="Output surface",category="Surface operations")]
 class Instruction_OutputSurface : Instruction
     override flags = InstructionFlags Output
@@ -132,6 +160,8 @@ class Instruction_OutputSurface : Instruction
         return <- [{string
             "output({to_reg_surface(src_regs[0])},\"{name}\",\"{id}\",\"\")"
         }]
+
+// surface operations
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction
@@ -147,7 +177,6 @@ class Instruction_SolidColor : Instruction
             "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
             "surface_gen_solid_color({to_reg(pins.outputs[0].reg)},{to_produce(color)})"
         }]
-
 
 [instruction_node(name="Gradient",category="Surface operations")]
 class Instruction_Gradient : Instruction

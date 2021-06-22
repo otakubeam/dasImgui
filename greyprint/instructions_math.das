@@ -9,6 +9,8 @@ require preview
 require instructions_ui
 require produce
 
+// debug
+
 class Instruction_DebugCommon : Instruction
     override editing = true
     override flags = InstructionFlags Output | InstructionFlags HasEdit
@@ -43,6 +45,8 @@ class Instruction_DebugVector3 : Instruction_DebugCommon
 class Instruction_DebugVector4 : Instruction_DebugCommon
     def Instruction_DebugVector4
         Instruction_DebugCommon`Instruction_DebugCommon(self,TYPE_VECTOR4)
+
+// common
 
 class Instruction_OpCommon : Instruction
     op : string
@@ -83,6 +87,8 @@ class Instruction_Op2Common : Instruction
             "{to_reg_any(pins.outputs[0].reg,op_type)} = {to_reg_any(src_regs[0],op_type)} {op} {to_reg_any(src_regs[1],op_type)}"
         }]
 
+// scalar c-tor
+
 [instruction_node(name="Scalar constant",category="Scalar operations")]
 class Instruction_Scalar : Instruction
     override editing = true
@@ -95,6 +101,8 @@ class Instruction_Scalar : Instruction
         return <- [{string
             "{to_reg_scalar(pins.outputs[0].reg)} = {to_produce(value)}"
         }]
+
+// vector2 ctor\combine\split
 
 [instruction_node(name="Vector2 constant",category="Vector2 operations")]
 class Instruction_Vector2 : Instruction
@@ -139,6 +147,8 @@ class Instruction_Vector2Split : Instruction
         if pins.outputs[1].reg!=-1
             res |> push("{to_reg(pins.outputs[1].reg)} = {to_reg_vector2(src_regs[0])}.y")
         return <- res
+
+// vector3 ctor\combine\split
 
 [instruction_node(name="Vector3 constant",category="Vector3 operations")]
 class Instruction_Vector3 : Instruction
@@ -189,6 +199,8 @@ class Instruction_Vector3Split : Instruction
         if pins.outputs[2].reg!=-1
             res |> push("{to_reg(pins.outputs[2].reg)} = {to_reg_vector3(src_regs[0])}.z")
         return <- res
+
+// vector4 ctor\combine\split
 
 [instruction_node(name="Vector4 constant",category="Vector4 operations")]
 class Instruction_Vector4 : Instruction
@@ -246,46 +258,161 @@ class Instruction_Vector4Split : Instruction
             res |> push("{to_reg(pins.outputs[3].reg)} = {to_reg_vector4(src_regs[0])}.z")
         return <- res
 
-// fun1
+// sin
 
 [instruction_node(name="Sin scalar",category="Scalar operations")]
 class Instruction_SinScalar : Instruction_FunCommon
     def Instruction_SinScalar
         Instruction_FunCommon`Instruction_FunCommon(self,"sin",TYPE_SCALAR)
 
+[instruction_node(name="Sin vector2",category="Vector2 operations")]
+class Instruction_SinVector2 : Instruction_FunCommon
+    def Instruction_SinVector2
+        Instruction_FunCommon`Instruction_FunCommon(self,"sin",TYPE_VECTOR2)
+
+[instruction_node(name="Sin vector3",category="Vector3 operations")]
+class Instruction_SinVector3 : Instruction_FunCommon
+    def Instruction_SinVector3
+        Instruction_FunCommon`Instruction_FunCommon(self,"sin",TYPE_VECTOR3)
+
+[instruction_node(name="Sin vector4",category="Vector4 operations")]
+class Instruction_SinVector4 : Instruction_FunCommon
+    def Instruction_SinVector4
+        Instruction_FunCommon`Instruction_FunCommon(self,"sin",TYPE_VECTOR4)
+
+// cos
+
 [instruction_node(name="Cos scalar",category="Scalar operations")]
 class Instruction_CosScalar : Instruction_FunCommon
     def Instruction_CosScalar
         Instruction_FunCommon`Instruction_FunCommon(self,"cos",TYPE_SCALAR)
 
-// op1
+[instruction_node(name="Cos vector2",category="Vector2 operations")]
+class Instruction_CosVector2 : Instruction_FunCommon
+    def Instruction_CosVector2
+        Instruction_FunCommon`Instruction_FunCommon(self,"cos",TYPE_VECTOR2)
+
+[instruction_node(name="Cos vector3",category="Vector3 operations")]
+class Instruction_CosVector3 : Instruction_FunCommon
+    def Instruction_CosVector3
+        Instruction_FunCommon`Instruction_FunCommon(self,"cos",TYPE_VECTOR3)
+
+[instruction_node(name="Cos vector4",category="Vector4 operations")]
+class Instruction_CosVector4 : Instruction_FunCommon
+    def Instruction_CosVector4
+        Instruction_FunCommon`Instruction_FunCommon(self,"cos",TYPE_VECTOR4)
+
+// route
 
 [instruction_node(name="Route scalar",category="Scalar operations")]
 class Instruction_RouteScalar : Instruction_OpCommon
     def Instruction_RouteScalar
         Instruction_OpCommon`Instruction_OpCommon(self," ",TYPE_SCALAR)
 
+[instruction_node(name="Route vector2",category="Vector2 operations")]
+class Instruction_RouteVector2 : Instruction_OpCommon
+    def Instruction_RouteVector2
+        Instruction_OpCommon`Instruction_OpCommon(self," ",TYPE_VECTOR2)
+
+[instruction_node(name="Route vector3",category="Vector3 operations")]
+class Instruction_RouteVector3 : Instruction_OpCommon
+    def Instruction_RouteVector3
+        Instruction_OpCommon`Instruction_OpCommon(self," ",TYPE_VECTOR3)
+
+[instruction_node(name="Route vector4",category="Vector4 operations")]
+class Instruction_RouteVector4 : Instruction_OpCommon
+    def Instruction_RouteVector4
+        Instruction_OpCommon`Instruction_OpCommon(self," ",TYPE_VECTOR4)
+
+// negate
+
 [instruction_node(name="Negate scalar",category="Scalar operations")]
-class Instruction_Negate : Instruction_OpCommon
-    def Instruction_Negate
+class Instruction_NegateScalar : Instruction_OpCommon
+    def Instruction_NegateScalar
         Instruction_OpCommon`Instruction_OpCommon(self,"-",TYPE_SCALAR)
 
-// op2
+[instruction_node(name="Negate vector2",category="Vector2 operations")]
+class Instruction_NegateVector2 : Instruction_OpCommon
+    def Instruction_NegateVector2
+        Instruction_OpCommon`Instruction_OpCommon(self,"-",TYPE_VECTOR2)
+
+[instruction_node(name="Negate vector3",category="Vector3 operations")]
+class Instruction_NegateVector3 : Instruction_OpCommon
+    def Instruction_NegateVector3
+        Instruction_OpCommon`Instruction_OpCommon(self,"-",TYPE_VECTOR3)
+
+[instruction_node(name="Negate vector4",category="Vector4 operations")]
+class Instruction_NegateVector4 : Instruction_OpCommon
+    def Instruction_NegateVector4
+        Instruction_OpCommon`Instruction_OpCommon(self,"-",TYPE_VECTOR4)
+
+// add
 
 [instruction_node(name="Add scalar",category="Scalar operations")]
 class Instruction_AddScalar : Instruction_Op2Common
     def Instruction_AddScalar
         Instruction_Op2Common`Instruction_Op2Common(self,"+",TYPE_SCALAR)
 
+[instruction_node(name="Add vector2",category="Vector2 operations")]
+class Instruction_AddVector2 : Instruction_Op2Common
+    def Instruction_AddVector2
+        Instruction_Op2Common`Instruction_Op2Common(self,"+",TYPE_VECTOR2)
+
+[instruction_node(name="Add vector3",category="Vector3 operations")]
+class Instruction_AddVector3 : Instruction_Op2Common
+    def Instruction_AddVector3
+        Instruction_Op2Common`Instruction_Op2Common(self,"+",TYPE_VECTOR3)
+
+[instruction_node(name="Add vector4",category="Vector4 operations")]
+class Instruction_AddVector4 : Instruction_Op2Common
+    def Instruction_AddVector4
+        Instruction_Op2Common`Instruction_Op2Common(self,"+",TYPE_VECTOR4)
+
+// sub
+
 [instruction_node(name="Sub scalar",category="Scalar operations")]
 class Instruction_SubScalar : Instruction_Op2Common
     def Instruction_SubScalar
         Instruction_Op2Common`Instruction_Op2Common(self,"-",TYPE_SCALAR)
 
+[instruction_node(name="Sub vector2",category="Vector2 operations")]
+class Instruction_SubVector2 : Instruction_Op2Common
+    def Instruction_SubVector2
+        Instruction_Op2Common`Instruction_Op2Common(self,"-",TYPE_VECTOR2)
+
+[instruction_node(name="Sub vector3",category="Vector3 operations")]
+class Instruction_SubVector3 : Instruction_Op2Common
+    def Instruction_SubVector3
+        Instruction_Op2Common`Instruction_Op2Common(self,"-",TYPE_VECTOR3)
+
+[instruction_node(name="Sub vector4",category="Vector4 operations")]
+class Instruction_SubVector4 : Instruction_Op2Common
+    def Instruction_SubVector4
+        Instruction_Op2Common`Instruction_Op2Common(self,"-",TYPE_VECTOR4)
+
+// mul
+
 [instruction_node(name="Mul scalar",category="Scalar operations")]
 class Instruction_MulScalar : Instruction_Op2Common
     def Instruction_MulScalar
         Instruction_Op2Common`Instruction_Op2Common(self,"*",TYPE_SCALAR)
+
+[instruction_node(name="Mul vector2",category="Vector2 operations")]
+class Instruction_MulVector2 : Instruction_Op2Common
+    def Instruction_MulVector2
+        Instruction_Op2Common`Instruction_Op2Common(self,"*",TYPE_VECTOR2)
+
+[instruction_node(name="Mul vector3",category="Vector3 operations")]
+class Instruction_MulVector3 : Instruction_Op2Common
+    def Instruction_MulVector3
+        Instruction_Op2Common`Instruction_Op2Common(self,"*",TYPE_VECTOR3)
+
+[instruction_node(name="Mul vector4",category="Vector4 operations")]
+class Instruction_MulVector4 : Instruction_Op2Common
+    def Instruction_MulVector4
+        Instruction_Op2Common`Instruction_Op2Common(self,"*",TYPE_VECTOR4)
+
+// div
 
 [instruction_node(name="Div scalar",category="Scalar operations")]
 class Instruction_DivScalar : Instruction_Op2Common
@@ -295,3 +422,18 @@ class Instruction_DivScalar : Instruction_Op2Common
         return <- [{string
             "{to_reg_scalar(pins.outputs[0].reg)} = ({to_reg_scalar(src_regs[1])}!=0.) ? {to_reg_scalar(src_regs[0])} / {to_reg_scalar(src_regs[1])} : 0."
         }]
+
+[instruction_node(name="Div vector2",category="Vector2 operations")]
+class Instruction_DivVector2 : Instruction_Op2Common
+    def Instruction_DivVector2
+        Instruction_Op2Common`Instruction_Op2Common(self,"/",TYPE_VECTOR2)
+
+[instruction_node(name="Div vector3",category="Vector3 operations")]
+class Instruction_DivVector3 : Instruction_Op2Common
+    def Instruction_DivVector3
+        Instruction_Op2Common`Instruction_Op2Common(self,"/",TYPE_VECTOR3)
+
+[instruction_node(name="Div vector4",category="Vector4 operations")]
+class Instruction_DivVector4 : Instruction_Op2Common
+    def Instruction_DivVector4
+        Instruction_Op2Common`Instruction_Op2Common(self,"/",TYPE_VECTOR4)
