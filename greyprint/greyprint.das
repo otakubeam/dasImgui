@@ -27,7 +27,8 @@ require undo_stack
 require instructions_model
 require model_eval
 
-var SIDE_PANNEL_WIDTH = 600.
+var LEFT_SIDE_PANNEL_WIDTH = 600.
+var RIGHT_SIDE_PANNEL_WIDTH = 600.
 let CONTEXT_MENU_WIDTH = 400.
 let INSTRUCTION_PANNEL_HEIGHT = 350.
 let SELECTION_PANNEL_HEIGHT = 600.
@@ -651,7 +652,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
         Text("Create new instruction")
     static_let <|
         var filter = new ImGuiTextFilter
-    *filter |> Draw("##edit_instruction",(flags.FromContextMenu ? CONTEXT_MENU_WIDTH : SIDE_PANNEL_WIDTH)-10.)
+    *filter |> Draw("##edit_instruction",(flags.FromContextMenu ? CONTEXT_MENU_WIDTH : LEFT_SIDE_PANNEL_WIDTH)-10.)
     if flags.FromContextMenu
         if IsWindowAppearing()
             SetKeyboardFocusHere()
@@ -682,21 +683,6 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
     if flags.DisplayCategories
         if !collapsed
             TreePop()
-
-def create_instruction_side_menu()
-    create_instruction_ex(EditInstructionsFlags DisplayCategories) <| $ ( ai )
-        let type_name : string := ai.tname
-        post_event() <| @   // context free instruction which will be centered
-            next_undo_action()
-            var inst = make_instruction(type_name)
-            inst.action = g_CurrentAction
-            (*g_CurrentProject)->add_new_insturction(inst)
-            ClearSelection()
-            inst.select = true
-            undo_create_instruction(inst)
-            update_preview()
-    lpipe() <| $ ( ai )
-        return false
 
 def create_instruction_contextless(pos:float2)
     create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
@@ -835,20 +821,42 @@ def rename_action_dialog()
             CloseCurrentPopup()
         EndPopup()
 
-def side_child_window()
+def left_side_child_window()
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
-// instructions
-    BeginChild("Instructions", float2(SIDE_PANNEL_WIDTH, INSTRUCTION_PANNEL_HEIGHT), true)
-    if CollapsingHeader("New instruction",ImGuiTreeNodeFlags DefaultOpen)
-        create_instruction_side_menu()
+    BeginChild("Project", float2(LEFT_SIDE_PANNEL_WIDTH, -FLT_MIN), true)
+    if !empty(g_CurrentAction)
+        if Button("Rename##rename_action")
+            g_RenameAction = g_CurrentAction
+            OpenPopup("RENAME ACTION")
+        SameLine()
+        Text(g_CurrentAction)
+    rename_action_dialog()
+    if Button("[*]##navigate_to_content")
+        NavigateToContent(NAVIGATION_TIME)
+    HelpMarker("Navigate to content")
+    SameLine()
+    static_let <|
+        var project_filter = new ImGuiTextFilter
+    *project_filter |> Draw("",LEFT_SIDE_PANNEL_WIDTH-10.)
+    for inst in g_CurrentProject.instructions
+        if inst.action != g_CurrentAction
+            continue
+        if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
+            side_edit_instance(inst)
     EndChild()
-// selection
+    EndGroup()
+    imgui::PopStyleColor()
+
+def right_side_child_window()
+    var style & = imgui::GetStyle()
+    PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
+    BeginGroup()
     var snc = GetSelectedObjectCount()
     if snc != 0
         var sna <- GetSelectedNodes()
-        BeginChild("Selection", float2(SIDE_PANNEL_WIDTH, SELECTION_PANNEL_HEIGHT), true)
+        BeginChild("Selection", float2(RIGHT_SIDE_PANNEL_WIDTH, -FLT_MIN), true)
         if Button("[X]##delete selection")
             next_undo_action()
             for ng in sna
@@ -863,29 +871,6 @@ def side_child_window()
             var inst = (*g_CurrentProject)->find_instruction(nid)
             side_edit_instance(inst, ImGuiTreeNodeFlags DefaultOpen)
         EndChild()
-// project
-    BeginChild("Project", float2(SIDE_PANNEL_WIDTH, -FLT_MIN), true)
-    if !empty(g_CurrentAction)
-        if Button("Rename##rename_action")
-            g_RenameAction = g_CurrentAction
-            OpenPopup("RENAME ACTION")
-        SameLine()
-        Text(g_CurrentAction)
-    rename_action_dialog()
-    if Button("[*]##navigate_to_content")
-        NavigateToContent(NAVIGATION_TIME)
-    HelpMarker("Navigate to content")
-    SameLine()
-    static_let <|
-        var project_filter = new ImGuiTextFilter
-    *project_filter |> Draw("",SIDE_PANNEL_WIDTH-10.)
-    for inst in g_CurrentProject.instructions
-        if inst.action != g_CurrentAction
-            continue
-        if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
-            side_edit_instance(inst)
-    EndChild()
-// and done
     EndGroup()
     imgui::PopStyleColor()
 
@@ -916,6 +901,29 @@ def preview_errors
             EndGroup()
             EndPopup()
 
+// separator
+
+def vertical_separator(name:string; var PANNEL_WIDTH:float&; inverted:float=1.)
+    var IO & = imgui::GetIO()
+    PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
+    static_let <|
+        var resizing_vertical = false
+        var resizing_name = ""
+    let sz = GetItemRectSize()
+    InvisibleButton("##vertical_separator_{name}", float2(10.,sz.y))
+    if IsItemHovered()
+        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        if IsMouseDown(ImGuiMouseButton Left)
+            resizing_vertical = true
+            resizing_name = name
+    if resizing_vertical && resizing_name==name
+        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        if IsMouseDragging(ImGuiMouseButton Left)
+            PANNEL_WIDTH = max(PANNEL_WIDTH + IO.MouseDelta.x*inverted, 200.)
+        elif !IsMouseDown(ImGuiMouseButton Left)
+            resizing_vertical = false
+    SameLine()
+    imgui::PopStyleVar(1)
 
 // MAIN WINDOW
 
@@ -938,32 +946,16 @@ def main_editor_screen()
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         main_menu()
         preview_errors()
-        side_child_window()
+        left_side_child_window()
         PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
         SameLine()
         imgui::PopStyleVar(1)
-
-        // vertical separator
-        PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
-        static_let <|
-            var resizing_vertical = false
         let sz = GetItemRectSize()
-        InvisibleButton("##vertical_separator", float2(10.,sz.y))
-        if IsItemHovered()
-            SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
-            if IsMouseDown(ImGuiMouseButton Left)
-                resizing_vertical = true
-        if resizing_vertical
-            SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
-            if IsMouseDragging(ImGuiMouseButton Left)
-                SIDE_PANNEL_WIDTH = max(SIDE_PANNEL_WIDTH + IO.MouseDelta.x, 200.)
-            elif !IsMouseDown(ImGuiMouseButton Left)
-                resizing_vertical = false
-        SameLine()
-        imgui::PopStyleVar(1)
-
+        vertical_separator("left_side",LEFT_SIDE_PANNEL_WIDTH)
         PushStyleVar(ImGuiStyleVar ChildBorderSize, 0.)
-        BeginChild("Node editor window", float2(0., -FLT_MIN), true, ImGuiWindowFlags NoBackground)
+        let editing = GetSelectedObjectCount() != 0
+        let nedw = editing ? (IO.DisplaySize.x - RIGHT_SIDE_PANNEL_WIDTH - 10. - sz.x - 10.) : 0.
+        BeginChild("Node editor window", float2(nedw, -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         if length(g_CurrentProject.actions)>0
             if BeginTabBar("##Tabs", ImGuiTabBarFlags None)
                 if BeginTabItem("Project")
@@ -981,7 +973,12 @@ def main_editor_screen()
             editor_child_window()
         EndChild()
         imgui::PopStyleVar(1)
-
+        if editing
+            PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
+            SameLine()
+            imgui::PopStyleVar(1)
+            vertical_separator("right_side",RIGHT_SIDE_PANNEL_WIDTH,-1.)
+            right_side_child_window()
         post_invoke_que()
 
 [export]
