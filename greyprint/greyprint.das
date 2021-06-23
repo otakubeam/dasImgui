@@ -356,10 +356,6 @@ def editor_child_window()
                 BeginNode(id) <|
                     Dummy(float2(DEFAULT_NODE_WIDTH,0.))
                     ImGuiEx_BeginColumn()
-                    if inst.flags.HasEdit
-                        unsafe
-                            Checkbox("##embedded_{inst.id}",addr(inst.editing))
-                        SameLine()
                     Text(inst.name)
                     let sz = ImGuiEx_NextColumn()
                     Dummy(float2(DEFAULT_NODE_WIDTH - sz.x,0.))
@@ -370,10 +366,6 @@ def editor_child_window()
                     ImGuiEx_EndColumn()
                     if inst.tex != null
                         Image(inst.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
-                    if inst.editing
-                        if inst.flags.HasEdit
-                            before_instruction(inst)
-                            inst->edit(EditMode Embedded)
                     ImGuiEx_BeginColumn()
                     for inp in inst.pins.inputs
                         let inp_id = get_input_unique_id(inst,inp.name)

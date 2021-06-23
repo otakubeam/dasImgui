@@ -17,7 +17,6 @@ require daslib/strings_boost
 
 [instruction_node(name="Call action",category="Actions")]
 class Instruction_CallAction : Instruction
-    override editing = true
     [[serialize]] fn : string
     pin_fn : string
     def Instruction_CallAction

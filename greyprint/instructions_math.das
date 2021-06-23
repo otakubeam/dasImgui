@@ -12,7 +12,6 @@ require produce
 // debug
 
 class Instruction_DebugCommon : Instruction
-    override editing = true
     override flags = InstructionFlags Output | InstructionFlags HasEdit
     debug_type : string
     def Instruction_DebugCommon(dtype:string)
@@ -91,7 +90,6 @@ class Instruction_Op2Common : Instruction
 
 [instruction_node(name="Scalar constant",category="Scalar operations")]
 class Instruction_Scalar : Instruction
-    override editing = true
     [[serialize]] value : float = 1.
     def Instruction_Scalar
         self->add_output("Out",TYPE_SCALAR)
@@ -106,7 +104,6 @@ class Instruction_Scalar : Instruction
 
 [instruction_node(name="Vector2 constant",category="Vector2 operations")]
 class Instruction_Vector2 : Instruction
-    override editing = true
     [[serialize]] x : float = 1.
     [[serialize]] y : float = 1.
     def Instruction_Vector2
@@ -152,7 +149,6 @@ class Instruction_Vector2Split : Instruction
 
 [instruction_node(name="Vector3 constant",category="Vector3 operations")]
 class Instruction_Vector3 : Instruction
-    override editing = true
     [[serialize]] x : float = 1.
     [[serialize]] y : float = 1.
     [[serialize]] z : float = 1.
@@ -204,7 +200,6 @@ class Instruction_Vector3Split : Instruction
 
 [instruction_node(name="Vector4 constant",category="Vector4 operations")]
 class Instruction_Vector4 : Instruction
-    override editing = true
     [[serialize]] x : float = 1.
     [[serialize]] y : float = 1.
     [[serialize]] z : float = 1.

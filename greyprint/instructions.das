@@ -77,7 +77,6 @@ class Instruction
     hasPosition : bool = false
     select : bool = false
     navigate : bool = false
-    editing : bool = false
     pins : Pins
     tex : void?
     [[do_not_delete]] owner : Project?
