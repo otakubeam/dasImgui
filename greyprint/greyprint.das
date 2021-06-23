@@ -29,10 +29,7 @@ require model_eval
 
 var LEFT_SIDE_PANNEL_WIDTH = 600.
 var RIGHT_SIDE_PANNEL_WIDTH = 600.
-let CONTEXT_MENU_WIDTH = 400.
-let INSTRUCTION_PANNEL_HEIGHT = 350.
-let SELECTION_PANNEL_HEIGHT = 600.
-
+let CONTEXT_MENU_WIDTH = 600.
 let NAVIGATION_TIME = 0.5
 
 // window and app
@@ -664,14 +661,20 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
         make_first = true
     var prevCategory = ""
     var collapsed = true
+    var stx = 0.
     if length(g_CurrentProject.actions)>0
         if flags.DisplayCategories
             prevCategory = "Custom actions"
             collapsed = !TreeNodeEx(prevCategory,ImGuiTreeNodeFlags DefaultOpen)
+            stx = 0.
         if !collapsed || !flags.DisplayCategories
             for act in g_CurrentProject.actions
                 if ! ((*filter) |> PassFilter(act))
                     continue
+                if stx!=0. && stx<CONTEXT_MENU_WIDTH
+                    SameLine()
+                else
+                    stx=0.
                 if Button("{act}##action_S") || make_first
                     make_first = false
                     if flags.FromContextMenu
@@ -681,6 +684,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                     assert(idx!=-1,"Call action not found")
                     var ai & = g_instructionsByCategory[idx]
                     invoke(evt, safe_addr(ai), act)
+                stx += GetItemRectSize().x
     for ai in g_instructionsByCategory
         if prevCategory != ai.category
             prevCategory = ai.category
@@ -688,6 +692,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                 if !collapsed
                     TreePop()
                 collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
+                stx = 0.
         if !collapsed || !flags.DisplayCategories
             if ai.name=="Call action"
                 continue
@@ -695,11 +700,16 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                 continue
             if skip |> invoke(safe_addr(ai))
                 continue
+            if stx!=0. && stx<CONTEXT_MENU_WIDTH
+                SameLine()
+            else
+                stx=0.
             if Button("{ai.name}##make_S") || make_first
                 make_first = false
                 if flags.FromContextMenu
                     CloseCurrentPopup()
                 invoke(evt, safe_addr(ai), "")
+            stx += GetItemRectSize().x
     if flags.DisplayCategories
         if !collapsed
             TreePop()
