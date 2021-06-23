@@ -840,11 +840,21 @@ def left_side_child_window()
     static_let <|
         var project_filter = new ImGuiTextFilter
     *project_filter |> Draw("",LEFT_SIDE_PANNEL_WIDTH-10.)
-    for inst in g_CurrentProject.instructions
-        if inst.action != g_CurrentAction
-            continue
-        if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
-            side_edit_instance(inst)
+    let tact = length(g_CurrentProject.actions)
+    if tact > 0
+        for aidx in range(0,tact+1)
+            let cact = aidx!=0 ? g_CurrentProject.actions[aidx-1] : ""
+            if TreeNodeEx("action_or_project_{cact}",ImGuiTreeNodeFlags DefaultOpen,aidx!=0 ? cact : "Project")
+                for inst in g_CurrentProject.instructions
+                    if inst.action != cact
+                        continue
+                    if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
+                        side_edit_instance(inst)
+                TreePop()
+    else
+        for inst in g_CurrentProject.instructions
+            if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
+                side_edit_instance(inst)
     EndChild()
     EndGroup()
     imgui::PopStyleColor()
@@ -901,30 +911,6 @@ def preview_errors
             EndGroup()
             EndPopup()
 
-// separator
-
-def vertical_separator(name:string; var PANNEL_WIDTH:float&; inverted:float=1.)
-    var IO & = imgui::GetIO()
-    PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
-    static_let <|
-        var resizing_vertical = false
-        var resizing_name = ""
-    let sz = GetItemRectSize()
-    InvisibleButton("##vertical_separator_{name}", float2(10.,sz.y))
-    if IsItemHovered()
-        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
-        if IsMouseDown(ImGuiMouseButton Left)
-            resizing_vertical = true
-            resizing_name = name
-    if resizing_vertical && resizing_name==name
-        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
-        if IsMouseDragging(ImGuiMouseButton Left)
-            PANNEL_WIDTH = max(PANNEL_WIDTH + IO.MouseDelta.x*inverted, 200.)
-        elif !IsMouseDown(ImGuiMouseButton Left)
-            resizing_vertical = false
-    SameLine()
-    imgui::PopStyleVar(1)
-
 // MAIN WINDOW
 
 def main_editor_screen()
@@ -951,7 +937,7 @@ def main_editor_screen()
         SameLine()
         imgui::PopStyleVar(1)
         let sz = GetItemRectSize()
-        vertical_separator("left_side",LEFT_SIDE_PANNEL_WIDTH)
+        VerticalSeparator("left_side",LEFT_SIDE_PANNEL_WIDTH)
         PushStyleVar(ImGuiStyleVar ChildBorderSize, 0.)
         let editing = GetSelectedObjectCount() != 0
         let nedw = editing ? (IO.DisplaySize.x - RIGHT_SIDE_PANNEL_WIDTH - 10. - sz.x - 10.) : 0.
@@ -977,7 +963,7 @@ def main_editor_screen()
             PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
             SameLine()
             imgui::PopStyleVar(1)
-            vertical_separator("right_side",RIGHT_SIDE_PANNEL_WIDTH,-1.)
+            VerticalSeparator("right_side",RIGHT_SIDE_PANNEL_WIDTH,-1.)
             right_side_child_window()
         post_invoke_que()
 

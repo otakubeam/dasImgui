@@ -7,6 +7,7 @@ require imgui public
 require glfw
 require imgui_app
 require daslib/safe_addr
+require daslib/static_let
 require rtti public
 require strings
 require math
@@ -362,3 +363,25 @@ def GetBL(rect:float4)
 
 def GetBR(rect:float4)
     return rect.zw
+
+def VerticalSeparator (name:string; var PANNEL_WIDTH:float&; inverted:float=1.; min_width:float=200.; max_width:float=100500.0)
+    var IO & = imgui::GetIO()
+    PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
+    static_let <|
+        var resizing_vertical = false
+        var resizing_name = ""
+    let sz = GetItemRectSize()
+    InvisibleButton("##vertical_separator_{name}", float2(10.,sz.y))
+    if IsItemHovered()
+        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        if IsMouseDown(ImGuiMouseButton Left)
+            resizing_vertical = true
+            resizing_name = name
+    if resizing_vertical && resizing_name==name
+        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        if IsMouseDragging(ImGuiMouseButton Left)
+            PANNEL_WIDTH = clamp(PANNEL_WIDTH + IO.MouseDelta.x*inverted, min_width, max_width)
+        elif !IsMouseDown(ImGuiMouseButton Left)
+            resizing_vertical = false
+    SameLine()
+    imgui::PopStyleVar(1)
