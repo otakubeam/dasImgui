@@ -41,8 +41,6 @@ class Instruction_CallAction : Instruction
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
         Text("Action: {fn}")
-        if EmbeddedListBox ( "##action_{id}{mode}_CallAction",fn,owner.actions )
-            self->sync()
     def override produce ( var src_regs : array<int> ): array<string>
         var args <- [{for reg,inp in src_regs,pins.inputs; to_reg_any(reg,inp._type)}]
         for oreg in pins.outputs

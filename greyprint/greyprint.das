@@ -572,6 +572,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
             DeleteNode(get_unique_id(inst.id))
         HelpMarker("Delete")
         Text("id: `{inst.id}`")
+        Text("at: {inst.at}")
         before_instruction(inst)
         var buf = get_next_text_buffer(inst.name)
         if InputText("name##{inst.id}_EDIT",*buf)
@@ -647,7 +648,7 @@ bitfield EditInstructionsFlags
     FromContextMenu
     DisplayCategories
 
-def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCategory?#):void>;skip:block<(ai:InstructionCategory?#):bool>)
+def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionCategory?#;action:string):void>;skip:block<(ai:InstructionCategory?#):bool>)
     if flags.FromContextMenu
         Text("Create new instruction")
     static_let <|
@@ -663,6 +664,23 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
         make_first = true
     var prevCategory = ""
     var collapsed = true
+    if length(g_CurrentProject.actions)>0
+        if flags.DisplayCategories
+            prevCategory = "Custom actions"
+            collapsed = !TreeNodeEx(prevCategory,ImGuiTreeNodeFlags DefaultOpen)
+        if !collapsed || !flags.DisplayCategories
+            for act in g_CurrentProject.actions
+                if ! ((*filter) |> PassFilter(act))
+                    continue
+                if Button("{act}##action_S") || make_first
+                    make_first = false
+                    if flags.FromContextMenu
+                        CloseCurrentPopup()
+                    var idx = g_instructionsByCategory |> find_index_if <| $ ( val )
+                        return val.name=="Call action"
+                    assert(idx!=-1,"Call action not found")
+                    var ai & = g_instructionsByCategory[idx]
+                    invoke(evt, safe_addr(ai), act)
     for ai in g_instructionsByCategory
         if prevCategory != ai.category
             prevCategory = ai.category
@@ -671,6 +689,8 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                     TreePop()
                 collapsed = !TreeNodeEx(ai.category,ImGuiTreeNodeFlags DefaultOpen)
         if !collapsed || !flags.DisplayCategories
+            if ai.name=="Call action"
+                continue
             if ! ((*filter) |> PassFilter(ai.name))
                 continue
             if skip |> invoke(safe_addr(ai))
@@ -679,23 +699,33 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                 make_first = false
                 if flags.FromContextMenu
                     CloseCurrentPopup()
-                invoke(evt, safe_addr(ai))
+                invoke(evt, safe_addr(ai), "")
     if flags.DisplayCategories
         if !collapsed
             TreePop()
 
+def make_instruction_ex(type_name,aname:string)
+    var res = make_instruction(type_name)
+    if !empty(aname)
+        assert(type_name=="Instruction_CallAction")
+        unsafe
+            var pact = upcast<Instruction_CallAction?> res
+            pact.fn = aname
+    return res
+
 def create_instruction_contextless(pos:float2)
-    create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai )
+    create_instruction_ex(EditInstructionsFlags DisplayCategories | EditInstructionsFlags FromContextMenu) <| $ ( ai, aname )
         let type_name : string := ai.tname
         post_event() <| @   // context free instruction at mouse position
             next_undo_action()
-            var inst = make_instruction(type_name)
+            var inst = make_instruction_ex(type_name,aname)
             inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(inst)
+            (*inst)->pre_sync()
             ClearSelection()
             inst.select = true
             inst.at = pos
-            inst.hasPosition = true
+            inst.hasPosition = pos != float2(-FLT_MAX)
             undo_create_instruction(inst)
             update_preview()
     lpipe <| $ ( ai )
@@ -705,13 +735,14 @@ def edit_link_instructions(var inst:Instruction?;pin:string )
     let pid = inst->input_index(pin)
     assert(pid!=-1)
     let iotype = inst.pins.inputs[pid]._type
-    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
+    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai, aname )
         let type_name : string := ai.tname
         post_event() <| @   // link between input and output
             next_undo_action()
-            var link_inst = make_instruction(type_name)
+            var link_inst = make_instruction_ex(type_name,aname)
             link_inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(link_inst)
+            (*link_inst)->pre_sync()
             ClearSelection()
             link_inst.select = true
             let p0 = GetNodePosition(guid_2_id[inst.id])
@@ -737,13 +768,14 @@ def edit_tab_instructions(var inst:Instruction?;pin:string )
     let pid = inst->output_index(pin)
     assert(pid!=-1)
     let iotype = inst.pins.outputs[pid]._type
-    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai )
+    create_instruction_ex(EditInstructionsFlags FromContextMenu) <| $ ( ai, aname )
         let type_name : string := ai.tname
         post_event() <| @   // link to main output
             next_undo_action()
-            var out_inst = make_instruction(type_name)
+            var out_inst = make_instruction_ex(type_name,aname)
             out_inst.action = g_CurrentAction
             (*g_CurrentProject)->add_new_insturction(out_inst)
+            (*out_inst)->pre_sync()
             ClearSelection()
             out_inst.select = true
             out_inst.navigate = true
@@ -821,7 +853,7 @@ def rename_action_dialog()
             CloseCurrentPopup()
         EndPopup()
 
-def left_side_child_window()
+def project_window()
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
@@ -859,7 +891,7 @@ def left_side_child_window()
     EndGroup()
     imgui::PopStyleColor()
 
-def right_side_child_window()
+def properties_window()
     var style & = imgui::GetStyle()
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
@@ -932,7 +964,7 @@ def main_editor_screen()
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         main_menu()
         preview_errors()
-        left_side_child_window()
+        project_window()
         PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
         SameLine()
         imgui::PopStyleVar(1)
@@ -964,7 +996,7 @@ def main_editor_screen()
             SameLine()
             imgui::PopStyleVar(1)
             VerticalSeparator("right_side",RIGHT_SIDE_PANNEL_WIDTH,-1.)
-            right_side_child_window()
+            properties_window()
         post_invoke_que()
 
 [export]
