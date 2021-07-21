@@ -1,7 +1,7 @@
 #include "daScript/daScript.h"
 #include "daScript/ast/ast_typefactory_bind.h"
 
-#include "..\imgui-1.81\backends\imgui_impl_vulkan.h"
+#include "..\imgui\backends\imgui_impl_vulkan.h"
 
 using namespace das;
 
@@ -75,7 +75,7 @@ public:
         return true;
     }
     virtual ModuleAotType aotRequire ( TextWriter & tw ) const override {
-        tw << "#include "imgui_stub.h"\n";
+        tw << "#include \"imgui_stub.h\"\n";
         return ModuleAotType::cpp;
     }
 };

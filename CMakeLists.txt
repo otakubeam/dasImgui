@@ -164,7 +164,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		SETUP_CPP11(dasImguiOpenGL)
 		SETUP_LTO(dasImguiOpenGL)
 
-		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../../dasVulkan/include/dasVulkan/module.h"))
+		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../dasVulkan/include/dasVulkan/module.h"))
 			MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
 		ELSE()
 			# libDasModuleImGuiVulkan
