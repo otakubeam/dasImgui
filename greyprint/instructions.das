@@ -1,5 +1,4 @@
 options indenting = 4
-options remove_unused_symbols = false
 
 module instructions shared
 
@@ -11,6 +10,7 @@ require daslib/json_boost public
 require daslib/safe_addr
 require daslib/ast_boost
 require daslib/static_let
+require daslib/strings_boost
 
 // surface
 
@@ -465,7 +465,7 @@ def generate_node_save(var str:StructurePtr)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation
-                if "{ann.name}"=="serialize"
+                if eq(ann.name,"serialize")
                     // node["{fld.name}"] = JV(self.{fld.name})
                     var cll <- new [[ExprCall() at=str.at, name:="JV"]]
                     cll.arguments |> emplace_new() <| new [[ExprField() at=str.at,
@@ -496,7 +496,7 @@ def generate_node_load(var str:StructurePtr)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation
-                if "{ann.name}"=="serialize"
+                if eq(ann.name,"serialize")
                     // self.{fld.name} = from_JV(node["{fld.name}"],type<fld.type>)
                     var cll <- new [[ExprCall() at=str.at, name:="from_JV"]]
                     cll.arguments |> emplace_new() <| new [[ExprAt() at=str.at,

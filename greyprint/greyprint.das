@@ -135,7 +135,7 @@ def load_project(fname:string)
     var text : string
     fopen(fname,"rb") <| $ ( json_file )
         if json_file != null
-            fmap(json_file) <| $ ( data )
+            fread(json_file) <| $ ( data )
                 text := data
         else
             get_dlg_ok_from_user("Error","Can't load {fname}")
@@ -153,7 +153,7 @@ def import_action(fname:string)
     var text : string
     fopen(fname,"rb") <| $ ( json_file )
         if json_file != null
-            fmap(json_file) <| $ ( data )
+            fread(json_file) <| $ ( data )
                 text := data
         else
             get_dlg_ok_from_user("Error","Can't load {fname}")

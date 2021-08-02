@@ -1,5 +1,4 @@
 options indenting = 4
-options remove_unused_symbols = false
 
 module undo_stack
 
@@ -120,8 +119,7 @@ def before_instruction ( var inst:Instruction? )
 def before_link ( id,pin:string )
     g_UndoLastLink = describe_connection(id,pin)
 
-[private]
-def restore_instruction(id:string;json:string)
+def private restore_instruction(id:string;json:string)
     var inst = (*g_CurrentProject)->find_instruction(id)
     var error = ""
     var jv = read_json(json,error)
@@ -132,8 +130,7 @@ def restore_instruction(id:string;json:string)
     unsafe
         delete jv
 
-[private]
-def create_and_restore_instruction(json:string)
+def private create_and_restore_instruction(json:string)
     var inst : Instruction?
     var error = ""
     var jv = read_json(json,error)
@@ -204,8 +201,7 @@ def undo_create_instruction(var inst:Instruction?)
                 print("redo create instruction {id} {before}\n")
             create_and_restore_instruction(before)
 
-[private]
-def describe_connection (id,pin:string) : SavedConnection
+def private describe_connection (id,pin:string) : SavedConnection
     var inst = (*g_CurrentProject)->find_instruction(id)
     var inI = (*inst)->input_index(pin)
     var inp & =  inst.pins.inputs[inI]
@@ -214,8 +210,7 @@ def describe_connection (id,pin:string) : SavedConnection
     else
         return [[SavedConnection id=id,pin=pin]]
 
-[private]
-def restore_connection ( before:SavedConnection )
+def private restore_connection ( before:SavedConnection )
     var inst = (*g_CurrentProject)->find_instruction(before.id)
     var inI = (*inst)->input_index(before.pin)
     var inp & =  inst.pins.inputs[inI]
@@ -225,8 +220,7 @@ def restore_connection ( before:SavedConnection )
         inp.src = (*g_CurrentProject)->find_instruction(before.lid)
         inp.output = before.loutput
 
-[private]
-def destroy_connection ( before:SavedConnection )
+def private destroy_connection ( before:SavedConnection )
     var inst = (*g_CurrentProject)->find_instruction(before.id)
     var inI = (*inst)->input_index(before.pin)
     var inp & =  inst.pins.inputs[inI]
