@@ -68,7 +68,7 @@ namespace das {
         if ( !diit->callback.capture ) {
             diit->context->throw_error("ImguiTextCallback: missing capture");
         }
-        return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, diit->callback, diit, data);
+        return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, &diit->at, diit->callback, diit, data);
     }
 
     bool InputTextMultiline(vec4f vdiit, const char* label, const ImVec2& size, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
@@ -201,7 +201,7 @@ namespace das {
         if ( !temp->lambda.capture ) {
             temp->context->throw_error_at(temp->at, "expecting lambda");
         }
-        das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,temp->lambda,data);
+        das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,&temp->at,temp->lambda,data);
     }
 
     void SetNextWindowSizeConstraints(vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at ) {
@@ -232,7 +232,7 @@ namespace das {
             getter->context->throw_error_at(getter->at, "expecting lambda");
         }
         *out_text = nullptr;
-        auto res = das_invoke_lambda<bool>::invoke<int,char **>(getter->context,getter->lambda,idx,(char **)out_text);
+        auto res = das_invoke_lambda<bool>::invoke<int,char **>(getter->context,&getter->at,getter->lambda,idx,(char **)out_text);
         if ( *out_text==nullptr ) *out_text = "";
         return res;
     }
@@ -257,7 +257,7 @@ namespace das {
         if ( !getter->lambda.capture ) {
             getter->context->throw_error_at(getter->at, "expecting lambda");
         }
-        return  das_invoke_lambda<float>::invoke<int>(getter->context,getter->lambda,idx);
+        return  das_invoke_lambda<float>::invoke<int>(getter->context,&getter->at,getter->lambda,idx);
     }
 
     void PlotLines ( vec4f igpg, const char* label, int values_count, int values_offset, const char* overlay_text,
