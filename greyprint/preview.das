@@ -5,6 +5,7 @@ module preview
 require daslib/glfw_boost
 require daslib/safe_addr
 require daslib/static_let
+require daslib/opengl_boost
 
 require instructions public
 require model_eval
@@ -46,33 +47,80 @@ def update_preview
         if g_PreviewUpdater != null
             invoke(g_PreviewUpdater)
 
+
+var [[in, location=0]] v_position : float3
+var [[in, location=1]] v_texcoord : float2
+var [[uniform]] v_model : float4x4
+var [[uniform]] v_view : float4x4
+var [[uniform]] v_projection : float4x4
+var [[inout]] f_texcoord : float2
+var [[out]] f_outputColor : float4
+var [[uniform]] f_tex : sampler2D
+
+[vertex_program(name="PREVIEW_VERTEX_SRC",version=330)]
+def vs_preview_main
+    f_texcoord = v_texcoord
+    gl_Position = v_projection * v_view * v_model * float4(v_position.x, v_position.y, v_position.z, 1.0)
+
+[fragment_program(name="PREVIEW_FRAGMENT_SRC",version=330)]
+def ps_preview_main
+    f_outputColor = texture(f_tex,f_texcoord)
+
+[vertex_buffer]
+struct PreviewVertex
+    [[type=GL_FLOAT, size=3, normalized=false]] xyz : float3
+    [[type=GL_FLOAT, size=2, normalized=false]] uv  : float2
+    [[type=GL_FLOAT, size=3, normalized=true]]  normal : float3
+
+def radians(f:float)
+    return f * PI / 180.0
+
 def draw_preview ( display_w, display_h : int )
     static_let <|
         var rot_cube = 0.
         var rot_tri = 0.
-        var texture = 0u
+        var program : uint
+        var vao : uint
+        var vbo : uint
+        var ebo : uint
+    if program==0u
+        program = create_shader_program(PREVIEW_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
+    if vao==0u
+        glGenVertexArrays(1, safe_addr(vao))
+        glBindVertexArray(vao)
+        glGenBuffers(1, safe_addr(vbo))
+        glBindBuffer(GL_ARRAY_BUFFER, vbo)
+        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW)
+    if ebo==0u
+        glGenBuffers(1, safe_addr(ebo))
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
+
     if length(g_PreviewTexture)==0
         g_PreviewTexture |> push(make_checkerboard())
     static_let <|
-        let vertices = [[float[]
-            -0.5;  -0.5;  0.5;   0.5; -0.5;  0.5;   0.5;  0.5;  0.5; -0.5;  0.5;  0.5;
-            -0.5;   0.5; -0.5;   0.5;  0.5; -0.5;   0.5; -0.5; -0.5; -0.5; -0.5; -0.5;
-             0.5;  -0.5;  0.5;   0.5; -0.5; -0.5;   0.5;  0.5; -0.5;  0.5;  0.5;  0.5;
-            -0.5;  -0.5; -0.5;  -0.5; -0.5;  0.5;  -0.5;  0.5;  0.5; -0.5;  0.5; -0.5 ]]
-        let texcoords = [[float[]   0.0;0.0; 1.0;0.0; 1.0;1.0; 0.0;1.0;
-                                    0.0;0.0; 1.0;0.0; 1.0;1.0; 0.0;1.0;
-                                    0.0;0.0; 1.0;0.0; 1.0;1.0; 0.0;1.0;
-                                    0.0;0.0; 1.0;0.0; 1.0;1.0; 0.0;1.0 ]]
-        let cubeIndices = [[int[] 0;1;2;3; 4;5;6;7; 3;2;5;4; 7;6;1;0; 8;9;10;11; 12;13;14;15 ]]
-    glEnable(GL_DEPTH_TEST)
-    glDepthFunc(GL_LEQUAL)
-    glShadeModel(GL_SMOOTH)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-    let aspect = double(display_w) / double(display_h)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    gluPerspective(45.0lf, aspect, 0.1lf, 100.0lf)
-    glMatrixMode(GL_MODELVIEW)
+        let vertices = [[PreviewVertex
+            xyz=float3(-0.5,-0.5, 0.5), uv=float2(0.0, 0.0);
+            xyz=float3( 0.5,-0.5, 0.5), uv=float2(1.0, 0.0);
+            xyz=float3( 0.5, 0.5, 0.5), uv=float2(1.0, 1.0);
+            xyz=float3(-0.5, 0.5, 0.5), uv=float2(0.0, 1.0);
+
+            xyz=float3(-0.5, 0.5,-0.5), uv=float2(0.0, 0.0);
+            xyz=float3( 0.5, 0.5,-0.5), uv=float2(1.0, 0.0);
+            xyz=float3( 0.5,-0.5,-0.5), uv=float2(1.0, 1.0);
+            xyz=float3(-0.5,-0.5,-0.5), uv=float2(0.0, 1.0);
+
+            xyz=float3( 0.5,-0.5, 0.5), uv=float2(0.0, 0.0);
+            xyz=float3( 0.5,-0.5,-0.5), uv=float2(1.0, 0.0);
+            xyz=float3( 0.5, 0.5,-0.5), uv=float2(1.0, 1.0);
+            xyz=float3( 0.5, 0.5, 0.5), uv=float2(0.0, 1.0);
+
+            xyz=float3(-0.5,-0.5,-0.5), uv=float2(0.0, 0.0);
+            xyz=float3(-0.5,-0.5, 0.5), uv=float2(1.0, 0.0);
+            xyz=float3(-0.5, 0.5, 0.5), uv=float2(1.0, 1.0);
+            xyz=float3(-0.5, 0.5,-0.5), uv=float2(0.0, 1.0)
+        ]]
+        let indices = [[int[] 0;1;2;3; 4;5;6;7; 3;2;5;4; 7;6;1;0; 8;9;10;11; 12;13;14;15 ]]
     rot_cube += 1.0
     if rot_cube > 360.
         rot_cube -= 360.
@@ -89,25 +137,37 @@ def draw_preview ( display_w, display_h : int )
     let halfX = -stepX*float(max(sqX-1,0))*0.5
     let halfY = -stepY*float(max(sqY-1,0))*0.5
     var index = 0
+    identity(v_view)
+    f_tex.texture = 0
     for y in range(sqY)
         for x in range(sqX)
-            glLoadIdentity()
-            glTranslatef(float(x)*stepX+halfX, float(y)*stepY+halfY, -2. - float(sqX-1)*2. )
-            glRotatef(rot_tri * 0.25,1.0,0.0,0.0)
-            glRotatef(rot_cube,0.0,1.0,0.0)
+            let rot1 = un_quat_from_unit_vec_ang(normalize(float3(1.,0.,0.)), radians(rot_tri * 0.25))
+            let rot2 = un_quat_from_unit_vec_ang(normalize(float3(0.,1.,0.)), radians(rot_cube))
+            let rot = quat_mul(rot1, rot2)
+            v_model = compose(
+                    float4(float(x)*stepX+halfX, float(y)*stepY+halfY, -2. - float(sqX-1)*2., 0.0),
+                    rot,
+                    float4(1.0))
+            v_projection = perspective_opengl( radians(45.0f), float(display_w)/float(display_h), 0.1f, 100.0f)
+            glEnable(GL_DEPTH_TEST)
+            glDepthFunc(GL_LEQUAL)
             glEnable(GL_TEXTURE_2D)
             glBindTexture(GL_TEXTURE_2D, g_PreviewTexture[index])
             glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-            glColor3f(1.0f, 1.0f, 1.0f)
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-            glEnableClientState(GL_VERTEX_ARRAY)
-            glTexCoordPointer(2, GL_FLOAT, 0, gl_array_ptr(texcoords))
-            glVertexPointer(3, GL_FLOAT, 0, gl_array_ptr(vertices))
-            glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, gl_array_ptr(cubeIndices))
-            glDisableClientState(GL_VERTEX_ARRAY)
+            glUseProgram(program)
+            glBindBuffer(GL_ARRAY_BUFFER, vbo)
+            bind_vertex_buffer(type<PreviewVertex>)
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
+            vs_preview_main_bind_uniform(program)
+            ps_preview_main_bind_uniform(program)
+            glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, null)
+
             glDisable(GL_TEXTURE_2D)
+            glDisable(GL_DEPTH_TEST)
+            bind_ffp()
+
             index ++
             if index==total
                 break

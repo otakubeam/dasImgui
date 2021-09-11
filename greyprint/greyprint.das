@@ -15,6 +15,7 @@ require daslib/safe_addr
 require daslib/imgui_node_editor_boost
 require daslib/strings_boost
 require daslib/lpipe
+require daslib/opengl_boost
 
 require instructions
 require instructions_ui
@@ -43,6 +44,7 @@ def imgui_app ( title:string; blk : block )
     window = glfwCreateWindow(1920, 1280, title, null, null)
     if window==null
   		panic("can't create window")
+    glfwInitOpenGL(3,3)
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)
