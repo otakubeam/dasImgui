@@ -9,6 +9,7 @@ require daslib/opengl_boost
 
 require instructions public
 require model_eval
+require model
 require math
 
 var g_PreviewTexture : array<uint>
@@ -121,6 +122,7 @@ def draw_preview ( display_w, display_h : int )
             xyz=float3(-0.5, 0.5,-0.5), uv=float2(0.0, 1.0)
         ]]
         let indices = [[int[] 0;1;2;3; 4;5;6;7; 3;2;5;4; 7;6;1;0; 8;9;10;11; 12;13;14;15 ]]
+
     rot_cube += 1.0
     if rot_cube > 360.
         rot_cube -= 360.

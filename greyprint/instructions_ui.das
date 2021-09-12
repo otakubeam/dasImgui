@@ -110,13 +110,4 @@ def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     else
         return false
 
-def make_prewview_rgba_texture ( var s : Surface )
-    var rgba : array<uint>
-    rgba |> resize(s.size.x * s.size.y)
-    for col,val in s.data,rgba
-        val = pack_float_to_byte(col * float4(255.0f))  // todo: HDR conversion?
-    let preview = make_rgba_texture(s.size.x, s.size.y, gl_array_ptr(rgba))
-    delete rgba
-    return preview
-
 

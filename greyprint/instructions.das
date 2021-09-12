@@ -11,17 +11,25 @@ require daslib/safe_addr
 require daslib/ast_boost
 require daslib/static_let
 require daslib/strings_boost
+require daslib/opengl_boost
 
 // surface
 
 struct Surface
     size : int2
-    data : array<float4>
+    tex  : uint
+    fbo  : uint
 
 def Surface ( w,h:int )
-    var data : array<float4>
-    data |> resize(w*h)
-    return <- [[Surface size=int2(w,h), data<-data]]
+    return <- [[Surface size=int2(w,h)]]
+
+def finalize ( var self:Surface )
+    if self.tex != 0u
+        glDeleteTextures(1, safe_addr(self.tex))
+        self.tex = 0u
+    if self.fbo != 0u
+        glDeleteFramebuffers(1, safe_addr(self.fbo))
+        self.fbo = 0u
 
 // instructions
 

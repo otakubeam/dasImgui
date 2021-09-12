@@ -1,70 +1,235 @@
 options indenting = 4
 
-module model shared
+module model shared private
 
 require instructions public
 require math
 
-def create_surface ( var reg:Surface; sz:int2 )
-    reg <- Surface(sz.x,sz.y)
+require daslib/opengl_boost
+require daslib/safe_addr
+require daslib/static_let
 
-def empty_surface()
+var [[uniform]] f_grad_tl : float4
+var [[uniform]] f_grad_tr : float4
+var [[uniform]] f_grad_bl : float4
+var [[uniform]] f_grad_br : float4
+var [[in, location=0]] v_position : float2
+var [[in, location=1]] v_texcoord : float2
+var [[inout]] f_texcoord : float2
+var [[out]] f_outputColor : float4
+var [[uniform]] f_tex : sampler2D
+var [[uniform]] f_tex2 : sampler2D
+var [[uniform]] f_blend_factor : float
+
+[vertex_program(name="ANY_EFFECT_VERTEX_SRC",version=330)]
+def vs_any_effect
+    f_texcoord = v_texcoord
+    gl_Position = float4(v_position.x, v_position.y, 0.0, 1.0)
+
+[fragment_program(name="COPY_FRAGMENT_SRC",version=330)]
+def ps_copy_effect
+    f_outputColor = texture(f_tex,f_texcoord)
+
+[fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
+def ps_gradient_effect
+    let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
+    var r = lerp(f_grad_tr,f_grad_br,float4(f_texcoord.y))
+    f_outputColor = lerp(l, r, float4(f_texcoord.x))
+
+[fragment_program(name="BLEND_ADD_FRAGMENT_SRC",version=330)]
+def ps_blend_add_effect
+    let c1 = texture ( f_tex, f_texcoord )
+    let c2 = texture ( f_tex2, f_texcoord )
+    f_outputColor = c1 + c2
+
+[fragment_program(name="BLEND_MUL_FRAGMENT_SRC",version=330)]
+def ps_blend_mul_effect
+    let c1 = texture ( f_tex, f_texcoord )
+    let c2 = texture ( f_tex2, f_texcoord )
+    f_outputColor = c1 * c2
+
+[fragment_program(name="BLEND_CROSSFADE_FRAGMENT_SRC",version=330)]
+def ps_blend_crossfade_effect
+    let c1 = texture ( f_tex, f_texcoord )
+    let c2 = texture ( f_tex2, f_texcoord )
+    f_outputColor = lerp(c1, c2, float4(f_blend_factor))
+
+[vertex_buffer]
+struct EffectVertex
+    [[type=GL_FLOAT, size=2, normalized=false]] xy  : float2
+    [[type=GL_FLOAT, size=2, normalized=false]] uv  : float2
+
+let private effect_vertices = [[EffectVertex
+        xy=float2(-1.0, 1.0), uv=float2(0.0,0.0);
+        xy=float2( 1.0, 1.0), uv=float2(1.0,0.0);
+        xy=float2( 1.0,-1.0), uv=float2(1.0,1.0);
+        xy=float2(-1.0,-1.0), uv=float2(0.0,1.0)
+]]
+
+let private effect_indices = [[int 0; 1; 2; 2; 3; 0]]
+
+var private effect_vao = 0u
+var private effect_vbo = 0u
+var private effect_ebo = 0u
+
+def create_effect_data
+    if effect_vao==0u
+        glGenVertexArrays(1, safe_addr(effect_vao))
+        glBindVertexArray(effect_vao);
+    if effect_vbo==0u
+        glGenBuffers(1, safe_addr(effect_vbo))
+        glBindBuffer(GL_ARRAY_BUFFER, effect_vbo)
+        glBufferData(GL_ARRAY_BUFFER, effect_vertices, GL_STATIC_DRAW)
+    if effect_ebo==0u
+        glGenBuffers(1, safe_addr(effect_ebo))
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, effect_ebo)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, effect_indices, GL_STATIC_DRAW)
+
+def bind_effect ( var surf:Surface; prog:uint )
+    create_effect_data()
+    glBindFramebuffer(GL_FRAMEBUFFER, surf.fbo)
+    glViewport(0, 0, surf.size.x, surf.size.y)
+    glDisable(GL_DEPTH_TEST)
+    glUseProgram(prog)
+    glBindBuffer(GL_ARRAY_BUFFER, effect_vbo)
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, effect_ebo)
+    bind_vertex_buffer(type<EffectVertex>)
+
+def bind_texture_2d ( unit:int; tex:uint )
+    glActiveTexture(GL_TEXTURE0 + uint(unit))
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, tex)
+
+def public create_surface ( var reg:Surface; sz:int2 )
+    reg <- Surface(sz.x,sz.y)
+    glGenFramebuffers(1, safe_addr(reg.fbo))
+    glBindFramebuffer(GL_FRAMEBUFFER, reg.fbo)
+    glGenTextures(1, safe_addr(reg.tex))
+    glBindTexture(GL_TEXTURE_2D, reg.tex)
+    glTexImage2D(GL_TEXTURE_2D, 0, int(GL_RGB), reg.size.x, reg.size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, null)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, reg.tex, 0)
+    if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
+        panic("fbo failed")
+
+def public surface_gen_tex ( var surf:Surface )
+    var scopy : Surface
+    create_surface(scopy, surf.size)
+    static_let <|
+        var copy_program = 0u
+    if copy_program==0u
+        copy_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
+    bind_effect(scopy, copy_program)
+    f_tex.texture = 0
+    bind_texture_2d(0, surf.tex)
+    vs_any_effect_bind_uniform(copy_program)
+    ps_copy_effect_bind_uniform(copy_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+    var res <- scopy.tex
+    delete scopy
+    return res
+
+def public empty_surface()
     return <- [[Surface]]
 
-def delete_surface ( var reg:Surface )
+def public delete_surface ( var reg:Surface )
     delete reg
 
-def surface_gen_solid_color ( var reg:Surface; color:float4 )
-    for c in reg.data
-        c = color
+def public surface_gen_solid_color ( var reg:Surface; color:float4 )
+    bind_effect(reg, 0u)
+    glClearColor(color.x, color.y, color.z, color.w)
+    glClear(GL_COLOR_BUFFER_BIT)
+    bind_ffp()
 
-def surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_left,bottom_right:float4 )
-    var index = 0
-    let iS = float2(1) / ( float2(surf.size) - float2(1) )
-    for y in range(0,surf.size.y)
-        let ky = float(y)*iS.y
-        let left = lerp(top_left,bottom_left,float4(ky))
-        let right = lerp(top_right,bottom_right,float4(ky))
-        for x in range(0,surf.size.x)
-            let kx = float(x)*iS.x
-            surf.data[index++] = lerp(left,right,float4(kx))
+def public surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_left,bottom_right:float4 )
+    static_let <|
+        var gradient_program = 0u
+    if gradient_program==0u
+        gradient_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,GRADIENT_FRAGMENT_SRC)
+    bind_effect ( surf, gradient_program )
+    f_grad_tl = top_left
+    f_grad_tr = top_right
+    f_grad_bl = bottom_left
+    f_grad_br = bottom_right
+    vs_any_effect_bind_uniform(gradient_program)
+    ps_gradient_effect_bind_uniform(gradient_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
 
 [unused_argument(factor)]
-def surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
-    for c,sC,dC in reg.data,src.data,dst.data
-        c = sC + dC
+def public surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
+    static_let <|
+        var blend_add_program = 0u
+    if blend_add_program==0u
+        blend_add_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_ADD_FRAGMENT_SRC)
+    bind_effect ( reg, blend_add_program )
+    f_tex.texture = 0
+    f_tex2.texture = 1
+    bind_texture_2d(0, src.tex)
+    bind_texture_2d(1, dst.tex)
+    vs_any_effect_bind_uniform(blend_add_program)
+    ps_blend_add_effect_bind_uniform(blend_add_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
 
 [unused_argument(factor)]
-def surface_blend_Multiply ( var reg:Surface; src,dst:Surface; factor:float )
-    for c,sC,dC in reg.data,src.data,dst.data
-        c = sC * dC
+def public surface_blend_Multiply ( var reg:Surface; src,dst:Surface; factor:float )
+    static_let <|
+        var blend_mul_program = 0u
+    if blend_mul_program==0u
+        blend_mul_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_MUL_FRAGMENT_SRC)
+    bind_effect ( reg, blend_mul_program )
+    f_tex.texture = 0
+    f_tex2.texture = 1
+    bind_texture_2d(0, src.tex)
+    bind_texture_2d(1, dst.tex)
+    vs_any_effect_bind_uniform(blend_mul_program)
+    ps_blend_mul_effect_bind_uniform(blend_mul_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
 
-def surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var factor:float )
-    factor = clamp(factor,0.,1.)
-    let ifactor = 1. - factor
-    for c,sC,dC in reg.data,src.data,dst.data
-        c = sC*ifactor + dC*factor
+def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var factor:float )
+    static_let <|
+        var blend_crossfade_program = 0u
+    if blend_crossfade_program==0u
+        blend_crossfade_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_CROSSFADE_FRAGMENT_SRC)
+    bind_effect ( reg, blend_crossfade_program )
+    f_tex.texture = 0
+    f_tex2.texture = 1
+    f_blend_factor = clamp(factor,0.,1.)
+    bind_texture_2d(0, src.tex)
+    bind_texture_2d(1, dst.tex)
+    vs_any_effect_bind_uniform(blend_crossfade_program)
+    ps_blend_crossfade_effect_bind_uniform(blend_crossfade_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
 
 var G_OUTPUT : array<tuple<Surface;string;string;string>>
 
-def preview ( var reg:Surface; name,id,outp:string )
+def public preview ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
-        var creg := reg
+        var creg : Surface
+        create_surface(creg, reg.size)
+        creg.tex = surface_gen_tex(reg)
         G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
-def output ( var reg:Surface; name,id,outp:string )
+def public output ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
-        var creg := reg
+        var creg : Surface
+        create_surface(creg, reg.size)
+        creg.tex = surface_gen_tex(reg)
         G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
-def output ( var reg:float; name,id,outp:string )
+def public output ( var reg:float; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")
 
-def output ( var reg:float2; name,id,outp:string )
+def public output ( var reg:float2; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")
 
-def output ( var reg:float3; name,id,outp:string )
+def public output ( var reg:float3; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")
 
-def output ( var reg:float4; name,id,outp:string )
+def public output ( var reg:float4; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")

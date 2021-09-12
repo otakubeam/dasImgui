@@ -27,6 +27,7 @@ require undo_stack
 // note - can be different model for every new editor type
 require instructions_model
 require model_eval
+require model
 
 var LEFT_SIDE_PANNEL_WIDTH = 600.
 var RIGHT_SIDE_PANNEL_WIDTH = 600.
@@ -828,7 +829,9 @@ def eval_project ()
                             for outp in inst.pins.outputs
                                 outp.tex = null
                         for outprev in OUTPUT
-                            let tex = make_prewview_rgba_texture(outprev.surf)
+                            // let tex = make_prewview_rgba_texture(outprev.surf)
+                            // var tex = surface_gen_tex(outprev.surf)
+                            var tex = outprev.surf.tex
                             g_PreviewTexture |> push(tex)
                             var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
                             assert(pinst!=null)
@@ -1026,3 +1029,5 @@ def main
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
 
+options debugger
+require daslib/debug
