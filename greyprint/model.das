@@ -2,6 +2,8 @@ options indenting = 4
 
 module model shared private
 
+require model_cache
+
 require instructions public
 require math
 
@@ -32,8 +34,8 @@ def ps_copy_effect
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
-    let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
-    var r = lerp(f_grad_tr,f_grad_br,float4(f_texcoord.y))
+    let l = lerp(f_grad_bl,f_grad_tl,float4(f_texcoord.y))  // note: top is 0 in OpenGL
+    var r = lerp(f_grad_br,f_grad_tr,float4(f_texcoord.y))
     f_outputColor = lerp(l, r, float4(f_texcoord.x))
 
 [fragment_program(name="BLEND_ADD_FRAGMENT_SRC",version=330)]
@@ -116,10 +118,7 @@ def public create_surface ( var reg:Surface; sz:int2 )
 def public surface_gen_tex ( var surf:Surface )
     var scopy : Surface
     create_surface(scopy, surf.size)
-    static_let <|
-        var copy_program = 0u
-    if copy_program==0u
-        copy_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
+    let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect(scopy, copy_program)
     f_tex.texture = 0
     bind_texture_2d(0, surf.tex)
@@ -144,10 +143,7 @@ def public surface_gen_solid_color ( var reg:Surface; color:float4 )
     bind_ffp()
 
 def public surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_left,bottom_right:float4 )
-    static_let <|
-        var gradient_program = 0u
-    if gradient_program==0u
-        gradient_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,GRADIENT_FRAGMENT_SRC)
+    let gradient_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,GRADIENT_FRAGMENT_SRC)
     bind_effect ( surf, gradient_program )
     f_grad_tl = top_left
     f_grad_tr = top_right
@@ -160,10 +156,7 @@ def public surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_le
 
 [unused_argument(factor)]
 def public surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
-    static_let <|
-        var blend_add_program = 0u
-    if blend_add_program==0u
-        blend_add_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_ADD_FRAGMENT_SRC)
+    let blend_add_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_ADD_FRAGMENT_SRC)
     bind_effect ( reg, blend_add_program )
     f_tex.texture = 0
     f_tex2.texture = 1
@@ -176,10 +169,7 @@ def public surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
 
 [unused_argument(factor)]
 def public surface_blend_Multiply ( var reg:Surface; src,dst:Surface; factor:float )
-    static_let <|
-        var blend_mul_program = 0u
-    if blend_mul_program==0u
-        blend_mul_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_MUL_FRAGMENT_SRC)
+    let blend_mul_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_MUL_FRAGMENT_SRC)
     bind_effect ( reg, blend_mul_program )
     f_tex.texture = 0
     f_tex2.texture = 1
@@ -191,10 +181,7 @@ def public surface_blend_Multiply ( var reg:Surface; src,dst:Surface; factor:flo
     bind_ffp()
 
 def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var factor:float )
-    static_let <|
-        var blend_crossfade_program = 0u
-    if blend_crossfade_program==0u
-        blend_crossfade_program = create_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_CROSSFADE_FRAGMENT_SRC)
+    let blend_crossfade_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_CROSSFADE_FRAGMENT_SRC)
     bind_effect ( reg, blend_crossfade_program )
     f_tex.texture = 0
     f_tex2.texture = 1

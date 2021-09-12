@@ -109,6 +109,7 @@ def produce_eval(action:string="")
 
 def produce_project_text
     let st = build_string() <| $ (var writer)
+        writer |> write("options fusion=false\n")
         writer |> write("require instructions\n")
         writer |> write("require model\n")
         writer |> write("require math\n")

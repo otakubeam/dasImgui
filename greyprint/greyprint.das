@@ -28,6 +28,7 @@ require undo_stack
 require instructions_model
 require model_eval
 require model
+require model_cache
 
 var LEFT_SIDE_PANNEL_WIDTH = 600.
 var RIGHT_SIDE_PANNEL_WIDTH = 600.
@@ -116,6 +117,7 @@ def clear_project_data
     reset_guids()
     (*g_CurrentProject)->clear()
     clear_preview()
+    reset_model_cache()
 
 def check_save_project
     if is_undo_dirty()
@@ -815,12 +817,19 @@ def eval_project ()
     g_ProjectSource = produce_project_text()
     g_ProjectErrors = ""
     g_ProjectErrorsMessage = ""
-    compile("project",g_ProjectSource, CodeOfPolicies()) <| $ ( ok; prog; errors )
+    var t0 = ref_time_ticks()
+    compile("project",g_ProjectSource, CodeOfPolicies(), false) <| $ ( ok; prog; errors )
+        let compile_sec = double(get_time_usec(t0))/1000000.0lf
         if ok
+            var t1 = ref_time_ticks()
             simulate(prog,false) <| $ ( sok; context; serrors ) // no aot for now
+                let simulate_sec = double(get_time_usec(t1))/1000000.0lf
                 if sok
                     unsafe
+                        var t2 = ref_time_ticks()
                         invoke_in_context(context,"main")
+                        let run_sec = double(get_time_usec(t2))/1000000.0lf
+                        print("compile={compile_sec} simulate={simulate_sec}, run={run_sec}\n{errors}\n")
                         var pout = get_context_global_variable(context,"G_OUTPUT")
                         var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
                         clear_preview()
@@ -829,8 +838,6 @@ def eval_project ()
                             for outp in inst.pins.outputs
                                 outp.tex = null
                         for outprev in OUTPUT
-                            // let tex = make_prewview_rgba_texture(outprev.surf)
-                            // var tex = surface_gen_tex(outprev.surf)
                             var tex = outprev.surf.tex
                             g_PreviewTexture |> push(tex)
                             var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
@@ -1020,6 +1027,7 @@ def main
     g_PreviewUpdater = @@ <|
         eval_project()
     seal_instruction_factory()          // initialize everything greyprint related
+    init_model_cache()
     imgui_app("Testing IMGUI") <|
         NewFrame()
         main_editor_screen()
