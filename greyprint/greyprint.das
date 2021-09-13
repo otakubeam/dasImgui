@@ -1,3 +1,5 @@
+options log_total_compile_time
+
 options persistent_heap = true
 options persistent_string_heap = true
 
@@ -1037,6 +1039,3 @@ def main
     if g_Context != null
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
-
-options debugger
-require daslib/debug

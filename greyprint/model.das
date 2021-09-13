@@ -34,8 +34,8 @@ def ps_copy_effect
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
-    let l = lerp(f_grad_bl,f_grad_tl,float4(f_texcoord.y))  // note: top is 0 in OpenGL
-    var r = lerp(f_grad_br,f_grad_tr,float4(f_texcoord.y))
+    let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
+    var r = lerp(f_grad_tr,f_grad_br,float4(f_texcoord.y))
     f_outputColor = lerp(l, r, float4(f_texcoord.x))
 
 [fragment_program(name="BLEND_ADD_FRAGMENT_SRC",version=330)]
@@ -62,10 +62,10 @@ struct EffectVertex
     [[type=GL_FLOAT, size=2, normalized=false]] uv  : float2
 
 let private effect_vertices = [[EffectVertex
-        xy=float2(-1.0, 1.0), uv=float2(0.0,0.0);
-        xy=float2( 1.0, 1.0), uv=float2(1.0,0.0);
-        xy=float2( 1.0,-1.0), uv=float2(1.0,1.0);
-        xy=float2(-1.0,-1.0), uv=float2(0.0,1.0)
+        xy=float2(-1.0, 1.0), uv=float2(0.0,1.0);
+        xy=float2( 1.0, 1.0), uv=float2(1.0,1.0);
+        xy=float2( 1.0,-1.0), uv=float2(1.0,0.0);
+        xy=float2(-1.0,-1.0), uv=float2(0.0,0.0)
 ]]
 
 let private effect_indices = [[int 0; 1; 2; 2; 3; 0]]
