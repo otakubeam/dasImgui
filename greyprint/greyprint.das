@@ -829,25 +829,26 @@ def eval_project ()
                         var t2 = ref_time_ticks()
                         invoke_in_context(context,"main")
                         let run_sec = double(get_time_usec(t2))/1000000.0lf
-                        print("compile={compile_sec} simulate={simulate_sec}, run={run_sec}\n{errors}\n")
+                        // print("compile={compile_sec} simulate={simulate_sec}, run={run_sec}\n{errors}\n")
                         var pout = get_context_global_variable(context,"G_OUTPUT")
-                        var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
-                        clear_preview()
-                        for inst in g_CurrentProject.instructions
-                            inst.tex = null
-                            for outp in inst.pins.outputs
-                                outp.tex = null
-                        for outprev in OUTPUT
-                            var tex = outprev.surf.tex
-                            g_PreviewTexture |> push(tex)
-                            var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
-                            assert(pinst!=null)
-                            if !empty(outprev.outp)
-                                pinst |> find_output(outprev.outp) <| $ ( outp )
-                                    if outp != null
-                                        outp.tex = reinterpret<void?> tex
-                            else
-                                pinst.tex = reinterpret<void?> tex
+                        if pout!=null
+                            var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
+                            clear_preview()
+                            for inst in g_CurrentProject.instructions
+                                inst.tex = null
+                                for outp in inst.pins.outputs
+                                    outp.tex = null
+                            for outprev in OUTPUT
+                                var tex = outprev.surf.tex
+                                g_PreviewTexture |> push(tex)
+                                var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
+                                assert(pinst!=null)
+                                if !empty(outprev.outp)
+                                    pinst |> find_output(outprev.outp) <| $ ( outp )
+                                        if outp != null
+                                            outp.tex = reinterpret<void?> tex
+                                else
+                                    pinst.tex = reinterpret<void?> tex
                 else
                     g_ProjectErrorsMessage = "generated code failed to simulate"
                     g_ProjectErrors = "{serrors}"

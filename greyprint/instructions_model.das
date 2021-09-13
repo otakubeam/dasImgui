@@ -174,6 +174,20 @@ class Instruction_SolidColor : Instruction
             "surface_gen_solid_color({to_reg(pins.outputs[0].reg)},{to_produce(color)})"
         }]
 
+[instruction_node(name="Image file",category="Surface operations")]
+class Instruction_ImageFile : Instruction
+    [[serialize]] size : int2 = int2(256,256)
+    [[serialize]] fileName : string = ""
+    def Instruction_ImageFile
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ): void
+        NodeFileName(mode,id,"file",fileName)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_image({to_reg(pins.outputs[0].reg)},\"{escape(fileName)}\")"
+        }]
+
 [instruction_node(name="Gradient",category="Surface operations")]
 class Instruction_Gradient : Instruction
     [[serialize]] size : int2 = int2(256,256)

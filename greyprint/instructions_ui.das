@@ -11,6 +11,8 @@ require daslib/imgui_boost public
 require daslib/glfw_boost
 require daslib/safe_addr
 require math
+require stddlg
+require strings
 
 let DEFAULT_NODE_WIDTH  = 500.
 let DEFAULT_ELEMENT_WIDTH = DEFAULT_NODE_WIDTH - 20.
@@ -109,5 +111,17 @@ def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
         return true
     else
         return false
+
+def NodeFileName(mode:EditMode; id,name:string; var text:string&)
+    var buf = get_next_text_buffer(text,256)
+    if Button("...##{name}{id}{mode}_Button")
+        let fname = get_dlg_open_file(text,"*.*")   // todo: filter supported only
+        if !empty(fname)
+            text = fname
+            undo_edit_instruction(id,name)
+            update_preview()
+    SameLine()
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - GetCursorPosX() - 8.)
+    Text(text)
 
 

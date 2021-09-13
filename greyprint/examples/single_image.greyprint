@@ -1,0 +1,46 @@
+{
+	"nodes" : [
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "bea4ea17-4b4b-4f69-9c10-6d7fb4d31347",
+			"at" : {
+				"y" : 502.00000000000000000,
+				"x" : 153.00000000000000000
+			},
+			"rtti" : "Instruction_ImageFile",
+			"name" : "Image file",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"fileName" : "C:\\Users\\Boris\\Work\\yzg\\modules\\dasImgui\\greyprint\\examples\\image.png",
+			"action" : ""
+		},
+		{
+			"id" : "6d43a33c-e708-49be-bb7b-75cfeadbef0c",
+			"at" : {
+				"y" : 502.00000000000000000,
+				"x" : 853.00000000000000000
+			},
+			"rtti" : "Instruction_OutputSurface",
+			"name" : "Output surface",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		}
+	],
+	"actions" : [],
+	"links" : [
+		{
+			"input_name" : "In",
+			"input_id" : "6d43a33c-e708-49be-bb7b-75cfeadbef0c",
+			"output_id" : "bea4ea17-4b4b-4f69-9c10-6d7fb4d31347",
+			"output_name" : "Out"
+		}
+	]
+}

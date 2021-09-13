@@ -136,6 +136,17 @@ def public empty_surface()
 def public delete_surface ( var reg:Surface )
     delete reg
 
+def public surface_gen_image ( var reg:Surface; fileName:string )
+    var imgtex = cache_image(fileName)
+    let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
+    bind_effect(reg, copy_program)
+    f_tex.texture = 0
+    bind_texture_2d(0, imgtex)
+    vs_any_effect_bind_uniform(copy_program)
+    ps_copy_effect_bind_uniform(copy_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
 def public surface_gen_solid_color ( var reg:Surface; color:float4 )
     bind_effect(reg, 0u)
     glClearColor(color.x, color.y, color.z, color.w)
