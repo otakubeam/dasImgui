@@ -1,0 +1,70 @@
+{
+	"nodes" : [
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"at" : {
+				"y" : 491.00000000000000000,
+				"x" : 287.00000000000000000
+			},
+			"rtti" : "Instruction_ImageFile",
+			"name" : "Image file",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"fileName" : "C:\\Users\\Boris\\Work\\yzg\\modules\\dasImgui\\greyprint\\examples\\OIP.jpg",
+			"action" : ""
+		},
+		{
+			"id" : "7922cbd3-77d1-4b19-bd61-41638d95e29f",
+			"at" : {
+				"y" : 370.00000000000000000,
+				"x" : 1235.00000000000000000
+			},
+			"rtti" : "Instruction_OutputSurface",
+			"name" : "Output surface",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		},
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "aefbeb12-1bfe-46c1-b0f5-c1133dec586f",
+			"at" : {
+				"y" : 750.00000000000000000,
+				"x" : 975.00000000000000000
+			},
+			"rtti" : "Instruction_Blur",
+			"name" : "Blur",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		}
+	],
+	"actions" : [],
+	"links" : [
+		{
+			"input_name" : "In",
+			"input_id" : "7922cbd3-77d1-4b19-bd61-41638d95e29f",
+			"output_id" : "aefbeb12-1bfe-46c1-b0f5-c1133dec586f",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Inp",
+			"input_id" : "aefbeb12-1bfe-46c1-b0f5-c1133dec586f",
+			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"output_name" : "Out"
+		}
+	]
+}

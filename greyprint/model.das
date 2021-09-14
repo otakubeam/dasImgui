@@ -56,8 +56,16 @@ def ps_sobel_effect
 	let sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6])
   	let sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8])
 	let sobel = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
-	f_outputColor.xyz = sobel.xyz // float3(1.0) - sobel.xyz
-    f_outputColor.w = 1.
+	f_outputColor = sobel
+
+[fragment_program(name="BLUR_FRAGMENT_SRC",version=330)]
+def ps_blur_effect
+    var n : float4[9]
+    make_kernel(n, f_tex, f_texcoord)
+    var c : float4
+    for i in range(9)
+        c += n[i]
+	f_outputColor = c * float4(1./9.)
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
@@ -187,6 +195,16 @@ def public surface_gen_greyscale ( var surf:Surface; src:Surface )
     bind_texture_2d(0, src.tex)
     vs_any_effect_bind_uniform(greyscale_program)
     ps_greyscale_effect_bind_uniform(greyscale_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
+def public surface_gen_blur ( var surf:Surface; src:Surface )
+    let blur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLUR_FRAGMENT_SRC)
+    bind_effect ( surf, blur_program )
+    f_tex.texture = 0
+    bind_texture_2d(0, src.tex)
+    vs_any_effect_bind_uniform(blur_program)
+    ps_blur_effect_bind_uniform(blur_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
