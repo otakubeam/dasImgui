@@ -51,6 +51,7 @@ def imgui_app ( title:string; blk : block )
     glfwInitOpenGL(3,3)
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
+    // glSetBreakOnOpenGLError(true)    // enable for opengl debugging
     CreateContext(null)
     dlg_init()
     var io & = GetIO()
@@ -351,6 +352,9 @@ def editor_child_window()
     style.NodePadding = float4(4)
     style.Colors[int(StyleColor StyleColor_Bg)].w = 0.
     style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
+    static_let <|
+        var largePreviewTex = null
+    var openPreview = false
     Begin("My Editor", float2(0.0, 0.0f)) <|
         for inst in g_CurrentProject.instructions
             if inst.action != g_CurrentAction
@@ -399,6 +403,9 @@ def editor_child_window()
                                     update_preview()
                             if outp.tex != null
                                 Image(outp.tex,float2(128,128),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
+                                if IsItemClicked()
+                                    largePreviewTex = outp.tex
+                                    openPreview = true
                     ImGuiEx_EndColumn()
             else
                 var comment : string
@@ -541,6 +548,17 @@ def editor_child_window()
 
         instruction_context_menu()
 
+    if openPreview
+        openPreview = false
+        OpenPopup("LARGE PREVIEW")
+    if IsPopupOpen("LARGE PREVIEW")
+        var tsize : int2
+        unsafe
+            tsize = getTexture2DSize(reinterpret<uint> largePreviewTex)
+        SetNextWindowSize(float2(tsize.x + 40,tsize.y + 40))
+        if BeginPopup("LARGE PREVIEW")
+            Image(largePreviewTex,float2(tsize.x,tsize.y),float2(0.,0.),float2(1.,1.),float4(1),float4(1))
+            EndPopup()
     if g_FirstFrame
         NavigateToContent(NAVIGATION_TIME)
     g_FirstFrame = false

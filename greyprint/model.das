@@ -32,6 +32,12 @@ def vs_any_effect
 def ps_copy_effect
     f_outputColor = texture(f_tex,f_texcoord)
 
+[fragment_program(name="GREYSCALE_FRAGMENT_SRC",version=330)]
+def ps_greyscale_effect
+    let color = texture(f_tex,f_texcoord)
+    let b = color.x * 0.299 + color.y * 0.587 + color.z * 0.114
+    f_outputColor = float4(b, b, b, 1.0)
+
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
     let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
@@ -151,6 +157,16 @@ def public surface_gen_solid_color ( var reg:Surface; color:float4 )
     bind_effect(reg, 0u)
     glClearColor(color.x, color.y, color.z, color.w)
     glClear(GL_COLOR_BUFFER_BIT)
+    bind_ffp()
+
+def public surface_gen_greyscale ( var surf:Surface; src:Surface )
+    let greyscale_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,GREYSCALE_FRAGMENT_SRC)
+    bind_effect ( surf, greyscale_program )
+    f_tex.texture = 0
+    bind_texture_2d(0, src.tex)
+    vs_any_effect_bind_uniform(greyscale_program)
+    ps_greyscale_effect_bind_uniform(greyscale_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
 def public surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_left,bottom_right:float4 )
