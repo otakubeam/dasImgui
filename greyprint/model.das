@@ -38,6 +38,27 @@ def ps_greyscale_effect
     let b = color.x * 0.299 + color.y * 0.587 + color.z * 0.114
     f_outputColor = float4(b, b, b, 1.0)
 
+def make_kernel ( var n : float4[9]; tex:sampler2D; coord:float2 )
+	n[0] = textureOffset(tex, coord, int2(-1,-1))
+	n[1] = textureOffset(tex, coord, int2( 0,-1))
+	n[2] = textureOffset(tex, coord, int2( 1,-1))
+	n[3] = textureOffset(tex, coord, int2(-1, 0))
+	n[4] = textureOffset(tex, coord, int2( 0, 0))
+	n[5] = textureOffset(tex, coord, int2( 1, 0))
+	n[6] = textureOffset(tex, coord, int2(-1, 1))
+	n[7] = textureOffset(tex, coord, int2( 0, 1))
+	n[8] = textureOffset(tex, coord, int2( 1, 1))
+
+[fragment_program(name="SOBEL_FRAGMENT_SRC",version=330)]
+def ps_sobel_effect
+    var n : float4[9]
+    make_kernel(n, f_tex, f_texcoord)
+	let sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6])
+  	let sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8])
+	let sobel = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
+	f_outputColor.xyz = sobel.xyz // float3(1.0) - sobel.xyz
+    f_outputColor.w = 1.
+
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
     let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
@@ -166,6 +187,16 @@ def public surface_gen_greyscale ( var surf:Surface; src:Surface )
     bind_texture_2d(0, src.tex)
     vs_any_effect_bind_uniform(greyscale_program)
     ps_greyscale_effect_bind_uniform(greyscale_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
+def public surface_gen_sobel ( var surf:Surface; src:Surface )
+    let sobel_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,SOBEL_FRAGMENT_SRC)
+    bind_effect ( surf, sobel_program )
+    f_tex.texture = 0
+    bind_texture_2d(0, src.tex)
+    vs_any_effect_bind_uniform(sobel_program)
+    ps_sobel_effect_bind_uniform(sobel_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 

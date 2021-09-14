@@ -188,8 +188,22 @@ class Instruction_ImageFile : Instruction
             "surface_gen_image({to_reg(pins.outputs[0].reg)},\"{escape(fileName)}\")"
         }]
 
+[instruction_node(name="Sobel",category="Surface operations")]
+class Instruction_Sobel : Instruction
+    [[serialize]] size : int2 = int2(256,256)
+    def Instruction_Sobel
+        self->add_input("Inp",TYPE_SURFACE)
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        NodeInputInt2(mode,id,"size",size)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_sobel({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
+        }]
+
 [instruction_node(name="Greyscale",category="Surface operations")]
-class Instruction_Greyscale: Instruction
+class Instruction_Greyscale : Instruction
     [[serialize]] size : int2 = int2(256,256)
     def Instruction_Greyscale
         self->add_input("Inp",TYPE_SURFACE)
