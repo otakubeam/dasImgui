@@ -11,27 +11,46 @@ require daslib/static_let
 require daslib/algorithm
 require daslib/defer
 
-def collect_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; var reval:array<Instruction?>; action:string )
+def mark_instruction ( inst:Instruction?; var used:table<Instruction?;bool>; action:string )
     if used |> key_exists(inst)
         return
     if inst.action!=action
         return
     used[inst] = true
-    reval |> push(inst)
     for inp in inst.pins.inputs
         if inp.src!=null
-            collect_instruction(inp.src, used, reval, action)
+            mark_instruction(inp.src, used, action)
 
 def collect_instructions(action:string)
-    var reval : array<Instruction?>
     var used : table<Instruction?;bool>
     for inst in g_CurrentProject.instructions
         if inst.flags.Output
             var ireval : array<Instruction?>
-            collect_instruction(inst, used, ireval, action)
-            var neval <- combine(ireval, reval)
-            swap(reval, neval)
+            mark_instruction(inst, used, action)
+    var reval : array<Instruction?>
+    var any_added = true
+    var placed : table<Instruction?;bool>
+    while any_added
+        any_added = false
+        for inst in g_CurrentProject.instructions
+            if placed |> key_exists(inst)
+                continue
+            if used |> key_exists(inst)
+                var allPins = true
+                for inp in inst.pins.inputs
+                    if inp.src!=null
+                        if !placed |> key_exists(inp.src)
+                            allPins = false
+                            break
+                if allPins
+                    placed[inst] = true
+                    reval |> push(inst)
+                    any_added = true
+    delete used
+    delete placed
+    reverse(reval)
     return <- reval
+
 
 def assign_registers ( var reval:array<Instruction?> ) : int
     var reg_total = 0

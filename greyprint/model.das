@@ -23,6 +23,7 @@ var [[inout]] f_texcoord : float2
 var [[out]] f_outputColor : float4
 var [[uniform]] f_tex : sampler2D
 var [[uniform]] f_tex2 : sampler2D
+var [[uniform]] f_tex3 : sampler2D
 var [[uniform]] f_blend_factor : float
 
 [vertex_program(name="ANY_EFFECT_VERTEX_SRC",version=330)]
@@ -125,6 +126,13 @@ def ps_blend_crossfade_effect
     let c1 = texture ( f_tex, f_texcoord )
     let c2 = texture ( f_tex2, f_texcoord )
     f_outputColor = lerp(c1, c2, float4(f_blend_factor))
+
+[fragment_program(name="BLEND_TX_CROSSFADE_FRAGMENT_SRC",version=330)]
+def ps_tx_blend_crossfade_effect
+    let c1 = texture ( f_tex, f_texcoord )
+    let c2 = texture ( f_tex2, f_texcoord )
+    let cfactor = texture ( f_tex3, f_texcoord)
+    f_outputColor = lerp(c1, c2, cfactor)
 
 [vertex_buffer]
 struct EffectVertex
@@ -327,6 +335,21 @@ def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var fact
     ps_blend_crossfade_effect_bind_uniform(blend_crossfade_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
+
+def public surface_blend_tex_Crossfade  ( var reg:Surface; src,dst,factor:Surface )
+    let tx_blend_crossfade_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_TX_CROSSFADE_FRAGMENT_SRC)
+    bind_effect ( reg, tx_blend_crossfade_program )
+    f_tex.texture = 0
+    f_tex2.texture = 1
+    f_tex3.texture = 2
+    bind_texture_2d(0, src.tex)
+    bind_texture_2d(1, dst.tex)
+    bind_texture_2d(2, factor.tex)
+    vs_any_effect_bind_uniform(tx_blend_crossfade_program)
+    ps_tx_blend_crossfade_effect_bind_uniform(tx_blend_crossfade_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
 
 var G_OUTPUT : array<tuple<Surface;string;string;string>>
 

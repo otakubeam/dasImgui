@@ -1,0 +1,155 @@
+{
+	"nodes" : [
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"at" : {
+				"y" : 489.00000000000000000,
+				"x" : 129.00000000000000000
+			},
+			"rtti" : "Instruction_ImageFile",
+			"name" : "Image file",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"fileName" : "C:\\Users\\Boris\\Work\\yzg\\modules\\dasImgui\\greyprint\\examples\\OIP.jpg",
+			"action" : ""
+		},
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "e6adfc01-a8d1-4455-a7c5-19e146956def",
+			"at" : {
+				"y" : 793.00000000000000000,
+				"x" : 369.00000000000000000
+			},
+			"rtti" : "Instruction_Sobel",
+			"name" : "Sobel",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		},
+		{
+			"sigma" : 4.92000007629394531,
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "fa97fb86-cf78-4fc3-9f3e-aad500e47972",
+			"at" : {
+				"y" : 12.00000000000000000,
+				"x" : 849.00000000000000000
+			},
+			"rtti" : "Instruction_Blur",
+			"name" : "Blur",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		},
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "13d865b5-a55a-4228-be5b-185e33dea2a8",
+			"at" : {
+				"y" : 441.00000000000000000,
+				"x" : 1391.00000000000000000
+			},
+			"rtti" : "Instruction_TextureCrossfade",
+			"name" : "Texture Crossfade",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		},
+		{
+			"id" : "5ea95f64-296d-46a1-b85a-def0fcee4615",
+			"at" : {
+				"y" : 866.00000000000000000,
+				"x" : 2051.00000000000000000
+			},
+			"rtti" : "Instruction_OutputSurface",
+			"name" : "Output surface",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		},
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "e563c7c5-c5ab-4fd0-93eb-dbd33a6d0585",
+			"at" : {
+				"y" : 1001.00000000000000000,
+				"x" : 929.00000000000000000
+			},
+			"rtti" : "Instruction_Greyscale",
+			"name" : "Greyscale",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : ""
+		}
+	],
+	"actions" : [],
+	"links" : [
+		{
+			"input_name" : "Inp",
+			"input_id" : "e6adfc01-a8d1-4455-a7c5-19e146956def",
+			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Inp",
+			"input_id" : "fa97fb86-cf78-4fc3-9f3e-aad500e47972",
+			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Src",
+			"input_id" : "13d865b5-a55a-4228-be5b-185e33dea2a8",
+			"output_id" : "fa97fb86-cf78-4fc3-9f3e-aad500e47972",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Dst",
+			"input_id" : "13d865b5-a55a-4228-be5b-185e33dea2a8",
+			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Factor",
+			"input_id" : "13d865b5-a55a-4228-be5b-185e33dea2a8",
+			"output_id" : "e563c7c5-c5ab-4fd0-93eb-dbd33a6d0585",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "In",
+			"input_id" : "5ea95f64-296d-46a1-b85a-def0fcee4615",
+			"output_id" : "13d865b5-a55a-4228-be5b-185e33dea2a8",
+			"output_name" : "Out"
+		},
+		{
+			"input_name" : "Inp",
+			"input_id" : "e563c7c5-c5ab-4fd0-93eb-dbd33a6d0585",
+			"output_id" : "e6adfc01-a8d1-4455-a7c5-19e146956def",
+			"output_name" : "Out"
+		}
+	]
+}

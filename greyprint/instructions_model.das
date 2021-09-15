@@ -276,3 +276,19 @@ class Instruction_Blend : Instruction
             "surface_blend_{op}({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg(src_regs[2],"0.5f")})"
         }]
 
+[instruction_node(name="Texture Crossfade",category="Surface operations")]
+class Instruction_TextureCrossfade : Instruction
+    [[serialize]] size : int2 = int2(256,256)
+    def Instruction_TextureCrossfade
+        self->add_input("Src",TYPE_SURFACE)
+        self->add_input("Dst",TYPE_SURFACE)
+        self->add_input("Factor",TYPE_SURFACE)
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        NodeInputInt2(mode,id,"size",size)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_blend_tex_Crossfade({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg_surface(src_regs[2])})"
+        }]
+
