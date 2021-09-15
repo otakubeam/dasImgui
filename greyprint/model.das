@@ -57,18 +57,24 @@ def ps_sobel_effect
   	let sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8])
 	f_outputColor = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
 
+def dist(x,y:float)
+    return 1. / ( 1. + x*x + y*y )
+
 [fragment_program(name="BLUR_FRAGMENT_SRC",version=330)]
 def ps_blur_effect
     var n : float4[9]
     make_kernel(n, f_tex, f_texcoord)
+    var w = [[float
+        dist(-1.,-1.); dist(0.,-1.); dist(1.,-1.);
+        dist(-1., 0.); dist(0.,-1.); dist(1.,-0.);
+        dist(-1., 1.); dist(0., 1.); dist(1., 1.)
+    ]]
     var c : float4
-    // for i in range(length(n))
-    //     c += n[i]
-    for a in n
-        c += a
-    // for a,i in n,range(100500)
-    //     c += a * float4(i+1)
-    f_outputColor = c * float4(1./9.)
+    var cW = 0.
+    for a,W in n,w
+        c += a * float4(W)
+        cW += W
+    f_outputColor = c * float4(1./cW)
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
