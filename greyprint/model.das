@@ -62,9 +62,13 @@ def ps_blur_effect
     var n : float4[9]
     make_kernel(n, f_tex, f_texcoord)
     var c : float4
-    for i in n
-        c += i
-	f_outputColor = c * float4(1./9.)
+    // for i in range(length(n))
+    //     c += n[i]
+    for a in n
+        c += a
+    // for a,i in n,range(100500)
+    //     c += a * float4(i+1)
+    f_outputColor = c * float4(1./9.)
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
