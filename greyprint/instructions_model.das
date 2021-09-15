@@ -191,15 +191,17 @@ class Instruction_ImageFile : Instruction
 [instruction_node(name="Blur",category="Surface operations")]
 class Instruction_Blur : Instruction
     [[serialize]] size : int2 = int2(256,256)
+    [[serialize]] sigma : float = 2.0
     def Instruction_Blur
         self->add_input("Inp",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
         NodeInputInt2(mode,id,"size",size)
+        NodeDragFloat(mode,id,"sigma",sigma)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
             "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
-            "surface_gen_blur({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
+            "surface_gen_blur({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{sigma})"
         }]
 
 [instruction_node(name="Sobel",category="Surface operations")]

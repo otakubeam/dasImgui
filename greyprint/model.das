@@ -15,6 +15,8 @@ var [[uniform]] f_grad_tl : float4
 var [[uniform]] f_grad_tr : float4
 var [[uniform]] f_grad_bl : float4
 var [[uniform]] f_grad_br : float4
+var [[uniform]] f_weights : float[9]
+var [[uniform]] f_iweights_summ : float
 var [[in, location=0]] v_position : float2
 var [[in, location=1]] v_texcoord : float2
 var [[inout]] f_texcoord : float2
@@ -38,7 +40,7 @@ def ps_greyscale_effect
     let b = color.x * 0.299 + color.y * 0.587 + color.z * 0.114
     f_outputColor = float4(b, b, b, 1.0)
 
-def make_kernel ( var n : float4[9]; tex:sampler2D; coord:float2 )
+def make_kernel_3x3 ( var n : float4[9]; tex:sampler2D; coord:float2 )
 	n[0] = textureOffset(tex, coord, int2(-1,-1))
 	n[1] = textureOffset(tex, coord, int2( 0,-1))
 	n[2] = textureOffset(tex, coord, int2( 1,-1))
@@ -52,29 +54,53 @@ def make_kernel ( var n : float4[9]; tex:sampler2D; coord:float2 )
 [fragment_program(name="SOBEL_FRAGMENT_SRC",version=330)]
 def ps_sobel_effect
     var n : float4[9]
-    make_kernel(n, f_tex, f_texcoord)
+    make_kernel_3x3(n, f_tex, f_texcoord)
 	let sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6])
   	let sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8])
 	f_outputColor = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
 
-def dist(x,y:float)
-    return 1. / ( 1. + x*x + y*y )
+def make_kernel_9x1 ( var n : float4[9]; tex:sampler2D; coord:float2 )
+	n[0] = textureOffset(tex, coord, int2(-4,0))
+	n[1] = textureOffset(tex, coord, int2(-3,0))
+	n[2] = textureOffset(tex, coord, int2(-2,0))
+	n[3] = textureOffset(tex, coord, int2(-1,0))
+    n[4] = textureOffset(tex, coord, int2( 0,0))
+	n[5] = textureOffset(tex, coord, int2( 1,0))
+	n[6] = textureOffset(tex, coord, int2( 2,0))
+	n[7] = textureOffset(tex, coord, int2( 3,0))
+	n[8] = textureOffset(tex, coord, int2( 4,0))
 
-[fragment_program(name="BLUR_FRAGMENT_SRC",version=330)]
-def ps_blur_effect
+def make_kernel_1x9 ( var n : float4[9]; tex:sampler2D; coord:float2 )
+	n[0] = textureOffset(tex, coord, int2(0,-4))
+	n[1] = textureOffset(tex, coord, int2(0,-3))
+	n[2] = textureOffset(tex, coord, int2(0,-2))
+	n[3] = textureOffset(tex, coord, int2(0,-1))
+    n[4] = textureOffset(tex, coord, int2(0, 0))
+	n[5] = textureOffset(tex, coord, int2(0, 1))
+	n[6] = textureOffset(tex, coord, int2(0, 2))
+	n[7] = textureOffset(tex, coord, int2(0, 3))
+	n[8] = textureOffset(tex, coord, int2(0, 4))
+
+def gaussian(x, sigma:float)
+    return ( 1. / ( sqrt(2.*PI) * sigma ) ) * exp( -(x*x) / (2.*sigma*sigma) )
+
+[fragment_program(name="HBLUR_FRAGMENT_SRC",version=330)]
+def ps_hblur_effect
     var n : float4[9]
-    make_kernel(n, f_tex, f_texcoord)
-    var w = [[float
-        dist(-1.,-1.); dist(0.,-1.); dist(1.,-1.);
-        dist(-1., 0.); dist(0.,-1.); dist(1.,-0.);
-        dist(-1., 1.); dist(0., 1.); dist(1., 1.)
-    ]]
+    make_kernel_9x1(n, f_tex, f_texcoord)
     var c : float4
-    var cW = 0.
-    for a,W in n,w
-        c += a * float4(W)
-        cW += W
-    f_outputColor = c * float4(1./cW)
+    for a,w in n,f_weights
+        c += a * float4(w)
+    f_outputColor = c * f_iweights_summ
+
+[fragment_program(name="VBLUR_FRAGMENT_SRC",version=330)]
+def ps_vblur_effect
+    var n : float4[9]
+    make_kernel_1x9(n, f_tex, f_texcoord)
+    var c : float4
+    for a,w in n,f_weights
+        c += a * float4(w)
+    f_outputColor = c * f_iweights_summ
 
 [fragment_program(name="GRADIENT_FRAGMENT_SRC",version=330)]
 def ps_gradient_effect
@@ -207,15 +233,39 @@ def public surface_gen_greyscale ( var surf:Surface; src:Surface )
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
-def public surface_gen_blur ( var surf:Surface; src:Surface )
-    let blur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLUR_FRAGMENT_SRC)
-    bind_effect ( surf, blur_program )
+def public surface_gen_blur ( var surf:Surface; src:Surface; var sigma:float )
+    // bindings and weights
     f_tex.texture = 0
+    sigma = max(sigma, 0.01)
+    f_weights = [[float[9]
+        gaussian(-4., sigma);   gaussian(-3., sigma);   gaussian(-2., sigma);   gaussian(-1., sigma);
+        gaussian( 0., sigma);
+        gaussian( 1., sigma);   gaussian( 2., sigma);   gaussian( 3., sigma);   gaussian( 4., sigma)
+    ]]
+    f_iweights_summ = 0.
+    for w in f_weights
+        f_iweights_summ += w
+    f_iweights_summ = 1.0 / f_iweights_summ
+    // temp surface
+    var temp : Surface
+    create_surface(temp, surf.size)
+    // horizontal
+    let hblur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,HBLUR_FRAGMENT_SRC)
+    bind_effect (temp,hblur_program )
     bind_texture_2d(0, src.tex)
-    vs_any_effect_bind_uniform(blur_program)
-    ps_blur_effect_bind_uniform(blur_program)
+    vs_any_effect_bind_uniform(hblur_program)
+    ps_hblur_effect_bind_uniform(hblur_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    // vertical
+    let vblur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,VBLUR_FRAGMENT_SRC)
+    bind_effect (surf,vblur_program )
+    bind_texture_2d(0, temp.tex)
+    vs_any_effect_bind_uniform(vblur_program)
+    ps_vblur_effect_bind_uniform(vblur_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    // back to ffp, also cleanup
     bind_ffp()
+    delete temp
 
 def public surface_gen_sobel ( var surf:Surface; src:Surface )
     let sobel_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,SOBEL_FRAGMENT_SRC)
