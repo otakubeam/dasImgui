@@ -164,11 +164,6 @@ def bind_effect ( var surf:Surface; prog:uint )
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, effect_ebo)
     bind_vertex_buffer(type<EffectVertex>)
 
-def bind_texture_2d ( unit:int; tex:uint )
-    glActiveTexture(GL_TEXTURE0 + uint(unit))
-    glEnable(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, tex)
-
 def public create_surface ( var reg:Surface; sz:int2 )
     reg <- Surface(sz.x,sz.y)
     glGenFramebuffers(1, safe_addr(reg.fbo))
