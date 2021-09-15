@@ -10,6 +10,7 @@ require math
 require daslib/opengl_boost
 require daslib/safe_addr
 require daslib/static_let
+require daslib/unroll
 
 var [[uniform]] f_grad_tl : float4
 var [[uniform]] f_grad_tr : float4
@@ -61,26 +62,14 @@ def ps_sobel_effect
 	f_outputColor = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
 
 def make_kernel_9x1 ( var n : float4[9]; tex:sampler2D; coord:float2 )
-	n[0] = textureOffset(tex, coord, int2(-4,0))
-	n[1] = textureOffset(tex, coord, int2(-3,0))
-	n[2] = textureOffset(tex, coord, int2(-2,0))
-	n[3] = textureOffset(tex, coord, int2(-1,0))
-    n[4] = textureOffset(tex, coord, int2( 0,0))
-	n[5] = textureOffset(tex, coord, int2( 1,0))
-	n[6] = textureOffset(tex, coord, int2( 2,0))
-	n[7] = textureOffset(tex, coord, int2( 3,0))
-	n[8] = textureOffset(tex, coord, int2( 4,0))
+    unroll <|
+        for i in range(9)
+	        n[i] = textureOffset(tex, coord, int2(i-4,0))
 
 def make_kernel_1x9 ( var n : float4[9]; tex:sampler2D; coord:float2 )
-	n[0] = textureOffset(tex, coord, int2(0,-4))
-	n[1] = textureOffset(tex, coord, int2(0,-3))
-	n[2] = textureOffset(tex, coord, int2(0,-2))
-	n[3] = textureOffset(tex, coord, int2(0,-1))
-    n[4] = textureOffset(tex, coord, int2(0, 0))
-	n[5] = textureOffset(tex, coord, int2(0, 1))
-	n[6] = textureOffset(tex, coord, int2(0, 2))
-	n[7] = textureOffset(tex, coord, int2(0, 3))
-	n[8] = textureOffset(tex, coord, int2(0, 4))
+    unroll <|
+        for i in range(9)
+	        n[i] = textureOffset(tex, coord, int2(0,i-4))
 
 def gaussian(x, sigma:float)
     return ( 1. / ( sqrt(2.*PI) * sigma ) ) * exp( -(x*x) / (2.*sigma*sigma) )
