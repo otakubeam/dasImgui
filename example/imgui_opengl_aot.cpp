@@ -60,8 +60,6 @@ int main(int argc, char * argv[]) {
     // compile and run
     string demoName = getDasRoot() + "/modules/dasImgui/example/imgui_opengl2.das";
     compile_and_run(demoName, "main", false);
-    // and done
-    getchar();
     Module::Shutdown();
     return 0;
 }

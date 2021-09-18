@@ -21,7 +21,8 @@ def main
         "ImGuiTextFilter::PassFilter";
         "ImGuiTextBuffer::append";
         "ImGuiInputTextCallbackData::InsertChars";
-        "ImGui::CalcTextSize"
+        "ImGui::CalcTextSize";
+        "ImGui::SetNextWindowSizeConstraints"
     }]
 
     cmres_functions <- [{auto[]

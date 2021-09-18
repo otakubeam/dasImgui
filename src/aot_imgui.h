@@ -43,6 +43,7 @@ namespace das {
     char * ImGTB_Slice ( ImGuiTextBuffer & buf, int32_t head, int32_t tail, Context * context, LineInfoArg * at );
     void InsertChars(ImGuiInputTextCallbackData & data, int pos, const char* text );
     void SetNextWindowSizeConstraints(vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at );
+    void SetNextWindowSizeConstraintsNoCallback(const ImVec2& size_min, const ImVec2& size_max);
     ImGuiSortDirection_ SortDirection ( const ImGuiTableColumnSortSpecs & specs );
     ImVec2 CalcTextSize(const char* text,bool hide_text_after_double_hash, float wrap_width);
     bool Combo ( vec4f cg, const char * label, int * current_item, int items_count, int popup_max_height_in_items, Context * ctx, LineInfoArg * at );

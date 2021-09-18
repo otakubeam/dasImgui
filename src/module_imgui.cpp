@@ -204,11 +204,15 @@ namespace das {
         das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,&temp->at,temp->lambda,data);
     }
 
-    void SetNextWindowSizeConstraints(vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at ) {
+    void SetNextWindowSizeConstraints ( vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at ) {
         SNWSCC * temp = cast<SNWSCC *>::to(snwscc);
         temp->context = context;
         temp->at = *at;
         ImGui::SetNextWindowSizeConstraints(size_min, size_max, &SetNextWindowSizeConstraintsCallback, temp);
+    }
+
+    void SetNextWindowSizeConstraintsNoCallback ( const ImVec2& size_min, const ImVec2& size_max ) {
+        ImGui::SetNextWindowSizeConstraints(size_min, size_max);
     }
 
     ImGuiSortDirection_ SortDirection ( const ImGuiTableColumnSortSpecs & specs ) {
@@ -405,6 +409,9 @@ bool Module_imgui::initDependencies() {
     // SetNextWindowSizeConstraints
     addExtern<DAS_BIND_FUN(das::SetNextWindowSizeConstraints)>(*this,lib,"_builtin_SetNextWindowSizeConstraints",
         SideEffects::worstDefault,"das::SetNextWindowSizeConstraints");
+    addExtern<DAS_BIND_FUN(das::SetNextWindowSizeConstraintsNoCallback)>(*this,lib,"SetNextWindowSizeConstraints",
+        SideEffects::worstDefault,"das::SetNextWindowSizeConstraintsNoCallback")
+            ->args({"size_min","size_max"});
     // ImGuiTableColumnSortSpecs
     addExtern<DAS_BIND_FUN(das::SortDirection)>(*this,lib,"SortDirection",
         SideEffects::none,"das::SortDirection");

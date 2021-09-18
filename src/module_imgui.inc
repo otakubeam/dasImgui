@@ -2302,13 +2302,6 @@ addExtern<DAS_BIND_FUN(ImGui::PopButtonRepeat)>(*this, lib, "PopButtonRepeat",Si
 ;
 #endif
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::SetNextWindowSizeConstraints)>(*this, lib, "SetNextWindowSizeConstraints",SideEffects::worstDefault, "ImGui::SetNextWindowSizeConstraints")
-	->args({"size_min","size_max","custom_callback","custom_callback_data"})
-		->arg_init(2,make_smart<ExprConstPtr>())
-		->arg_init(3,make_smart<ExprConstPtr>())
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<void (*)(const char *, bool, ImGuiCond),ImGui::SetWindowCollapsed>(*this, lib, "SetWindowCollapsed",SideEffects::worstDefault, "ImGui::SetWindowCollapsed")
 	->args({"name","collapsed","cond"})
 		->arg_type(2,makeType<ImGuiCond_>(lib))

@@ -14,11 +14,6 @@ void Module_imgui::initFunctions_20() {
 #if USE_GENERATED
 #if USE_GENERATED_SPLIT
 #ifdef GLOBAL_NAMESPACE
-addExtern<DAS_BIND_FUN(ImGui::IsKeyReleased)>(*this, lib, "IsKeyReleased",SideEffects::worstDefault, "ImGui::IsKeyReleased")
-	->args({"user_key_index"})
-;
-#endif
-#ifdef GLOBAL_NAMESPACE
 addExtern<DAS_BIND_FUN(ImGui::SetClipboardText)>(*this, lib, "SetClipboardText",SideEffects::worstDefault, "ImGui::SetClipboardText")
 	->args({"text"})
 ;
