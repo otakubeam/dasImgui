@@ -140,7 +140,6 @@ def draw_preview ( display_w, display_h : int )
     let halfY = -stepY*float(max(sqY-1,0))*0.5
     var index = 0
     identity(v_view)
-    f_tex.texture = 0
     for y in range(sqY)
         for x in range(sqX)
             let rot1 = un_quat_from_unit_vec_ang(normalize(float3(1.,0.,0.)), radians(rot_tri * 0.25))
@@ -153,13 +152,11 @@ def draw_preview ( display_w, display_h : int )
             v_projection = perspective_opengl( radians(45.0f), float(display_w)/float(display_h), 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, g_PreviewTexture[index])
+            f_tex.texture2D = g_PreviewTexture[index]
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
             glUseProgram(program)
-            glBindBuffer(GL_ARRAY_BUFFER, vbo)
-            bind_vertex_buffer(type<PreviewVertex>)
+            bind_vertex_buffer(vbo,type<PreviewVertex>)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
             vs_preview_main_bind_uniform(program)
             ps_preview_main_bind_uniform(program)
