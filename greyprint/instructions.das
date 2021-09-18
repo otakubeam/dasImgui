@@ -442,8 +442,8 @@ def generate_node_init(name,category:string;var str:StructurePtr)
         cmi.arguments |> emplace_new() <| new [[ExprTypeDecl() at=str.at, typeexpr<-cmt]]
         blk.list |> emplace(cmi)
         fn.body <- blk
-        if !(compiling_module() |> add_function(fn))
-            panic("can't setup")
+        return compiling_module() |> add_function(fn)
+    return true
 
 // def {name} ( slef:{str._type}; var node:table<string;JsonValue> )
 def generate_serialize ( name : string; var str:StructurePtr )
@@ -491,8 +491,9 @@ def generate_node_save(var str:StructurePtr)
                     break
         fn.body <- blk
         if !(compiling_module() |> add_function(fn))
-            panic("can't setup")
+            return false
         override_method(str, "save", "_::{name}")
+    return true
 
 // def override load ( var node:table<string;json:JsonValue?> )
 def generate_node_load(var str:StructurePtr)
@@ -525,8 +526,9 @@ def generate_node_load(var str:StructurePtr)
                     break
         fn.body <- blk
         if !(compiling_module() |> add_function(fn))
-            panic("can't setup")
+            return false
         override_method(str, "load", "_::{name}")
+    return true
 
 // add instruction type registration function
 //  make_instruction_factory("Solid color", CATEGORY_SURFACE_OPERATIONS, type<Instruction_SolidColor>)
@@ -550,8 +552,14 @@ class InstructionNodeStructureAnnotation : AstStructureAnnotation
             else
                 errors := "invalid argument {arg.name}"
                 return false
-        generate_node_init(name,category,str)
-        generate_node_save(str)
-        generate_node_load(str)
+        if !generate_node_init(name,category,str)
+            errors := "can't generate node init"
+            return false
+        if !generate_node_save(str)
+            errors := "can't generate node save"
+            return false
+        if !generate_node_load(str)
+            errors := "can't generate node load"
+            return false
         return true
 
