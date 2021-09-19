@@ -84,7 +84,12 @@ def imgui_app ( title:string; blk : block )
         unsafe
             string_heap_collect()
         let dt = (get_time_usec(t0)+500) / 1000
-        glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
+        // glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
+
+        var IO & = GetIO()
+        if IO.KeyCtrl
+            if IsKeyPressed(GetKeyIndex(ImGuiKey A))
+                string_heap_report()
 
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
