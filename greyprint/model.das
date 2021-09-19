@@ -308,8 +308,6 @@ def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var fact
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
-options log
-
 def public surface_blend_tex_Crossfade  ( var reg:Surface; src,dst,factor:Surface )
     let tx_blend_crossfade_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_TX_CROSSFADE_FRAGMENT_SRC)
     bind_effect ( reg, tx_blend_crossfade_program )

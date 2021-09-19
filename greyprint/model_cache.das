@@ -12,17 +12,21 @@ var private programs : table<uint64; uint>
 var private images : table<string; uint>
 
 [apply_in_context(model_cache)]
-def public cache_shader_program(vtx,frag:string) : uint
+def public cache_shader_program(vtx,frag:string# implicit) : uint
     let phash = (uint64(hash(vtx))<<32ul) | uint64(hash(frag))
     if ! programs |> key_exists(phash)
         programs[phash] = create_shader_program(vtx,frag)
     return programs[phash]
 
 [apply_in_context(model_cache)]
-def public cache_image(filename:string) : uint
-    if ! images |> key_exists(filename)
-        images[filename] = load_image_from_file(filename, true)
-    return images[filename]
+def public cache_image(filename:string# implicit) : uint
+    var value = 0u
+    images |> find_if_exists(filename) <| $ ( pimg:uint? ) : void
+        value = *pimg
+    if value==0u
+        value = load_image_from_file(filename, true)
+        images[clone_string(filename)] = value
+    return value
 
 def private has_agent
     return has_debug_agent_context("model_cache")

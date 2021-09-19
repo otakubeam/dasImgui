@@ -76,6 +76,16 @@ def imgui_app ( title:string; blk : block )
         ImGui_ImplOpenGL2_RenderDrawData(GetDrawData())
         glfwMakeContextCurrent(window)
         glfwSwapBuffers(window)
+
+        // now GC
+        let total_string_heap = string_heap_bytes_allocated()
+        let total_heap = heap_bytes_allocated()
+        let t0 = ref_time_ticks()
+        unsafe
+            string_heap_collect()
+        let dt = (get_time_usec(t0)+500) / 1000
+        glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
+
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
     DestroyContext(null)
