@@ -89,7 +89,7 @@ def imgui_app ( title:string; blk : block )
         var IO & = GetIO()
         if IO.KeyCtrl
             if IsKeyPressed(GetKeyIndex(ImGuiKey A))
-                string_heap_report()
+                memory_report()
 
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
