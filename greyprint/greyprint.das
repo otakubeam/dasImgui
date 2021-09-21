@@ -2,6 +2,7 @@ options log_total_compile_time
 
 options persistent_heap = true
 options persistent_string_heap = true
+options gc
 
 require fio
 require imgui_app
@@ -48,10 +49,10 @@ def imgui_app ( title:string; blk : block )
     window = glfwCreateWindow(1920, 1280, title, null, null)
     if window==null
   		panic("can't create window")
-    glfwInitOpenGL(3,3)
+    glfwInitOpenGL(3,3,true)
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
-    // glSetBreakOnOpenGLError(true)    // enable for opengl debugging
+    glSetBreakOnOpenGLError(true)    // enable for opengl debugging
     CreateContext(null)
     dlg_init()
     var io & = GetIO()
@@ -82,14 +83,14 @@ def imgui_app ( title:string; blk : block )
         let total_heap = heap_bytes_allocated()
         let t0 = ref_time_ticks()
         unsafe
-            string_heap_collect()
+            heap_collect(true)
         let dt = (get_time_usec(t0)+500) / 1000
-        // glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
+        glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
 
         var IO & = GetIO()
         if IO.KeyCtrl
             if IsKeyPressed(GetKeyIndex(ImGuiKey A))
-                memory_report()
+                memory_report(false)
 
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
@@ -1072,3 +1073,4 @@ def main
     if g_Context != null
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
+
