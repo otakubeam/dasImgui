@@ -164,6 +164,8 @@ def bind_effect ( var surf:Surface; prog:uint )
     bind_vertex_buffer(effect_vbo, type<EffectVertex>)
 
 def public create_surface ( var reg:Surface; sz:int2 )
+    if sz.x<=0 || sz.y<=0
+        panic("can't create surface size {sz}")
     reg <- Surface(sz.x,sz.y)
     glGenFramebuffers(1, safe_addr(reg.fbo))
     glBindFramebuffer(GL_FRAMEBUFFER, reg.fbo)
@@ -173,8 +175,9 @@ def public create_surface ( var reg:Surface; sz:int2 )
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, reg.tex, 0)
-    if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
-        panic("fbo failed")
+    let fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+    if  fboStatus != GL_FRAMEBUFFER_COMPLETE
+        panic("fbo failed {fboStatus} on size {sz}\n")
     if DEBUG_TEXTURE_LIFETIME
         print("create_surface {reg.tex}\n")
 

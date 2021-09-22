@@ -863,28 +863,35 @@ def eval_project ()
                 if sok
                     unsafe
                         var t2 = ref_time_ticks()
-                        invoke_in_context(context,"main")
+                        try
+                            invoke_in_context(context,"main")
+                        recover
+                            let ctx = reinterpret<Context?> context
+                            g_ProjectErrorsMessage = "generated project failed to simulate"
+                            g_ProjectErrors = "{ctx.exception}, at {ctx.exceptionAt}"
+                            failed = true
                         let run_sec = double(get_time_usec(t2))/1000000.0lf
                         // print("compile={compile_sec} simulate={simulate_sec}, run={run_sec}\n{errors}\n")
-                        var pout = get_context_global_variable(context,"G_OUTPUT")
-                        if pout!=null
-                            var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
-                            clear_preview()
-                            for inst in g_CurrentProject.instructions
-                                inst.tex = null
-                                for outp in inst.pins.outputs
-                                    outp.tex = null
-                            for outprev in OUTPUT
-                                var tex = outprev.surf.tex
-                                g_PreviewTexture |> push(tex)
-                                var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
-                                assert(pinst!=null)
-                                if !empty(outprev.outp)
-                                    pinst |> find_output(outprev.outp) <| $ ( outp )
-                                        if outp != null
-                                            outp.tex = reinterpret<void?> tex
-                                else
-                                    pinst.tex = reinterpret<void?> tex
+                        if !failed
+                            var pout = get_context_global_variable(context,"G_OUTPUT")
+                            if pout!=null
+                                var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
+                                clear_preview()
+                                for inst in g_CurrentProject.instructions
+                                    inst.tex = null
+                                    for outp in inst.pins.outputs
+                                        outp.tex = null
+                                for outprev in OUTPUT
+                                    var tex = outprev.surf.tex
+                                    g_PreviewTexture |> push(tex)
+                                    var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
+                                    assert(pinst!=null)
+                                    if !empty(outprev.outp)
+                                        pinst |> find_output(outprev.outp) <| $ ( outp )
+                                            if outp != null
+                                                outp.tex = reinterpret<void?> tex
+                                    else
+                                        pinst.tex = reinterpret<void?> tex
                 else
                     g_ProjectErrorsMessage = "generated code failed to simulate"
                     g_ProjectErrors = "{serrors}"
@@ -904,8 +911,19 @@ def rename_action_dialog()
         if InputText("##action_name",*buf)
             g_RenameAction = to_string(*buf)
         if Button("OK##action_name")
-            if g_CurrentProject |> rename_action(g_CurrentAction,g_RenameAction)
-                g_CurrentAction = g_RenameAction
+            let caction = g_CurrentAction
+            let raction = g_RenameAction
+            post_event <| @
+                // note: all this noise here is so that there are no dangling links in the NodeEditor
+                //  for it will delete them, and they would create undo to the old CallAction
+                next_undo_action()
+                before_project()
+                if g_CurrentProject |> rename_action(caction,raction)
+                    g_CurrentAction = raction
+                undo_load_project()
+                clear_project_data()
+                redo_last()
+                update_preview()
             CloseCurrentPopup()
         SameLine()
         if Button("CANCEL##action_name")
@@ -1076,3 +1094,5 @@ def main
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
 
+options debugger
+require daslib/debug

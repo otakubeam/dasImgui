@@ -130,6 +130,9 @@ class Instruction
         at = from_JV(node["at"],type<float2>)
         extents = from_JV(node["extents"],type<float2>)
         self->load(node)
+    def rename_action(old_name,new_name:string)
+        if action==old_name
+            action = new_name
 
 def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input?#):void> ) : void
     for i in inst.pins.inputs
@@ -358,8 +361,7 @@ def rename_action ( var proj:Project?; oldName,newName:string )
     assert(oidx!=-1, "can't find action which we are trying to rename")
     proj.actions[oidx] = newName
     for inst in proj.instructions
-        if inst.action==oldName
-            inst.action==newName
+        inst->rename_action(oldName,newName)
     return true
 
 def collect_action_pins ( var proj:Project?; action:string )
@@ -567,4 +569,3 @@ class InstructionNodeStructureAnnotation : AstStructureAnnotation
             errors := "can't generate node load"
             return false
         return true
-

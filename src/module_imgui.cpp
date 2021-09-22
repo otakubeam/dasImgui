@@ -22,37 +22,37 @@ namespace das {
         ImGui::Text("%s",txt);
     }
     void LabelText ( const char * lab, const char * txt ) {
-        ImGui::LabelText(lab,"%s",txt);
+        ImGui::LabelText(lab,"%s",txt ? txt : "");
     }
     void TextWrapped ( const char * txt ) {
-        ImGui::TextWrapped("%s",txt);
+        ImGui::TextWrapped("%s",txt ? txt : "");
     }
     void TextDisabled ( const char * txt ) {
-        ImGui::TextDisabled("%s",txt);
+        ImGui::TextDisabled("%s",txt ? txt : "");
     }
     void TextColored ( const ImVec4 & col, const char * txt ) {
-        ImGui::TextColored(col,"%s",txt);
+        ImGui::TextColored(col,"%s",txt ? txt : "");
     }
     void LogText ( const char * txt ) {
-        ImGui::LogText("%s",txt);
+        ImGui::LogText("%s",txt ? txt : "");
     }
     bool TreeNode ( const char * id, const char * txt ) {
-        return ImGui::TreeNode(id,"%s",txt);
+        return ImGui::TreeNode(id,"%s",txt ? txt : "");
     }
     bool TreeNodeEx ( const char * id, ImGuiTreeNodeFlags_ flags, const char * txt ) {
-        return ImGui::TreeNodeEx(id,flags,"%s",txt);
+        return ImGui::TreeNodeEx(id,flags,"%s",txt ? txt : "");
     }
     bool TreeNodeEx2 ( const void * id, ImGuiTreeNodeFlags_ flags, const char * txt ) {
-        return ImGui::TreeNodeEx(id,flags,"%s",txt);
+        return ImGui::TreeNodeEx(id,flags,"%s",txt ? txt : "");
     }
     void TextUnformatted ( const char * txt ) {
-        ImGui::TextUnformatted(txt, nullptr);
+        ImGui::TextUnformatted(txt ? txt : "", nullptr);
     }
     void BulletText ( const char * txt ) {
-        ImGui::BulletText("%s",txt);
+        ImGui::BulletText("%s",txt ? txt : "");
     }
     void SetTooltip ( const char * txt ) {
-        ImGui::SetTooltip("%s",txt);
+        ImGui::SetTooltip("%s",txt ? txt : "");
     }
 
     struct DasImguiInputText {

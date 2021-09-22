@@ -129,6 +129,7 @@ def private restore_instruction(id:string;json:string)
         print("{error}\nfailed to restore {id} from {json}\n")  // TODO: better error reporting
     unsafe
         delete jv
+    (*inst)->sync()
 
 def private create_and_restore_instruction(json:string)
     var inst : Instruction?
@@ -140,6 +141,7 @@ def private create_and_restore_instruction(json:string)
         print("{error}\nfailed create and to restore from {json}\n")   // TODO: better error reporting
     unsafe
         delete jv
+    inst->sync()
 
 def undo_edit_instruction(id,name:string)
     next_undo_action()

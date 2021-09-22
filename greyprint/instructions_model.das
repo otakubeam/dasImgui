@@ -37,6 +37,10 @@ class Instruction_CallAction : Instruction
             pins <- new_pins
         else
             self->pre_sync()
+    def override rename_action(old_name,new_name:string)
+        Instruction`rename_action(self, old_name, new_name)
+        if fn==old_name
+            fn = new_name
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
         Text("Action: {fn}")
