@@ -5,39 +5,6 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"id" : "4116073a-86d6-479a-9980-18022ac357f3",
-			"at" : {
-				"y" : 489.00000000000000000,
-				"x" : 129.00000000000000000
-			},
-			"rtti" : "Instruction_ImageFile",
-			"name" : "Image file",
-			"extents" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"fileName" : "C:\\Users\\Boris\\Work\\yzg\\modules\\dasImgui\\greyprint\\examples\\OIP.jpg",
-			"action" : ""
-		},
-		{
-			"id" : "5ea95f64-296d-46a1-b85a-def0fcee4615",
-			"at" : {
-				"y" : 492.00000000000000000,
-				"x" : 1523.00000000000000000
-			},
-			"rtti" : "Instruction_OutputSurface",
-			"name" : "Output surface",
-			"extents" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"action" : ""
-		},
-		{
-			"size" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
 			"id" : "0c0107f9-57b3-48ce-817e-f21352c7d5a1",
 			"at" : {
 				"y" : 884.00000000000000000,
@@ -135,33 +102,12 @@
 				"x" : 256.00000000000000000
 			},
 			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
-		},
-		{
-			"id" : "b5c1b40a-cf42-4ec9-8251-8459375fb5d5",
-			"at" : {
-				"y" : 489.00000000000000000,
-				"x" : 829.00000000000000000
-			},
-			"fn" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa",
-			"rtti" : "Instruction_CallAction",
-			"name" : "Call action",
-			"extents" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"action" : ""
 		}
 	],
-	"actions" : {
-		"5ea95f64-296d-46a1-b85a-def0fceeaaaa" : "Smart blur"
-	},
+	"action_name" : "Smart blur",
+	"actions" : {},
+	"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa",
 	"links" : [
-		{
-			"input_name" : "In",
-			"input_id" : "5ea95f64-296d-46a1-b85a-def0fcee4615",
-			"output_id" : "b5c1b40a-cf42-4ec9-8251-8459375fb5d5",
-			"output_name" : "Res"
-		},
 		{
 			"input_name" : "Inp",
 			"input_id" : "0c0107f9-57b3-48ce-817e-f21352c7d5a1",
@@ -202,12 +148,6 @@
 			"input_name" : "In",
 			"input_id" : "7647298a-a8c8-4f6c-86dd-3e1b9a1c05b0",
 			"output_id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
-			"output_name" : "Out"
-		},
-		{
-			"input_name" : "Arg",
-			"input_id" : "b5c1b40a-cf42-4ec9-8251-8459375fb5d5",
-			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
 			"output_name" : "Out"
 		}
 	]

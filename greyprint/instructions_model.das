@@ -37,13 +37,9 @@ class Instruction_CallAction : Instruction
             pins <- new_pins
         else
             self->pre_sync()
-    def override rename_action(old_name,new_name:string)
-        Instruction`rename_action(self, old_name, new_name)
-        if fn==old_name
-            fn = new_name
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
-        Text("Action: {fn}")
+        Text("{owner.actions[fn]} : {fn}")
     def override produce ( var src_regs : array<int> ): array<string>
         var args <- [{for reg,inp in src_regs,pins.inputs; to_reg_any(reg,inp._type)}]
         for oreg in pins.outputs
@@ -51,7 +47,7 @@ class Instruction_CallAction : Instruction
                 args |> push(to_reg(oreg.reg))  // always real register
         var astr = join(args, ",")
         return <- [{string
-            "{decorate_name(fn)}({astr})"
+            "fn_{decorate_name(fn)}({astr})"
             // ;"preview({to_reg(pins.outputs[0].reg)},\"{name}\",\"{id}\",\"unexpected\")"
         }]
 

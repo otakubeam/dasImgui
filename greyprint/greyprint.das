@@ -187,9 +187,9 @@ def import_action(fname:string)
             before_project()
             var proj = new Project()
             var action = load_project_from_json(proj,text,true)
-            if g_CurrentProject.actions |> find_index(action) == -1
-                merge_project (g_CurrentProject, proj, float2(0.0), action )
-                g_CurrentProject.actions |> push(action)
+            if !(g_CurrentProject.actions |> key_exists(action.id))
+                merge_project (g_CurrentProject, proj, float2(0.0), action.id )
+                g_CurrentProject.actions[action.id] = action.name
                 unsafe
                     delete proj
                 undo_load_project()
@@ -259,9 +259,9 @@ def main_menu()
                 paste()
         BeginMenu("Action##Main menu") <|
             if MenuItem("New##Action")
-                g_CurrentProject.actions |> push(make_unique_action_name())
+                g_CurrentProject.actions[make_unique_action_name()] = "New action"
             if MenuItem("New from selection##Action")
-                g_CurrentProject.actions |> push(make_unique_action_name())
+                g_CurrentProject.actions[make_unique_action_name()] = "New action from selection"
                 // TODO: replace selection with action instance
             Separator()
             if MenuItem("Import##Action")
@@ -709,14 +709,14 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
             collapsed = !TreeNodeEx(prevCategory,ImGuiTreeNodeFlags DefaultOpen)
             stx = 0.
         if !collapsed || !flags.DisplayCategories
-            for act in g_CurrentProject.actions
-                if ! ((*filter) |> PassFilter(act))
+            for actid,actname in keys(g_CurrentProject.actions),values(g_CurrentProject.actions)
+                if ! ((*filter) |> PassFilter(actname))
                     continue
                 if stx!=0. && stx<CONTEXT_MENU_WIDTH
                     SameLine()
                 else
                     stx=0.
-                if Button("{act}##action_S") || make_first
+                if Button("{actname}##action_S") || make_first
                     make_first = false
                     if flags.FromContextMenu
                         CloseCurrentPopup()
@@ -724,7 +724,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                         return val.name=="Call action"
                     assert(idx!=-1,"Call action not found")
                     var ai & = g_instructionsByCategory[idx]
-                    invoke(evt, safe_addr(ai), act)
+                    invoke(evt, safe_addr(ai), actid)
                 stx += GetItemRectSize().x
     for ai in g_instructionsByCategory
         if prevCategory != ai.category
@@ -902,6 +902,7 @@ def eval_project ()
             failed = true
 
 var g_RenameAction = ""
+var g_RenameActionId = ""
 
 def rename_action_dialog()
     if BeginPopup("RENAME ACTION")
@@ -911,19 +912,9 @@ def rename_action_dialog()
         if InputText("##action_name",*buf)
             g_RenameAction = to_string(*buf)
         if Button("OK##action_name")
-            let caction = g_CurrentAction
-            let raction = g_RenameAction
-            post_event <| @
-                // note: all this noise here is so that there are no dangling links in the NodeEditor
-                //  for it will delete them, and they would create undo to the old CallAction
-                next_undo_action()
-                before_project()
-                if g_CurrentProject |> rename_action(caction,raction)
-                    g_CurrentAction = raction
-                undo_load_project()
-                clear_project_data()
-                redo_last()
-                update_preview()
+            next_undo_action()
+            undo_rename_action(g_RenameActionId, g_CurrentProject.actions[g_RenameActionId], g_RenameAction)
+            redo_last()
             CloseCurrentPopup()
         SameLine()
         if Button("CANCEL##action_name")
@@ -936,11 +927,13 @@ def project_window()
     BeginGroup()
     BeginChild("Project", float2(LEFT_SIDE_PANNEL_WIDTH, -FLT_MIN), true)
     if !empty(g_CurrentAction)
+        Text(g_CurrentAction)
         if Button("Rename##rename_action")
-            g_RenameAction = g_CurrentAction
+            g_RenameAction = g_CurrentProject.actions[g_CurrentAction]
+            g_RenameActionId = g_CurrentAction
             OpenPopup("RENAME ACTION")
         SameLine()
-        Text(g_CurrentAction)
+        Text(g_CurrentProject.actions[g_CurrentAction])
     rename_action_dialog()
     if Button("[*]##navigate_to_content")
         NavigateToContent(NAVIGATION_TIME)
@@ -951,15 +944,21 @@ def project_window()
     *project_filter |> Draw("",LEFT_SIDE_PANNEL_WIDTH-10.)
     let tact = length(g_CurrentProject.actions)
     if tact > 0
-        for aidx in range(0,tact+1)
-            let cact = aidx!=0 ? g_CurrentProject.actions[aidx-1] : ""
-            if TreeNodeEx("action_or_project_{cact}",ImGuiTreeNodeFlags DefaultOpen,aidx!=0 ? cact : "Project")
+        for actid,actname in keys(g_CurrentProject.actions),values(g_CurrentProject.actions)
+            if TreeNodeEx("action_{actid}",ImGuiTreeNodeFlags DefaultOpen,actname)
                 for inst in g_CurrentProject.instructions
-                    if inst.action != cact
+                    if inst.action != actid
                         continue
                     if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
                         side_edit_instance(inst)
                 TreePop()
+        if TreeNodeEx("project_",ImGuiTreeNodeFlags DefaultOpen,"Project")
+            for inst in g_CurrentProject.instructions
+                if inst.action != ""
+                    continue
+                if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
+                    side_edit_instance(inst)
+            TreePop()
     else
         for inst in g_CurrentProject.instructions
             if *project_filter|>PassFilter(inst.name) || *project_filter|>PassFilter(inst.id)
@@ -1059,9 +1058,9 @@ def main_editor_screen()
                     g_CurrentAction = ""
                     editor_child_window()
                     EndTabItem()
-                for act in g_CurrentProject.actions
-                    if BeginTabItem(act)
-                        g_CurrentAction = act
+                for actid,actname in keys(g_CurrentProject.actions),values(g_CurrentProject.actions)
+                    if BeginTabItem("{actname}##{actid}")
+                        g_CurrentAction = actid
                         editor_child_window()
                         EndTabItem()
                 EndTabBar()

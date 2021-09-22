@@ -133,10 +133,11 @@ def produce_project_text
         writer |> write("require model\n")
         writer |> write("require math\n")
         writer |> write("\n")
-        for act in g_CurrentProject.actions
+        for act,actname in keys(g_CurrentProject.actions),values(g_CurrentProject.actions)
             var pins <- collect_action_pins(g_CurrentProject,act)
             defer_delete(pins)
-            write(writer,"def {decorate_name(act)}(")
+            write(writer,"// {actname}\n")
+            write(writer,"def fn_{decorate_name(act)}(")
             var eidx = 0
             for inp in pins.inputs
                 eidx ++

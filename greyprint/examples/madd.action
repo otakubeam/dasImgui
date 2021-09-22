@@ -89,8 +89,9 @@
 			"action" : "Madd, scalar"
 		}
 	],
-	"actions" : [],
+	"actions" : {},
 	"action" : "Madd, scalar",
+	"action_name" : "Madd, scalar",
 	"links" : [
 		{
 			"input_name" : "In-1",

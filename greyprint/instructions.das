@@ -130,9 +130,6 @@ class Instruction
         at = from_JV(node["at"],type<float2>)
         extents = from_JV(node["extents"],type<float2>)
         self->load(node)
-    def rename_action(old_name,new_name:string)
-        if action==old_name
-            action = new_name
 
 def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input?#):void> ) : void
     for i in inst.pins.inputs
@@ -181,7 +178,7 @@ def generate_new_id()
 class Project
     instructions : array<Instruction?>
     lookup : table<string; Instruction?>
-    actions : array<string>
+    actions : table<string;string>
     def clear
         delete actions
         delete instructions
@@ -235,7 +232,7 @@ class Project
             "nodes"=> JV(nodes);
             "links" => JV(links)
         }}
-        var act <- export_actions ? JV([{for action in actions; JV(action)}]) : JV([[array<JsonValue?>]])
+        var act <- export_actions ? JV(actions) : JV([[table<string;string>]])
         root["actions"] <- act
         unsafe
             delete act
@@ -273,8 +270,10 @@ class Project
             self->load_instruction(pnode)
         self->pre_sync()
         self->load_links(root["links"])
-        var acts & = root["actions"].value as _array
-        actions <- [{for action in acts; action as _string}]
+        var acts & = root["actions"].value as _object
+        delete actions
+        for aid,aname in keys(acts),values(acts)
+            actions[aid] = aname as _string
         self->sync()
     def pre_sync : void
         for inst in instructions
@@ -351,18 +350,6 @@ def merge_project ( var proj,sel:Project?; offset:float2; action:string )
 
 def make_unique_action_name
     return "Action {uriparser::make_new_guid()}"
-
-def rename_action ( var proj:Project?; oldName,newName:string )
-    if empty(newName)
-        return false
-    if proj.actions |> find_index(newName) != -1
-        return false
-    var oidx = proj.actions |> find_index(oldName)
-    assert(oidx!=-1, "can't find action which we are trying to rename")
-    proj.actions[oidx] = newName
-    for inst in proj.instructions
-        inst->rename_action(oldName,newName)
-    return true
 
 def collect_action_pins ( var proj:Project?; action:string )
     var pins : Pins

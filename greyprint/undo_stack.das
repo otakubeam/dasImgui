@@ -253,19 +253,21 @@ def undo_create_connection(id,pin:string)
                 print("restore connection from {after}\n")
             restore_connection(after)
 
-def load_project_from_json(var proj:Project?;json:string; checkAction:bool = false)
+def load_project_from_json(var proj:Project?;json:string; checkAction:bool = false) : tuple<id:string;name:string>
     var error : string
-    var action : string
     var jv = read_json(json,error)
     if jv!=null
         (*proj)->load(jv)
         if checkAction
-            action = from_JV((jv.value as _object)["action"], type<string>)
+            return [[auto
+                from_JV((jv.value as _object)["action"], type<string>),
+                from_JV((jv.value as _object)["action_name"], type<string>)
+            ]]
     else
         print("{error}\nfailed to load project from {json}\n")  // TODO: better error reporting
     unsafe
         delete jv
-    return action
+    return [[auto "",""]]
 
 def restore_current_project(json:string)
     load_project_from_json(g_CurrentProject,json)
@@ -281,6 +283,7 @@ def export_action(var proj:Project?;aname:string)
     var jv = (*proj)->save_with_filter(false) <| $ ( inst : Instruction? )
         return inst.action==aname
     (jv.value as _object)["action"] = JV(aname)
+    (jv.value as _object)["action_name"] = JV(proj.actions[aname])
     let before = write_json(jv)
     unsafe
         delete jv
@@ -291,6 +294,17 @@ def save_current_project
 
 def before_project
     g_UndoLastElement = save_current_project()
+
+def undo_rename_action(action,oldname,newname:string)
+    create_undo("new project {g_UndoAction}") <| $ ( ur )
+        ur.undo <- @ <|
+            static_if DEBUG_UNDO
+                print("rename {action} {newname} -> {oldname}\n")
+            g_CurrentProject.actions[action] = oldname
+        ur.redo <- @ <|
+            static_if DEBUG_UNDO
+                print("rename {action} {oldname} -> {newname}\n")
+            g_CurrentProject.actions[action] = newname
 
 [generic]
 def undo_new_project()
