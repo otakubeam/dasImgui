@@ -13,6 +13,8 @@ require daslib/static_let
 require daslib/strings_boost
 require daslib/opengl_boost
 
+let DEBUG_TEXTURE_LIFETIME = false
+
 // surface
 
 struct Surface
@@ -25,6 +27,8 @@ def Surface ( w,h:int )
 
 def finalize ( var self:Surface )
     if self.tex != 0u
+        if DEBUG_TEXTURE_LIFETIME
+            print(" ! glDeleteTextures {self.tex}\n")
         glDeleteTextures(1, safe_addr(self.tex))
         self.tex = 0u
     if self.fbo != 0u
@@ -155,7 +159,8 @@ def decorate_name(an:string)
             ' ' => "_";
             ',' => "_comma_";
             '*' => "_times_";
-            '+' => "_plus_"
+            '+' => "_plus_";
+            '-' => "_dash_"
         }}
     let st = build_string() <| $ (var writer)
         for ch in an

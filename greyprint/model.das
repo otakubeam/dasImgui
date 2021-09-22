@@ -175,9 +175,13 @@ def public create_surface ( var reg:Surface; sz:int2 )
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, reg.tex, 0)
     if glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE
         panic("fbo failed")
+    if DEBUG_TEXTURE_LIFETIME
+        print("create_surface {reg.tex}\n")
 
 def public surface_gen_tex ( var surf:Surface )
     var scopy : Surface
+    if DEBUG_TEXTURE_LIFETIME
+        print("IN surface_gen_tex:\n")
     create_surface(scopy, surf.size)
     let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect(scopy, copy_program)
@@ -188,12 +192,16 @@ def public surface_gen_tex ( var surf:Surface )
     bind_ffp()
     var res <- scopy.tex
     delete scopy
+    if DEBUG_TEXTURE_LIFETIME
+        print("create copy {res} from {surf.tex}\n")
     return res
 
 def public empty_surface()
     return <- [[Surface]]
 
 def public delete_surface ( var reg:Surface )
+    if DEBUG_TEXTURE_LIFETIME
+        print("delete surface {reg.tex}\n")
     delete reg
 
 def public surface_gen_image ( var reg:Surface; fileName:string )
@@ -210,6 +218,17 @@ def public surface_gen_solid_color ( var reg:Surface; color:float4 )
     bind_effect(reg, 0u)
     glClearColor(color.x, color.y, color.z, color.w)
     glClear(GL_COLOR_BUFFER_BIT)
+    bind_ffp()
+
+def public surface_gen_copy ( var surf:Surface; src:Surface )
+    if DEBUG_TEXTURE_LIFETIME
+        print("copy_image {surf.tex} <- {src.tex}\n")
+    let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
+    bind_effect ( surf, copy_program )
+    f_tex.texture2D = src.tex
+    vs_any_effect_bind_uniform(copy_program)
+    ps_copy_effect_bind_uniform(copy_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
 def public surface_gen_greyscale ( var surf:Surface; src:Surface )
@@ -234,6 +253,8 @@ def public surface_gen_blur ( var surf:Surface; src:Surface; var sigma:float )
         f_iweights_summ += w
     f_iweights_summ = 1.0 / f_iweights_summ
     // temp surface
+    if DEBUG_TEXTURE_LIFETIME
+        print("IN surface_gen_blur:\n")
     var temp : Surface
     create_surface(temp, surf.size)
     // horizontal
@@ -252,6 +273,8 @@ def public surface_gen_blur ( var surf:Surface; src:Surface; var sigma:float )
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     // back to ffp, also cleanup
     bind_ffp()
+    if DEBUG_TEXTURE_LIFETIME
+        print("delete temp texture {temp.tex}\n")
     delete temp
 
 def public surface_gen_sobel ( var surf:Surface; src:Surface )
@@ -325,15 +348,23 @@ var G_OUTPUT : array<tuple<Surface;string;string;string>>
 def public preview ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
         var creg : Surface
+        if DEBUG_TEXTURE_LIFETIME
+            print("IN preview:\n")
         create_surface(creg, reg.size)
         creg.tex = surface_gen_tex(reg)
+        if DEBUG_TEXTURE_LIFETIME
+            print("preview {creg.tex}\n")
         G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
 def public output ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
         var creg : Surface
+        if DEBUG_TEXTURE_LIFETIME
+            print("IN output:\n")
         create_surface(creg, reg.size)
         creg.tex = surface_gen_tex(reg)
+        if DEBUG_TEXTURE_LIFETIME
+            print("output {creg.tex}\n")
         G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
 
 def public output ( var reg:float; name,id,outp:string )

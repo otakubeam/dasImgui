@@ -83,7 +83,7 @@ def imgui_app ( title:string; blk : block )
         let total_heap = heap_bytes_allocated()
         let t0 = ref_time_ticks()
         unsafe
-            heap_collect(true)
+            heap_collect(true, true)
         let dt = (get_time_usec(t0)+500) / 1000
         glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
 
@@ -1031,7 +1031,9 @@ def main_editor_screen()
         VerticalSeparator("left_side",LEFT_SIDE_PANNEL_WIDTH)
         PushStyleVar(ImGuiStyleVar ChildBorderSize, 0.)
         let editing = GetSelectedObjectCount() != 0
-        let nedw = editing ? (IO.DisplaySize.x - RIGHT_SIDE_PANNEL_WIDTH - 10. - sz.x - 10.) : 0.
+        var nedw = IO.DisplaySize.x - 10. - sz.x - 10.
+        if editing
+            nedw -= RIGHT_SIDE_PANNEL_WIDTH
         BeginChild("Node editor window", float2(nedw, -FLT_MIN), true, ImGuiWindowFlags NoBackground)
         if length(g_CurrentProject.actions)>0
             if BeginTabBar("##Tabs", ImGuiTabBarFlags None)

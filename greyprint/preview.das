@@ -149,7 +149,8 @@ def draw_preview ( display_w, display_h : int )
                     float4(float(x)*stepX+halfX, float(y)*stepY+halfY, -2. - float(sqX-1)*2., 0.0),
                     rot,
                     float4(1.0))
-            v_projection = perspective_opengl( radians(45.0f), float(display_w)/float(display_h), 0.1f, 100.0f)
+            let aspect = display_h>0 ? float(display_w)/float(display_h) : 1.0
+            v_projection = perspective_opengl( radians(45.0f), aspect, 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
             f_tex.texture2D = g_PreviewTexture[index]

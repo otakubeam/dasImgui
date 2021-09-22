@@ -48,6 +48,7 @@ class Instruction_CallAction : Instruction
         var astr = join(args, ",")
         return <- [{string
             "{decorate_name(fn)}({astr})"
+            // ;"preview({to_reg(pins.outputs[0].reg)},\"{name}\",\"{id}\",\"unexpected\")"
         }]
 
 // action arguments
@@ -89,6 +90,11 @@ class Instruction_ActionArgumentVector4 : Instruction_ActionArgumentAny
 class Instruction_ActionArgumentSurface : Instruction_ActionArgumentAny
     def Instruction_ActionArgumentSurface
         Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_SURFACE)
+    def override produce ( var src_regs : array<int> ): array<string>
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{decorate_name(argument_name)}.size) // {to_reg_any(pins.outputs[0].reg,argument_type)} = {decorate_name(argument_name)}";
+            "surface_gen_copy({to_reg(pins.outputs[0].reg)},{decorate_name(argument_name)})"
+        }]
 
 // action results
 
@@ -127,8 +133,19 @@ class Instruction_ActionResultVector4 : Instruction_ActionResultAny
 
 [instruction_node(name="Result, surface",category="Actions")]
 class Instruction_ActionResultSurface : Instruction_ActionResultAny
+    preview : bool = false
     def Instruction_ActionResultSurface
         Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_SURFACE)
+    def override edit ( mode:EditMode ): void
+        NodeCheckbox(mode,id,"preview",preview)
+    def override produce ( var src_regs : array<int> ): array<string>
+        var res <- [{string
+            "create_surface({decorate_name(argument_name)},{to_reg_any(src_regs[0],argument_type)}.size)";
+            "surface_gen_copy({decorate_name(argument_name)},{to_reg_any(src_regs[0],argument_type)})"
+        }]
+        if preview
+            res |> push("preview({decorate_name(argument_name)},\"{name}\",\"{id}\",\"unexpected\")")
+        return <- res
 
 // comment
 
