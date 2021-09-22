@@ -63,7 +63,7 @@ def NodeArgumentName(mode:EditMode; id,name:string; var text:string&; var proj:P
 def NodeEditEnumeration(mode:EditMode; id,name:string; var op : auto&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     Text(name)
-    if EmbeddedListBox("{name}##{id}{mode}_Enumeration", op)
+    if ListBox("{name}##{id}{mode}_Enumeration", op)
         undo_edit_instruction(id,name)
         update_preview()
         return true

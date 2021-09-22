@@ -49,7 +49,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"sigma" : 4.92000007629394531,
@@ -68,7 +68,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"size" : {
@@ -86,7 +86,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"size" : {
@@ -104,7 +104,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"argument_name" : "Arg",
@@ -119,7 +119,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"argument_name" : "Res",
@@ -134,7 +134,7 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+			"action" : "Smart Blur"
 		},
 		{
 			"id" : "b5c1b40a-cf42-4ec9-8251-8459375fb5d5",
@@ -142,7 +142,7 @@
 				"y" : 489.00000000000000000,
 				"x" : 829.00000000000000000
 			},
-			"fn" : "Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa",
+			"fn" : "Smart Blur",
 			"rtti" : "Instruction_CallAction",
 			"name" : "Call action",
 			"extents" : {
@@ -153,7 +153,7 @@
 		}
 	],
 	"actions" : [
-		"Action 5189ddbe-cf1e-4f39-8ef9-98a057a133aa"
+		"Smart Blur"
 	],
 	"links" : [
 		{
