@@ -5,10 +5,10 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"id" : "e3ce5566-9fc9-4eb6-ab7e-a43441d8b6c9",
 			"at" : {
-				"y" : 491.00000000000000000,
-				"x" : 287.00000000000000000
+				"y" : 567.00000000000000000,
+				"x" : 43.00000000000000000
 			},
 			"rtti" : "Instruction_ImageFile",
 			"name" : "Image file",
@@ -20,10 +20,10 @@
 			"action" : ""
 		},
 		{
-			"id" : "7922cbd3-77d1-4b19-bd61-41638d95e29f",
+			"id" : "f354eea1-bc24-4e8d-a4e7-a153b235fa9e",
 			"at" : {
-				"y" : 491.00000000000000000,
-				"x" : 987.00000000000000000
+				"y" : 567.00000000000000000,
+				"x" : 743.00000000000000000
 			},
 			"rtti" : "Instruction_OutputSurface",
 			"name" : "Output surface",
@@ -34,12 +34,12 @@
 			"action" : ""
 		}
 	],
-	"actions" : [],
+	"actions" : {},
 	"links" : [
 		{
 			"input_name" : "In",
-			"input_id" : "7922cbd3-77d1-4b19-bd61-41638d95e29f",
-			"output_id" : "4116073a-86d6-479a-9980-18022ac357f3",
+			"input_id" : "f354eea1-bc24-4e8d-a4e7-a153b235fa9e",
+			"output_id" : "e3ce5566-9fc9-4eb6-ab7e-a43441d8b6c9",
 			"output_name" : "Out"
 		}
 	]

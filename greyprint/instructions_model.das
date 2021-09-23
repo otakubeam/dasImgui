@@ -17,26 +17,23 @@ require daslib/strings_boost
 [instruction_node(name="Call action",category="Actions")]
 class Instruction_CallAction : Instruction
     [[serialize]] fn : string
-    pin_fn : string
     def Instruction_CallAction
         pass
     def override pre_sync : void
         unsafe
             delete pins
         pins <- collect_action_pins(g_CurrentProject, fn)
-        pin_fn = fn
     def override sync : void
-        if pin_fn == fn
-            var new_pins <- collect_action_pins(g_CurrentProject, fn)
-            for i,ni in pins.inputs,new_pins.inputs
-                if ni.name==i.name && ni._type==i._type
-                    ni.src = i.src
-                    ni.output = i.output
-            unsafe
-                delete pins
-            pins <- new_pins
-        else
-            self->pre_sync()
+        var new_pins <- collect_action_pins(g_CurrentProject, fn)
+        for np in new_pins.inputs
+            for p in pins.inputs
+                if p.name==np.name && p._type==np._type
+                    np.src = p.src
+                    np.output = p.output
+                    break
+        unsafe
+            delete pins
+        pins <- new_pins
     def override edit ( mode:EditMode ) : void
         assert(owner!=null)
         Text("{owner.actions[fn]} : {fn}")
@@ -63,7 +60,7 @@ class Instruction_ActionArgumentAny : Instruction_Argument
         NodeArgumentName(mode,id,"Argument name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{to_reg_any(pins.outputs[0].reg,argument_type)} = {decorate_name(argument_name)}"
+            "{to_reg_any(pins.outputs[0].reg,argument_type)} = arg_{decorate_name(id)} // {argument_name}"
         }]
 
 [instruction_node(name="Argument, scalar",category="Actions")]
@@ -92,8 +89,8 @@ class Instruction_ActionArgumentSurface : Instruction_ActionArgumentAny
         Instruction_ActionArgumentAny`Instruction_ActionArgumentAny(self,TYPE_SURFACE)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{decorate_name(argument_name)}.size) // {to_reg_any(pins.outputs[0].reg,argument_type)} = {decorate_name(argument_name)}";
-            "surface_gen_copy({to_reg(pins.outputs[0].reg)},{decorate_name(argument_name)})"
+            "create_surface({to_reg(pins.outputs[0].reg)},arg_{decorate_name(id)}.size) // {to_reg_any(pins.outputs[0].reg,argument_type)} = {argument_name}";
+            "surface_gen_copy({to_reg(pins.outputs[0].reg)},arg_{decorate_name(id)})"
         }]
 
 // action results
@@ -108,7 +105,7 @@ class Instruction_ActionResultAny : Instruction_Argument
         NodeArgumentName(mode,id,"Result name",argument_name,owner)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "{decorate_name(argument_name)} = {to_reg_any(src_regs[0],argument_type)}"
+            "arg_{decorate_name(id)} = {to_reg_any(src_regs[0],argument_type)}"
         }]
 
 [instruction_node(name="Result, scalar",category="Actions")]
@@ -137,14 +134,15 @@ class Instruction_ActionResultSurface : Instruction_ActionResultAny
     def Instruction_ActionResultSurface
         Instruction_ActionResultAny`Instruction_ActionResultAny(self,TYPE_SURFACE)
     def override edit ( mode:EditMode ): void
+        Instruction_ActionArgumentAny`edit(self,mode)
         NodeCheckbox(mode,id,"preview",preview)
     def override produce ( var src_regs : array<int> ): array<string>
         var res <- [{string
-            "create_surface({decorate_name(argument_name)},{to_reg_any(src_regs[0],argument_type)}.size)";
-            "surface_gen_copy({decorate_name(argument_name)},{to_reg_any(src_regs[0],argument_type)})"
+            "create_surface(arg_{decorate_name(id)},{to_reg_any(src_regs[0],argument_type)}.size)";
+            "surface_gen_copy(arg_{decorate_name(id)},{to_reg_any(src_regs[0],argument_type)})"
         }]
         if preview
-            res |> push("preview({decorate_name(argument_name)},\"{name}\",\"{id}\",\"unexpected\")")
+            res |> push("preview(arg_{decorate_name(id)},\"{name}\",\"{id}\",\"unexpected\")")
         return <- res
 
 // comment

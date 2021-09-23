@@ -5,10 +5,10 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"id" : "0c0107f9-57b3-48ce-817e-f21352c7d5a1",
+			"id" : "e654e464-9e5a-42df-b66c-37a74d60882d",
 			"at" : {
-				"y" : 884.00000000000000000,
-				"x" : 875.00000000000000000
+				"y" : 1049.00000000000000000,
+				"x" : 785.00000000000000000
 			},
 			"rtti" : "Instruction_Sobel",
 			"name" : "Sobel",
@@ -16,54 +16,17 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
-		},
-		{
-			"sigma" : 4.92000007629394531,
-			"size" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"id" : "edebc511-1f1a-4241-a43f-efa646f6305d",
-			"at" : {
-				"y" : 212.00000000000000000,
-				"x" : 1049.00000000000000000
-			},
-			"rtti" : "Instruction_Blur",
-			"name" : "Blur",
-			"extents" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"size" : {
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
+			"id" : "3e84ddc0-9cf7-43da-b525-70bc375a8cb4",
 			"at" : {
-				"y" : 641.00000000000000000,
-				"x" : 1591.00000000000000000
-			},
-			"rtti" : "Instruction_TextureCrossfade",
-			"name" : "Texture Crossfade",
-			"extents" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
-		},
-		{
-			"size" : {
-				"y" : 256.00000000000000000,
-				"x" : 256.00000000000000000
-			},
-			"id" : "b3b78722-e8b1-4611-a0fa-6707f3e69f53",
-			"at" : {
-				"y" : 1201.00000000000000000,
-				"x" : 1129.00000000000000000
+				"y" : 1505.00000000000000000,
+				"x" : 1211.00000000000000000
 			},
 			"rtti" : "Instruction_Greyscale",
 			"name" : "Greyscale",
@@ -71,84 +34,135 @@
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
-			"argument_name" : "Arg",
-			"id" : "e2911fc3-7347-4b52-8384-842ecf8442f3",
-			"at" : {
-				"y" : 540.00000000000000000,
-				"x" : 487.00000000000000000
+			"sigma" : 2.19000005722045898,
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
 			},
-			"rtti" : "Instruction_ActionArgumentSurface",
-			"name" : "Argument, surface",
+			"id" : "0b57f002-3649-40d0-b43a-29705f432204",
+			"at" : {
+				"y" : 681.00000000000000000,
+				"x" : 787.00000000000000000
+			},
+			"rtti" : "Instruction_Blur",
+			"name" : "Blur",
 			"extents" : {
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
+		},
+		{
+			"size" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"id" : "7b32aa32-0405-449f-89e3-c68997fac01d",
+			"at" : {
+				"y" : 849.00000000000000000,
+				"x" : 1561.00000000000000000
+			},
+			"rtti" : "Instruction_TextureCrossfade",
+			"name" : "Texture Crossfade",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"argument_name" : "Res",
-			"id" : "7647298a-a8c8-4f6c-86dd-3e1b9a1c05b0",
+			"id" : "1df6ef4d-678f-477f-b995-04466a894de1",
 			"at" : {
-				"y" : 641.00000000000000000,
-				"x" : 2291.00000000000000000
+				"y" : 849.00000000000000000,
+				"x" : 2261.00000000000000000
 			},
 			"rtti" : "Instruction_ActionResultSurface",
-			"name" : "Result, surface",
+			"name" : "Result",
 			"extents" : {
 				"y" : 256.00000000000000000,
 				"x" : 256.00000000000000000
 			},
-			"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa"
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
+		},
+		{
+			"argument_name" : "Arg",
+			"id" : "ca3b236c-e9a7-48ec-97ec-6e44edc534a4",
+			"at" : {
+				"y" : 889.00000000000000000,
+				"x" : 49.00000000000000000
+			},
+			"rtti" : "Instruction_ActionArgumentSurface",
+			"name" : "Source",
+			"extents" : {
+				"y" : 256.00000000000000000,
+				"x" : 256.00000000000000000
+			},
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		}
 	],
 	"action_name" : "Smart blur",
 	"actions" : {},
-	"action" : "5ea95f64-296d-46a1-b85a-def0fceeaaaa",
+	"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620",
 	"links" : [
 		{
 			"input_name" : "Inp",
-			"input_id" : "0c0107f9-57b3-48ce-817e-f21352c7d5a1",
-			"output_id" : "e2911fc3-7347-4b52-8384-842ecf8442f3",
-			"output_name" : "Out"
+			"input_id" : "e654e464-9e5a-42df-b66c-37a74d60882d",
+			"output_id" : "ca3b236c-e9a7-48ec-97ec-6e44edc534a4",
+			"output_name" : "Out",
+			"name" : "Sobel",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"input_name" : "Inp",
-			"input_id" : "edebc511-1f1a-4241-a43f-efa646f6305d",
-			"output_id" : "e2911fc3-7347-4b52-8384-842ecf8442f3",
-			"output_name" : "Out"
+			"input_id" : "3e84ddc0-9cf7-43da-b525-70bc375a8cb4",
+			"output_id" : "e654e464-9e5a-42df-b66c-37a74d60882d",
+			"output_name" : "Out",
+			"name" : "Greyscale",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
+		},
+		{
+			"input_name" : "Inp",
+			"input_id" : "0b57f002-3649-40d0-b43a-29705f432204",
+			"output_id" : "ca3b236c-e9a7-48ec-97ec-6e44edc534a4",
+			"output_name" : "Out",
+			"name" : "Blur",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"input_name" : "Src",
-			"input_id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
-			"output_id" : "edebc511-1f1a-4241-a43f-efa646f6305d",
-			"output_name" : "Out"
+			"input_id" : "7b32aa32-0405-449f-89e3-c68997fac01d",
+			"output_id" : "0b57f002-3649-40d0-b43a-29705f432204",
+			"output_name" : "Out",
+			"name" : "Texture Crossfade",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"input_name" : "Dst",
-			"input_id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
-			"output_id" : "e2911fc3-7347-4b52-8384-842ecf8442f3",
-			"output_name" : "Out"
+			"input_id" : "7b32aa32-0405-449f-89e3-c68997fac01d",
+			"output_id" : "ca3b236c-e9a7-48ec-97ec-6e44edc534a4",
+			"output_name" : "Out",
+			"name" : "Texture Crossfade",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"input_name" : "Factor",
-			"input_id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
-			"output_id" : "b3b78722-e8b1-4611-a0fa-6707f3e69f53",
-			"output_name" : "Out"
-		},
-		{
-			"input_name" : "Inp",
-			"input_id" : "b3b78722-e8b1-4611-a0fa-6707f3e69f53",
-			"output_id" : "0c0107f9-57b3-48ce-817e-f21352c7d5a1",
-			"output_name" : "Out"
+			"input_id" : "7b32aa32-0405-449f-89e3-c68997fac01d",
+			"output_id" : "3e84ddc0-9cf7-43da-b525-70bc375a8cb4",
+			"output_name" : "Out",
+			"name" : "Texture Crossfade",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		},
 		{
 			"input_name" : "In",
-			"input_id" : "7647298a-a8c8-4f6c-86dd-3e1b9a1c05b0",
-			"output_id" : "34a8b2ce-00dd-4d9f-a02d-f91f3dd4c509",
-			"output_name" : "Out"
+			"input_id" : "1df6ef4d-678f-477f-b995-04466a894de1",
+			"output_id" : "7b32aa32-0405-449f-89e3-c68997fac01d",
+			"output_name" : "Out",
+			"name" : "Result",
+			"action" : "Action d5b8940c-5d0a-47f3-b77a-cc5f14264620"
 		}
 	]
 }

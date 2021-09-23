@@ -396,7 +396,7 @@ def editor_child_window()
                         let inp_id = get_input_unique_id(inst,inp.name)
                         in_pin(inp_id) <|
                             SameLine()
-                            Text("{inp.name}:{inp._type}")
+                            Text("{get_display_name(inp)}:{inp._type}")
                             SameLine()
                             if inp.src != null
                                 SameLine()
@@ -411,7 +411,7 @@ def editor_child_window()
                     let lw = ImGuiEx_NextColumn()
                     for outp in inst.pins.outputs
                         let outp_id = get_output_unique_id(inst,outp.name)
-                        let text = "{outp.name}:{outp._type}"
+                        let text = "{get_display_name(outp)}:{outp._type}"
                         out_pin(outp_id, text, DEFAULT_NODE_WIDTH - CalcTextSize(text).x - lw.x) <|
                             SameLine()
                             unsafe
@@ -494,6 +494,7 @@ def editor_child_window()
                     let inp_id = get_input_unique_id(inst,inp.name)
                     let outp_id = get_output_unique_id(inp.src,inp.output)
                     Link(inp_id, inp_id, outp_id)
+
 
         /*
         if (ed::ShowNodeContextMenu(&contextNodeId))
@@ -622,7 +623,7 @@ def side_edit_instance( var inst:Instruction?; flags:ImGuiTreeNodeFlags = ImGuiT
                 if Checkbox("##preview_{inst.id}_{outp.name}_S",addr(outp.preview))
                     update_preview()
             SameLine()
-            Text("-> {outp.name}:{outp._type}")
+            Text("-> {get_display_name(outp)}:{outp._type}")
         if inst.flags.HasEdit
             inst->edit(EditMode Sidebar)
         TreePop()

@@ -39,7 +39,11 @@ def finalize ( var self:Surface )
 
 struct Connection
     name    : string
+    text    : string
     _type   : string
+
+def get_display_name ( self:Connection )
+    return empty(self.text) ? self.name : self.text
 
 struct Input : Connection
     [[do_not_delete]] src : Instruction?
@@ -360,11 +364,17 @@ def collect_action_pins ( var proj:Project?; action:string )
             unsafe
                 let arg_inst = upcast<Instruction_Argument?> inst
                 if inst.flags.Input
-                    let name = "{arg_inst.argument_name}"
-                    pins.inputs |> push([[Input name=name,_type=arg_inst.argument_type]])
+                    pins.inputs |> push <| [[Input
+                        name=arg_inst.id,
+                        text=arg_inst.argument_name,
+                        _type=arg_inst.argument_type
+                    ]]
                 if inst.flags.Output
-                    let name = "{arg_inst.argument_name}"
-                    pins.outputs |> push([[Output name=name,_type=arg_inst.argument_type]])
+                    pins.outputs |> push <| [[Output
+                        name=arg_inst.id,
+                        text= arg_inst.argument_name,
+                        _type=arg_inst.argument_type
+                    ]]
     return <- pins
 
 var g_CurrentProject : Project?

@@ -143,12 +143,12 @@ def produce_project_text
                 eidx ++
                 if eidx != 1
                     writer |> write("; ")
-                writer |> write("{decorate_name(inp.name)}:{reg_type(inp._type)}")
+                writer |> write("arg_{decorate_name(inp.name)}:{reg_type(inp._type)}")
             for outp in pins.outputs
                 eidx ++
                 if eidx != 1
                     writer |> write("; ")
-                writer |> write("var {decorate_name(outp.name)}:{reg_type(outp._type)}")
+                writer |> write("var arg_{decorate_name(outp.name)}:{reg_type(outp._type)}")
                 if outp._type!=TYPE_SURFACE
                     writer |> write("&");
             writer |> write(")\n")

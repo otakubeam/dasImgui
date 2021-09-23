@@ -56,7 +56,7 @@ def NodeArgumentName(mode:EditMode; id,name:string; var text:string&; var proj:P
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH)
     if InputText("##{name}{id}{mode}_Text",*buf)
         text = to_string(*buf)
-        // TODO: rename argument
+        proj->sync()
         undo_edit_instruction(id,name)
         update_preview()
 
