@@ -19,6 +19,7 @@ require daslib/imgui_node_editor_boost
 require daslib/strings_boost
 require daslib/lpipe
 require daslib/opengl_boost
+require daslib/opengl_ttf
 
 require instructions
 require instructions_ui
@@ -1085,7 +1086,7 @@ def main
         eval_project()
     seal_instruction_factory()          // initialize everything greyprint related
     init_model_cache()
-    imgui_app("Testing IMGUI") <|
+    imgui_app("Greyprint") <|
         NewFrame()
         main_editor_screen()
         Render()

@@ -6,6 +6,7 @@ require daslib/glfw_boost
 require daslib/safe_addr
 require daslib/static_let
 require daslib/opengl_boost
+require daslib/opengl_ttf
 
 require instructions public
 require model_eval
@@ -21,8 +22,8 @@ def make_rgba_texture(width,height:int; data:void?)
     glBindTexture(GL_TEXTURE_2D, texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
     glTexImage2D(GL_TEXTURE_2D, 0, int(GL_RGBA), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
     glBindTexture(GL_TEXTURE_2D, GL_INVALID_VALUE)
     return texture
@@ -83,6 +84,8 @@ def draw_preview ( display_w, display_h : int )
         var vao : uint
         var vbo : uint
         var ebo : uint
+        var ttf : bool = false
+        var font : Font
     if program==0u
         program = create_shader_program(PREVIEW_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
     if vao==0u
@@ -95,6 +98,9 @@ def draw_preview ( display_w, display_h : int )
         glGenBuffers(1, safe_addr(ebo))
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
+    if !ttf
+        create_ttf_objects()
+        font <- load_ttf("c:/windows/fonts/times.ttf")
 
     if length(g_PreviewTexture)==0
         g_PreviewTexture |> push([[Material surf=make_checkerboard(),name="Checkerboard",id="nothing",outp="nothing"]])
@@ -153,8 +159,6 @@ def draw_preview ( display_w, display_h : int )
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
             f_tex.texture2D = g_PreviewTexture[index].surf.tex
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
             glUseProgram(program)
             bind_vertex_buffer(vbo,type<PreviewVertex>)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
