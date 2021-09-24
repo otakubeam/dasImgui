@@ -35,6 +35,12 @@ def finalize ( var self:Surface )
         glDeleteFramebuffers(1, safe_addr(self.fbo))
         self.fbo = 0u
 
+struct Material
+    surf   : Surface
+    name   : string
+    id     : string
+    outp   : string
+
 // instructions
 
 struct Connection

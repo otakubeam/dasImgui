@@ -346,7 +346,7 @@ def public surface_blend_tex_Crossfade  ( var reg:Surface; src,dst,factor:Surfac
     bind_ffp()
 
 
-var G_OUTPUT : array<tuple<Surface;string;string;string>>
+var G_OUTPUT : array<Material>
 
 def public preview ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
@@ -357,7 +357,7 @@ def public preview ( var reg:Surface; name,id,outp:string )
         creg.tex = surface_gen_tex(reg)
         if DEBUG_TEXTURE_LIFETIME
             print("preview {creg.tex}\n")
-        G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
+        G_OUTPUT |> push_clone([[Material surf=creg,name=name,id=id,outp=outp]])
 
 def public output ( var reg:Surface; name,id,outp:string )
     if reg.size.x!=0 && reg.size.y!=0
@@ -368,7 +368,7 @@ def public output ( var reg:Surface; name,id,outp:string )
         creg.tex = surface_gen_tex(reg)
         if DEBUG_TEXTURE_LIFETIME
             print("output {creg.tex}\n")
-        G_OUTPUT |> push_clone([[auto creg,name,id,outp]])
+        G_OUTPUT |> push_clone([[Material surf=creg,name=name,id=id,outp=outp]])
 
 def public output ( var reg:float; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")

@@ -876,7 +876,7 @@ def eval_project ()
                         if !failed
                             var pout = get_context_global_variable(context,"G_OUTPUT")
                             if pout!=null
-                                var OUTPUT  & = * ( reinterpret<array<tuple<surf:Surface;name:string;id:string;outp:string>>?> pout )
+                                var OUTPUT  & = * ( reinterpret<array<Material>?> pout )
                                 clear_preview()
                                 for inst in g_CurrentProject.instructions
                                     inst.tex = null
@@ -884,7 +884,7 @@ def eval_project ()
                                         outp.tex = null
                                 for outprev in OUTPUT
                                     var tex = outprev.surf.tex
-                                    g_PreviewTexture |> push(tex)
+                                    g_PreviewTexture |> push(outprev)
                                     var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
                                     assert(pinst!=null)
                                     if !empty(outprev.outp)

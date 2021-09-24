@@ -12,7 +12,7 @@ require model_eval
 require model
 require math
 
-var g_PreviewTexture : array<uint>
+var g_PreviewTexture : array<Material>
 var g_LivePreview = true
 
 def make_rgba_texture(width,height:int; data:void?)
@@ -32,13 +32,12 @@ def make_checkerboard
     for y in range(16)
         for x in range(16)
             cbt[y][x] = ((x^y)&1)!=0 ? 0xff404040 : 0xff808080
-    return make_rgba_texture(16,16,gl_array_ptr(cbt))
+    var surf = Surface(16,16)
+    surf.tex = make_rgba_texture(16,16,gl_array_ptr(cbt))
+    return surf
 
 def clear_preview
-    if length(g_PreviewTexture)!=0
-        unsafe
-            glDeleteTextures(length(g_PreviewTexture), addr(g_PreviewTexture[0]))
-        g_PreviewTexture |> clear()
+    delete g_PreviewTexture
 
 var g_PreviewUpdater : function<():void>
 
@@ -98,7 +97,7 @@ def draw_preview ( display_w, display_h : int )
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
     if length(g_PreviewTexture)==0
-        g_PreviewTexture |> push(make_checkerboard())
+        g_PreviewTexture |> push([[Material surf=make_checkerboard(),name="Checkerboard",id="nothing",outp="nothing"]])
     static_let <|
         let vertices = [[PreviewVertex
             xyz=float3(-0.5,-0.5, 0.5), uv=float2(0.0, 0.0);
@@ -153,7 +152,7 @@ def draw_preview ( display_w, display_h : int )
             v_projection = perspective_opengl( radians(45.0f), aspect, 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
-            f_tex.texture2D = g_PreviewTexture[index]
+            f_tex.texture2D = g_PreviewTexture[index].surf.tex
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
             glUseProgram(program)
