@@ -103,6 +103,18 @@ def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.0
     else
         return false
 
+def NodeDragFloat2(mode:EditMode; id,name:string; var data:float2&; step:float=0.01f)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
+    var any = DragFloat("{name}.x##{id}{mode}_DragFloat_x",safe_addr(data.x),step)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
+    any = DragFloat("{name}.y##{id}{mode}_DragFloat_y",safe_addr(data.y),step) || any
+    if any
+        undo_edit_instruction(id,name)
+        update_preview()
+        return true
+    else
+        return false
+
 def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH -  - CalcTextSize(name).x)
     if Checkbox("{name}##{id}{mode}_Checkbox",safe_addr(data))

@@ -7,6 +7,7 @@ require model
 require preview
 require instructions_ui
 require produce
+require math
 
 require instructions_math public
 
@@ -307,3 +308,23 @@ class Instruction_TextureCrossfade : Instruction
             "surface_blend_tex_Crossfade({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg_surface(src_regs[2])})"
         }]
 
+[instruction_node(name="Compose",category="Surface operations")]
+class Instruction_Compose : Instruction
+    [[serialize]] size : int2 = int2(256,256)
+    [[serialize]] offset : float2 = float2(0.,0.)
+    [[serialize]] scale  : float2 = float2(1.,1.)
+    [[serialize]] angle  : float  = 0.
+    def Instruction_Compose
+        self->add_input("Src",TYPE_SURFACE)
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        NodeInputInt2(mode,id,"size",size)
+        NodeDragFloat2(mode,id,"offset",offset)
+        NodeDragFloat2(mode,id,"sclae",scale)
+        NodeDragFloat (mode,id,"angle",angle)
+    def override produce ( var src_regs : array<int> ): array<string>
+        let rad = angle * PI / 180.
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "surface_gen_compose({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},float2({offset.x},{offset.y}),float2({scale.x},{scale.y}),{angle})"
+        }]
