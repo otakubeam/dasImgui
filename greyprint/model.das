@@ -149,6 +149,7 @@ def create_effect_data
         glGenBuffers(1, safe_addr(effect_vbo))
         glBindBuffer(GL_ARRAY_BUFFER, effect_vbo)
         glBufferData(GL_ARRAY_BUFFER, effect_vertices, GL_STATIC_DRAW)
+        bind_vertex_buffer(null, type<EffectVertex>)
     if effect_ebo==0u
         glGenBuffers(1, safe_addr(effect_ebo))
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, effect_ebo)
@@ -161,7 +162,7 @@ def bind_effect ( var surf:Surface; prog:uint )
     glDisable(GL_DEPTH_TEST)
     glUseProgram(prog)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, effect_ebo)
-    bind_vertex_buffer(effect_vbo, type<EffectVertex>)
+    glBindVertexArray(effect_vao)
 
 def public create_surface ( var reg:Surface; sz:int2 )
     if sz.x<=0 || sz.y<=0
