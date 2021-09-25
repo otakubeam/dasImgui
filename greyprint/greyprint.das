@@ -1,5 +1,7 @@
 options log_total_compile_time
 
+options multiple_contexts
+
 options persistent_heap = true
 options persistent_string_heap = true
 options gc
@@ -70,6 +72,7 @@ def imgui_app ( title:string; blk : block )
         invoke(blk)
         var display_w, display_h : int
         glfwGetFramebufferSize(window, display_w, display_h)
+        bind_ffp()
         glViewport(0, 0, display_w, display_h)
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w)
         glClearDepth(1.0lf)
@@ -275,8 +278,9 @@ def main_menu()
                     if !empty(fname)
                         export_action(g_CurrentAction,fname)
         BeginMenu("Preview##Main menu") <|
-            if Checkbox("Live preview##Preview",safe_addr(g_LivePreview))
+            if Checkbox("Live preview##Preview_live",safe_addr(g_LivePreview))
                 update_preview()
+            Checkbox("Preview labels##Preview_labels",safe_addr(g_PreviewLabels))
             if MenuItem("View generated code##Preview")
                 g_ProjectSource = produce_project_text()
                 post_event <| @
@@ -877,7 +881,7 @@ def eval_project ()
                         if !failed
                             var pout = get_context_global_variable(context,"G_OUTPUT")
                             if pout!=null
-                                var OUTPUT  & = * ( reinterpret<array<Material>?> pout )
+                                var OUTPUT  & = * ( reinterpret<array<Material#>?> pout )
                                 clear_preview()
                                 for inst in g_CurrentProject.instructions
                                     inst.tex = null
@@ -885,7 +889,7 @@ def eval_project ()
                                         outp.tex = null
                                 for outprev in OUTPUT
                                     var tex = outprev.surf.tex
-                                    g_PreviewTexture |> push(outprev)
+                                    g_PreviewTexture |> push_clone(outprev)
                                     var pinst = (*g_CurrentProject)->find_instruction(outprev.id)
                                     assert(pinst!=null)
                                     if !empty(outprev.outp)

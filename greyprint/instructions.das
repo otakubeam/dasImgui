@@ -150,7 +150,7 @@ def find_input ( var inst:Instruction?; iname:string; blk : block<(var inp:Input
         invoke(blk,reinterpret<Input?#> null)
 
 
-def find_output ( var inst:Instruction?; iname:string; blk : block<(var inp:Output?#):void> ) : void
+def find_output ( var inst:Instruction?; iname:string implicit; blk : block<(var inp:Output?#):void> ) : void
     for i in inst.pins.outputs
         if i.name==iname
             invoke(blk,safe_addr(i))
@@ -195,7 +195,7 @@ class Project
         clear(lookup)
     def finalize
         self->clear()
-    def find_instruction ( id:string ) : Instruction?
+    def find_instruction ( id:string implicit ) : Instruction?
         return lookup?[id] ?? null
     def add_insturction ( var i : Instruction? )
         unsafe

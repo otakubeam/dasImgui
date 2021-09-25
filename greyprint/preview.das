@@ -12,9 +12,11 @@ require instructions public
 require model_eval
 require model
 require math
+require strings
 
 var g_PreviewTexture : array<Material>
 var g_LivePreview = true
+var g_PreviewLabels = true
 
 def make_rgba_texture(width,height:int; data:void?)
     var texture : uint
@@ -71,7 +73,6 @@ def ps_preview_main
 struct PreviewVertex
     [[type=GL_FLOAT, size=3, normalized=false]] xyz : float3
     [[type=GL_FLOAT, size=2, normalized=false]] uv  : float2
-    [[type=GL_FLOAT, size=3, normalized=true]]  normal : float3
 
 def radians(f:float)
     return f * PI / 180.0
@@ -101,7 +102,7 @@ def draw_preview ( display_w, display_h : int )
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
     if !ttf
         create_ttf_objects()
-        font <- load_ttf("c:/windows/fonts/times.ttf")
+        font <- load_ttf("c:/windows/fonts/arial.ttf")
 
     if length(g_PreviewTexture)==0
         g_PreviewTexture |> push([[Material surf=make_checkerboard(),name="Checkerboard",id="nothing",outp="nothing"]])
@@ -161,17 +162,24 @@ def draw_preview ( display_w, display_h : int )
             glDepthFunc(GL_LEQUAL)
             f_tex.texture2D = g_PreviewTexture[index].surf.tex
             glUseProgram(program)
-            glBindVertexArray(vao)
-//            bind_vertex_buffer(safe_addr(vertices),type<PreviewVertex>)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
             vs_preview_main_bind_uniform(program)
             ps_preview_main_bind_uniform(program)
+            glBindVertexArray(vao)
             glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, null)
-
-            glDisable(GL_TEXTURE_2D)
             glDisable(GL_DEPTH_TEST)
+
+            if g_PreviewLabels
+                var hw_text <- font |> create_quads(g_PreviewTexture[index].name)
+                let qmodel = quads_view(hw_text, float2(1.0/300.0))
+                let model = translation(float3(float(x)*stepX+halfX, (float(y)+0.45)*stepY+halfY, -2.2 - float(sqX-1)*2.)) * qmodel
+                let mvp = v_projection * v_view * model
+                font |> draw_quads(hw_text, mvp)
+                delete hw_text
+
             bind_ffp()
 
             index ++
             if index==total
                 break
+
