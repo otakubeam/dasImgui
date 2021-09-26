@@ -57,6 +57,8 @@ def imgui_app ( title:string; blk : block )
     glfwSwapInterval(1)
     glSetBreakOnOpenGLError(true)    // enable for opengl debugging
     CreateContext(null)
+    create_ttf_objects()
+    create_preview_objects()
     dlg_init()
     var io & = GetIO()
     io.FontGlobalScale = 2.0

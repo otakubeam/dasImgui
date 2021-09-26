@@ -27,6 +27,9 @@ var [[uniform, binding=1]] f_tex2 : sampler2D
 var [[uniform, binding=2]] f_tex3 : sampler2D
 var [[uniform]] f_blend_factor : float
 var [[uniform]] v_tex_transform : float4x4
+var [[uniform]] f_contrast : float
+var [[uniform]] f_brightness : float
+var [[uniform]] f_normal_size : float
 
 [vertex_program(name="ANY_EFFECT_VERTEX_SRC",version=330)]
 def vs_any_effect
@@ -41,6 +44,30 @@ def vs_transform_effect
 [fragment_program(name="COPY_FRAGMENT_SRC",version=330)]
 def ps_copy_effect
     f_outputColor = texture(f_tex,f_texcoord)
+
+[fragment_program(name="HEIGHT_TO_NORMAL_FRAGMENT_SRC",version=330)]
+def ps_height_to_normal_effect
+    let off = int3(-1,0,1)
+    let size = float2(f_normal_size,0.0)
+    let s01 = textureOffset(f_tex, f_texcoord, off.xy).y
+    let s21 = textureOffset(f_tex, f_texcoord, off.zy).y
+    let s10 = textureOffset(f_tex, f_texcoord, off.yx).y
+    let s12 = textureOffset(f_tex, f_texcoord, off.yz).y
+    let va  = normalize(float3(size.x,size.y,s21-s01))
+    let vb  = normalize(float3(size.y,size.x,s12-s10))
+    f_outputColor.xyz = cross(va,vb) * 0.5 + float3(0.5)
+    f_outputColor.w = 1.
+
+[fragment_program(name="INVERSE_FRAGMENT_SRC",version=330)]
+def ps_inverse_effect
+    f_outputColor = saturate ( float4(1.) - texture(f_tex,f_texcoord) )
+
+[fragment_program(name="BRIGHTNESS_CONTRAST_FRAGMENT_SRC",version=330)]
+def ps_brightness_contrast_effect
+    let color = texture(f_tex,f_texcoord)
+    let colorContrasted = color.xyz * f_contrast
+    f_outputColor.xyz = max ( colorContrasted + float3(f_brightness), float3(0.))
+    f_outputColor.w = color.w
 
 [fragment_program(name="GREYSCALE_FRAGMENT_SRC",version=330)]
 def ps_greyscale_effect
@@ -241,6 +268,42 @@ def public surface_gen_copy ( var surf:Surface; src:Surface )
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
+def public surface_gen_height_to_normal ( var surf:Surface; src:Surface; scale:float )
+    if DEBUG_TEXTURE_LIFETIME
+        print("height_to_normal {surf.tex} <- {src.tex}\n")
+    let h2n_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,HEIGHT_TO_NORMAL_FRAGMENT_SRC)
+    bind_effect ( surf, h2n_program )
+    f_tex.texture2D = src.tex
+    f_normal_size = max(scale,0.2)
+    vs_any_effect_bind_uniform(h2n_program)
+    ps_height_to_normal_effect_bind_uniform(h2n_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
+def public surface_gen_inverse ( var surf:Surface; src:Surface )
+    if DEBUG_TEXTURE_LIFETIME
+        print("inverse_image {surf.tex} <- {src.tex}\n")
+    let inverse_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,INVERSE_FRAGMENT_SRC)
+    bind_effect ( surf, inverse_program )
+    f_tex.texture2D = src.tex
+    vs_any_effect_bind_uniform(inverse_program)
+    ps_copy_effect_bind_uniform(inverse_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
+def public surface_gen_brightness_contrast ( var surf:Surface; src:Surface; brightness,contrast:float )
+    if DEBUG_TEXTURE_LIFETIME
+        print("brightness_contrast {surf.tex} <- {src.tex}\n")
+    let bc_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BRIGHTNESS_CONTRAST_FRAGMENT_SRC)
+    bind_effect ( surf, bc_program )
+    f_tex.texture2D = src.tex
+    f_brightness = brightness
+    f_contrast = contrast
+    vs_any_effect_bind_uniform(bc_program)
+    ps_brightness_contrast_effect_bind_uniform(bc_program)
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
+    bind_ffp()
+
 def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:float2; angle_rad:float )
     if DEBUG_TEXTURE_LIFETIME
         print("compose {surf.tex} <- {src.tex}\n")
@@ -391,6 +454,29 @@ def public output ( var reg:Surface; name,id,outp:string )
         if DEBUG_TEXTURE_LIFETIME
             print("output {creg.tex}\n")
         G_OUTPUT |> push_clone([[Material surf=creg,name=name,id=id,outp=outp]])
+
+def public output_blinn_phong ( var diff,spec,norm:Surface; kD,kS,pS:float; name,id,outp:string )
+    if diff.size.x!=0 && diff.size.y!=0
+        var cdiff, cspec, cnorm : Surface
+        if DEBUG_TEXTURE_LIFETIME
+            print("IN output:\n")
+        create_surface(cdiff, diff.size)
+        cdiff.tex = surface_gen_tex(diff)
+        create_surface(cspec, spec.size)
+        cspec.tex = surface_gen_tex(spec)
+        create_surface(cnorm, norm.size)
+        cnorm.tex = surface_gen_tex(norm)
+        if DEBUG_TEXTURE_LIFETIME
+            print("output pbr {cdiff.tex}\n")
+        G_OUTPUT |> push_clone <| [[Material
+            surf=cdiff,
+            spec=cspec,
+            norm=cnorm,
+            name=name,
+            id=id,
+            outp=outp,
+            opt <- {{ "kDiff"=>kD; "kSpec"=>kS; "pSpec"=>pS }}
+        ]]
 
 def public output ( var reg:float; name,id,outp:string )
     print(" {name}:{outp} = {reg} // {id}\n")

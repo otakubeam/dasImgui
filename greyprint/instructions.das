@@ -37,9 +37,12 @@ def finalize ( var self:Surface )
 
 struct Material
     surf   : Surface
+    spec   : Surface
+    norm   : Surface
     name   : string
     id     : string
     outp   : string
+    opt    : table<string; float>
 
 // instructions
 
