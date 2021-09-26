@@ -41,6 +41,29 @@ def vs_transform_effect
     f_texcoord = (v_tex_transform * float4(v_texcoord.x - 0.5, v_texcoord.y - 0.5, 0., 1.)).xy + float2(0.5)
     gl_Position = float4(v_position.x, v_position.y, 0.0, 1.0)
 
+[fragment_program(name="COPY_AA_FRAGMENT_SRC",version=330)]
+def ps_copy_aa_effect
+    let base00  = texture(f_tex, f_texcoord)
+    let baseNW  = textureOffset(f_tex, f_texcoord, int2(-1,-1)).xyz
+    let baseNE  = textureOffset(f_tex, f_texcoord, int2( 1,-1)).xyz
+    let baseSW  = textureOffset(f_tex, f_texcoord, int2(-1, 1)).xyz
+    let baseSE  = textureOffset(f_tex, f_texcoord, int2( 1, 1)).xyz
+    let gray = normalize(float3(0.299, 0.587, 0.114))
+    let lumaNw  = dot(baseNW, gray)
+    let lumaNe  = dot(baseNE, gray)
+    let lumaSw  = dot(baseSW, gray)
+    let lumaSe  = dot(baseSE, gray)
+    let dirSwMinusNe = lumaSw - lumaNe
+    let dirSeMinusNw = lumaSe - lumaNw
+    let dir = float2(dirSwMinusNe + dirSeMinusNw, dirSwMinusNe - dirSeMinusNw) * 2.
+    let tsize = textureSize(f_tex,0)
+    let isize = float2(1.) / float2(tsize.x,tsize.y)
+    let rgbyN1 = texture(f_tex, f_texcoord - dir * isize).xyz
+    let rgbyP1 = texture(f_tex, f_texcoord + dir * isize).xyz
+    let rgbyA = (rgbyN1 + rgbyP1)*0.5
+    f_outputColor.xyz = base00.xyz*0.5 + rgbyA*0.5
+    f_outputColor.w = base00.w
+
 [fragment_program(name="COPY_FRAGMENT_SRC",version=330)]
 def ps_copy_effect
     f_outputColor = texture(f_tex,f_texcoord)
@@ -311,10 +334,10 @@ def public surface_gen_brightness_contrast ( var surf:Surface; src:Surface; brig
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
-def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:float2; angle_rad:float )
+def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:float2; angle_rad:float; aa:bool )
     if DEBUG_TEXTURE_LIFETIME
         print("compose {surf.tex} <- {src.tex}\n")
-    let transform_program = cache_shader_program(TRANSFORM_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
+    let transform_program = cache_shader_program(TRANSFORM_EFFECT_VERTEX_SRC,aa ? COPY_AA_FRAGMENT_SRC : COPY_FRAGMENT_SRC)
     bind_effect ( surf, transform_program )
     f_tex.texture2D = src.tex
     v_tex_transform = compose(
@@ -322,7 +345,10 @@ def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:flo
         un_quat_from_unit_vec_ang(float3(0.,0.,1.), angle_rad),
         float4(scale.x, scale.y, 1.0, 1.0))
     vs_transform_effect_bind_uniform(transform_program)
-    ps_copy_effect_bind_uniform(transform_program)
+    if aa
+        ps_copy_aa_effect_bind_uniform(transform_program)
+    else
+        ps_copy_effect_bind_uniform(transform_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     bind_ffp()
 
