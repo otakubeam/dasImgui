@@ -55,13 +55,12 @@ def ps_copy_aa_effect
     let lumaSe  = dot(baseSE, gray)
     let dirSwMinusNe = lumaSw - lumaNe
     let dirSeMinusNw = lumaSe - lumaNw
-    let dir = float2(dirSwMinusNe + dirSeMinusNw, dirSwMinusNe - dirSeMinusNw) * 2.
+    let dir = float2(dirSwMinusNe + dirSeMinusNw, dirSwMinusNe - dirSeMinusNw)
     let tsize = textureSize(f_tex,0)
     let isize = float2(1.) / float2(tsize.x,tsize.y)
     let rgbyN1 = texture(f_tex, f_texcoord - dir * isize).xyz
     let rgbyP1 = texture(f_tex, f_texcoord + dir * isize).xyz
-    let rgbyA = (rgbyN1 + rgbyP1)*0.5
-    f_outputColor.xyz = base00.xyz*0.5 + rgbyA*0.5
+    f_outputColor.xyz = base00.xyz*0.2 + rgbyN1*0.4 + rgbyP1*0.5
     f_outputColor.w = base00.w
 
 [fragment_program(name="COPY_FRAGMENT_SRC",version=330)]
