@@ -196,7 +196,7 @@ class Instruction_OutputSurfacePBR : Instruction
 
 [instruction_node(name="Solid color",category="Surface operations")]
 class Instruction_SolidColor : Instruction
-    [[serialize]] size : int2 = int2(256,256)
+    [[serialize]] size : int2 = int2(4,4)
     [[serialize]] color : float4 = float4(.5,.5,.5,1.)
     def Instruction_SolidColor
         self->add_output("Out",TYPE_SURFACE)
@@ -211,7 +211,6 @@ class Instruction_SolidColor : Instruction
 
 [instruction_node(name="Image file",category="Surface operations")]
 class Instruction_ImageFile : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     [[serialize]] fileName : string = ""
     def Instruction_ImageFile
         self->add_output("Out",TYPE_SURFACE)
@@ -219,51 +218,46 @@ class Instruction_ImageFile : Instruction
         NodeFileName(mode,id,"file",fileName)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
             "surface_gen_image({to_reg(pins.outputs[0].reg)},\"{escape(fileName)}\")"
         }]
 
 [instruction_node(name="Blur",category="Surface operations")]
 class Instruction_Blur : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     [[serialize]] sigma : float = 2.0
     def Instruction_Blur
         self->add_input("Inp",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
         NodeDragFloat(mode,id,"sigma",sigma)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_blur({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{sigma})"
         }]
 
 [instruction_node(name="Sobel",category="Surface operations")]
 class Instruction_Sobel : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     def Instruction_Sobel
         self->add_input("Inp",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
+        pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_sobel({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
         }]
 
 [instruction_node(name="Greyscale",category="Surface operations")]
 class Instruction_Greyscale : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     def Instruction_Greyscale
         self->add_input("Inp",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
+        pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_greyscale({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
         }]
 
@@ -295,7 +289,6 @@ enum BlendOp
 
 [instruction_node(name="Blend",category="Surface operations")]
 class Instruction_Blend : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     [[serialize]] op  : BlendOp = BlendOp Add
     def Instruction_Blend
         self->add_input("Src",TYPE_SURFACE)
@@ -303,27 +296,25 @@ class Instruction_Blend : Instruction
         self->add_input("Factor",TYPE_SCALAR)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
         NodeEditEnumeration(mode,id,"Operation",op)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},max({to_reg_surface(src_regs[0])}.size,{to_reg_surface(src_regs[1])}.size))";
             "surface_blend_{op}({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg(src_regs[2],"0.5f")})"
         }]
 
 [instruction_node(name="Texture Crossfade",category="Surface operations")]
 class Instruction_TextureCrossfade : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     def Instruction_TextureCrossfade
         self->add_input("Src",TYPE_SURFACE)
         self->add_input("Dst",TYPE_SURFACE)
         self->add_input("Factor",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
+        pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},max(max({to_reg_surface(src_regs[0])}.size,{to_reg_surface(src_regs[1])}.size),{to_reg_surface(src_regs[2])}.size))";
             "surface_blend_tex_Crossfade({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{to_reg_surface(src_regs[1])},{to_reg_surface(src_regs[2])})"
         }]
 
@@ -334,6 +325,7 @@ class Instruction_Compose : Instruction
     [[serialize]] scale  : float2 = float2(1.,1.)
     [[serialize]] angle  : float  = 0.
     def Instruction_Compose
+        self->add_input("Src",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
         NodeInputInt2(mode,id,"size",size)
@@ -344,53 +336,79 @@ class Instruction_Compose : Instruction
         let rad = angle * PI / 180.
         return <- [{string
             "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
-            "surface_gen_compose({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},float2({offset.x},{offset.y}),float2({scale.x}{scale.y}),{angle})"
+            "surface_gen_compose({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},float2({offset.x},{offset.y}),float2({scale.x},{scale.y}),{angle})"
         }]
 
 [instruction_node(name="Brightness and contrast",category="Surface operations")]
 class Instruction_BrightnessContrast : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     [[serialize]] brightness  : float  = 0.
     [[serialize]] contrast    : float  = 1.
     def Instruction_BrightnessContrast
         self->add_input("Src",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
         NodeDragFloat (mode,id,"brightness",brightness)
         NodeDragFloat (mode,id,"contrast",contrast)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_brightness_contrast({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{brightness},{contrast})"
         }]
 
 [instruction_node(name="Inverse",category="Surface operations")]
 class Instruction_Inverse : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     def Instruction_Inverse
         self->add_input("Src",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
+        pass
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_inverse({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
         }]
 
 [instruction_node(name="Height map to normal map",category="Surface operations")]
 class Instruction_H2N : Instruction
-    [[serialize]] size : int2 = int2(256,256)
     [[serialize]] scale : float = 2.0
     def Instruction_H2N
         self->add_input("Src",TYPE_SURFACE)
         self->add_output("Out",TYPE_SURFACE)
     def override edit ( mode:EditMode ) : void
-        NodeInputInt2(mode,id,"size",size)
         NodeDragFloat (mode,id,"scale",scale)
     def override produce ( var src_regs : array<int> ): array<string>
         return <- [{string
-            "create_surface({to_reg(pins.outputs[0].reg)},{to_produce(size)})";
+            "create_surface({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])}.size)";
             "surface_gen_height_to_normal({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])},{scale})"
         }]
+
+[instruction_node(name="Copy or resize",category="Actions")]
+class Instruction_Resize : Instruction
+    [[serialize]] size : int2 = int2(256,256)
+    [[serialize]] applySize : bool = false
+    [[serialize]] factorMul : int2 = int2(1)
+    [[serialize]] factorDiv : int2 = int2(1)
+    def Instruction_Resize
+        self->add_input("Src",TYPE_SURFACE)
+        self->add_output("Out",TYPE_SURFACE)
+    def override edit ( mode:EditMode ) : void
+        if applySize
+            Text("SIZE: {size}")
+        else
+            let fmul = max(factorMul,int2(1))
+            let fdiv = max(factorDiv,int2(1))
+            Text("SIZE * {fmul} / {fdiv}")
+        NodeInputInt2(mode,id,"size",size)
+        NodeCheckbox(mode,id,"apply size",applySize)
+        NodeInputInt2(mode,id,"multiplier",factorMul)
+        NodeInputInt2(mode,id,"divider",factorDiv)
+    def override produce ( var src_regs : array<int> ): array<string>
+        let fmul = max(factorMul,int2(1))
+        let fdiv = max(factorDiv,int2(1))
+        let sz = applySize ? "int2({size.x},{size.y})" : "{to_reg_surface(src_regs[0])}.size*int2({fmul.x},{fmul.y})/int2({fdiv.x},{fdiv.y})"
+        return <- [{string
+            "create_surface({to_reg(pins.outputs[0].reg)},{sz})";
+            "surface_gen_copy({to_reg(pins.outputs[0].reg)},{to_reg_surface(src_regs[0])})"
+        }]
+
+

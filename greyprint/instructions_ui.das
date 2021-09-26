@@ -85,9 +85,18 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
     else
         return false
 
+def NodeInputInt(mode:EditMode; id,name:string; var data:int&)
+    SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
+    if InputInt("{name}##{id}{mode}_InputInt",safe_addr(data))
+        undo_edit_instruction(id,name)
+        update_preview()
+        return true
+    else
+        return false
+
 def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    if InputInt2("{name}##{id}{mode}_DragFloat",safe_addr(data.x))
+    if InputInt2("{name}##{id}{mode}_InputInt2",safe_addr(data.x))
         undo_edit_instruction(id,name)
         update_preview()
         return true
@@ -135,5 +144,3 @@ def NodeFileName(mode:EditMode; id,name:string; var text:string&)
     SameLine()
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - GetCursorPosX() - 8.)
     Text(text)
-
-

@@ -243,6 +243,13 @@ def public delete_surface ( var reg:Surface )
 
 def public surface_gen_image ( var reg:Surface; fileName:string )
     var imgtex = cache_image(fileName)
+    var size : int2
+    glActiveTexture(GL_TEXTURE0)
+    glBindTexture(GL_TEXTURE_2D, imgtex)
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, safe_addr(size.x))
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, safe_addr(size.y))
+    size = max(size,int2(1))
+    create_surface(reg, size)
     let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect(reg, copy_program)
     f_tex.texture2D = imgtex
