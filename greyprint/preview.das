@@ -2,11 +2,12 @@ options indenting = 4
 
 module preview private
 
-require daslib/glfw_boost
+require glfw/glfw_boost
 require daslib/safe_addr
 require daslib/static_let
-require daslib/opengl_boost
-require daslib/opengl_ttf
+
+require opengl/opengl_boost
+require opengl/opengl_ttf
 
 require instructions public
 require model_eval

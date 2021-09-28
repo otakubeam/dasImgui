@@ -2,7 +2,7 @@ options indenting = 4
 
 module imgui_demo
 
-require daslib/imgui_boost
+require imgui/imgui_boost
 require daslib/safe_addr
 require daslib/static_let
 require math

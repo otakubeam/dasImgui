@@ -11,7 +11,7 @@ require daslib/safe_addr
 require daslib/ast_boost
 require daslib/static_let
 require daslib/strings_boost
-require daslib/opengl_boost
+require opengl/opengl_boost
 
 let DEBUG_TEXTURE_LIFETIME = false
 

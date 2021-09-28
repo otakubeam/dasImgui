@@ -5,8 +5,9 @@ module model_cache shared
 require debugapi
 
 require daslib/apply_in_context
-require daslib/opengl_boost
 require daslib/safe_addr
+
+require opengl/opengl_boost
 
 var private programs : table<uint64; uint>
 var private images : table<string; uint>

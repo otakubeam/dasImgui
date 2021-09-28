@@ -2,11 +2,11 @@ options persistent_heap = true
 options persistent_string_heap = true
 
 require imgui_app
-require daslib/glfw_boost
-require daslib/imgui_boost
+require glfw/glfw_boost
+require imgui/imgui_boost
 require daslib/static_let
 require daslib/safe_addr
-require daslib/imgui_node_editor_boost
+require imgui/imgui_node_editor_boost
 
 var window : GLFWwindow?
 

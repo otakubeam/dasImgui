@@ -7,10 +7,11 @@ require model_cache
 require instructions public
 require math
 
-require daslib/opengl_boost
 require daslib/safe_addr
 require daslib/static_let
 require daslib/unroll
+
+require opengl/opengl_boost
 
 var [[uniform]] f_grad_tl : float4
 var [[uniform]] f_grad_tr : float4

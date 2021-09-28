@@ -6,8 +6,8 @@ require rtti
 require ast
 require daslib/ast_boost
 require imgui_app
-require daslib/glfw_boost
-require daslib/imgui_boost
+require glfw/glfw_boost
+require imgui/imgui_boost
 require daslib/static_let
 require daslib/imnodes_boost
 require daslib/safe_addr

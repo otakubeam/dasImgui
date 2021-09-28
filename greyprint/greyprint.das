@@ -13,15 +13,15 @@ require rtti
 require debugapi
 require stddlg
 
-require daslib/glfw_boost
-require daslib/imgui_boost
+require glfw/glfw_boost
+require imgui/imgui_boost
 require daslib/static_let
 require daslib/safe_addr
-require daslib/imgui_node_editor_boost
+require imgui/imgui_node_editor_boost
 require daslib/strings_boost
 require daslib/lpipe
-require daslib/opengl_boost
-require daslib/opengl_ttf
+require opengl/opengl_boost
+require opengl/opengl_ttf
 
 require instructions
 require instructions_ui

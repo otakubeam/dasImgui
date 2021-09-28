@@ -2,9 +2,9 @@ options persistent_heap = true
 options persistent_string_heap = true
 
 require imgui_app
-require daslib/glfw_boost
-require daslib/imgui_boost
-require daslib/opengl_boost
+require glfw/glfw_boost
+require imgui/imgui_boost
+require opengl/opengl_boost
 require imgui_demo
 
 var window : GLFWwindow?

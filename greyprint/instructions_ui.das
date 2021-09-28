@@ -7,8 +7,8 @@ require preview
 require undo_stack
 
 require rtti
-require daslib/imgui_boost public
-require daslib/glfw_boost
+require imgui/imgui_boost public
+require glfw/glfw_boost
 require daslib/safe_addr
 require math
 require stddlg
