@@ -15,9 +15,16 @@ require model
 require math
 require strings
 
+enum PreviewMode
+    Sphere
+    CubeSphere
+    Cube
+
 var public g_PreviewTexture : array<Material>
 var public g_LivePreview = true
+var public g_AlwaysLitPreview = true
 var public g_PreviewLabels = true
+var public g_PreviewMode = PreviewMode Sphere
 
 def make_rgba_texture(width,height:int; data:void?)
     var texture : uint
@@ -69,11 +76,6 @@ var [[uniform]] f_kD : float
 var [[uniform]] f_kS : float
 var [[uniform]] f_pS : float
 
-[vertex_program(name="PREVIEW_VERTEX_SRC",version=330)]
-def vs_preview_main
-    f_texcoord = v_texcoord
-    gl_Position = v_projection * v_view * v_model * float4(v_position.x, v_position.y, v_position.z, 1.0)
-
 [fragment_program(name="PREVIEW_FRAGMENT_SRC",version=330)]
 def ps_preview_main
     f_outputColor = texture(f_tex,f_texcoord)
@@ -121,6 +123,20 @@ def ps_preview_pbr
     )
     f_outputColor.w = 1.
 
+[fragment_program(name="LIT_FRAGMENT_SRC",version=330)]
+def ps_preview_lit
+    let light_dir = normalize(float3(-1,-2,-3))
+    let camera_dir = normalize(f_position)
+    let normal = normalize(f_normal)
+    // blinn-phong
+    let k = -dot(light_dir,normal)
+    let diffuse = float3(saturate(k)) * f_kD
+    let refl = normalize ( reflect(camera_dir,normal) )
+    let kS = saturate(dot(-light_dir,refl))
+    let specular = float3(pow(kS,f_pS)*f_kS)
+    f_outputColor.xyz = texture(f_tex,  f_texcoord).xyz *  diffuse + specular
+    f_outputColor.w = 1.
+
 [vertex_buffer]
 struct PreviewVertex
     [[type=GL_FLOAT, size=3, normalized=false]] xyz    : float3
@@ -153,7 +169,24 @@ def draw_fragment ( frag : Fragment )
         glBindVertexArray(vao)
         glDrawElements(frag.prim, length(indices), GL_UNSIGNED_INT, null)
 
-def gen_sphere ( sectorCount,stackCount:int )
+def ssign ( x : float )
+    return x>=0. ? 1. : -1.
+
+def get_uv ( xyz:float3; uv:float2; cube:bool )
+    if cube
+        let XYZ = abs(xyz)
+        var UV : float2
+        if XYZ.x >= XYZ.y && XYZ.x >= XYZ.z
+            UV = xyz.yz*sign(xyz.x)
+        elif XYZ.y >= XYZ.z
+            UV = xyz.xz*sign(xyz.y)
+        else
+            UV = xyz.xy*sign(xyz.z)
+        return UV*0.5 + float2(0.5)
+    else
+        return uv
+
+def gen_sphere ( sectorCount,stackCount:int; cubeUV : bool )
     var frag : Fragment
     let sectorStep = 2. * PI / float(sectorCount)
     let stackStep = PI / float(stackCount)
@@ -170,7 +203,7 @@ def gen_sphere ( sectorCount,stackCount:int )
             frag.vertices |> push <| [[PreviewVertex
                 xyz=float3(x,y,z),
                 normal=normalize(float3(x,y,z)),
-                uv=float2(s,t)
+                uv=get_uv(float3(x,y,z),float2(s,t),cubeUV)
             ]]
     var indices : array<int>
     var k1, k2 : int
@@ -193,49 +226,68 @@ def gen_sphere ( sectorCount,stackCount:int )
     return <- frag
 
 def gen_cube
+    // cube ////////
+    //    v6----- v5
+    //   /|      /|
+    //  v1------v0|
+    //  | |     | |
+    //  | |v7---|-|v4
+    //  |/      |/
+    //  v2------v3
     var frag : Fragment
     frag.vertices <- [{PreviewVertex
-        xyz=float3(-0.5,-0.5, 0.5), uv=float2(0.0, 0.0);
-        xyz=float3( 0.5,-0.5, 0.5), uv=float2(1.0, 0.0);
-        xyz=float3( 0.5, 0.5, 0.5), uv=float2(1.0, 1.0);
-        xyz=float3(-0.5, 0.5, 0.5), uv=float2(0.0, 1.0);
-
-        xyz=float3(-0.5, 0.5,-0.5), uv=float2(0.0, 0.0);
-        xyz=float3( 0.5, 0.5,-0.5), uv=float2(1.0, 0.0);
-        xyz=float3( 0.5,-0.5,-0.5), uv=float2(1.0, 1.0);
-        xyz=float3(-0.5,-0.5,-0.5), uv=float2(0.0, 1.0);
-
-        xyz=float3( 0.5,-0.5, 0.5), uv=float2(0.0, 0.0);
-        xyz=float3( 0.5,-0.5,-0.5), uv=float2(1.0, 0.0);
-        xyz=float3( 0.5, 0.5,-0.5), uv=float2(1.0, 1.0);
-        xyz=float3( 0.5, 0.5, 0.5), uv=float2(0.0, 1.0);
-
-        xyz=float3(-0.5,-0.5,-0.5), uv=float2(0.0, 0.0);
-        xyz=float3(-0.5,-0.5, 0.5), uv=float2(1.0, 0.0);
-        xyz=float3(-0.5, 0.5, 0.5), uv=float2(1.0, 1.0);
-        xyz=float3(-0.5, 0.5,-0.5), uv=float2(0.0, 1.0)
-    }]
-    frag.indices <- [{int 0;1;2;3; 4;5;6;7; 3;2;5;4; 7;6;1;0; 8;9;10;11; 12;13;14;15 }]
-    frag.prim = GL_QUADS
+        xyz=float3( 1, 1, 1), normal=float3(  0, 0, 1),  uv=float2(0,0);              // v0 (front)
+        xyz=float3(-1, 1, 1), normal=float3(  0, 0, 1),  uv=float2(1,0);              // v1
+        xyz=float3(-1,-1, 1), normal=float3(  0, 0, 1),  uv=float2(1,1);              // v2
+        xyz=float3( 1,-1, 1), normal=float3(  0, 0, 1),  uv=float2(0,1);              // v3
+        xyz=float3( 1, 1, 1), normal=float3(  1, 0, 0),  uv=float2(0,0);              // v0 (right)
+        xyz=float3( 1,-1, 1), normal=float3(  1, 0, 0),  uv=float2(1,0);              // v3
+        xyz=float3( 1,-1,-1), normal=float3(  1, 0, 0),  uv=float2(1,1);              // v4
+        xyz=float3( 1, 1,-1), normal=float3(  1, 0, 0),  uv=float2(0,1);              // v5
+        xyz=float3( 1, 1, 1), normal=float3(  0, 1, 0),  uv=float2(0,0);              // v0 (top)
+        xyz=float3( 1, 1,-1), normal=float3(  0, 1, 0),  uv=float2(1,0);              // v5
+        xyz=float3(-1, 1,-1), normal=float3(  0, 1, 0),  uv=float2(1,1);              // v6
+        xyz=float3(-1, 1, 1), normal=float3(  0, 1, 0),  uv=float2(0,1);              // v1
+        xyz=float3(-1, 1, 1), normal=float3( -1, 0, 0),  uv=float2(0,0);              // v1 (left)
+        xyz=float3(-1, 1,-1), normal=float3( -1, 0, 0),  uv=float2(1,0);              // v6
+        xyz=float3(-1,-1,-1), normal=float3( -1, 0, 0),  uv=float2(1,1);              // v7
+        xyz=float3(-1,-1, 1), normal=float3( -1, 0, 0),  uv=float2(0,1);              // v2
+        xyz=float3(-1,-1,-1), normal=float3(  0,-1, 0),  uv=float2(0,0);              // v7 (bottom)
+        xyz=float3( 1,-1,-1), normal=float3(  0,-1, 0),  uv=float2(1,0);              // v4
+        xyz=float3( 1,-1, 1), normal=float3(  0,-1, 0),  uv=float2(1,1);              // v3
+        xyz=float3(-1,-1, 1), normal=float3(  0,-1, 0),  uv=float2(0,1);              // v2
+        xyz=float3( 1,-1,-1), normal=float3(  0, 0,-1),  uv=float2(0,0);              // v4 (back)
+        xyz=float3(-1,-1,-1), normal=float3(  0, 0,-1),  uv=float2(1,0);              // v7
+        xyz=float3(-1, 1,-1), normal=float3(  0, 0,-1),  uv=float2(1,1);              // v6
+        xyz=float3( 1, 1,-1), normal=float3(  0, 0,-1),  uv=float2(0,1) }]            // v5
+    frag.indices <- [{int
+         0; 1; 2;   2; 3; 0;      // front
+         4; 5; 6;   6; 7; 4;      // right
+         8; 9;10;  10;11; 8;      // top
+        12;13;14;  14;15;12;      // left
+        16;17;18;  18;19;16;      // bottom
+        20;21;22;  22;23;20 }]    // back
+    frag.prim = GL_TRIANGLES
     frag |> create_objects()
     return <- frag
 
 def radians(f:float)
     return f * PI / 180.0
 
-var program, program_pbr : uint
+var program, program_pbr, program_lit : uint
 
 var ttf : bool = false
 var font : Font
-var cube : Fragment
-var sphere : Fragment
+var cube, sphere, sphere_cuv : Fragment
 
 def public create_preview_objects
-    program = create_shader_program(PREVIEW_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
+    program = create_shader_program(PBR_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
     program_pbr = create_shader_program(PBR_VERTEX_SRC,PBR_FRAGMENT_SRC)
+    program_lit = create_shader_program(PBR_VERTEX_SRC,LIT_FRAGMENT_SRC)
     font <- load_ttf("c:/windows/fonts/arial.ttf")
     cube <- gen_cube()
-    sphere <- gen_sphere(32,16)
+    sphere <- gen_sphere(32,16,false)
+    sphere_cuv <- gen_sphere(32,16,true)
 
 def public draw_preview ( display_w, display_h : int )
     static_let <|
@@ -274,12 +326,11 @@ def public draw_preview ( display_w, display_h : int )
             v_model = compose(
                     float4(float(x)*stepX+halfX, float(y)*stepY+halfY, -2. - float(sqX-1)*2., 0.0),
                     rot,
-                    float4(1.0))
+                    float4(g_PreviewMode==PreviewMode Cube ? 0.7 : 1.))
             let aspect = display_h>0 ? float(display_w)/float(display_h) : 1.0
             v_projection = perspective_opengl( radians(45.0f), aspect, 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
-
             if g_PreviewTexture[index].norm.tex!=0u && g_PreviewTexture[index].spec.tex!=0u
                 f_tex.texture2D = g_PreviewTexture[index].surf.tex
                 f_spec.texture2D = g_PreviewTexture[index].spec.tex
@@ -290,18 +341,25 @@ def public draw_preview ( display_w, display_h : int )
                 glUseProgram(program_pbr)
                 vs_preview_pbr_bind_uniform(program_pbr)
                 ps_preview_pbr_bind_uniform(program_pbr)
-                // cube |> draw_fragment()
-                sphere |> draw_fragment()
             else
                 f_tex.texture2D = g_PreviewTexture[index].surf.tex
-                glUseProgram(program)
-                vs_preview_main_bind_uniform(program)
-                ps_preview_main_bind_uniform(program)
+                let prog = g_AlwaysLitPreview ? program_lit : program
+                f_kD = 1.0
+                f_kS = 1.0
+                f_pS = 24.0
+                glUseProgram(prog)
+                vs_preview_pbr_bind_uniform(prog)
+                if g_AlwaysLitPreview
+                    ps_preview_lit_bind_uniform(prog)
+                else
+                    ps_preview_main_bind_uniform(prog)
+            if g_PreviewMode==PreviewMode Cube
                 cube |> draw_fragment()
-                // sphere |> draw_fragment()
-
+            elif g_PreviewMode==PreviewMode Sphere
+                sphere |> draw_fragment()
+            else
+                sphere_cuv |> draw_fragment()
             glDisable(GL_DEPTH_TEST)
-
             if g_PreviewLabels
                 var hw_text <- font |> create_quads(g_PreviewTexture[index].name)
                 let qmodel = quads_view(hw_text, float2(1.0/300.0))
@@ -309,9 +367,7 @@ def public draw_preview ( display_w, display_h : int )
                 let mvp = v_projection * v_view * model
                 font |> draw_quads(hw_text, mvp)
                 delete hw_text
-
             bind_ffp()
-
             index ++
             if index==total
                 break
