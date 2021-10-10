@@ -12,6 +12,7 @@ void application () {
     TextPrinter tout;
     ModuleGroup dummyLibGroup;
     CodeOfPolicies policies;
+    policies.aot = USE_AOT;
     auto fAccess = make_smart<FsFileAccess>();
     auto program = compileDaScript(getDasRoot() + APP_NAME, fAccess, tout, dummyLibGroup, false, policies);
     if ( program->failed() ) {
@@ -28,17 +29,6 @@ void application () {
             tout << reportError(err.at, err.what, err.extra, err.fixme, err.cerr );
         }
         return;
-    }
-    if ( USE_AOT ) {
-        // now, what we get to do is to link AOT
-        program->linkCppAot(ctx, getGlobalAotLibrary(), tout);
-        if ( program->failed() ) {
-            tout << "failed to link AOT\n";
-            for ( auto & err : program->errors ) {
-                tout << reportError(err.at, err.what, err.extra, err.fixme, err.cerr );
-            }
-            return;
-        }
     }
     auto fnTest = ctx.findFunction("main");
     if ( !fnTest ) {
