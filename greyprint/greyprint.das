@@ -870,7 +870,7 @@ def eval_project ()
         let compile_sec = double(get_time_usec(t0))/1000000.0lf
         if ok
             var t1 = ref_time_ticks()
-            simulate(prog,false) <| $ ( sok; context; serrors ) // no aot for now
+            simulate(prog, false) <| $ ( sok; context; serrors ) // no aot for now
                 let simulate_sec = double(get_time_usec(t1))/1000000.0lf
                 if sok
                     unsafe
@@ -1105,5 +1105,10 @@ def main
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
 
-options debugger
-require daslib/debug
+options log_mem
+options log_debug_mem
+options log_shared_mem
+
+//options debugger
+//require daslib/debug
+

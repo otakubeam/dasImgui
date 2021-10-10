@@ -457,12 +457,19 @@ bool Module_imgui::initDependencies() {
     // time to fix-up const & ImVec2 and const & ImVec4
     for ( auto fn : this->functions ) {
         const auto&  pfn = fn.second;
+        bool anyString = false;
         for ( auto & arg : pfn->arguments ) {
             if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
                 if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {
                     arg->type->ref = false;
                 }
             }
+            if ( arg->type->isString() && !arg->type->ref ) {
+                anyString = true;
+            }
+        }
+        if ( anyString ) {
+            pfn->needStringCast = true;
         }
     }
 #endif

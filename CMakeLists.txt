@@ -167,6 +167,58 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		SETUP_LTO(dasImguiOpenGL)
 		ADD_EXAMPLE(dasImguiOpenGL)
 
+		# GREYPRINT AOT
+		add_custom_target(GREYPRINT_AOT)
+		SET(GREYPRINT_GENERATED_SRC)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/command_que.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/greyprint.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/guid_2_id.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_math.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_ui.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model_eval.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/preview.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/produce.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/undo_stack.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		# imgui
+		DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_node_editor_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		# glfw
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glfw/glfw_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		# opengl
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_state.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_ttf.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		# glsl
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glsl/glsl.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		# daslib
+		DAS_AOT("daslib/functional.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/json.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/json_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/regex.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/regex_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/strings_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("daslib/random.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		SOURCE_GROUP_FILES("aot stub" GREYPRINT_GENERATED_SRC)
+
+		# now, the demo
+		SET(GREYPRINT_SRC
+			${DAS_IMGUI_DIR}/greyprint/greyprint.cpp
+			${DAS_MODULES_NEED_INC}
+		)
+		SOURCE_GROUP_FILES("main" GREYPRINT_SRC)
+		add_executable(Greyprint ${GREYPRINT_SRC} ${GREYPRINT_GENERATED_SRC})
+		TARGET_LINK_LIBRARIES(Greyprint libDaScript libDasModuleUriparser libUriParser Threads::Threads)
+		ADD_DEPENDENCIES(Greyprint libDaScript libDasModuleUriparser libUriParser)
+		ADD_DEPENDENCIES(Greyprint GREYPRINT_AOT dasAotStub)
+		TARGET_INCLUDE_DIRECTORIES(Greyprint PUBLIC ${imgui_INCLUDE_DIR} ${glfw_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
+		SETUP_CPP11(Greyprint)
+		SETUP_LTO(Greyprint)
+		ADD_EXAMPLE(Greyprint)
+
 		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../dasVulkan/include/dasVulkan/module.h"))
 			MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
 		ELSE()
