@@ -6,13 +6,15 @@ using namespace das;
 
 #define APP_NAME   "/modules/dasImgui/greyprint/greyprint.das"
 
-#define USE_AOT     1
+#define USE_AOT         1
+#define LOG_AOT_ERRORS  1
 
 void application () {
     TextPrinter tout;
     ModuleGroup dummyLibGroup;
     CodeOfPolicies policies;
     policies.aot = USE_AOT;
+    policies.fail_on_no_aot = false;
     auto fAccess = make_smart<FsFileAccess>();
     auto program = compileDaScript(getDasRoot() + APP_NAME, fAccess, tout, dummyLibGroup, false, policies);
     if ( program->failed() ) {
@@ -29,6 +31,13 @@ void application () {
             tout << reportError(err.at, err.what, err.extra, err.fixme, err.cerr );
         }
         return;
+    }
+    if ( LOG_AOT_ERRORS && program->aotErrors.size() ) {
+        tout << "AOT linker failed:\n\n";
+        for ( auto & err : program->aotErrors ) {
+            tout << err.what << "\n" << err.extra << "\n\n";
+        }
+        tout << "Total " << program->aotErrors.size() << " linking errors.\n";
     }
     auto fnTest = ctx.findFunction("main");
     if ( !fnTest ) {
