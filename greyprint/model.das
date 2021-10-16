@@ -2,7 +2,7 @@ options indenting = 4
 
 module model shared private
 
-require model_cache
+require opengl/opengl_cache
 
 require instructions public
 require math

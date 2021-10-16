@@ -34,7 +34,7 @@ require undo_stack
 require instructions_model
 require model_eval
 require model
-require model_cache
+require opengl/opengl_cache
 
 var LEFT_SIDE_PANNEL_WIDTH = 600.
 var RIGHT_SIDE_PANNEL_WIDTH = 600.
@@ -142,7 +142,7 @@ def clear_project_data
     reset_guids()
     (*g_CurrentProject)->clear()
     clear_preview()
-    reset_model_cache()
+    reset_opengl_cache()
 
 def check_save_project
     if is_undo_dirty()
@@ -1095,7 +1095,7 @@ def main
     g_PreviewUpdater = @@ <|
         eval_project()
     seal_instruction_factory()          // initialize everything greyprint related
-    init_model_cache()
+    init_opengl_cache()
     imgui_app("Greyprint") <|
         NewFrame()
         main_editor_screen()
