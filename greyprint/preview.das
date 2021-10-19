@@ -5,6 +5,7 @@ module preview private
 require glfw/glfw_boost
 require daslib/safe_addr
 require daslib/static_let
+require daslib/math_boost
 
 require opengl/opengl_boost
 require opengl/opengl_ttf
@@ -125,9 +126,6 @@ def ps_preview_lit
     f_outputColor.xyz = texture(f_tex,  f_texcoord).xyz *  diffuse + specular
     f_outputColor.w = 1.
 
-def radians(f:float)
-    return f * PI / 180.0
-
 var program, program_pbr, program_lit : uint
 
 var ttf : bool = false
@@ -182,7 +180,7 @@ def public draw_preview ( display_w, display_h : int )
                     rot,
                     float4(g_PreviewMode==PreviewMode Cube ? 0.7 : 1.))
             let aspect = display_h>0 ? float(display_w)/float(display_h) : 1.0
-            v_projection = perspective_opengl( radians(45.0f), aspect, 0.1f, 100.0f)
+            v_projection = perspective_rh( radians(45.0f), aspect, 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
             if g_PreviewTexture[index].norm.tex!=0u && g_PreviewTexture[index].spec.tex!=0u
