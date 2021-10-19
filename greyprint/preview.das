@@ -21,6 +21,7 @@ enum PreviewMode
     Sphere
     CubeSphere
     Cube
+    Cylinder
 
 var public g_PreviewTexture : array<Material>
 var public g_LivePreview = true
@@ -130,7 +131,7 @@ var program, program_pbr, program_lit : uint
 
 var ttf : bool = false
 var font : Font
-var cube, sphere, sphere_cuv : Fragment
+var cube, sphere, sphere_cuv, cylinder : Fragment
 
 def public create_preview_objects
     program = create_shader_program(PBR_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
@@ -140,6 +141,7 @@ def public create_preview_objects
     cube <- gen_cube()
     sphere <- gen_sphere(32,16,false)
     sphere_cuv <- gen_sphere(32,16,true)
+    cylinder <- gen_cylinder(GenDirection xz, 32)
 
 def public draw_preview ( display_w, display_h : int )
     static_let <|
@@ -183,6 +185,8 @@ def public draw_preview ( display_w, display_h : int )
             v_projection = perspective_rh( radians(45.0f), aspect, 0.1f, 100.0f)
             glEnable(GL_DEPTH_TEST)
             glDepthFunc(GL_LEQUAL)
+            glEnable(GL_CULL_FACE)
+            glCullFace(GL_BACK)
             if g_PreviewTexture[index].norm.tex!=0u && g_PreviewTexture[index].spec.tex!=0u
                 f_tex.texture2D = g_PreviewTexture[index].surf.tex
                 f_spec.texture2D = g_PreviewTexture[index].spec.tex
@@ -209,8 +213,11 @@ def public draw_preview ( display_w, display_h : int )
                 cube |> draw_fragment()
             elif g_PreviewMode==PreviewMode Sphere
                 sphere |> draw_fragment()
-            else
+            elif g_PreviewMode==PreviewMode CubeSphere
                 sphere_cuv |> draw_fragment()
+            elif g_PreviewMode==PreviewMode Cylinder
+                cylinder |> draw_fragment()
+            glDisable(GL_CULL_FACE)
             glDisable(GL_DEPTH_TEST)
             if g_PreviewLabels
                 var hw_text <- font |> create_quads(g_PreviewTexture[index].name)
