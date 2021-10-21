@@ -35,12 +35,12 @@ var [[uniform]] f_normal_size : float
 [vertex_program(name="ANY_EFFECT_VERTEX_SRC",version=330)]
 def vs_any_effect
     f_texcoord = v_texcoord
-    gl_Position = float4(v_position.x, v_position.y, 0.0, 1.0)
+    gl_Position = float4(v_position, 0.0, 1.0)
 
 [vertex_program(name="TRANSFORM_EFFECT_VERTEX_SRC",version=330)]
 def vs_transform_effect
     f_texcoord = (v_tex_transform * float4(v_texcoord.x - 0.5, v_texcoord.y - 0.5, 0., 1.)).xy + float2(0.5)
-    gl_Position = float4(v_position.x, v_position.y, 0.0, 1.0)
+    gl_Position = float4(v_position, 0.0, 1.0)
 
 [fragment_program(name="COPY_AA_FRAGMENT_SRC",version=330)]
 def ps_copy_aa_effect
@@ -341,9 +341,9 @@ def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:flo
     bind_effect ( surf, transform_program )
     f_tex.texture2D = src.tex
     v_tex_transform = compose(
-        float4(offset.x, offset.y, 0.0, 1.0),
+        float4(offset, 0.0, 1.0),
         un_quat_from_unit_vec_ang(float3(0.,0.,1.), angle_rad),
-        float4(scale.x, scale.y, 1.0, 1.0))
+        float4(scale, 1.0, 1.0))
     vs_transform_effect_bind_uniform(transform_program)
     if aa
         ps_copy_aa_effect_bind_uniform(transform_program)

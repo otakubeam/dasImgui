@@ -74,7 +74,7 @@ def ps_preview_main
 def vs_preview_pbr
     f_texcoord = v_texcoord
     f_normal = normalize ( float3x3(v_model) * v_normal )
-    let tpos = v_model * float4(v_position.x, v_position.y, v_position.z, 1.0)
+    let tpos = v_model * float4(v_position, 1.0)
     f_position = tpos.xyz
     gl_Position = v_projection * v_view * tpos
 
