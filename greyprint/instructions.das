@@ -486,7 +486,7 @@ def generate_node_save(var str:StructurePtr)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation
-                if eq(ann.name,"serialize")
+                if ann.name=="serialize"
                     // node["{fld.name}"] = JV(self.{fld.name})
                     var cll <- new [[ExprCall() at=str.at, name:="JV"]]
                     cll.arguments |> emplace_new() <| new [[ExprField() at=str.at,
@@ -518,7 +518,7 @@ def generate_node_load(var str:StructurePtr)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation
-                if eq(ann.name,"serialize")
+                if ann.name=="serialize"
                     // self.{fld.name} = from_JV(node["{fld.name}"],type<fld.type>)
                     var cll <- new [[ExprCall() at=str.at, name:="from_JV"]]
                     cll.arguments |> emplace_new() <| new [[ExprAt() at=str.at,
