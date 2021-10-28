@@ -1108,6 +1108,3 @@ def main
 options log_mem
 options log_debug_mem
 
-//options debugger
-//require daslib/debug
-

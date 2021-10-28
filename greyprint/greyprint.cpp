@@ -58,6 +58,7 @@ void application () {
 int main( int, char * [] ) {
     NEED_ALL_DEFAULT_MODULES;
     NEED_MODULE(Module_UriParser);
+    NEED_MODULE(Module_JobQue);
     #include "modules/external_need.inc"
     Module::Initialize();
     application();
