@@ -55,6 +55,8 @@ public:
             SideEffects::worstDefault, "ImGui_ImplGlfw_InitForOpenGL");
         addExtern<DAS_BIND_FUN(ImGui_ImplGlfw_InitForVulkan)>(*this,lib,"ImGui_ImplGlfw_InitForVulkan",
             SideEffects::worstDefault, "ImGui_ImplGlfw_InitForVulkan");
+        addExtern<DAS_BIND_FUN(ImGui_ImplGlfw_InitForOther)>(*this,lib,"ImGui_ImplGlfw_InitForOther",
+            SideEffects::worstDefault, "ImGui_ImplGlfw_InitForOther");
         addExtern<DAS_BIND_FUN(ImGui_ImplGlfw_Shutdown)>(*this,lib,"ImGui_ImplGlfw_Shutdown",
             SideEffects::worstDefault, "ImGui_ImplGlfw_Shutdown");
         addExtern<DAS_BIND_FUN(ImGui_ImplGlfw_NewFrame)>(*this,lib,"ImGui_ImplGlfw_NewFrame",
