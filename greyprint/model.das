@@ -23,9 +23,9 @@ var [[in, location=0]] v_position : float2
 var [[in, location=1]] v_texcoord : float2
 var [[inout]] f_texcoord : float2
 var [[out]] f_outputColor : float4
-var [[uniform, binding=0]] f_tex : sampler2D
-var [[uniform, binding=1]] f_tex2 : sampler2D
-var [[uniform, binding=2]] f_tex3 : sampler2D
+var [[uniform, stage=0]] f_tex : sampler2D
+var [[uniform, stage=1]] f_tex2 : sampler2D
+var [[uniform, stage=2]] f_tex3 : sampler2D
 var [[uniform]] f_blend_factor : float
 var [[uniform]] v_tex_transform : float4x4
 var [[uniform]] f_contrast : float
@@ -181,14 +181,14 @@ def ps_tx_blend_crossfade_effect
 
 [vertex_buffer]
 struct EffectVertex
-    [[type=GL_FLOAT, size=2, normalized=false]] xy  : float2
-    [[type=GL_FLOAT, size=2, normalized=false]] uv  : float2
+    xy  : float2
+    uv  : float2
 
 let private effect_vertices = [[EffectVertex
-        xy=float2(-1.0, 1.0), uv=float2(0.0,1.0);
-        xy=float2( 1.0, 1.0), uv=float2(1.0,1.0);
-        xy=float2( 1.0,-1.0), uv=float2(1.0,0.0);
-        xy=float2(-1.0,-1.0), uv=float2(0.0,0.0)
+    xy=float2(-1.0, 1.0), uv=float2(0.0,1.0);
+    xy=float2( 1.0, 1.0), uv=float2(1.0,1.0);
+    xy=float2( 1.0,-1.0), uv=float2(1.0,0.0);
+    xy=float2(-1.0,-1.0), uv=float2(0.0,0.0)
 ]]
 
 let private effect_indices = [[int 0; 1; 2; 2; 3; 0]]
@@ -245,7 +245,7 @@ def public surface_gen_tex ( var surf:Surface )
     create_surface(scopy, surf.size)
     let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect(scopy, copy_program)
-    f_tex.texture2D = surf.tex
+    f_tex := surf.tex
     vs_any_effect_bind_uniform(copy_program)
     ps_copy_effect_bind_uniform(copy_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -275,7 +275,7 @@ def public surface_gen_image ( var reg:Surface; fileName:string )
     create_surface(reg, size)
     let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect(reg, copy_program)
-    f_tex.texture2D = imgtex
+    f_tex := imgtex
     vs_any_effect_bind_uniform(copy_program)
     ps_copy_effect_bind_uniform(copy_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -292,7 +292,7 @@ def public surface_gen_copy ( var surf:Surface; src:Surface )
         print("copy_image {surf.tex} <- {src.tex}\n")
     let copy_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,COPY_FRAGMENT_SRC)
     bind_effect ( surf, copy_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     vs_any_effect_bind_uniform(copy_program)
     ps_copy_effect_bind_uniform(copy_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -303,7 +303,7 @@ def public surface_gen_height_to_normal ( var surf:Surface; src:Surface; scale:f
         print("height_to_normal {surf.tex} <- {src.tex}\n")
     let h2n_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,HEIGHT_TO_NORMAL_FRAGMENT_SRC)
     bind_effect ( surf, h2n_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     f_normal_size = max(scale,0.2)
     vs_any_effect_bind_uniform(h2n_program)
     ps_height_to_normal_effect_bind_uniform(h2n_program)
@@ -315,7 +315,7 @@ def public surface_gen_inverse ( var surf:Surface; src:Surface )
         print("inverse_image {surf.tex} <- {src.tex}\n")
     let inverse_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,INVERSE_FRAGMENT_SRC)
     bind_effect ( surf, inverse_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     vs_any_effect_bind_uniform(inverse_program)
     ps_copy_effect_bind_uniform(inverse_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -326,7 +326,7 @@ def public surface_gen_brightness_contrast ( var surf:Surface; src:Surface; brig
         print("brightness_contrast {surf.tex} <- {src.tex}\n")
     let bc_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BRIGHTNESS_CONTRAST_FRAGMENT_SRC)
     bind_effect ( surf, bc_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     f_brightness = brightness
     f_contrast = contrast
     vs_any_effect_bind_uniform(bc_program)
@@ -339,7 +339,7 @@ def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:flo
         print("compose {surf.tex} <- {src.tex}\n")
     let transform_program = cache_shader_program(TRANSFORM_EFFECT_VERTEX_SRC,aa ? COPY_AA_FRAGMENT_SRC : COPY_FRAGMENT_SRC)
     bind_effect ( surf, transform_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     v_tex_transform = compose(
         float4(offset, 0.0, 1.0),
         un_quat_from_unit_vec_ang(float3(0.,0.,1.), angle_rad),
@@ -355,7 +355,7 @@ def public surface_gen_compose ( var surf:Surface; src:Surface; offset,scale:flo
 def public surface_gen_greyscale ( var surf:Surface; src:Surface )
     let greyscale_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,GREYSCALE_FRAGMENT_SRC)
     bind_effect ( surf, greyscale_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     vs_any_effect_bind_uniform(greyscale_program)
     ps_greyscale_effect_bind_uniform(greyscale_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -381,14 +381,14 @@ def public surface_gen_blur ( var surf:Surface; src:Surface; var sigma:float )
     // horizontal
     let hblur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,HBLUR_FRAGMENT_SRC)
     bind_effect (temp,hblur_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     vs_any_effect_bind_uniform(hblur_program)
     ps_hblur_effect_bind_uniform(hblur_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
     // vertical
     let vblur_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,VBLUR_FRAGMENT_SRC)
     bind_effect (surf,vblur_program )
-    f_tex.texture2D = temp.tex
+    f_tex := temp.tex
     vs_any_effect_bind_uniform(vblur_program)
     ps_vblur_effect_bind_uniform(vblur_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -401,7 +401,7 @@ def public surface_gen_blur ( var surf:Surface; src:Surface; var sigma:float )
 def public surface_gen_sobel ( var surf:Surface; src:Surface )
     let sobel_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,SOBEL_FRAGMENT_SRC)
     bind_effect ( surf, sobel_program )
-    f_tex.texture2D = src.tex
+    f_tex := src.tex
     vs_any_effect_bind_uniform(sobel_program)
     ps_sobel_effect_bind_uniform(sobel_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -423,8 +423,8 @@ def public surface_gen_gradient ( var surf:Surface; top_left,top_right,bottom_le
 def public surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
     let blend_add_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_ADD_FRAGMENT_SRC)
     bind_effect ( reg, blend_add_program )
-    f_tex.texture2D = src.tex
-    f_tex2.texture2D = dst.tex
+    f_tex := src.tex
+    f_tex2 := dst.tex
     vs_any_effect_bind_uniform(blend_add_program)
     ps_blend_add_effect_bind_uniform(blend_add_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -434,8 +434,8 @@ def public surface_blend_Add ( var reg:Surface; src,dst:Surface; factor:float )
 def public surface_blend_Multiply ( var reg:Surface; src,dst:Surface; factor:float )
     let blend_mul_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_MUL_FRAGMENT_SRC)
     bind_effect ( reg, blend_mul_program )
-    f_tex.texture2D = src.tex
-    f_tex2.texture2D = dst.tex
+    f_tex := src.tex
+    f_tex2 := dst.tex
     vs_any_effect_bind_uniform(blend_mul_program)
     ps_blend_mul_effect_bind_uniform(blend_mul_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -445,8 +445,8 @@ def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var fact
     let blend_crossfade_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_CROSSFADE_FRAGMENT_SRC)
     bind_effect ( reg, blend_crossfade_program )
     f_blend_factor = clamp(factor,0.,1.)
-    f_tex.texture2D = src.tex
-    f_tex2.texture2D = dst.tex
+    f_tex := src.tex
+    f_tex2 := dst.tex
     vs_any_effect_bind_uniform(blend_crossfade_program)
     ps_blend_crossfade_effect_bind_uniform(blend_crossfade_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)
@@ -455,9 +455,9 @@ def public surface_blend_Crossfade  ( var reg:Surface; src,dst:Surface; var fact
 def public surface_blend_tex_Crossfade  ( var reg:Surface; src,dst,factor:Surface )
     let tx_blend_crossfade_program = cache_shader_program(ANY_EFFECT_VERTEX_SRC,BLEND_TX_CROSSFADE_FRAGMENT_SRC)
     bind_effect ( reg, tx_blend_crossfade_program )
-    f_tex.texture2D = src.tex
-    f_tex2.texture2D = dst.tex
-    f_tex3.texture2D = factor.tex
+    f_tex := src.tex
+    f_tex2 := dst.tex
+    f_tex3 := factor.tex
     vs_any_effect_bind_uniform(tx_blend_crossfade_program)
     ps_tx_blend_crossfade_effect_bind_uniform(tx_blend_crossfade_program)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, null)

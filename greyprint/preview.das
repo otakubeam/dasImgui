@@ -59,9 +59,9 @@ var [[inout]] f_texcoord : float2
 var [[inout]] f_normal : float3
 var [[inout]] f_position : float3
 var [[out]] f_outputColor : float4
-var [[uniform, binding=0]] f_tex : sampler2D
-var [[uniform, binding=1]] f_spec : sampler2D
-var [[uniform, binding=2]] f_norm : sampler2D
+var [[uniform, stage=0]] f_tex : sampler2D
+var [[uniform, stage=1]] f_spec : sampler2D
+var [[uniform, stage=2]] f_norm : sampler2D
 var [[uniform]] f_kD : float
 var [[uniform]] f_kS : float
 var [[uniform]] f_pS : float
@@ -188,9 +188,9 @@ def public draw_preview ( display_w, display_h : int )
             glEnable(GL_CULL_FACE)
             glCullFace(GL_BACK)
             if g_PreviewTexture[index].norm.tex!=0u && g_PreviewTexture[index].spec.tex!=0u
-                f_tex.texture2D = g_PreviewTexture[index].surf.tex
-                f_spec.texture2D = g_PreviewTexture[index].spec.tex
-                f_norm.texture2D = g_PreviewTexture[index].norm.tex
+                f_tex := g_PreviewTexture[index].surf.tex
+                f_spec := g_PreviewTexture[index].spec.tex
+                f_norm := g_PreviewTexture[index].norm.tex
                 f_kD = g_PreviewTexture[index].opt?["kDiff"] ?? 1.0
                 f_kS = g_PreviewTexture[index].opt?["kSpec"] ?? 1.0
                 f_pS = g_PreviewTexture[index].opt?["pSpec"] ?? 1.0
@@ -198,7 +198,7 @@ def public draw_preview ( display_w, display_h : int )
                 vs_preview_pbr_bind_uniform(program_pbr)
                 ps_preview_pbr_bind_uniform(program_pbr)
             else
-                f_tex.texture2D = g_PreviewTexture[index].surf.tex
+                f_tex := g_PreviewTexture[index].surf.tex
                 let prog = g_AlwaysLitPreview ? program_lit : program
                 f_kD = 1.0
                 f_kS = 1.0
