@@ -43,7 +43,7 @@ def vs_transform_effect
 
 [fragment_program]
 def ps_copy_aa_effect
-    let base00  = texture(f_tex, f_texcoord)
+    let base00  = texture2D(f_tex, f_texcoord)
     let baseNW  = textureOffset(f_tex, f_texcoord, int2(-1,-1)).xyz
     let baseNE  = textureOffset(f_tex, f_texcoord, int2( 1,-1)).xyz
     let baseSW  = textureOffset(f_tex, f_texcoord, int2(-1, 1)).xyz
@@ -58,14 +58,14 @@ def ps_copy_aa_effect
     let dir = float2(dirSwMinusNe + dirSeMinusNw, dirSwMinusNe - dirSeMinusNw)
     let tsize = textureSize(f_tex,0)
     let isize = float2(1.) / float2(tsize.x,tsize.y)
-    let rgbyN1 = texture(f_tex, f_texcoord - dir * isize).xyz
-    let rgbyP1 = texture(f_tex, f_texcoord + dir * isize).xyz
+    let rgbyN1 = texture2D(f_tex, f_texcoord - dir * isize).xyz
+    let rgbyP1 = texture2D(f_tex, f_texcoord + dir * isize).xyz
     gl_FragColor.xyz = base00.xyz*0.2 + rgbyN1*0.4 + rgbyP1*0.5
     gl_FragColor.w = base00.w
 
 [fragment_program]
 def ps_copy_effect
-    gl_FragColor = texture(f_tex,f_texcoord)
+    gl_FragColor = texture2D(f_tex,f_texcoord)
 
 [fragment_program]
 def ps_height_to_normal_effect
@@ -82,18 +82,18 @@ def ps_height_to_normal_effect
 
 [fragment_program]
 def ps_inverse_effect
-    gl_FragColor = saturate ( float4(1.) - texture(f_tex,f_texcoord) )
+    gl_FragColor = saturate ( float4(1.) - texture2D(f_tex,f_texcoord) )
 
 [fragment_program]
 def ps_brightness_contrast_effect
-    let color = texture(f_tex,f_texcoord)
+    let color = texture2D(f_tex,f_texcoord)
     let colorContrasted = color.xyz * f_contrast
     gl_FragColor.xyz = max ( colorContrasted + float3(f_brightness), float3(0.))
     gl_FragColor.w = color.w
 
 [fragment_program]
 def ps_greyscale_effect
-    let color = texture(f_tex,f_texcoord)
+    let color = texture2D(f_tex,f_texcoord)
     let b = color.x * 0.299 + color.y * 0.587 + color.z * 0.114
     gl_FragColor = float4(b, b, b, 1.0)
 
