@@ -58,7 +58,6 @@ var [[uniform]] v_projection : float4x4
 var [[inout]] f_texcoord : float2
 var [[inout]] f_normal : float3
 var [[inout]] f_position : float3
-var [[out]] f_outputColor : float4
 var [[uniform, stage=0]] f_tex : sampler2D
 var [[uniform, stage=1]] f_spec : sampler2D
 var [[uniform, stage=2]] f_norm : sampler2D
@@ -66,11 +65,11 @@ var [[uniform]] f_kD : float
 var [[uniform]] f_kS : float
 var [[uniform]] f_pS : float
 
-[fragment_program(name="PREVIEW_FRAGMENT_SRC",version=330)]
+[fragment_program]
 def ps_preview_main
-    f_outputColor = texture(f_tex,f_texcoord)
+    gl_FragColor = texture(f_tex,f_texcoord)
 
-[vertex_program(name="PBR_VERTEX_SRC",version=330)]
+[vertex_program]
 def vs_preview_pbr
     f_texcoord = v_texcoord
     f_normal = normalize ( float3x3(v_model) * v_normal )
@@ -96,7 +95,7 @@ def get_normal
     TBN[2] = N
 	return normalize(TBN * (texture(f_norm, f_texcoord).xyz * 2.0 - float3(1.0)))
 
-[fragment_program(name="PBR_FRAGMENT_SRC",version=330)]
+[fragment_program]
 def ps_preview_pbr
     let light_dir = normalize(float3(-1,-2,-3))
     let camera_dir = normalize(f_position)
@@ -107,13 +106,13 @@ def ps_preview_pbr
     let refl = normalize ( reflect(camera_dir,normal) )
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
-    f_outputColor.xyz =  (
+    gl_FragColor.xyz =  (
         texture(f_tex,  f_texcoord).xyz * diffuse +
         texture(f_spec, f_texcoord).xyz * specular
     )
-    f_outputColor.w = 1.
+    gl_FragColor.w = 1.
 
-[fragment_program(name="LIT_FRAGMENT_SRC",version=330)]
+[fragment_program]
 def ps_preview_lit
     let light_dir = normalize(float3(-1,-2,-3))
     let camera_dir = normalize(f_position)
@@ -124,8 +123,8 @@ def ps_preview_lit
     let refl = normalize ( reflect(camera_dir,normal) )
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
-    f_outputColor.xyz = texture(f_tex,  f_texcoord).xyz *  diffuse + specular
-    f_outputColor.w = 1.
+    gl_FragColor.xyz = texture(f_tex,  f_texcoord).xyz *  diffuse + specular
+    gl_FragColor.w = 1.
 
 var program, program_pbr, program_lit : uint
 
@@ -134,9 +133,9 @@ var font : Font
 var cube, sphere, sphere_cuv, cylinder : Fragment
 
 def public create_preview_objects
-    program = create_shader_program(PBR_VERTEX_SRC,PREVIEW_FRAGMENT_SRC)
-    program_pbr = create_shader_program(PBR_VERTEX_SRC,PBR_FRAGMENT_SRC)
-    program_lit = create_shader_program(PBR_VERTEX_SRC,LIT_FRAGMENT_SRC)
+    program = create_shader_program(@@vs_preview_pbr,@@ps_preview_main)
+    program_pbr = create_shader_program(@@vs_preview_pbr,@@ps_preview_pbr)
+    program_lit = create_shader_program(@@vs_preview_pbr,@@ps_preview_lit)
     font <- load_ttf("c:/windows/fonts/arial.ttf")
     cube <- gen_cube()
     sphere <- gen_sphere(32,16,false)
@@ -147,14 +146,12 @@ def public draw_preview ( display_w, display_h : int )
     static_let <|
         var rot_cube = 0.
         var rot_tri = 0.
-
     if length(g_PreviewTexture)==0
         g_PreviewTexture |> emplace <| [[Material
             surf=make_checkerboard(),
             name="Checkerboard",
             id="nothing",
             outp="nothing"]]
-
     rot_cube += 1.0
     if rot_cube > 360.
         rot_cube -= 360.
