@@ -31,7 +31,7 @@ var public g_PreviewMode = PreviewMode Sphere
 
 def make_checkerboard
     var surf = Surface(16,16)
-    surf.tex = gen_tex_checkerboard(16,16, 0xff404040 , 0xff808080)
+    surf.tex = gen_image_checkerboard(16,16, 0xff404040 , 0xff808080) |> create_texture
     glBindTexture(GL_TEXTURE_2D, surf.tex)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
@@ -130,17 +130,17 @@ var program, program_pbr, program_lit : uint
 
 var ttf : bool = false
 var font : Font
-var cube, sphere, sphere_cuv, cylinder : Fragment
+var cube, sphere, sphere_cuv, cylinder : OpenGLGeometryFragment
 
 def public create_preview_objects
     program = create_shader_program(@@vs_preview_pbr,@@ps_preview_main)
     program_pbr = create_shader_program(@@vs_preview_pbr,@@ps_preview_pbr)
     program_lit = create_shader_program(@@vs_preview_pbr,@@ps_preview_lit)
     font <- load_ttf("c:/windows/fonts/arial.ttf")
-    cube <- gen_cube()
-    sphere <- gen_sphere(32,16,false)
-    sphere_cuv <- gen_sphere(32,16,true)
-    cylinder <- gen_cylinder(GenDirection xz, 32)
+    cube <- gen_cube() |> create_geometry_fragment
+    sphere <- gen_sphere(32,16,false) |> create_geometry_fragment
+    sphere_cuv <- gen_sphere(32,16,true) |> create_geometry_fragment
+    cylinder <- gen_cylinder(GenDirection xz, 32) |> create_geometry_fragment
 
 def public draw_preview ( display_w, display_h : int )
     static_let <|
@@ -207,13 +207,13 @@ def public draw_preview ( display_w, display_h : int )
                 else
                     ps_preview_main_bind_uniform(prog)
             if g_PreviewMode==PreviewMode Cube
-                cube |> draw_fragment()
+                cube |> draw_geometry_fragment()
             elif g_PreviewMode==PreviewMode Sphere
-                sphere |> draw_fragment()
+                sphere |> draw_geometry_fragment()
             elif g_PreviewMode==PreviewMode CubeSphere
-                sphere_cuv |> draw_fragment()
+                sphere_cuv |> draw_geometry_fragment()
             elif g_PreviewMode==PreviewMode Cylinder
-                cylinder |> draw_fragment()
+                cylinder |> draw_geometry_fragment()
             glDisable(GL_CULL_FACE)
             glDisable(GL_DEPTH_TEST)
             if g_PreviewLabels

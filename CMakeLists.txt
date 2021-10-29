@@ -195,6 +195,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		# glsl
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/glsl_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/geom_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		# ttf
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasStbTrueType/ttf/stb_ttf_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		# daslib
