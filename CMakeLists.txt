@@ -149,7 +149,7 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
 		DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_node_editor_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glfw/glfw_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
 		SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
 
 		# now, the demo
@@ -188,11 +188,11 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		# glfw
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glfw/glfw_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		# opengl
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_state.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_ttf.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/opengl/opengl_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_state.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_ttf.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		# glsl
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/glsl_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
 		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/geom_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
