@@ -55,7 +55,6 @@ def imgui_app ( title:string; blk : block )
     glfwInitOpenGL(3,3,true)
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
-    glSetBreakOnOpenGLError(true)    // enable for opengl debugging
     CreateContext(null)
     create_ttf_objects()
     create_preview_objects()
