@@ -3,7 +3,6 @@ options log_total_compile_time
 options multiple_contexts
 
 options persistent_heap = true
-options persistent_string_heap = true
 options gc
 
 require fio
