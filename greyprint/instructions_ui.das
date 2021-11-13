@@ -78,7 +78,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
     var flags = ImGuiColorEditFlags AlphaBar
     if mode==EditMode Embedded
         flags |= ImGuiColorEditFlags NoTooltip | ImGuiColorEditFlags NoOptions
-    if ColorPicker4("##{name}{id}{mode}_ColorEditor4",safe_addr(data.x),flags)
+    if ColorPicker4("##{name}{id}{mode}_ColorEditor4",unsafe(addr(data.x)),flags)
         undo_edit_instruction(id,name)
         update_preview()
         return true
@@ -87,7 +87,7 @@ def NodeColorEditor4(mode:EditMode; id,name:string; var data:float4&)
 
 def NodeInputInt(mode:EditMode; id,name:string; var data:int&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    if InputInt("{name}##{id}{mode}_InputInt",safe_addr(data))
+    if InputInt("{name}##{id}{mode}_InputInt",unsafe(addr(data)))
         undo_edit_instruction(id,name)
         update_preview()
         return true
@@ -96,7 +96,7 @@ def NodeInputInt(mode:EditMode; id,name:string; var data:int&)
 
 def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    if InputInt2("{name}##{id}{mode}_InputInt2",safe_addr(data.x))
+    if InputInt2("{name}##{id}{mode}_InputInt2",unsafe(addr(data.x)))
         undo_edit_instruction(id,name)
         update_preview()
         return true
@@ -105,7 +105,7 @@ def NodeInputInt2(mode:EditMode; id,name:string; var data:int2&)
 
 def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.01f)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    if DragFloat("{name}##{id}{mode}_DragFloat",safe_addr(data),step)
+    if DragFloat("{name}##{id}{mode}_DragFloat",unsafe(addr(data)),step)
         undo_edit_instruction(id,name)
         update_preview()
         return true
@@ -114,9 +114,9 @@ def NodeDragFloat(mode:EditMode; id,name:string; var data:float&; step:float=0.0
 
 def NodeDragFloat2(mode:EditMode; id,name:string; var data:float2&; step:float=0.01f)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    var any = DragFloat("{name}.x##{id}{mode}_DragFloat_x",safe_addr(data.x),step)
+    var any = DragFloat("{name}.x##{id}{mode}_DragFloat_x",unsafe(addr(data.x)),step)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH - CalcTextSize(name).x)
-    any = DragFloat("{name}.y##{id}{mode}_DragFloat_y",safe_addr(data.y),step) || any
+    any = DragFloat("{name}.y##{id}{mode}_DragFloat_y",unsafe(addr(data.y)),step) || any
     if any
         undo_edit_instruction(id,name)
         update_preview()
@@ -126,7 +126,7 @@ def NodeDragFloat2(mode:EditMode; id,name:string; var data:float2&; step:float=0
 
 def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
     SetNextItemWidth(DEFAULT_NAMED_ELEMENT_WIDTH -  - CalcTextSize(name).x)
-    if Checkbox("{name}##{id}{mode}_Checkbox",safe_addr(data))
+    if Checkbox("{name}##{id}{mode}_Checkbox",unsafe(addr(data)))
         undo_edit_instruction(id,name)
         update_preview()
         return true

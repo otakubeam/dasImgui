@@ -29,10 +29,10 @@ def finalize ( var self:Surface )
     if self.tex != 0u
         if DEBUG_TEXTURE_LIFETIME
             print(" ! glDeleteTextures {self.tex}\n")
-        glDeleteTextures(1, safe_addr(self.tex))
+        glDeleteTextures(1, unsafe(addr(self.tex)))
         self.tex = 0u
     if self.fbo != 0u
-        glDeleteFramebuffers(1, safe_addr(self.fbo))
+        glDeleteFramebuffers(1, unsafe(addr(self.fbo)))
         self.fbo = 0u
 
 struct Material
