@@ -58,7 +58,7 @@ def imgui_app ( title:string; blk : block )
     create_ttf_objects()
     create_preview_objects()
     dlg_init()
-    var io & = GetIO()
+    var io & = unsafe(GetIO())
     io.FontGlobalScale = 2.0
     imgui::GetStyle() |> ScaleAllSizes(2.0)
     StyleColorsDark(null)
@@ -91,7 +91,7 @@ def imgui_app ( title:string; blk : block )
         let dt = (get_time_usec(t0)+500) / 1000
         glfwSetWindowTitle(window, "heap:{int(total_heap)} string:{int(total_string_heap)} collect:{dt}ms")
 
-        var IO & = GetIO()
+        var IO & = unsafe(GetIO())
         if IO.KeyCtrl
             if IsKeyPressed(GetKeyIndex(ImGuiKey A))
                 memory_report(false)
@@ -290,7 +290,7 @@ def main_menu()
                 post_event <| @
                     OpenPopup("PREVIEW SOURCE")
 
-    var IO & = GetIO()
+    var IO & = unsafe(GetIO())
     if IO.KeyCtrl
         if IsKeyPressed(GetKeyIndex(ImGuiKey Z))
             ClearSelection()
@@ -312,8 +312,8 @@ def in_pin(id: int; blk: block<():void>)
     // imgui_node_editor::PushStyleColor(StyleColor StyleColor_PinRect, float4(1f, 0f, 0f, 1f))
     // imgui_node_editor::PushStyleVar(StyleVar StyleVar_PinCorners, 3f)
     BeginPin(id, PinKind Input) <|
-        var io & = GetIO()
-        Dummy(float2(10. * io.FontGlobalScale))
+        var IO & = unsafe(GetIO())
+        Dummy(float2(10. * IO.FontGlobalScale))
         let offset = float2(3, 3)
         let min = GetItemRectMin() - float2(8, 0)
         let max = GetItemRectMax() - float2(8, 0)
@@ -344,8 +344,8 @@ def out_pin(id: int; text: string implicit; indent: float; blk: block<():void>)
     // let size = GetNodeSize()
     // SetNextItemWidth(-FLT_MIN)
     BeginPin(id, PinKind Output) <|
-        var io & = GetIO()
-        Dummy(float2(10. * io.FontGlobalScale))
+        var IO & = unsafe(GetIO())
+        Dummy(float2(10. * IO.FontGlobalScale))
         let offset = float2(3, 3)
         let min = GetItemRectMin() + float2(8, 3)
         let max = GetItemRectMax() + float2(8, 3)
@@ -370,7 +370,7 @@ def editor_hint(desc:string)
     Resume()
 
 def editor_child_window()
-    var style & = imgui_node_editor::GetStyle()
+    var style & = unsafe(imgui_node_editor::GetStyle())
     style.NodeRounding = 0f
     style.GroupRounding = 0f
     style.PinRounding = 0f
@@ -733,7 +733,7 @@ def create_instruction_ex(flags:EditInstructionsFlags;evt:block<(ai:InstructionC
                     var idx = g_instructionsByCategory |> find_index_if <| $ ( val )
                         return val.name=="Call action"
                     assert(idx!=-1,"Call action not found")
-                    var ai & = g_instructionsByCategory[idx]
+                    var ai & = unsafe(g_instructionsByCategory[idx])
                     invoke(evt, safe_addr(ai), actid)
                 stx += GetItemRectSize().x
     for ai in g_instructionsByCategory
@@ -932,7 +932,7 @@ def rename_action_dialog()
         EndPopup()
 
 def project_window()
-    var style & = imgui::GetStyle()
+    var style & = unsafe(imgui::GetStyle())
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
     BeginChild("Project", float2(LEFT_SIDE_PANNEL_WIDTH, -FLT_MIN), true)
@@ -978,7 +978,7 @@ def project_window()
     imgui::PopStyleColor()
 
 def properties_window()
-    var style & = imgui::GetStyle()
+    var style & = unsafe(imgui::GetStyle())
     PushStyleColor(ImGuiCol ChildBg, style.Colors[int(ImGuiCol WindowBg)])
     BeginGroup()
     var snc = GetSelectedObjectCount()
@@ -1045,7 +1045,7 @@ def main_editor_screen()
     PushStyleVar(ImGuiStyleVar WindowPadding, float2())
     Begin("Surface project editor",null,ImGuiWindowFlags MenuBar | ImGuiWindowFlags NoTitleBar | ImGuiWindowFlags NoResize | ImGuiWindowFlags NoMove | ImGuiWindowFlags NoBackground ) <|
         imgui::PopStyleVar(1)
-        var IO & = imgui::GetIO()
+        var IO & = unsafe(imgui::GetIO())
         SetWindowPos(float2(0.,0.), ImGuiCond Once)
         SetWindowSize(float2(IO.DisplaySize.x,IO.DisplaySize.y), ImGuiCond Always)
         main_menu()

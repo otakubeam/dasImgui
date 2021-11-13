@@ -86,7 +86,7 @@ def produce_eval ( var reval:array<Instruction?>; reg_total:int )
             if inp.src != null
                 let oidx = inp.src->output_index(inp.output)
                 assert(oidx!=-1)
-                var outp & = inp.src.pins.outputs[oidx]
+                var outp & = unsafe(inp.src.pins.outputs[oidx])
                 let reg = outp.reg
                 inp_regs |> push(reg)
                 if !reg_used[reg]

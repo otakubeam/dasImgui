@@ -366,7 +366,7 @@ def GetBR(rect:float4)
     return rect.zw
 
 def VerticalSeparator (name:string; var PANNEL_WIDTH:float&; inverted:float=1.; min_width:float=200.; max_width:float=100500.0)
-    var IO & = imgui::GetIO()
+    var IO & = unsafe(imgui::GetIO())
     PushStyleVar(ImGuiStyleVar ItemSpacing, float2(0.))
     static_let <|
         var resizing_vertical = false

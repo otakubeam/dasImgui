@@ -136,7 +136,7 @@ class Instruction
         self->save(inode)
         return JV(inode)
     def from_JV ( var pnode:JsonValue? )
-        var node & = pnode.value as _object
+        var node & = unsafe(pnode.value as _object)
         id = node["id"].value as _string
         name = node["name"].value as _string
         action = node["action"].value as _string
@@ -254,7 +254,7 @@ class Project
         return self->save_with_filter(true) <| $ ( inst : Instruction? )
             return true
     def load_instruction ( var pnode : JsonValue? )
-        var node & = pnode.value as _object
+        var node & = unsafe(pnode.value as _object)
         let ntype = node["rtti"].value as _string
         var inst = make_instruction(ntype)
         (*inst)->from_JV(pnode)
@@ -262,9 +262,9 @@ class Project
         self->add_insturction(inst)
         return inst
     def load_links ( var rlinks : JsonValue? ): void
-        var links & = rlinks.value as _array
+        var links & = unsafe(rlinks.value as _array)
         for plink in links
-            var link & = plink.value as _object
+            var link & = unsafe(plink.value as _object)
             let input_id = link["input_id"].value as _string
             var inst = self->find_instruction(input_id)
             assert(inst != null)
@@ -277,13 +277,13 @@ class Project
     def load ( var proot:JsonValue? ) : void
         if proot==null
             return
-        var root & = proot.value as _object
-        var nodes & = root["nodes"].value as _array
+        var root & = unsafe(proot.value as _object)
+        var nodes & = unsafe(root["nodes"].value as _array)
         for pnode in nodes
             self->load_instruction(pnode)
         self->pre_sync()
         self->load_links(root["links"])
-        var acts & = root["actions"].value as _object
+        var acts & = unsafe(root["actions"].value as _object)
         delete actions
         for aid,aname in keys(acts),values(acts)
             actions[aid] = aname as _string
