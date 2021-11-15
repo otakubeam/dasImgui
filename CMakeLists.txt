@@ -6,10 +6,13 @@ IF(NOT DAS_IMGUI_INCLUDED)
 
     LIST(APPEND CMAKE_MODULE_PATH ${DAS_IMGUI_DIR})
 
-    FIND_PACKAGE(glfw3)
     FIND_PACKAGE(Vulkan)
 
 	ADD_DEFINITIONS(-DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
+
+	SET(DAS_GLFW_DIR ${CMAKE_SOURCE_DIR}/modules/dasGlfw)
+	SET(GLFW_INCLUDE_DIR ${DAS_GLFW_DIR}/glfw/include)
+	SET(GLFW_LIBRARIES ${DAS_GLFW_DIR}/glfw/lib/glfw3.lib)
 
 	# imgui
 	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui)
@@ -116,8 +119,10 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		${imgui_INCLUDE_DIR}
 		${IMGUI_H}
 	)
-	IF(NOT glfw3_FOUND)
-		MESSAGE(STATUS "GLFW3 not found. Not building dasImguiGLFW.")
+
+	FIND_PACKAGE(OpenGL)
+	IF(NOT OPENGL_FOUND)
+		MESSAGE(STATUS "OpenGL not found.")
 	ELSE()
 		# libDasModuleImGuiApp
 		SET(DAS_IMGUI_APP_MODULE_SRC
@@ -133,129 +138,134 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		ADD_MODULE_LIB(libDasModuleImGuiApp)
 		ADD_MODULE_CPP(imgui_app)
 		ADD_LIBRARY(libDasModuleImGuiApp ${DAS_IMGUI_APP_MODULE_SRC})
-		TARGET_LINK_LIBRARIES(libDasModuleImGuiApp ${glfw_LIBRARIES})
+		TARGET_LINK_LIBRARIES(libDasModuleImGuiApp
+			${GLFW_LIBRARIES}
+			${OPENGL_LIBRARIES}
+		)
 		ADD_DEPENDENCIES(libDasModuleImGuiApp libDaScript libDasModuleImGui)
 		TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiApp PUBLIC
 			${imgui_INCLUDE_DIR}
-			${glfw_INCLUDE_DIR}
+			${GLFW_INCLUDE_DIR}
 		)
 		SETUP_CPP11(libDasModuleImGuiApp)
 
-		# demo AOT
-		add_custom_target(dasImguiOpenGL_AOT)
-		SET(IMGUI_OPENGL_AOT_GENERATED_SRC)
-		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_demo.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_opengl2.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_node_editor_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glfw/glfw_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
-		SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
-
-		# now, the demo
-		SET(IMGUI_OPENGL_DEMO_SRC
-			${DAS_IMGUI_DIR}/example/imgui_opengl_aot.cpp
-			${DAS_MODULES_NEED_INC}
-		)
-		SOURCE_GROUP_FILES("main" IMGUI_OPENGL_DEMO_SRC)
-		add_executable(dasImguiOpenGL ${IMGUI_OPENGL_DEMO_SRC} ${IMGUI_OPENGL_AOT_GENERATED_SRC} ${AOT_GENERATED_SRC})
-		TARGET_LINK_LIBRARIES(dasImguiOpenGL libDaScript libDasModuleUriparser libUriParser Threads::Threads)
-		ADD_DEPENDENCIES(dasImguiOpenGL libDaScript libDasModuleUriparser libUriParser)
-		ADD_DEPENDENCIES(dasImguiOpenGL dasImguiOpenGL_AOT dasAotStub)
-		TARGET_INCLUDE_DIRECTORIES(dasImguiOpenGL PUBLIC ${imgui_INCLUDE_DIR} ${glfw_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
-		SETUP_CPP11(dasImguiOpenGL)
-		SETUP_LTO(dasImguiOpenGL)
-		ADD_EXAMPLE(dasImguiOpenGL)
-
-		# GREYPRINT AOT
-		add_custom_target(GREYPRINT_AOT)
-		SET(GREYPRINT_GENERATED_SRC)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/command_que.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/greyprint.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/guid_2_id.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_math.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_ui.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model_eval.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/preview.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/produce.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/greyprint/undo_stack.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# imgui
-		DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_node_editor_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# glfw
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/glfw/glfw_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# opengl
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_state.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_ttf.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# glsl
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/glsl_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/geom_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# ttf
-		DAS_AOT("${DAS_IMGUI_DIR}/../dasStbTrueType/ttf/stb_ttf_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		# daslib
-		DAS_AOT("daslib/functional.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/json.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/json_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/regex.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/regex_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/strings_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/random.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		DAS_AOT("daslib/math_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
-		SOURCE_GROUP_FILES("aot stub" GREYPRINT_GENERATED_SRC)
-
-		# now, the demo
-		SET(GREYPRINT_SRC
-			${DAS_IMGUI_DIR}/greyprint/greyprint.cpp
-			${DAS_MODULES_NEED_INC}
-		)
-		SOURCE_GROUP_FILES("main" GREYPRINT_SRC)
-		add_executable(Greyprint ${GREYPRINT_SRC} ${GREYPRINT_GENERATED_SRC})
-		TARGET_LINK_LIBRARIES(Greyprint libDaScript libDasModuleUriparser libUriParser Threads::Threads)
-		ADD_DEPENDENCIES(Greyprint libDaScript libDasModuleUriparser libUriParser)
-		ADD_DEPENDENCIES(Greyprint GREYPRINT_AOT dasAotStub)
-		TARGET_INCLUDE_DIRECTORIES(Greyprint PUBLIC ${imgui_INCLUDE_DIR} ${glfw_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
-		SETUP_CPP11(Greyprint)
-		SETUP_LTO(Greyprint)
-		ADD_EXAMPLE(Greyprint)
-
-		IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../dasVulkan/include/dasVulkan/module.h"))
-			MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
-		ELSE()
-			# libDasModuleImGuiVulkan
-			SET(DAS_IMGUI_VULKAN_MODULE_SRC
-				${DAS_IMGUI_DIR}/src/module_imgui_vulkan.cpp
-				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.cpp
-				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
-				${DAS_IMGUI_DIR}/example/imgui_demo.das
-				${DAS_IMGUI_DIR}/example/imgui_vulkan.das
-			)
-			ADD_MODULE_LIB(libDasModuleImGuiVulkan)
-			ADD_MODULE_CPP(imgui_vulkan)
-			ADD_LIBRARY(libDasModuleImGuiVulkan ${DAS_IMGUI_VULKAN_MODULE_SRC})
-			TARGET_LINK_LIBRARIES(libDasModuleImGuiVulkan ${glfw_LIBRARIES})
-			ADD_DEPENDENCIES(libDasModuleImGuiVulkan libDaScript libDasModuleImGui)
-			TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiVulkan PUBLIC
-				${imgui_INCLUDE_DIR}
-				${glfw_INCLUDE_DIR}
-				${Vulkan_INCLUDE_DIR})
-			SETUP_CPP11(libDasModuleImGuiVulkan)
-
-			# GENERATED IMGUI VULKAN
-			DAS_CPP_BIND_AST(
-				IMGUI_GENERATE_VULKAN
-				generate_vulkan.das
-				${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
-				${DAS_IMGUI_DIR}/src/module_imgui_vulkan
-				${DAS_IMGUI_DIR}/src
-				"${Vulkan_INCLUDE_DIR};${imgui_INCLUDE_DIR}"
-				""
-			)
-		ENDIF()
 	ENDIF()
+
+	# demo AOT
+	add_custom_target(dasImguiOpenGL_AOT)
+	SET(IMGUI_OPENGL_AOT_GENERATED_SRC)
+	DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_demo.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_opengl2.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_node_editor_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/dasglfw/glfw_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT dasAot)
+	SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
+
+	# now, the demo
+	SET(IMGUI_OPENGL_DEMO_SRC
+		${DAS_IMGUI_DIR}/example/imgui_opengl_aot.cpp
+		${DAS_MODULES_NEED_INC}
+	)
+	SOURCE_GROUP_FILES("main" IMGUI_OPENGL_DEMO_SRC)
+	add_executable(dasImguiOpenGL ${IMGUI_OPENGL_DEMO_SRC} ${IMGUI_OPENGL_AOT_GENERATED_SRC} ${AOT_GENERATED_SRC})
+	TARGET_LINK_LIBRARIES(dasImguiOpenGL libDaScript libDasModuleUriparser libUriParser Threads::Threads)
+	ADD_DEPENDENCIES(dasImguiOpenGL libDaScript libDasModuleUriparser libUriParser)
+	ADD_DEPENDENCIES(dasImguiOpenGL dasImguiOpenGL_AOT dasAotStub)
+	TARGET_INCLUDE_DIRECTORIES(dasImguiOpenGL PUBLIC ${imgui_INCLUDE_DIR} ${GLFW_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
+	SETUP_CPP11(dasImguiOpenGL)
+	SETUP_LTO(dasImguiOpenGL)
+	ADD_EXAMPLE(dasImguiOpenGL)
+
+	# GREYPRINT AOT
+	add_custom_target(GREYPRINT_AOT)
+	SET(GREYPRINT_GENERATED_SRC)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/command_que.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/greyprint.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/guid_2_id.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_math.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/instructions_ui.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/model_eval.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/preview.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/produce.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/greyprint/undo_stack.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# imgui
+	DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_node_editor_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# glfw
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/dasglfw/glfw_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# opengl
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_state.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_ttf.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_cache.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# glsl
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/glsl_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasGlsl/glsl/geom_gen.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# ttf
+	DAS_AOT("${DAS_IMGUI_DIR}/../dasStbTrueType/ttf/stb_ttf_common.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	# daslib
+	DAS_AOT("daslib/functional.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/json.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/json_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/regex.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/regex_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/strings_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/random.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	DAS_AOT("daslib/math_boost.das" GREYPRINT_GENERATED_SRC GREYPRINT_AOT dasAot)
+	SOURCE_GROUP_FILES("aot stub" GREYPRINT_GENERATED_SRC)
+
+	# now, the demo
+	SET(GREYPRINT_SRC
+		${DAS_IMGUI_DIR}/greyprint/greyprint.cpp
+		${DAS_MODULES_NEED_INC}
+	)
+	SOURCE_GROUP_FILES("main" GREYPRINT_SRC)
+	add_executable(Greyprint ${GREYPRINT_SRC} ${GREYPRINT_GENERATED_SRC})
+	TARGET_LINK_LIBRARIES(Greyprint libDaScript libDasModuleUriparser libUriParser Threads::Threads)
+	ADD_DEPENDENCIES(Greyprint libDaScript libDasModuleUriparser libUriParser)
+	ADD_DEPENDENCIES(Greyprint GREYPRINT_AOT dasAotStub)
+	TARGET_INCLUDE_DIRECTORIES(Greyprint PUBLIC ${imgui_INCLUDE_DIR} ${GLFW_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
+	SETUP_CPP11(Greyprint)
+	SETUP_LTO(Greyprint)
+	ADD_EXAMPLE(Greyprint)
+
+	IF ((NOT Vulkan_FOUND) OR (NOT EXISTS "${DAS_IMGUI_DIR}/../dasVulkan/include/dasVulkan/module.h"))
+		MESSAGE(STATUS "Vulkan not found. Not building dasImguiVulkan.")
+	ELSE()
+		# libDasModuleImGuiVulkan
+		SET(DAS_IMGUI_VULKAN_MODULE_SRC
+			${DAS_IMGUI_DIR}/src/module_imgui_vulkan.cpp
+			${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.cpp
+			${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
+			${DAS_IMGUI_DIR}/example/imgui_demo.das
+			${DAS_IMGUI_DIR}/example/imgui_vulkan.das
+		)
+		ADD_MODULE_LIB(libDasModuleImGuiVulkan)
+		ADD_MODULE_CPP(imgui_vulkan)
+		ADD_LIBRARY(libDasModuleImGuiVulkan ${DAS_IMGUI_VULKAN_MODULE_SRC})
+		TARGET_LINK_LIBRARIES(libDasModuleImGuiVulkan ${GLFW_LIBRARIES})
+		ADD_DEPENDENCIES(libDasModuleImGuiVulkan libDaScript libDasModuleImGui)
+		TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiVulkan PUBLIC
+			${imgui_INCLUDE_DIR}
+			${GLFW_INCLUDE_DIR}
+			${Vulkan_INCLUDE_DIR})
+		SETUP_CPP11(libDasModuleImGuiVulkan)
+
+		# GENERATED IMGUI VULKAN
+		DAS_CPP_BIND_AST(
+			IMGUI_GENERATE_VULKAN
+			generate_vulkan.das
+			${imgui_INCLUDE_DIR}/backends/imgui_impl_vulkan.h
+			${DAS_IMGUI_DIR}/src/module_imgui_vulkan
+			${DAS_IMGUI_DIR}/src
+			"${Vulkan_INCLUDE_DIR};${imgui_INCLUDE_DIR}"
+			""
+		)
+	ENDIF()
+
 ENDIF()
