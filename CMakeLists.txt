@@ -12,7 +12,23 @@ IF(NOT DAS_IMGUI_INCLUDED)
 
 	SET(DAS_GLFW_DIR ${CMAKE_SOURCE_DIR}/modules/dasGlfw)
 	SET(GLFW_INCLUDE_DIR ${DAS_GLFW_DIR}/glfw/include)
-	SET(GLFW_LIBRARIES ${DAS_GLFW_DIR}/glfw/lib/glfw3.lib)
+	IF(APPLE)
+		find_library(COCOA_LIBRARY Cocoa)
+		find_library(IOKIT_LIBRARY IOKit)
+		find_library(METAL_LIBRARY Metal)
+		find_library(QUARTZCORE_LIBRARY QuartzCore)
+		SET(GLFW_LIBRARIES
+			${DAS_GLFW_DIR}/glfw/lib/libglfw3.a
+			${COCOA_LIBRARY}
+			${IOKIT_LIBRARY}
+			${METAL_LIBRARY}
+			${QUARTZCORE_LIBRARY}
+		)
+	ELSEIF(UNIX)
+		SET(GLFW_LIBRARIES ${DAS_GLFW_DIR}/glfw/lib/libglfw3.a)
+	ELSE()
+		SET(GLFW_LIBRARIES ${DAS_GLFW_DIR}/glfw/lib/glfw3.lib)
+	ENDIF()
 
 	# imgui
 	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui)
