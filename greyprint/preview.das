@@ -68,7 +68,7 @@ var [[out]] f_FragColor : float4
 
 [fragment_program]
 def ps_preview_main
-    f_FragColor = texture2D(f_tex,f_texcoord)
+    f_FragColor = texture(f_tex,f_texcoord)
 
 [vertex_program]
 def vs_preview_pbr
@@ -94,7 +94,7 @@ def get_normal
     TBN[0] = T
     TBN[1] = B
     TBN[2] = N
-	return normalize(TBN * (texture2D(f_norm, f_texcoord).xyz * 2.0 - float3(1.0)))
+	return normalize(TBN * (texture(f_norm, f_texcoord).xyz * 2.0 - float3(1.0)))
 
 [fragment_program]
 def ps_preview_pbr
@@ -108,8 +108,8 @@ def ps_preview_pbr
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
     f_FragColor.xyz =  (
-        texture2D(f_tex,  f_texcoord).xyz * diffuse +
-        texture2D(f_spec, f_texcoord).xyz * specular
+        texture(f_tex,  f_texcoord).xyz * diffuse +
+        texture(f_spec, f_texcoord).xyz * specular
     )
     f_FragColor.w = 1.
 
@@ -124,7 +124,7 @@ def ps_preview_lit
     let refl = normalize ( reflect(camera_dir,normal) )
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
-    f_FragColor.xyz = texture2D(f_tex,  f_texcoord).xyz *  diffuse + specular
+    f_FragColor.xyz = texture(f_tex,  f_texcoord).xyz *  diffuse + specular
     f_FragColor.w = 1.
 
 var program, program_pbr, program_lit : uint
@@ -137,7 +137,7 @@ def public create_preview_objects
     program = create_shader_program(@@vs_preview_pbr,@@ps_preview_main)
     program_pbr = create_shader_program(@@vs_preview_pbr,@@ps_preview_pbr)
     program_lit = create_shader_program(@@vs_preview_pbr,@@ps_preview_lit)
-    font <- load_ttf("c:/windows/fonts/arial.ttf")
+    font <- load_ttf("{get_das_root()}/modules/dasBGFX/bgfx/bgfx/examples/runtime/font/droidsansmono.ttf")
     cube <- gen_cube() |> create_geometry_fragment
     sphere <- gen_sphere(32,16,false) |> create_geometry_fragment
     sphere_cuv <- gen_sphere(32,16,true) |> create_geometry_fragment

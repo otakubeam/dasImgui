@@ -16,6 +16,7 @@ require glfw/glfw_boost
 require imgui/imgui_boost
 require daslib/static_let
 require daslib/safe_addr
+require daslib/defer
 require imgui/imgui_node_editor_boost
 require daslib/strings_boost
 require daslib/lpipe
@@ -48,11 +49,16 @@ var g_Context : EditorContext?
 def imgui_app ( title:string; blk : block )
     if glfwInit()==0
 		panic("can't init glfw")
-    window = glfwCreateWindow(1920, 1280, title, null, null)
-    if window==null
-  		panic("can't create window")
+    defer <|
+        glfwTerminate()
     glfwInitOpenGL(3,3)
+    var window = glfwCreateWindow(1280, 720, "Greyprint", null, null)
+    if window==null
+		panic("can't create window")
+    defer <|
+        glfwDestroyWindow(window)
     glfwMakeContextCurrent(window)
+
     glfwSwapInterval(1)
     CreateContext(null)
     create_ttf_objects()
@@ -99,8 +105,6 @@ def imgui_app ( title:string; blk : block )
     ImGui_ImplOpenGL2_Shutdown()
     ImGui_ImplGlfw_Shutdown()
     DestroyContext(null)
-    glfwDestroyWindow(window)
-    glfwTerminate()
 
 // PROJECT
 
