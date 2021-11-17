@@ -1,6 +1,7 @@
 #include "daScript/daScript.h"
 
 #include "imgui_stub.h"
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 
 #include "../imgui/backends/imgui_impl_opengl3.h"
@@ -11,10 +12,6 @@ using namespace das;
 #define USE_GENERATED 1
 
 #if USE_GENERATED
-
-#if defined(_MSC_VER)
-#include <GL/gl3w.h>
-#endif
 
 // NOTE: this module requires GLFW module
 #include "../../dasGlfw/src/module_glfw_include.h"
@@ -28,9 +25,7 @@ void glfw_error_callback(int error, const char* description) {
 }
 
 void das_ImGui_ImplOpenGL3_Init ( const char * version ) {
-#if defined(_MSC_VER)
     gl3wInit();
-#endif
     ImGui_ImplOpenGL3_Init(version);
 }
 
@@ -106,7 +101,8 @@ public:
         tw << "#include \"../modules/dasImgui/src/imgui_stub.h\"\n";
         tw << "#include \"../modules/dasImgui/src/imnodes_stub.h\"\n";
         tw << "#include <backends/imgui_impl_glfw.h>\n";
-        tw << "#include <backends/imgui_impl_opengl2.h>\n";
+        tw << "#include <backends/imgui_impl_opengl3.h>\n";
+        tw << "void das_ImGui_ImplOpenGL3_Init ( const char * version );\n";
         return ModuleAotType::cpp;
     }
 };
