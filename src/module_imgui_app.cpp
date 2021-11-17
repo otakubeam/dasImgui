@@ -3,7 +3,7 @@
 #include "imgui_stub.h"
 #include <GLFW/glfw3.h>
 
-#include "../imgui/backends/imgui_impl_opengl2.h"
+#include "../imgui/backends/imgui_impl_opengl3.h"
 #include "../imgui/backends/imgui_impl_glfw.h"
 
 using namespace das;
@@ -11,6 +11,10 @@ using namespace das;
 #define USE_GENERATED 1
 
 #if USE_GENERATED
+
+#if defined(_MSC_VER)
+#include <GL/gl3w.h>
+#endif
 
 // NOTE: this module requires GLFW module
 #include "../../dasGlfw/src/module_glfw_include.h"
@@ -21,6 +25,13 @@ MAKE_EXTERNAL_TYPE_FACTORY(ImDrawData,ImDrawData);
 
 void glfw_error_callback(int error, const char* description) {
     printf("Glfw Error %d: %s\n", error, description);
+}
+
+void das_ImGui_ImplOpenGL3_Init ( const char * version ) {
+#if defined(_MSC_VER)
+    gl3wInit();
+#endif
+    ImGui_ImplOpenGL3_Init(version);
 }
 
 // making custom builtin module
@@ -69,23 +80,24 @@ public:
             SideEffects::worstDefault, "ImGui_ImplGlfw_KeyCallback");
         addExtern<DAS_BIND_FUN(ImGui_ImplGlfw_CharCallback)>(*this,lib,"ImGui_ImplGlfw_CharCallback",
             SideEffects::worstDefault, "ImGui_ImplGlfw_CharCallback");
-        // OpenGL2
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_Init)>(*this,lib,"ImGui_ImplOpenGL2_Init",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_Init");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_Shutdown)>(*this,lib,"ImGui_ImplOpenGL2_Shutdown",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_Shutdown");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_NewFrame)>(*this,lib,"ImGui_ImplOpenGL2_NewFrame",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_NewFrame");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_RenderDrawData)>(*this,lib,"ImGui_ImplOpenGL2_RenderDrawData",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_RenderDrawData");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_CreateFontsTexture)>(*this,lib,"ImGui_ImplOpenGL2_CreateFontsTexture",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_CreateFontsTexture");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_DestroyFontsTexture)>(*this,lib,"ImGui_ImplOpenGL2_DestroyFontsTexture",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_DestroyFontsTexture");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_CreateDeviceObjects)>(*this,lib,"ImGui_ImplOpenGL2_CreateDeviceObjects",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_CreateDeviceObjects");
-        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL2_DestroyDeviceObjects)>(*this,lib,"ImGui_ImplOpenGL2_DestroyDeviceObjects",
-            SideEffects::worstDefault, "ImGui_ImplOpenGL2_DestroyDeviceObjects");
+        // OpenGL
+        addExtern<DAS_BIND_FUN(das_ImGui_ImplOpenGL3_Init)>(*this,lib,"ImGui_ImplOpenGL3_Init",
+            SideEffects::worstDefault, "das_ImGui_ImplOpenGL3_Init");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_Shutdown)>(*this,lib,"ImGui_ImplOpenGL3_Shutdown",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_Shutdown");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_NewFrame)>(*this,lib,"ImGui_ImplOpenGL3_NewFrame",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_NewFrame");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_RenderDrawData)>(*this,lib,"ImGui_ImplOpenGL3_RenderDrawData",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_RenderDrawData");
+
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_CreateFontsTexture)>(*this,lib,"ImGui_ImplOpenGL3_CreateFontsTexture",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_CreateFontsTexture");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_DestroyFontsTexture)>(*this,lib,"ImGui_ImplOpenGL3_DestroyFontsTexture",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_DestroyFontsTexture");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_CreateDeviceObjects)>(*this,lib,"ImGui_ImplOpenGL3_CreateDeviceObjects",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_CreateDeviceObjects");
+        addExtern<DAS_BIND_FUN(ImGui_ImplOpenGL3_DestroyDeviceObjects)>(*this,lib,"ImGui_ImplOpenGL3_DestroyDeviceObjects",
+            SideEffects::worstDefault, "ImGui_ImplOpenGL3_DestroyDeviceObjects");
 #endif
         // all good
         return true;

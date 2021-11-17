@@ -145,15 +145,20 @@ IF(NOT DAS_IMGUI_INCLUDED)
 			${DAS_IMGUI_DIR}/src/module_imgui_app.cpp
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_glfw.cpp
 			${imgui_INCLUDE_DIR}/backends/imgui_impl_glfw.h
-			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl2.cpp
-			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl2.h
+			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl3.cpp
+			${imgui_INCLUDE_DIR}/backends/imgui_impl_opengl3.h
 			${DAS_IMGUI_DIR}/example/imgui_demo.das
 			${DAS_IMGUI_DIR}/example/imgui_opengl2.das
 			${DAS_IMGUI_DIR}/example/imnode_editor.das
 		)
 		ADD_MODULE_LIB(libDasModuleImGuiApp)
+		IF(WIN32)
+			SET(IMGUI_GL3W ${imgui_INCLUDE_DIR}/examples/libs/gl3w/GL/gl3w.c)
+		ELSE()
+			SET(IMGUI_GL3W)
+		ENDIF()
 		ADD_MODULE_CPP(imgui_app)
-		ADD_LIBRARY(libDasModuleImGuiApp ${DAS_IMGUI_APP_MODULE_SRC})
+		ADD_LIBRARY(libDasModuleImGuiApp ${DAS_IMGUI_APP_MODULE_SRC} ${IMGUI_GL3W})
 		TARGET_LINK_LIBRARIES(libDasModuleImGuiApp
 			${GLFW_LIBRARIES}
 			${OPENGL_LIBRARIES}
@@ -161,10 +166,13 @@ IF(NOT DAS_IMGUI_INCLUDED)
 		ADD_DEPENDENCIES(libDasModuleImGuiApp libDaScript libDasModuleImGui)
 		TARGET_INCLUDE_DIRECTORIES(libDasModuleImGuiApp PUBLIC
 			${imgui_INCLUDE_DIR}
+			${imgui_INCLUDE_DIR}/examples/libs/gl3w
 			${GLFW_INCLUDE_DIR}
 		)
+		IF(WIN32)
+			target_compile_definitions(libDasModuleImGuiApp PUBLIC IMGUI_IMPL_OPENGL_LOADER_GL3W)
+		ENDIF()
 		SETUP_CPP11(libDasModuleImGuiApp)
-
 	ENDIF()
 
 	# demo AOT
