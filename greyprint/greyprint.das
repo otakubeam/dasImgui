@@ -65,8 +65,8 @@ def imgui_app ( title:string; blk : block )
     create_preview_objects()
     dlg_init()
     var io & = unsafe(GetIO())
-    io.FontGlobalScale = 2.0
-    imgui::GetStyle() |> ScaleAllSizes(2.0)
+    io.FontGlobalScale = 1.5
+    imgui::GetStyle() |> ScaleAllSizes(1.5)
     StyleColorsDark(null)
     ImGui_ImplGlfw_InitForOpenGL(window, true)
     ImGui_ImplOpenGL3_Init("#version 330")

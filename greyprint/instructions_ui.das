@@ -136,7 +136,7 @@ def NodeCheckbox(mode:EditMode; id,name:string; var data:bool&)
 def NodeFileName(mode:EditMode; id,name:string; var text:string&)
     var buf = get_next_text_buffer(text,256)
     if Button("...##{name}{id}{mode}_Button")
-        let fname = get_dlg_open_file(text,"*.*")   // todo: filter supported only
+        let fname = get_dlg_open_file(text,"png|jpg|tga")   // todo: filter supported only
         if !empty(fname)
             text = fname
             undo_edit_instruction(id,name)
