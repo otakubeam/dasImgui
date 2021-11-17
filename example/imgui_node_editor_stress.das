@@ -7,6 +7,7 @@ require imgui/imgui_boost
 require daslib/static_let
 require daslib/safe_addr
 require imgui/imgui_node_editor_boost
+require opengl/opengl
 
 var window : GLFWwindow?
 

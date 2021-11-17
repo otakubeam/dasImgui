@@ -1,5 +1,4 @@
 options persistent_heap = true
-options persistent_string_heap = true
 
 require imgui_app
 require glfw/glfw_boost
@@ -12,7 +11,7 @@ var window : GLFWwindow?
 def imgui_app ( title:string; blk : block )
     if glfwInit()==0
 		panic("can't init glfw")
-    window = glfwCreateWindow(1920, 1280, title, null, null)
+    window = glfwCreateWindow(1280, 720, title, null, null)
     if window==null
   		panic("can't create window")
     glfwMakeContextCurrent(window)

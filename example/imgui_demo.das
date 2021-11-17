@@ -1459,7 +1459,7 @@ class ExampleAppLog
             End()
             return
         if BeginPopup("Options")
-            Checkbox("Auto-scroll", safe_addr(AutoScroll))
+            Checkbox("Auto-scroll", unsafe(addr(AutoScroll)))
             EndPopup()
         if Button("Options")
             OpenPopup("Options")
@@ -1614,7 +1614,7 @@ class ExampleAppConsole
         let copy_to_clipboard = SmallButton("Copy")
         Separator()
         if BeginPopup("Options")
-            Checkbox("Auto-scroll", safe_addr(AutoScroll))
+            Checkbox("Auto-scroll", unsafe(addr(AutoScroll)))
             EndPopup()
         if Button("Options")
             OpenPopup("Options")
@@ -1783,7 +1783,7 @@ def DoSave(var self:MyDocument)
     self.Dirty = false
 
 def DisplayContents(var doc:MyDocument)
-    PushID(safe_addr(doc))
+    PushID(unsafe(addr(doc)))
     Text("Document \"{doc.Name}\"")
     PushStyleColor(ImGuiCol Text, doc.Color)
     TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
@@ -1793,7 +1793,7 @@ def DisplayContents(var doc:MyDocument)
     SameLine()
     if Button("Save", float2(100., 0.))
         doc |> DoSave()
-    ColorEdit3("color", safe_addr(doc.Color.x))
+    ColorEdit3("color", unsafe(addr(doc.Color.x)))
     PopID()
 
 def DisplayContextMenu(var doc:MyDocument)
@@ -2476,10 +2476,10 @@ def EditTableColumnsFlags(var p_flags:ImGuiTableColumnFlags? implicit)
     DasHelpMarker("Default for column >0")
 
 def ShowTableColumnsStatusFlags(var flags:ImGuiTableColumnFlags)
-    CheckboxFlags("_IsEnabled", safe_addr(flags), ImGuiTableColumnFlags IsEnabled)
-    CheckboxFlags("_IsVisible", safe_addr(flags), ImGuiTableColumnFlags IsVisible)
-    CheckboxFlags("_IsSorted", safe_addr(flags), ImGuiTableColumnFlags IsSorted)
-    CheckboxFlags("_IsHovered", safe_addr(flags), ImGuiTableColumnFlags IsHovered)
+    CheckboxFlags("_IsEnabled", unsafe(addr(flags)), ImGuiTableColumnFlags IsEnabled)
+    CheckboxFlags("_IsVisible", unsafe(addr(flags)), ImGuiTableColumnFlags IsVisible)
+    CheckboxFlags("_IsSorted",  unsafe(addr(flags)), ImGuiTableColumnFlags IsSorted)
+    CheckboxFlags("_IsHovered", unsafe(addr(flags)), ImGuiTableColumnFlags IsHovered)
 
 enum ContentsType
     CT_ShowWidth
