@@ -70,12 +70,11 @@ def ps_copy_effect
 
 [fragment_program]
 def ps_height_to_normal_effect
-    let off = int3(-1,0,1)
     let size = float2(f_normal_size,0.0)
-    let s01 = textureOffset(f_tex, f_texcoord, off.xy).y
-    let s21 = textureOffset(f_tex, f_texcoord, off.zy).y
-    let s10 = textureOffset(f_tex, f_texcoord, off.yx).y
-    let s12 = textureOffset(f_tex, f_texcoord, off.yz).y
+    let s01 = textureOffset(f_tex, f_texcoord, int2(-1, 0)).y
+    let s21 = textureOffset(f_tex, f_texcoord, int2( 1, 0)).y
+    let s10 = textureOffset(f_tex, f_texcoord, int2( 0,-1)).y
+    let s12 = textureOffset(f_tex, f_texcoord, int2( 0, 1)).y
     let va  = normalize(float3(size.x,size.y,s21-s01))
     let vb  = normalize(float3(size.y,size.x,s12-s10))
     f_FragColor.xyz = cross(va,vb) * 0.5 + float3(0.5)
