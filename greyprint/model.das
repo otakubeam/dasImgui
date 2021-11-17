@@ -30,6 +30,7 @@ var [[uniform]] v_tex_transform : float4x4
 var [[uniform]] f_contrast : float
 var [[uniform]] f_brightness : float
 var [[uniform]] f_normal_size : float
+var [[out]] f_FragColor : float4
 
 [vertex_program]
 def vs_any_effect
@@ -60,12 +61,12 @@ def ps_copy_aa_effect
     let isize = float2(1.) / float2(tsize.x,tsize.y)
     let rgbyN1 = texture2D(f_tex, f_texcoord - dir * isize).xyz
     let rgbyP1 = texture2D(f_tex, f_texcoord + dir * isize).xyz
-    gl_FragColor.xyz = base00.xyz*0.2 + rgbyN1*0.4 + rgbyP1*0.5
-    gl_FragColor.w = base00.w
+    f_FragColor.xyz = base00.xyz*0.2 + rgbyN1*0.4 + rgbyP1*0.5
+    f_FragColor.w = base00.w
 
 [fragment_program]
 def ps_copy_effect
-    gl_FragColor = texture2D(f_tex,f_texcoord)
+    f_FragColor = texture2D(f_tex,f_texcoord)
 
 [fragment_program]
 def ps_height_to_normal_effect
@@ -77,25 +78,25 @@ def ps_height_to_normal_effect
     let s12 = textureOffset(f_tex, f_texcoord, off.yz).y
     let va  = normalize(float3(size.x,size.y,s21-s01))
     let vb  = normalize(float3(size.y,size.x,s12-s10))
-    gl_FragColor.xyz = cross(va,vb) * 0.5 + float3(0.5)
-    gl_FragColor.w = 1.
+    f_FragColor.xyz = cross(va,vb) * 0.5 + float3(0.5)
+    f_FragColor.w = 1.
 
 [fragment_program]
 def ps_inverse_effect
-    gl_FragColor = saturate ( float4(1.) - texture2D(f_tex,f_texcoord) )
+    f_FragColor = saturate ( float4(1.) - texture2D(f_tex,f_texcoord) )
 
 [fragment_program]
 def ps_brightness_contrast_effect
     let color = texture2D(f_tex,f_texcoord)
     let colorContrasted = color.xyz * f_contrast
-    gl_FragColor.xyz = max ( colorContrasted + float3(f_brightness), float3(0.))
-    gl_FragColor.w = color.w
+    f_FragColor.xyz = max ( colorContrasted + float3(f_brightness), float3(0.))
+    f_FragColor.w = color.w
 
 [fragment_program]
 def ps_greyscale_effect
     let color = texture2D(f_tex,f_texcoord)
     let b = color.x * 0.299 + color.y * 0.587 + color.z * 0.114
-    gl_FragColor = float4(b, b, b, 1.0)
+    f_FragColor = float4(b, b, b, 1.0)
 
 def make_kernel_3x3 ( var n : float4[9]; tex:sampler2D; coord:float2 )
 	n[0] = textureOffset(tex, coord, int2(-1,-1))
@@ -114,7 +115,7 @@ def ps_sobel_effect
     make_kernel_3x3(n, f_tex, f_texcoord)
 	let sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6])
   	let sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8])
-	gl_FragColor = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
+	f_FragColor = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v))
 
 def make_kernel_9x1 ( var n : float4[9]; tex:sampler2D; coord:float2 )
     unroll <|
@@ -136,7 +137,7 @@ def ps_hblur_effect
     var c : float4
     for a,w in n,f_weights
         c += a * float4(w)
-    gl_FragColor = c * f_iweights_summ
+    f_FragColor = c * f_iweights_summ
 
 [fragment_program]
 def ps_vblur_effect
@@ -145,38 +146,38 @@ def ps_vblur_effect
     var c : float4
     for a,w in n,f_weights
         c += a * float4(w)
-    gl_FragColor = c * f_iweights_summ
+    f_FragColor = c * f_iweights_summ
 
 [fragment_program]
 def ps_gradient_effect
     let l = lerp(f_grad_tl,f_grad_bl,float4(f_texcoord.y))
     var r = lerp(f_grad_tr,f_grad_br,float4(f_texcoord.y))
-    gl_FragColor = lerp(l, r, float4(f_texcoord.x))
+    f_FragColor = lerp(l, r, float4(f_texcoord.x))
 
 [fragment_program]
 def ps_blend_add_effect
     let c1 = texture ( f_tex, f_texcoord )
     let c2 = texture ( f_tex2, f_texcoord )
-    gl_FragColor = c1 + c2
+    f_FragColor = c1 + c2
 
 [fragment_program]
 def ps_blend_mul_effect
     let c1 = texture ( f_tex, f_texcoord )
     let c2 = texture ( f_tex2, f_texcoord )
-    gl_FragColor = c1 * c2
+    f_FragColor = c1 * c2
 
 [fragment_program]
 def ps_blend_crossfade_effect
     let c1 = texture ( f_tex, f_texcoord )
     let c2 = texture ( f_tex2, f_texcoord )
-    gl_FragColor = lerp(c1, c2, float4(f_blend_factor))
+    f_FragColor = lerp(c1, c2, float4(f_blend_factor))
 
 [fragment_program]
 def ps_tx_blend_crossfade_effect
     let c1 = texture ( f_tex, f_texcoord )
     let c2 = texture ( f_tex2, f_texcoord )
     let cfactor = texture ( f_tex3, f_texcoord)
-    gl_FragColor = lerp(c1, c2, cfactor)
+    f_FragColor = lerp(c1, c2, cfactor)
 
 [vertex_buffer]
 struct EffectVertex

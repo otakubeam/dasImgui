@@ -51,7 +51,7 @@ def imgui_app ( title:string; blk : block )
     window = glfwCreateWindow(1920, 1280, title, null, null)
     if window==null
   		panic("can't create window")
-    glfwInitOpenGL(3,3,true)
+    glfwInitOpenGL(3,3)
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)

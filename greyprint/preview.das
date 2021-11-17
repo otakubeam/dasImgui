@@ -64,10 +64,11 @@ var [[uniform, stage=2]] f_norm : sampler2D
 var [[uniform]] f_kD : float
 var [[uniform]] f_kS : float
 var [[uniform]] f_pS : float
+var [[out]] f_FragColor : float4
 
 [fragment_program]
 def ps_preview_main
-    gl_FragColor = texture2D(f_tex,f_texcoord)
+    f_FragColor = texture2D(f_tex,f_texcoord)
 
 [vertex_program]
 def vs_preview_pbr
@@ -106,11 +107,11 @@ def ps_preview_pbr
     let refl = normalize ( reflect(camera_dir,normal) )
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
-    gl_FragColor.xyz =  (
+    f_FragColor.xyz =  (
         texture2D(f_tex,  f_texcoord).xyz * diffuse +
         texture2D(f_spec, f_texcoord).xyz * specular
     )
-    gl_FragColor.w = 1.
+    f_FragColor.w = 1.
 
 [fragment_program]
 def ps_preview_lit
@@ -123,8 +124,8 @@ def ps_preview_lit
     let refl = normalize ( reflect(camera_dir,normal) )
     let kS = saturate(dot(-light_dir,refl))
     let specular = float3(pow(kS,f_pS)*f_kS)
-    gl_FragColor.xyz = texture2D(f_tex,  f_texcoord).xyz *  diffuse + specular
-    gl_FragColor.w = 1.
+    f_FragColor.xyz = texture2D(f_tex,  f_texcoord).xyz *  diffuse + specular
+    f_FragColor.w = 1.
 
 var program, program_pbr, program_lit : uint
 
