@@ -455,8 +455,7 @@ bool Module_imgui::initDependencies() {
     findUniqueFunction("ColorButton")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     // time to fix-up const & ImVec2 and const & ImVec4
-    for ( auto fn : this->functions ) {
-        const auto&  pfn = fn.second;
+    for ( auto & pfn : this->functions.each() ) {
         bool anyString = false;
         for ( auto & arg : pfn->arguments ) {
             if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
@@ -519,8 +518,7 @@ bool Module_imnodes::initDependencies() {
     findUniqueFunction("BeginOutputAttribute")
         ->arg_init(1, make_smart<ExprConstEnumeration>("CircleFilled",makeType<imnodes::PinShape>(lib)));
     // time to fix-up const & ImVec2 and const & ImVec4
-    for ( auto fn : this->functions ) {
-        const auto&  pfn = fn.second;
+    for ( auto & pfn : this->functions.each() ) {
         for ( auto & arg : pfn->arguments ) {
             if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
                 if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {

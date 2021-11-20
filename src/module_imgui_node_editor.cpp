@@ -36,8 +36,7 @@ bool Module_imgui_node_editor::initDependencies() {
     initFunc7();
     initFunc8();
     // time to fix-up const & ImVec2 and const & ImVec4
-    for ( auto fn : this->functions ) {
-        const auto&  pfn = fn.second;
+    for ( auto & pfn : this->functions.each() ) {
         for ( auto & arg : pfn->arguments ) {
             if ( arg->type->constant && arg->type->ref && arg->type->dim.size()==0 ) {
                 if ( arg->type->baseType==Type::tFloat2 || arg->type->baseType==Type::tFloat4 ) {
