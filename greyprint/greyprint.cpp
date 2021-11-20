@@ -1,7 +1,5 @@
 #include "daScript/daScript.h"
 
-#include "msvc32.inc"
-
 using namespace das;
 
 #define APP_NAME   "/modules/dasImgui/greyprint/greyprint.das"
