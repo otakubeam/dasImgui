@@ -1,4 +1,4 @@
-options log_total_compile_time
+// options log_total_compile_time
 
 options multiple_contexts
 
@@ -1107,6 +1107,6 @@ def main
         SetCurrentEditor(null)
         DestroyEditor(g_Context)
 
-options log_mem
-options log_debug_mem
+// options log_mem
+// options log_debug_mem
 

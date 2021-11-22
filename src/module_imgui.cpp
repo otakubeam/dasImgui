@@ -435,14 +435,14 @@ bool Module_imgui::initDependencies() {
         ->arg_init(5, make_smart<ExprConstEnumeration>("RoundCornersAll",makeType<ImDrawFlags_>(lib)));
     findUniqueFunction("BeginTable")
         ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
-    for ( auto & fn : functionsByName["Selectable"] ) {
+    for ( auto & fn : functionsByName[hash64z("Selectable")] ) {
         fn->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     }
     findUniqueFunction("SetNextWindowPos")
         ->arg_init(2, make_smart<ExprCall>(LineInfo(), "ImVec2"));
     findUniqueFunction("Button")
         ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
-    for ( auto & fn : functionsByName["PlotHistogram"] ) {
+    for ( auto & fn : functionsByName[hash64z("PlotHistogram")] ) {
         if ( fn->arguments.size()==9 ) {
             fn->arg_init(7, make_smart<ExprCall>(LineInfo(), "ImVec2"));
             fn->arg_init(8, make_smart<ExprConstInt>(int32_t(sizeof(float))));
