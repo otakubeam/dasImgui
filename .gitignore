@@ -32,3 +32,17 @@ greyprint/_aot_generated/model_eval.das.cpp
 greyprint/_aot_generated/preview.das.cpp
 greyprint/_aot_generated/produce.das.cpp
 greyprint/_aot_generated/undo_stack.das.cpp
+daslib/_aot_generated/GREYPRINT_AOT_imgui_boost.das.cpp
+daslib/_aot_generated/GREYPRINT_AOT_imgui_node_editor_boost.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_command_que.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_greyprint.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_guid_2_id.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_instructions.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_instructions_math.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_instructions_model.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_instructions_ui.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_model.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_model_eval.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_preview.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_produce.das.cpp
+greyprint/_aot_generated/GREYPRINT_AOT_undo_stack.das.cpp
