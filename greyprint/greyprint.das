@@ -379,8 +379,8 @@ def editor_child_window()
     style.GroupRounding = 0f
     style.PinRounding = 0f
     style.NodePadding = float4(4)
-    style.Colors[int(StyleColor StyleColor_Bg)].w = 0.
-    style.Colors[int(StyleColor StyleColor_Grid)].w = 0.
+    style.Colors[int(StyleColor Bg)].w = 0.
+    style.Colors[int(StyleColor Grid)].w = 0.
     static_let <|
         var largePreviewTex = null
     var openPreview = false
@@ -660,7 +660,7 @@ def instruction_context_menu
         var inL = translate_input_output_id(context_link_id,"INPUT")
         link_inst = inL.inst
         link_pin = inL.pin
-    if !IsPopupOpen("",int(ImGuiPopupFlags_ ImGuiPopupFlags_AnyPopupId))
+    if !IsPopupOpen("",ImGuiPopupFlags AnyPopupId)
         if IsKeyPressed(GetKeyIndex(ImGuiKey Tab)) || IsKeyPressed(GetKeyIndex(ImGuiKey Space))
             var snc = GetSelectedObjectCount()
             if snc==1
@@ -1037,9 +1037,10 @@ def preview_errors
 
 def main_editor_screen()
     if g_Context == null
-        var config = Config()
-        config.SettingsFile = ""
-        g_Context = CreateEditor(safe_addr(config))
+        unsafe
+            var config = Config()
+            // config.SettingsFile = ""
+            g_Context = CreateEditor(safe_addr(config))
         SetCurrentEditor(g_Context)
         /*
         SetCurrentEditor(g_Context)

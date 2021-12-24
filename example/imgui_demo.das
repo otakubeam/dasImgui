@@ -18,7 +18,7 @@ def DasHelpMarker(desc:string)
         EndTooltip()
 
 def DasShowUserGuide()
-    let io & = GetIO()
+    let io & = unsafe(GetIO())
     BulletText("Double-click on title bar to collapse window.")
     BulletText(
         "Click and drag on lower corner to resize window\n" +
@@ -78,8 +78,8 @@ def DasShowAboutWindow(p_open: bool? implicit)
         var show_config_info = false
     Checkbox("Config/Build Information", safe_addr(show_config_info))
     if show_config_info
-        var io & = GetIO()
-        var style & = GetStyle()
+        var io & = unsafe(GetIO())
+        var style & = unsafe(GetStyle())
         let copy_to_clipboard = Button("Copy to clipboard")
         var child_size = float2(0., GetTextLineHeightWithSpacing() * 18.)
         BeginChildFrame(GetID("cfg_infos"), child_size, ImGuiWindowFlags NoMove)
@@ -291,7 +291,7 @@ def DasShowDemoWindow ( _p_open : bool? )
         DasShowUserGuide()
 
     if CollapsingHeader("Configuration")
-        var io & = GetIO()
+        var io & =unsafe(GetIO())
         if TreeNode("Configuration##2")
             unsafe
                 CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", addr(io.ConfigFlags), ImGuiConfigFlags NavEnableKeyboard)
@@ -472,7 +472,7 @@ def DasShowDemoWindowPopups()
             DragFloat("##Value", safe_addr(value), 0.1f, 0.0f, 0.0f)
             EndPopup()
         Text("(You can also right-click me to open the same popup as above.)")
-        OpenPopupOnItemClick("item context menu", 1)
+        OpenPopupOnItemClick("item context menu", ImGuiPopupFlags MouseButtonRight)
         static_let <|
             var name <- ImGuiInputTextBuffer("Label1", 32)
         var buf = "Button: {name |> to_string}"
@@ -636,7 +636,7 @@ def DasShowDemoWindowMisc()
                 BulletText("{ln}")
 
     if CollapsingHeader("Inputs, Navigation & Focus")
-        var io & = GetIO()
+        var io & = unsafe(GetIO())
 
         Text("WantCaptureMouse: {io.WantCaptureMouse}")
         Text("WantCaptureKeyboard: {io.WantCaptureKeyboard}")
@@ -804,7 +804,7 @@ def DasShowDemoWindowMisc()
             static_let <|
                 var mouse_cursors_names = [[string[] "Arrow"; "TextInput"; "ResizeAll"; "ResizeNS"; "ResizeEW"; "ResizeNESW"; "ResizeNWSE"; "Hand"; "NotAllowed" ]]
             let current = GetMouseCursor()
-            Text("Current mouse cursor = {current}: {mouse_cursors_names[current]}")
+            Text("Current mouse cursor = {current}: {mouse_cursors_names[int(current)]}")
             Text("Hover to see mouse cursors:")
             SameLine()
             DasHelpMarker(
@@ -816,7 +816,8 @@ def DasShowDemoWindowMisc()
                 Bullet()
                 Selectable(lab, false)
                 if IsItemHovered()
-                    SetMouseCursor(i)
+                    unsafe
+                        SetMouseCursor(reinterpret<ImGuiMouseCursor> i)
             TreePop()
 
 def DasShowDemoWindowLayout
@@ -1013,7 +1014,7 @@ def DasShowDemoWindowLayout
         SameLine()
         Button("B", button_sz)
         Text("Manually wrapping:")
-        let style & = GetStyle()
+        let style & = unsafe(GetStyle())
         let buttons_count = 20
         let window_visible_x2 = GetWindowPos().x + GetWindowContentRegionMax().x
         for n in range(buttons_count)
@@ -1182,7 +1183,7 @@ def DasShowDemoWindowLayout
         PopItemWidth()
         if scroll_to_off || scroll_to_pos
             enable_track = false
-        var style & = GetStyle()
+        var style & = unsafe(GetStyle())
         var child_w = (GetContentRegionAvail().x - 4. * style.ItemSpacing.x) / 5.
         if child_w < 1.0f
             child_w = 1.0f
@@ -2096,7 +2097,7 @@ def DasShowExampleAppSimpleOverlay(var p_open:bool? implicit)
     let PAD = 10.0f
     static_let <|
         var corner = 0
-    var io & = GetIO()
+    var io & = unsafe(GetIO())
     var window_flags = ImGuiWindowFlags NoDecoration | ImGuiWindowFlags AlwaysAutoResize | ImGuiWindowFlags NoSavedSettings | ImGuiWindowFlags NoFocusOnAppearing | ImGuiWindowFlags NoNav
     if corner != -1
         let viewport = GetMainViewport()
@@ -2282,7 +2283,7 @@ def DasShowExampleAppCustomRendering(p_open:bool? implicit)
                 canvas_sz.y = 50.0f
             var canvas_p1 = float2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y)
 
-            var io & = GetIO()
+            var io & = unsafe(GetIO())
             var draw_list = GetWindowDrawList()
             *draw_list |> AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255))
             *draw_list |> AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255))
@@ -2394,7 +2395,7 @@ def SortMyItems ( var items:array<MyItem>; var sorts_specs:ImGuiTableSortSpecs? 
     sorts_specs.SpecsDirty = false
 
 def PushStyleCompact
-    var style & = GetStyle()
+    var style & = unsafe(GetStyle())
     PushStyleVar(ImGuiStyleVar FramePadding, float2(style.FramePadding.x, floor(style.FramePadding.y * 0.60f)))
     PushStyleVar(ImGuiStyleVar ItemSpacing, float2(style.ItemSpacing.x, floor(style.ItemSpacing.y * 0.60f)))
 
@@ -3036,7 +3037,8 @@ def DasShowDemoWindowTables()
                 TableSetupColumn(column_names[column], column_flags[column])
             TableHeadersRow()
             for column in range(column_count)
-                column_FlagsOut[column] = TableGetColumnFlags(column)
+                unsafe
+                    column_FlagsOut[column] = TableGetColumnFlags(column)
             let indent_step = floor(TEXT_BASE_WIDTH / 2.)
             for row in range(8)
                 Indent(indent_step)
@@ -3418,7 +3420,7 @@ def DasShowDemoWindowTables()
             items |> resize(50)
             for n in range(length(items))
                 let template_n = n % length(template_items_names)
-                var item & = items[n]
+                var item & = unsafe(items[n])
                 item.ID = n
                 item.Name = template_items_names[template_n]
                 item.Quantity = (n * n - n) % 20
@@ -3449,7 +3451,7 @@ def DasShowDemoWindowTables()
                 clipper |> Begin(length(items))
                 while clipper |> Step()
                     for row_n in range(clipper.DisplayStart,clipper.DisplayEnd)
-                        var item & = items[row_n]
+                        var item & = unsafe(items[row_n])
                         PushID(item.ID)
                         TableNextRow()
                         TableNextColumn()
@@ -3593,7 +3595,7 @@ def DasShowDemoWindowTables()
             items |> resize(items_count)
             for n in range(items_count)
                 let template_n = n % length(template_items_names)
-                var item & = items[n]
+                var item & = unsafe(items[n])
                 item.ID = n
                 item.Name = template_items_names[template_n]
                 item.Quantity = (template_n == 3) ? 10 : (template_n == 4) ? 20 : 0
@@ -3625,7 +3627,7 @@ def DasShowDemoWindowTables()
                 clipper |> Begin(length(items))
                 while clipper |> Step()
                     for row_n in range(clipper.DisplayStart,clipper.DisplayEnd)
-                        var item & = items[row_n]
+                        var item & = unsafe(items[row_n])
                         let item_is_selected = selection |> find_index(item.ID) != -1
                         PushID(item.ID)
                         TableNextRow(ImGuiTableRowFlags None, row_min_height)
@@ -4210,7 +4212,7 @@ def DasShowDemoWindowWidgets()
         TreePop()
 
     if TreeNode("Images")
-        var io & = GetIO()
+        var io & = unsafe(GetIO())
         TextWrapped(
             "Below we are displaying the font texture (which is the only texture we have access to in this demo). " +
             "Use the 'ImTextureID' type as storage to pass pointers or identifier to your own texture data. " +

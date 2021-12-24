@@ -18,7 +18,7 @@ def imgui_app ( title:string; blk : block )
     glfwMakeContextCurrent(window)
     glfwSwapInterval(1)
     CreateContext(null)
-    var io & = GetIO()
+    var io & = unsafe(GetIO())
     io.FontGlobalScale = 2.0;   // BBATKIN: note - my monitor is HUGE
     StyleColorsDark(null)
     ImGui_ImplGlfw_InitForOpenGL(window, true)

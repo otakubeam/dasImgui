@@ -83,55 +83,56 @@ def EditorDemo()
         // editor
         SetCurrentEditor(g_Context)
         Begin("My Editor", float2(0.0, 0.0f)) <|
+
             static_let <|
                 var firstTime = true
-            let TOTAL_X = 60
-            let TOTAL_Y = 60
-            let TOTAL = TOTAL_X * TOTAL_Y
-            for x in range(TOTAL_X)
-                //BeginChild(uint(100500 + x),float2())
-                for y in range(TOTAL_Y)
-                    let nodeId = (x + y*TOTAL_X) * 10
-                    let inPinId1 = nodeId + 1
-                    let inPinId2 = nodeId + 2
-                    let outPinId = nodeId + 3
-                    if firstTime
-                        SetNodePosition(nodeId, float2(x*250, y* 150))
-                    BeginNode(nodeId) <|
-                        Text("Node {x},{y}")
-                        ImGuiEx_BeginColumn()
-                        BeginPin(inPinId1, PinKind Input) <|
-                            Text("-> In1")
-                        BeginPin(inPinId2, PinKind Input) <|
-                            Text("-> In2")
-                        ImGuiEx_NextColumn()
-                        BeginPin(outPinId, PinKind Output) <|
-                            Text("Out ->")
-                        ImGuiEx_EndColumn()
-                //EndChild()
-            var ln1 = 13
-            var ln2 = 17
-            for x in range(TOTAL_X)
-                //BeginChild(uint(200500 + x),float2())
-                for y in range(TOTAL_Y)
-                    let fromNodeId = (x+y*TOTAL_X) * 10 + 3
-                    let toNodeId1  = (ln1 % TOTAL) * 10 + 1
-                    let toNodeId2  = (ln2 % TOTAL) * 10 + 2
-                    let linkId1 = (x + y * TOTAL_X + 1) * 2
-                    let linkId2 = linkId1 + 1
-                    Link (linkId1, fromNodeId, toNodeId1)
-                    Link (linkId2, fromNodeId, toNodeId2)
-                    ln1 += 2971
-                    ln2 += 3821
-                //EndChild()
-            firstTime = false
-        SetCurrentEditor(null)
 
+            let nodeA = 1
+            let pinA = 2
+            if firstTime
+                SetNodePosition(nodeA, float2(10, 10))
+            BeginNode(nodeA) <|
+                Text("Node A")
+                BeginPin(pinA, PinKind Input) <|
+                    Text("-> In1")
+            let nodeB = 3
+            let pinB = 4
+            if firstTime
+                SetNodePosition(nodeB, float2(200, 50))
+            BeginNode(nodeB) <|
+                Text("Node B")
+                BeginPin(pinB, PinKind Output) <|
+                    Text("Out ->")
+
+            let nodeC = 5
+            let pinCI1 = 6
+            let pinCI2 = 7
+            let pinDI = 8
+            if firstTime
+                SetNodePosition(nodeC, float2(400,100))
+            BeginNode(nodeC) <|
+                Text("Node CD")
+                ImGuiEx_BeginColumn()
+                BeginPin(pinCI1, PinKind Input) <|
+                    Text("-> In1")
+                BeginPin(pinCI2, PinKind Input) <|
+                    Text("-> In2")
+                ImGuiEx_NextColumn()
+                BeginPin(pinDI, PinKind Output) <|
+                    Text("Out ->")
+                ImGuiEx_EndColumn()
+
+            let linkAB = 9
+            Link(linkAB, pinA, pinB)
+
+            firstTime = false
+
+        SetCurrentEditor(null)
 
 [export]
 def main
 	let t = SaveReasonFlags None
-	imgui_app("Testing IMGUI") <|
+	imgui_app("Testing IMGUI node editor") <|
         NewFrame()
         EditorDemo()
         Render()

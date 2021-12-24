@@ -125,10 +125,10 @@ let IM_COL32_BLACK = IM_COL32(0,0,0,255)
 let IM_COL32_BLACK_TRANS = IM_COL32(0,0,0,0)
 
 def IM_COL32(R,G,B,A:uint)
-    return (A<<IM_COL32_A_SHIFT) | (B<<IM_COL32_B_SHIFT) | (G<<IM_COL32_G_SHIFT) | (R<<IM_COL32_R_SHIFT)
+    return (A<<uint(IM_COL32_A_SHIFT)) | (B<<uint(IM_COL32_B_SHIFT)) | (G<<uint(IM_COL32_G_SHIFT)) | (R<<uint(IM_COL32_R_SHIFT))
 
 def IM_COL32(R,G,B,A:int)
-    return (uint(A)<<IM_COL32_A_SHIFT) | (uint(B)<<IM_COL32_B_SHIFT) | (uint(G)<<IM_COL32_G_SHIFT) | (uint(R)<<IM_COL32_R_SHIFT)
+    return (uint(A)<<uint(IM_COL32_A_SHIFT)) | (uint(B)<<uint(IM_COL32_B_SHIFT)) | (uint(G)<<uint(IM_COL32_G_SHIFT)) | (uint(R)<<uint(IM_COL32_R_SHIFT))
 
 def Combo ( lab:string; current_item:int? implicit; items:array<string>; popul_max_heigh_in_items : int = -1 )
     let nItems = length(items)
@@ -374,12 +374,12 @@ def VerticalSeparator (name:string; var PANNEL_WIDTH:float&; inverted:float=1.; 
     let sz = GetItemRectSize()
     InvisibleButton("##vertical_separator_{name}", float2(10.,sz.y))
     if IsItemHovered()
-        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        SetMouseCursor(ImGuiMouseCursor ResizeEW)
         if IsMouseDown(ImGuiMouseButton Left)
             resizing_vertical = true
             resizing_name = name
     if resizing_vertical && resizing_name==name
-        SetMouseCursor(int(ImGuiMouseCursor_ ImGuiMouseCursor_ResizeEW))
+        SetMouseCursor(ImGuiMouseCursor ResizeEW)
         if IsMouseDragging(ImGuiMouseButton Left)
             PANNEL_WIDTH = clamp(PANNEL_WIDTH + IO.MouseDelta.x*inverted, min_width, max_width)
         elif !IsMouseDown(ImGuiMouseButton Left)

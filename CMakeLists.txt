@@ -71,70 +71,129 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 		${imgui_node_editor_INCLUDE_DIR}/imgui_node_editor_internal.inl
 	)
 
-	# libDasModuleImGui
-	SET(DAS_IMGUI_MODULE_SRC
-		${DAS_IMGUI_DIR}/src/aot_imgui.h
-		${DAS_IMGUI_DIR}/src/aot_imgui_node_editor.h
-		${DAS_IMGUI_DIR}/src/need_imgui.h
-		${DAS_IMGUI_DIR}/src/need_imnodes.h
-		${DAS_IMGUI_DIR}/src/need_imgui_node_editor.h
-		${DAS_IMGUI_DIR}/src/module_imgui.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_enums.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_ann.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_fun.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_method.cpp
-		${DAS_IMGUI_DIR}/src/module_imnodes_enums.cpp
-		${DAS_IMGUI_DIR}/src/module_imnodes_ann.cpp
-		${DAS_IMGUI_DIR}/src/module_imnodes_fun.cpp
-		${DAS_IMGUI_DIR}/src/module_imnodes_method.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui.h
-		${DAS_IMGUI_DIR}/src/module_imgui.inc
-		${DAS_IMGUI_DIR}/src/module_imgui.method.inc
-		${DAS_IMGUI_DIR}/src/module_imgui.enum.inc
-		${DAS_IMGUI_DIR}/src/module_imgui.enum.cpp_inc
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_types.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun1.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun2.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun3.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun4.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun5.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun6.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun7.cpp
-		${DAS_IMGUI_DIR}/src/module_imgui_node_editor_fun8.cpp
-		${DAS_IMGUI_DIR}/src/imgui_stub.h
-		${DAS_IMGUI_DIR}/src/imnodes_stub.h
-		${DAS_IMGUI_DIR}/src/imgui_node_editor_stub.h
+	SET(DAS_IMGUI_BIND_DIR ${DAS_IMGUI_DIR})
+	SET(DAS_IMGUI_BIND_MODULE_SRC
+		${DAS_IMGUI_BIND_DIR}/src/need_dasIMGUI.h
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.h
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.cpp
+	# user include
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.main.cpp
+	# generated binding includes
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.alias.add.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.dummy.add.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.enum.add.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.enum.class.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.enum.decl.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.enum.decl.cast.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.add.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.postadd.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.class.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.decl.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.impl.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.cast.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.const.inc
+	# generated functions
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_1.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_2.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_3.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_4.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_5.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_6.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_7.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_8.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_9.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_10.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_11.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_12.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_13.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_14.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_15.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_16.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_17.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_18.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_19.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_20.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_21.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_22.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_23.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_24.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_25.cpp
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_26.cpp
 	)
 
-	# libDasModuleImGui split
-	file(GLOB DAS_IMGUI_MODULE_SRC_SPLIT
-		"${DAS_IMGUI_DIR}/src/module_imgui_split_*.cpp"
+	SET(DAS_IMNODES_BIND_DIR ${DAS_IMGUI_DIR})
+	SET(DAS_IMNODES_BIND_MODULE_SRC
+		${DAS_IMNODES_BIND_DIR}/src/need_dasIMNODES.h
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.h
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.cpp
+	# user include
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.main.cpp
+	# generated binding includes
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.alias.add.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.dummy.add.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.enum.add.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.enum.class.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.enum.decl.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.enum.decl.cast.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.add.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.postadd.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.class.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.decl.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.impl.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.cast.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.const.inc
+	# generated functions
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func_1.cpp
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func_2.cpp
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func_3.cpp
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func_4.cpp
+	)
+
+	SET(DAS_IMGUI_NODE_EDITOR_BIND_DIR ${DAS_IMGUI_DIR})
+	SET(DAS_IMGUI_NODE_EDITOR_BIND_MODULE_SRC
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/need_dasIMGUI_NODE_EDITOR.h
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.h
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.cpp
+	# user include
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.main.cpp
+	# generated binding includes
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.alias.add.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.dummy.add.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.enum.add.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.enum.class.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.enum.decl.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.enum.decl.cast.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.add.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.postadd.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.class.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.decl.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.impl.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.cast.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.const.inc
+	# generated functions
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_1.cpp
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_2.cpp
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_3.cpp
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_4.cpp
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_5.cpp
 	)
 
 	ADD_MODULE_LIB(libDasModuleImGui)
-	ADD_MODULE_CPP(imgui)
-	ADD_MODULE_CPP(imnodes)
-	ADD_MODULE_CPP(imgui_node_editor)
+	ADD_MODULE_CPP(dasIMGUI)
+	ADD_MODULE_CPP(dasIMNODES)
+	ADD_MODULE_CPP(dasIMGUI_NODE_EDITOR)
 	ADD_MODULE_DAS(imgui daslib imgui_boost)
 	ADD_MODULE_DAS(imgui daslib imnodes_boost)
 	ADD_MODULE_DAS(imgui daslib imgui_node_editor_boost)
-	ADD_LIBRARY(libDasModuleImGui ${DAS_IMGUI_MODULE_SRC} ${DAS_IMGUI_MODULE_SRC_SPLIT} ${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC} ${DAS_IMGUI_NODE_EDITOR_SRC})
+	ADD_LIBRARY(libDasModuleImGui
+		${DAS_IMGUI_BIND_MODULE_SRC}
+		${DAS_IMNODES_BIND_MODULE_SRC}
+		${DAS_IMGUI_NODE_EDITOR_BIND_MODULE_SRC}
+		${DAS_IMGUI_SRC} ${DAS_IMNODES_SRC} ${DAS_IMGUI_NODE_EDITOR_SRC})
 	#TARGET_LINK_LIBRARIES(libDasModuleImGui ${imgui_LIBRARIES})
 	# ADD_DEPENDENCIES(libDasModuleImGui )
-	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR})
+	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR} ${DAS_IMGUI_BIND_DIR}/src)
 	SETUP_CPP11(libDasModuleImGui)
-	# GENERATED IMGUI
-	FIND_FILE(IMGUI_H "imgui.h" ${imgui_INCLUDE_DIR})
-	DAS_CPP_BIND_AST(
-		IMGUI_GENERATE
-		generate_imgui.das
-		${DAS_IMGUI_DIR}/src/imgui_headers.h
-		${DAS_IMGUI_DIR}/src/module_imgui
-		${DAS_IMGUI_DIR}/src
-		${imgui_INCLUDE_DIR}
-		${IMGUI_H}
-	)
 
 	FIND_PACKAGE(OpenGL)
 	IF(NOT OPENGL_FOUND)
