@@ -13,30 +13,30 @@ namespace das {
 void Module_dasIMGUI::initFunctions_3() {
 	addExtern< void (*)(float) , ImGui::SetNextWindowBgAlpha >(*this,lib,"SetNextWindowBgAlpha",SideEffects::worstDefault,"ImGui::SetNextWindowBgAlpha")
 		->args({"alpha"});
-	addExtern< void (*)(const ImVec2 &,ImGuiCond) , ImGui::SetWindowPos >(*this,lib,"SetWindowPos",SideEffects::worstDefault,"ImGui::SetWindowPos")
+	addExtern< void (*)(const ImVec2 &,int) , ImGui::SetWindowPos >(*this,lib,"SetWindowPos",SideEffects::worstDefault,"ImGui::SetWindowPos")
 		->args({"pos","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
-	addExtern< void (*)(const ImVec2 &,ImGuiCond) , ImGui::SetWindowSize >(*this,lib,"SetWindowSize",SideEffects::worstDefault,"ImGui::SetWindowSize")
+	addExtern< void (*)(const ImVec2 &,int) , ImGui::SetWindowSize >(*this,lib,"SetWindowSize",SideEffects::worstDefault,"ImGui::SetWindowSize")
 		->args({"size","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
-	addExtern< void (*)(bool,ImGuiCond) , ImGui::SetWindowCollapsed >(*this,lib,"SetWindowCollapsed",SideEffects::worstDefault,"ImGui::SetWindowCollapsed")
+	addExtern< void (*)(bool,int) , ImGui::SetWindowCollapsed >(*this,lib,"SetWindowCollapsed",SideEffects::worstDefault,"ImGui::SetWindowCollapsed")
 		->args({"collapsed","cond"})
 		->arg_type(1,makeType<ImGuiCond_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
 	addExtern< void (*)() , ImGui::SetWindowFocus >(*this,lib,"SetWindowFocus",SideEffects::worstDefault,"ImGui::SetWindowFocus");
 	addExtern< void (*)(float) , ImGui::SetWindowFontScale >(*this,lib,"SetWindowFontScale",SideEffects::worstDefault,"ImGui::SetWindowFontScale")
 		->args({"scale"});
-	addExtern< void (*)(const char *,const ImVec2 &,ImGuiCond) , ImGui::SetWindowPos >(*this,lib,"SetWindowPos",SideEffects::worstDefault,"ImGui::SetWindowPos")
+	addExtern< void (*)(const char *,const ImVec2 &,int) , ImGui::SetWindowPos >(*this,lib,"SetWindowPos",SideEffects::worstDefault,"ImGui::SetWindowPos")
 		->args({"name","pos","cond"})
 		->arg_type(2,makeType<ImGuiCond_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
-	addExtern< void (*)(const char *,const ImVec2 &,ImGuiCond) , ImGui::SetWindowSize >(*this,lib,"SetWindowSize",SideEffects::worstDefault,"ImGui::SetWindowSize")
+	addExtern< void (*)(const char *,const ImVec2 &,int) , ImGui::SetWindowSize >(*this,lib,"SetWindowSize",SideEffects::worstDefault,"ImGui::SetWindowSize")
 		->args({"name","size","cond"})
 		->arg_type(2,makeType<ImGuiCond_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
-	addExtern< void (*)(const char *,bool,ImGuiCond) , ImGui::SetWindowCollapsed >(*this,lib,"SetWindowCollapsed",SideEffects::worstDefault,"ImGui::SetWindowCollapsed")
+	addExtern< void (*)(const char *,bool,int) , ImGui::SetWindowCollapsed >(*this,lib,"SetWindowCollapsed",SideEffects::worstDefault,"ImGui::SetWindowCollapsed")
 		->args({"name","collapsed","cond"})
 		->arg_type(2,makeType<ImGuiCond_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));

@@ -11,44 +11,9 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_17() {
-	addExtern< bool (*)(ImGuiMouseButton) , ImGui::IsMouseDown >(*this,lib,"IsMouseDown",SideEffects::worstDefault,"ImGui::IsMouseDown")
-		->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
-	addExtern< bool (*)(ImGuiMouseButton,bool) , ImGui::IsMouseClicked >(*this,lib,"IsMouseClicked",SideEffects::worstDefault,"ImGui::IsMouseClicked")
-		->args({"button","repeat"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(1,make_smart<ExprConstBool>(false));
-	addExtern< bool (*)(ImGuiMouseButton) , ImGui::IsMouseReleased >(*this,lib,"IsMouseReleased",SideEffects::worstDefault,"ImGui::IsMouseReleased")
-		->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
-	addExtern< bool (*)(ImGuiMouseButton) , ImGui::IsMouseDoubleClicked >(*this,lib,"IsMouseDoubleClicked",SideEffects::worstDefault,"ImGui::IsMouseDoubleClicked")
-		->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
-	addExtern< bool (*)(const ImVec2 &,const ImVec2 &,bool) , ImGui::IsMouseHoveringRect >(*this,lib,"IsMouseHoveringRect",SideEffects::worstDefault,"ImGui::IsMouseHoveringRect")
-		->args({"r_min","r_max","clip"})
-		->arg_init(2,make_smart<ExprConstBool>(true));
-	addExtern< bool (*)(const ImVec2 *) , ImGui::IsMousePosValid >(*this,lib,"IsMousePosValid",SideEffects::worstDefault,"ImGui::IsMousePosValid")
-		->args({"mouse_pos"})
-		->arg_init(0,make_smart<ExprConstPtr>());
-	addExtern< bool (*)() , ImGui::IsAnyMouseDown >(*this,lib,"IsAnyMouseDown",SideEffects::worstDefault,"ImGui::IsAnyMouseDown");
-	addExtern< ImVec2 (*)() , ImGui::GetMousePos >(*this,lib,"GetMousePos",SideEffects::worstDefault,"ImGui::GetMousePos");
-	addExtern< ImVec2 (*)() , ImGui::GetMousePosOnOpeningCurrentPopup >(*this,lib,"GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault,"ImGui::GetMousePosOnOpeningCurrentPopup");
-	addExtern< bool (*)(ImGuiMouseButton,float) , ImGui::IsMouseDragging >(*this,lib,"IsMouseDragging",SideEffects::worstDefault,"ImGui::IsMouseDragging")
-		->args({"button","lock_threshold"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(1,make_smart<ExprConstFloat>(-1.00000000000000000));
-	addExtern< ImVec2 (*)(ImGuiMouseButton,float) , ImGui::GetMouseDragDelta >(*this,lib,"GetMouseDragDelta",SideEffects::worstDefault,"ImGui::GetMouseDragDelta")
-		->args({"button","lock_threshold"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
-		->arg_init(1,make_smart<ExprConstFloat>(-1.00000000000000000));
-	addExtern< void (*)(ImGuiMouseButton) , ImGui::ResetMouseDragDelta >(*this,lib,"ResetMouseDragDelta",SideEffects::worstDefault,"ImGui::ResetMouseDragDelta")
-		->args({"button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)));
-	addExtern< ImGuiMouseCursor (*)() , ImGui::GetMouseCursor >(*this,lib,"GetMouseCursor",SideEffects::worstDefault,"ImGui::GetMouseCursor")
+	addExtern< int (*)() , ImGui::GetMouseCursor >(*this,lib,"GetMouseCursor",SideEffects::worstDefault,"ImGui::GetMouseCursor")
 		->res_type(makeType<ImGuiMouseCursor_>(lib));
-	addExtern< void (*)(ImGuiMouseCursor) , ImGui::SetMouseCursor >(*this,lib,"SetMouseCursor",SideEffects::worstDefault,"ImGui::SetMouseCursor")
+	addExtern< void (*)(int) , ImGui::SetMouseCursor >(*this,lib,"SetMouseCursor",SideEffects::worstDefault,"ImGui::SetMouseCursor")
 		->args({"cursor_type"})
 		->arg_type(0,makeType<ImGuiMouseCursor_>(lib));
 	addExtern< void (*)(bool) , ImGui::CaptureMouseFromApp >(*this,lib,"CaptureMouseFromApp",SideEffects::worstDefault,"ImGui::CaptureMouseFromApp")
@@ -64,6 +29,33 @@ void Module_dasIMGUI::initFunctions_17() {
 		->arg_init(1,make_smart<ExprConstUInt64>(0x0));
 	addExtern< void (*)(const char *) , ImGui::SaveIniSettingsToDisk >(*this,lib,"SaveIniSettingsToDisk",SideEffects::worstDefault,"ImGui::SaveIniSettingsToDisk")
 		->args({"ini_filename"});
+	addExtern< const char * (*)(size_t *) , ImGui::SaveIniSettingsToMemory >(*this,lib,"SaveIniSettingsToMemory",SideEffects::worstDefault,"ImGui::SaveIniSettingsToMemory")
+		->args({"out_ini_size"})
+		->arg_init(0,make_smart<ExprConstPtr>());
+	addExtern< bool (*)(const char *,size_t,size_t,size_t,size_t,size_t,size_t) , ImGui::DebugCheckVersionAndDataLayout >(*this,lib,"DebugCheckVersionAndDataLayout",SideEffects::worstDefault,"ImGui::DebugCheckVersionAndDataLayout")
+		->args({"version_str","sz_io","sz_style","sz_vec2","sz_vec4","sz_drawvert","sz_drawidx"});
+	addExtern< void * (*)(size_t) , ImGui::MemAlloc >(*this,lib,"MemAlloc",SideEffects::worstDefault,"ImGui::MemAlloc")
+		->args({"size"});
+	addExtern< void (*)(void *) , ImGui::MemFree >(*this,lib,"MemFree",SideEffects::worstDefault,"ImGui::MemFree")
+		->args({"ptr"});
+	addCtorAndUsing<ImGuiStyle>(*this,lib,"ImGuiStyle","ImGuiStyle");
+	using _method_1 = das::das_call_member< void (ImGuiStyle::*)(float),&ImGuiStyle::ScaleAllSizes >;
+	addExtern<DAS_CALL_METHOD(_method_1)>(*this,lib,"ScaleAllSizes",SideEffects::worstDefault,"das_call_member< void (ImGuiStyle::*)(float) , &ImGuiStyle::ScaleAllSizes >::invoke")
+		->args({"self","scale_factor"});
+	using _method_2 = das::das_call_member< void (ImGuiIO::*)(unsigned int),&ImGuiIO::AddInputCharacter >;
+	addExtern<DAS_CALL_METHOD(_method_2)>(*this,lib,"AddInputCharacter",SideEffects::worstDefault,"das_call_member< void (ImGuiIO::*)(unsigned int) , &ImGuiIO::AddInputCharacter >::invoke")
+		->args({"self","c"});
+	using _method_3 = das::das_call_member< void (ImGuiIO::*)(unsigned short),&ImGuiIO::AddInputCharacterUTF16 >;
+	addExtern<DAS_CALL_METHOD(_method_3)>(*this,lib,"AddInputCharacterUTF16",SideEffects::worstDefault,"das_call_member< void (ImGuiIO::*)(unsigned short) , &ImGuiIO::AddInputCharacterUTF16 >::invoke")
+		->args({"self","c"});
+	using _method_4 = das::das_call_member< void (ImGuiIO::*)(const char *),&ImGuiIO::AddInputCharactersUTF8 >;
+	addExtern<DAS_CALL_METHOD(_method_4)>(*this,lib,"AddInputCharactersUTF8",SideEffects::worstDefault,"das_call_member< void (ImGuiIO::*)(const char *) , &ImGuiIO::AddInputCharactersUTF8 >::invoke")
+		->args({"self","str"});
+	using _method_5 = das::das_call_member< void (ImGuiIO::*)(),&ImGuiIO::ClearInputCharacters >;
+	addExtern<DAS_CALL_METHOD(_method_5)>(*this,lib,"ClearInputCharacters",SideEffects::worstDefault,"das_call_member< void (ImGuiIO::*)() , &ImGuiIO::ClearInputCharacters >::invoke")
+		->args({"self"});
+	addCtorAndUsing<ImGuiIO>(*this,lib,"ImGuiIO","ImGuiIO");
+	addCtorAndUsing<ImGuiInputTextCallbackData>(*this,lib,"ImGuiInputTextCallbackData","ImGuiInputTextCallbackData");
 }
 }
 

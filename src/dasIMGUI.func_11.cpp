@@ -11,41 +11,6 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_11() {
-	addExtern< bool (*)(const char *,bool,ImGuiSelectableFlags,const ImVec2 &) , ImGui::Selectable >(*this,lib,"Selectable",SideEffects::worstDefault,"ImGui::Selectable")
-		->args({"label","selected","flags","size"})
-		->arg_init(1,make_smart<ExprConstBool>(false))
-		->arg_type(2,makeType<ImGuiSelectableFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSelectableFlags_>(lib)));
-	addExtern< bool (*)(const char *,bool *,ImGuiSelectableFlags,const ImVec2 &) , ImGui::Selectable >(*this,lib,"Selectable",SideEffects::worstDefault,"ImGui::Selectable")
-		->args({"label","p_selected","flags","size"})
-		->arg_type(2,makeType<ImGuiSelectableFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiSelectableFlags_>(lib)));
-	addExtern< bool (*)(const char *,const ImVec2 &) , ImGui::BeginListBox >(*this,lib,"BeginListBox",SideEffects::worstDefault,"ImGui::BeginListBox")
-		->args({"label","size"});
-	addExtern< void (*)() , ImGui::EndListBox >(*this,lib,"EndListBox",SideEffects::worstDefault,"ImGui::EndListBox");
-	addExtern< bool (*)(const char *,int *,const char *const [],int,int) , ImGui::ListBox >(*this,lib,"ListBox",SideEffects::worstDefault,"ImGui::ListBox")
-		->args({"label","current_item","items","items_count","height_in_items"})
-		->arg_init(4,make_smart<ExprConstInt>(-1));
-	addExtern< void (*)(const char *,const float *,int,int,const char *,float,float,ImVec2,int) , ImGui::PlotLines >(*this,lib,"PlotLines",SideEffects::worstDefault,"ImGui::PlotLines")
-		->args({"label","values","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size","stride"})
-		->arg_init(3,make_smart<ExprConstInt>(0))
-		->arg_init(4,make_smart<ExprConstString>(""))
-		->arg_init(5,make_smart<ExprConstFloat>(340282346638528859811704183484516925440.00000000000000000))
-		->arg_init(6,make_smart<ExprConstFloat>(340282346638528859811704183484516925440.00000000000000000))
-		->arg_init(8,make_smart<ExprConstInt>(4));
-	addExtern< void (*)(const char *,const float *,int,int,const char *,float,float,ImVec2,int) , ImGui::PlotHistogram >(*this,lib,"PlotHistogram",SideEffects::worstDefault,"ImGui::PlotHistogram")
-		->args({"label","values","values_count","values_offset","overlay_text","scale_min","scale_max","graph_size","stride"})
-		->arg_init(3,make_smart<ExprConstInt>(0))
-		->arg_init(4,make_smart<ExprConstString>(""))
-		->arg_init(5,make_smart<ExprConstFloat>(340282346638528859811704183484516925440.00000000000000000))
-		->arg_init(6,make_smart<ExprConstFloat>(340282346638528859811704183484516925440.00000000000000000))
-		->arg_init(8,make_smart<ExprConstInt>(4));
-	addExtern< void (*)(const char *,bool) , ImGui::Value >(*this,lib,"Value",SideEffects::worstDefault,"ImGui::Value")
-		->args({"prefix","b"});
-	addExtern< void (*)(const char *,int) , ImGui::Value >(*this,lib,"Value",SideEffects::worstDefault,"ImGui::Value")
-		->args({"prefix","v"});
-	addExtern< void (*)(const char *,unsigned int) , ImGui::Value >(*this,lib,"Value",SideEffects::worstDefault,"ImGui::Value")
-		->args({"prefix","v"});
 	addExtern< void (*)(const char *,float,const char *) , ImGui::Value >(*this,lib,"Value",SideEffects::worstDefault,"ImGui::Value")
 		->args({"prefix","v","float_format"})
 		->arg_init(2,make_smart<ExprConstString>(""));
@@ -66,6 +31,42 @@ void Module_dasIMGUI::initFunctions_11() {
 		->args({"label","shortcut","p_selected","enabled"})
 		->arg_init(3,make_smart<ExprConstBool>(true));
 	addExtern< void (*)() , ImGui::BeginTooltip >(*this,lib,"BeginTooltip",SideEffects::worstDefault,"ImGui::BeginTooltip");
+	addExtern< void (*)() , ImGui::EndTooltip >(*this,lib,"EndTooltip",SideEffects::worstDefault,"ImGui::EndTooltip");
+	addExtern< bool (*)(const char *,int) , ImGui::BeginPopup >(*this,lib,"BeginPopup",SideEffects::worstDefault,"ImGui::BeginPopup")
+		->args({"str_id","flags"})
+		->arg_type(1,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
+	addExtern< bool (*)(const char *,bool *,int) , ImGui::BeginPopupModal >(*this,lib,"BeginPopupModal",SideEffects::worstDefault,"ImGui::BeginPopupModal")
+		->args({"name","p_open","flags"})
+		->arg_init(1,make_smart<ExprConstPtr>())
+		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
+	addExtern< void (*)() , ImGui::EndPopup >(*this,lib,"EndPopup",SideEffects::worstDefault,"ImGui::EndPopup");
+	addExtern< void (*)(const char *,int) , ImGui::OpenPopup >(*this,lib,"OpenPopup",SideEffects::worstDefault,"ImGui::OpenPopup")
+		->args({"str_id","popup_flags"})
+		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiPopupFlags_>(lib)));
+	addExtern< void (*)(const char *,int) , ImGui::OpenPopupOnItemClick >(*this,lib,"OpenPopupOnItemClick",SideEffects::worstDefault,"ImGui::OpenPopupOnItemClick")
+		->args({"str_id","popup_flags"})
+		->arg_init(0,make_smart<ExprConstString>(""))
+		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
+	addExtern< void (*)() , ImGui::CloseCurrentPopup >(*this,lib,"CloseCurrentPopup",SideEffects::worstDefault,"ImGui::CloseCurrentPopup");
+	addExtern< bool (*)(const char *,int) , ImGui::BeginPopupContextItem >(*this,lib,"BeginPopupContextItem",SideEffects::worstDefault,"ImGui::BeginPopupContextItem")
+		->args({"str_id","popup_flags"})
+		->arg_init(0,make_smart<ExprConstString>(""))
+		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
+	addExtern< bool (*)(const char *,int) , ImGui::BeginPopupContextWindow >(*this,lib,"BeginPopupContextWindow",SideEffects::worstDefault,"ImGui::BeginPopupContextWindow")
+		->args({"str_id","popup_flags"})
+		->arg_init(0,make_smart<ExprConstString>(""))
+		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
+	addExtern< bool (*)(const char *,int) , ImGui::BeginPopupContextVoid >(*this,lib,"BeginPopupContextVoid",SideEffects::worstDefault,"ImGui::BeginPopupContextVoid")
+		->args({"str_id","popup_flags"})
+		->arg_init(0,make_smart<ExprConstString>(""))
+		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
+		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
 }
 }
 

@@ -37,9 +37,9 @@ void Module_dasIMGUI::initFunctions_6() {
 	addExtern< void (*)(int) , ImGui::PushID >(*this,lib,"PushID",SideEffects::worstDefault,"ImGui::PushID")
 		->args({"int_id"});
 	addExtern< void (*)() , ImGui::PopID >(*this,lib,"PopID",SideEffects::worstDefault,"ImGui::PopID");
-	addExtern< ImGuiID (*)(const char *) , ImGui::GetID >(*this,lib,"GetID",SideEffects::worstDefault,"ImGui::GetID")
+	addExtern< unsigned int (*)(const char *) , ImGui::GetID >(*this,lib,"GetID",SideEffects::worstDefault,"ImGui::GetID")
 		->args({"str_id"});
-	addExtern< ImGuiID (*)(const char *,const char *) , ImGui::GetID >(*this,lib,"GetID",SideEffects::worstDefault,"ImGui::GetID")
+	addExtern< unsigned int (*)(const char *,const char *) , ImGui::GetID >(*this,lib,"GetID",SideEffects::worstDefault,"ImGui::GetID")
 		->args({"str_id_begin","str_id_end"});
 }
 }

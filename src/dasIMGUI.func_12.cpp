@@ -11,55 +11,17 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_12() {
-	addExtern< void (*)() , ImGui::EndTooltip >(*this,lib,"EndTooltip",SideEffects::worstDefault,"ImGui::EndTooltip");
-	addExtern< void (*)(const char *,va_list) , ImGui::SetTooltipV >(*this,lib,"SetTooltipV",SideEffects::worstDefault,"ImGui::SetTooltipV")
-		->args({"fmt","args"});
-	addExtern< bool (*)(const char *,ImGuiWindowFlags) , ImGui::BeginPopup >(*this,lib,"BeginPopup",SideEffects::worstDefault,"ImGui::BeginPopup")
-		->args({"str_id","flags"})
-		->arg_type(1,makeType<ImGuiWindowFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
-	addExtern< bool (*)(const char *,bool *,ImGuiWindowFlags) , ImGui::BeginPopupModal >(*this,lib,"BeginPopupModal",SideEffects::worstDefault,"ImGui::BeginPopupModal")
-		->args({"name","p_open","flags"})
-		->arg_init(1,make_smart<ExprConstPtr>())
-		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
-	addExtern< void (*)() , ImGui::EndPopup >(*this,lib,"EndPopup",SideEffects::worstDefault,"ImGui::EndPopup");
-	addExtern< void (*)(const char *,ImGuiPopupFlags) , ImGui::OpenPopup >(*this,lib,"OpenPopup",SideEffects::worstDefault,"ImGui::OpenPopup")
-		->args({"str_id","popup_flags"})
-		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< void (*)(const char *,ImGuiPopupFlags) , ImGui::OpenPopupOnItemClick >(*this,lib,"OpenPopupOnItemClick",SideEffects::worstDefault,"ImGui::OpenPopupOnItemClick")
-		->args({"str_id","popup_flags"})
-		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< void (*)() , ImGui::CloseCurrentPopup >(*this,lib,"CloseCurrentPopup",SideEffects::worstDefault,"ImGui::CloseCurrentPopup");
-	addExtern< bool (*)(const char *,ImGuiPopupFlags) , ImGui::BeginPopupContextItem >(*this,lib,"BeginPopupContextItem",SideEffects::worstDefault,"ImGui::BeginPopupContextItem")
-		->args({"str_id","popup_flags"})
-		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< bool (*)(const char *,ImGuiPopupFlags) , ImGui::BeginPopupContextWindow >(*this,lib,"BeginPopupContextWindow",SideEffects::worstDefault,"ImGui::BeginPopupContextWindow")
-		->args({"str_id","popup_flags"})
-		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< bool (*)(const char *,ImGuiPopupFlags) , ImGui::BeginPopupContextVoid >(*this,lib,"BeginPopupContextVoid",SideEffects::worstDefault,"ImGui::BeginPopupContextVoid")
-		->args({"str_id","popup_flags"})
-		->arg_init(0,make_smart<ExprConstString>(""))
-		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(1,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< bool (*)(const char *,ImGuiPopupFlags) , ImGui::IsPopupOpen >(*this,lib,"IsPopupOpen",SideEffects::worstDefault,"ImGui::IsPopupOpen")
+	addExtern< bool (*)(const char *,int) , ImGui::IsPopupOpen >(*this,lib,"IsPopupOpen",SideEffects::worstDefault,"ImGui::IsPopupOpen")
 		->args({"str_id","flags"})
 		->arg_type(1,makeType<ImGuiPopupFlags_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiPopupFlags_>(lib)));
-	addExtern< bool (*)(const char *,int,ImGuiTableFlags,const ImVec2 &,float) , ImGui::BeginTable >(*this,lib,"BeginTable",SideEffects::worstDefault,"ImGui::BeginTable")
+	addExtern< bool (*)(const char *,int,int,const ImVec2 &,float) , ImGui::BeginTable >(*this,lib,"BeginTable",SideEffects::worstDefault,"ImGui::BeginTable")
 		->args({"str_id","column","flags","outer_size","inner_width"})
 		->arg_type(2,makeType<ImGuiTableFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableFlags_>(lib)))
 		->arg_init(4,make_smart<ExprConstFloat>(0.00000000000000000));
 	addExtern< void (*)() , ImGui::EndTable >(*this,lib,"EndTable",SideEffects::worstDefault,"ImGui::EndTable");
-	addExtern< void (*)(ImGuiTableRowFlags,float) , ImGui::TableNextRow >(*this,lib,"TableNextRow",SideEffects::worstDefault,"ImGui::TableNextRow")
+	addExtern< void (*)(int,float) , ImGui::TableNextRow >(*this,lib,"TableNextRow",SideEffects::worstDefault,"ImGui::TableNextRow")
 		->args({"row_flags","min_row_height"})
 		->arg_type(0,makeType<ImGuiTableRowFlags_>(lib))
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableRowFlags_>(lib)))
@@ -67,7 +29,7 @@ void Module_dasIMGUI::initFunctions_12() {
 	addExtern< bool (*)() , ImGui::TableNextColumn >(*this,lib,"TableNextColumn",SideEffects::worstDefault,"ImGui::TableNextColumn");
 	addExtern< bool (*)(int) , ImGui::TableSetColumnIndex >(*this,lib,"TableSetColumnIndex",SideEffects::worstDefault,"ImGui::TableSetColumnIndex")
 		->args({"column_n"});
-	addExtern< void (*)(const char *,ImGuiTableColumnFlags,float,ImGuiID) , ImGui::TableSetupColumn >(*this,lib,"TableSetupColumn",SideEffects::worstDefault,"ImGui::TableSetupColumn")
+	addExtern< void (*)(const char *,int,float,unsigned int) , ImGui::TableSetupColumn >(*this,lib,"TableSetupColumn",SideEffects::worstDefault,"ImGui::TableSetupColumn")
 		->args({"label","flags","init_width_or_weight","user_id"})
 		->arg_type(1,makeType<ImGuiTableColumnFlags_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTableColumnFlags_>(lib)))
@@ -76,6 +38,30 @@ void Module_dasIMGUI::initFunctions_12() {
 	addExtern< void (*)(int,int) , ImGui::TableSetupScrollFreeze >(*this,lib,"TableSetupScrollFreeze",SideEffects::worstDefault,"ImGui::TableSetupScrollFreeze")
 		->args({"cols","rows"});
 	addExtern< void (*)() , ImGui::TableHeadersRow >(*this,lib,"TableHeadersRow",SideEffects::worstDefault,"ImGui::TableHeadersRow");
+	addExtern< void (*)(const char *) , ImGui::TableHeader >(*this,lib,"TableHeader",SideEffects::worstDefault,"ImGui::TableHeader")
+		->args({"label"});
+	addExtern< ImGuiTableSortSpecs * (*)() , ImGui::TableGetSortSpecs >(*this,lib,"TableGetSortSpecs",SideEffects::worstDefault,"ImGui::TableGetSortSpecs");
+	addExtern< int (*)() , ImGui::TableGetColumnCount >(*this,lib,"TableGetColumnCount",SideEffects::worstDefault,"ImGui::TableGetColumnCount");
+	addExtern< int (*)() , ImGui::TableGetColumnIndex >(*this,lib,"TableGetColumnIndex",SideEffects::worstDefault,"ImGui::TableGetColumnIndex");
+	addExtern< int (*)() , ImGui::TableGetRowIndex >(*this,lib,"TableGetRowIndex",SideEffects::worstDefault,"ImGui::TableGetRowIndex");
+	addExtern< const char * (*)(int) , ImGui::TableGetColumnName >(*this,lib,"TableGetColumnName",SideEffects::worstDefault,"ImGui::TableGetColumnName")
+		->args({"column_n"})
+		->arg_init(0,make_smart<ExprConstInt>(-1));
+	addExtern< int (*)(int) , ImGui::TableGetColumnFlags >(*this,lib,"TableGetColumnFlags",SideEffects::worstDefault,"ImGui::TableGetColumnFlags")
+		->args({"column_n"})
+		->arg_init(0,make_smart<ExprConstInt>(-1))
+		->res_type(makeType<ImGuiTableColumnFlags_>(lib));
+	addExtern< void (*)(int,unsigned int,int) , ImGui::TableSetBgColor >(*this,lib,"TableSetBgColor",SideEffects::worstDefault,"ImGui::TableSetBgColor")
+		->args({"target","color","column_n"})
+		->arg_type(0,makeType<ImGuiTableBgTarget_>(lib))
+		->arg_init(2,make_smart<ExprConstInt>(-1));
+	addExtern< void (*)(int,const char *,bool) , ImGui::Columns >(*this,lib,"Columns",SideEffects::worstDefault,"ImGui::Columns")
+		->args({"count","id","border"})
+		->arg_init(0,make_smart<ExprConstInt>(1))
+		->arg_init(1,make_smart<ExprConstString>(""))
+		->arg_init(2,make_smart<ExprConstBool>(true));
+	addExtern< void (*)() , ImGui::NextColumn >(*this,lib,"NextColumn",SideEffects::worstDefault,"ImGui::NextColumn");
+	addExtern< int (*)() , ImGui::GetColumnIndex >(*this,lib,"GetColumnIndex",SideEffects::worstDefault,"ImGui::GetColumnIndex");
 }
 }
 

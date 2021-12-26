@@ -11,32 +11,11 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_16() {
-	addExtern< int (*)() , ImGui::GetFrameCount >(*this,lib,"GetFrameCount",SideEffects::worstDefault,"ImGui::GetFrameCount");
-	addExtern< ImDrawList * (*)() , ImGui::GetBackgroundDrawList >(*this,lib,"GetBackgroundDrawList",SideEffects::worstDefault,"ImGui::GetBackgroundDrawList");
-	addExtern< ImDrawList * (*)() , ImGui::GetForegroundDrawList >(*this,lib,"GetForegroundDrawList",SideEffects::worstDefault,"ImGui::GetForegroundDrawList");
-	addExtern< ImDrawListSharedData * (*)() , ImGui::GetDrawListSharedData >(*this,lib,"GetDrawListSharedData",SideEffects::worstDefault,"ImGui::GetDrawListSharedData");
-	addExtern< const char * (*)(ImGuiCol) , ImGui::GetStyleColorName >(*this,lib,"GetStyleColorName",SideEffects::worstDefault,"ImGui::GetStyleColorName")
-		->args({"idx"})
-		->arg_type(0,makeType<ImGuiCol_>(lib));
-	addExtern< void (*)(ImGuiStorage *) , ImGui::SetStateStorage >(*this,lib,"SetStateStorage",SideEffects::worstDefault,"ImGui::SetStateStorage")
-		->args({"storage"});
-	addExtern< ImGuiStorage * (*)() , ImGui::GetStateStorage >(*this,lib,"GetStateStorage",SideEffects::worstDefault,"ImGui::GetStateStorage");
-	addExtern< void (*)(int,float,int *,int *) , ImGui::CalcListClipping >(*this,lib,"CalcListClipping",SideEffects::worstDefault,"ImGui::CalcListClipping")
-		->args({"items_count","items_height","out_items_display_start","out_items_display_end"});
-	addExtern< bool (*)(ImGuiID,const ImVec2 &,ImGuiWindowFlags) , ImGui::BeginChildFrame >(*this,lib,"BeginChildFrame",SideEffects::worstDefault,"ImGui::BeginChildFrame")
-		->args({"id","size","flags"})
-		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
-	addExtern< void (*)() , ImGui::EndChildFrame >(*this,lib,"EndChildFrame",SideEffects::worstDefault,"ImGui::EndChildFrame");
-	addExtern< ImVec4 (*)(ImU32) , ImGui::ColorConvertU32ToFloat4 >(*this,lib,"ColorConvertU32ToFloat4",SideEffects::worstDefault,"ImGui::ColorConvertU32ToFloat4")
-		->args({"in"});
-	addExtern< ImU32 (*)(const ImVec4 &) , ImGui::ColorConvertFloat4ToU32 >(*this,lib,"ColorConvertFloat4ToU32",SideEffects::worstDefault,"ImGui::ColorConvertFloat4ToU32")
-		->args({"in"});
 	addExtern< void (*)(float,float,float,float &,float &,float &) , ImGui::ColorConvertRGBtoHSV >(*this,lib,"ColorConvertRGBtoHSV",SideEffects::worstDefault,"ImGui::ColorConvertRGBtoHSV")
 		->args({"r","g","b","out_h","out_s","out_v"});
 	addExtern< void (*)(float,float,float,float &,float &,float &) , ImGui::ColorConvertHSVtoRGB >(*this,lib,"ColorConvertHSVtoRGB",SideEffects::worstDefault,"ImGui::ColorConvertHSVtoRGB")
 		->args({"h","s","v","out_r","out_g","out_b"});
-	addExtern< int (*)(ImGuiKey) , ImGui::GetKeyIndex >(*this,lib,"GetKeyIndex",SideEffects::worstDefault,"ImGui::GetKeyIndex")
+	addExtern< int (*)(int) , ImGui::GetKeyIndex >(*this,lib,"GetKeyIndex",SideEffects::worstDefault,"ImGui::GetKeyIndex")
 		->args({"imgui_key"})
 		->arg_type(0,makeType<ImGuiKey_>(lib));
 	addExtern< bool (*)(int) , ImGui::IsKeyDown >(*this,lib,"IsKeyDown",SideEffects::worstDefault,"ImGui::IsKeyDown")
@@ -51,6 +30,41 @@ void Module_dasIMGUI::initFunctions_16() {
 	addExtern< void (*)(bool) , ImGui::CaptureKeyboardFromApp >(*this,lib,"CaptureKeyboardFromApp",SideEffects::worstDefault,"ImGui::CaptureKeyboardFromApp")
 		->args({"want_capture_keyboard_value"})
 		->arg_init(0,make_smart<ExprConstBool>(true));
+	addExtern< bool (*)(int) , ImGui::IsMouseDown >(*this,lib,"IsMouseDown",SideEffects::worstDefault,"ImGui::IsMouseDown")
+		->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
+	addExtern< bool (*)(int,bool) , ImGui::IsMouseClicked >(*this,lib,"IsMouseClicked",SideEffects::worstDefault,"ImGui::IsMouseClicked")
+		->args({"button","repeat"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(1,make_smart<ExprConstBool>(false));
+	addExtern< bool (*)(int) , ImGui::IsMouseReleased >(*this,lib,"IsMouseReleased",SideEffects::worstDefault,"ImGui::IsMouseReleased")
+		->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
+	addExtern< bool (*)(int) , ImGui::IsMouseDoubleClicked >(*this,lib,"IsMouseDoubleClicked",SideEffects::worstDefault,"ImGui::IsMouseDoubleClicked")
+		->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib));
+	addExtern< bool (*)(const ImVec2 &,const ImVec2 &,bool) , ImGui::IsMouseHoveringRect >(*this,lib,"IsMouseHoveringRect",SideEffects::worstDefault,"ImGui::IsMouseHoveringRect")
+		->args({"r_min","r_max","clip"})
+		->arg_init(2,make_smart<ExprConstBool>(true));
+	addExtern< bool (*)(const ImVec2 *) , ImGui::IsMousePosValid >(*this,lib,"IsMousePosValid",SideEffects::worstDefault,"ImGui::IsMousePosValid")
+		->args({"mouse_pos"})
+		->arg_init(0,make_smart<ExprConstPtr>());
+	addExtern< bool (*)() , ImGui::IsAnyMouseDown >(*this,lib,"IsAnyMouseDown",SideEffects::worstDefault,"ImGui::IsAnyMouseDown");
+	addExtern< ImVec2 (*)() , ImGui::GetMousePos >(*this,lib,"GetMousePos",SideEffects::worstDefault,"ImGui::GetMousePos");
+	addExtern< ImVec2 (*)() , ImGui::GetMousePosOnOpeningCurrentPopup >(*this,lib,"GetMousePosOnOpeningCurrentPopup",SideEffects::worstDefault,"ImGui::GetMousePosOnOpeningCurrentPopup");
+	addExtern< bool (*)(int,float) , ImGui::IsMouseDragging >(*this,lib,"IsMouseDragging",SideEffects::worstDefault,"ImGui::IsMouseDragging")
+		->args({"button","lock_threshold"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(1,make_smart<ExprConstFloat>(-1.00000000000000000));
+	addExtern< ImVec2 (*)(int,float) , ImGui::GetMouseDragDelta >(*this,lib,"GetMouseDragDelta",SideEffects::worstDefault,"ImGui::GetMouseDragDelta")
+		->args({"button","lock_threshold"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))
+		->arg_init(1,make_smart<ExprConstFloat>(-1.00000000000000000));
+	addExtern< void (*)(int) , ImGui::ResetMouseDragDelta >(*this,lib,"ResetMouseDragDelta",SideEffects::worstDefault,"ImGui::ResetMouseDragDelta")
+		->args({"button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)));
 }
 }
 

@@ -27,19 +27,19 @@ void Module_dasIMGUI::initFunctions_4() {
 	addExtern< void (*)(ImFont *) , ImGui::PushFont >(*this,lib,"PushFont",SideEffects::worstDefault,"ImGui::PushFont")
 		->args({"font"});
 	addExtern< void (*)() , ImGui::PopFont >(*this,lib,"PopFont",SideEffects::worstDefault,"ImGui::PopFont");
-	addExtern< void (*)(ImGuiCol,ImU32) , ImGui::PushStyleColor >(*this,lib,"PushStyleColor",SideEffects::worstDefault,"ImGui::PushStyleColor")
+	addExtern< void (*)(int,unsigned int) , ImGui::PushStyleColor >(*this,lib,"PushStyleColor",SideEffects::worstDefault,"ImGui::PushStyleColor")
 		->args({"idx","col"})
 		->arg_type(0,makeType<ImGuiCol_>(lib));
-	addExtern< void (*)(ImGuiCol,const ImVec4 &) , ImGui::PushStyleColor >(*this,lib,"PushStyleColor",SideEffects::worstDefault,"ImGui::PushStyleColor")
+	addExtern< void (*)(int,const ImVec4 &) , ImGui::PushStyleColor >(*this,lib,"PushStyleColor",SideEffects::worstDefault,"ImGui::PushStyleColor")
 		->args({"idx","col"})
 		->arg_type(0,makeType<ImGuiCol_>(lib));
 	addExtern< void (*)(int) , ImGui::PopStyleColor >(*this,lib,"PopStyleColor",SideEffects::worstDefault,"ImGui::PopStyleColor")
 		->args({"count"})
 		->arg_init(0,make_smart<ExprConstInt>(1));
-	addExtern< void (*)(ImGuiStyleVar,float) , ImGui::PushStyleVar >(*this,lib,"PushStyleVar",SideEffects::worstDefault,"ImGui::PushStyleVar")
+	addExtern< void (*)(int,float) , ImGui::PushStyleVar >(*this,lib,"PushStyleVar",SideEffects::worstDefault,"ImGui::PushStyleVar")
 		->args({"idx","val"})
 		->arg_type(0,makeType<ImGuiStyleVar_>(lib));
-	addExtern< void (*)(ImGuiStyleVar,const ImVec2 &) , ImGui::PushStyleVar >(*this,lib,"PushStyleVar",SideEffects::worstDefault,"ImGui::PushStyleVar")
+	addExtern< void (*)(int,const ImVec2 &) , ImGui::PushStyleVar >(*this,lib,"PushStyleVar",SideEffects::worstDefault,"ImGui::PushStyleVar")
 		->args({"idx","val"})
 		->arg_type(0,makeType<ImGuiStyleVar_>(lib));
 	addExtern< void (*)(int) , ImGui::PopStyleVar >(*this,lib,"PopStyleVar",SideEffects::worstDefault,"ImGui::PopStyleVar")

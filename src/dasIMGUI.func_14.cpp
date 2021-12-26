@@ -11,37 +11,7 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_14() {
-	addExtern< bool (*)(const char *,ImGuiTabItemFlags) , ImGui::TabItemButton >(*this,lib,"TabItemButton",SideEffects::worstDefault,"ImGui::TabItemButton")
-		->args({"label","flags"})
-		->arg_type(1,makeType<ImGuiTabItemFlags_>(lib))
-		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiTabItemFlags_>(lib)));
-	addExtern< void (*)(const char *) , ImGui::SetTabItemClosed >(*this,lib,"SetTabItemClosed",SideEffects::worstDefault,"ImGui::SetTabItemClosed")
-		->args({"tab_or_docked_window_label"});
-	addExtern< void (*)(int) , ImGui::LogToTTY >(*this,lib,"LogToTTY",SideEffects::worstDefault,"ImGui::LogToTTY")
-		->args({"auto_open_depth"})
-		->arg_init(0,make_smart<ExprConstInt>(-1));
-	addExtern< void (*)(int,const char *) , ImGui::LogToFile >(*this,lib,"LogToFile",SideEffects::worstDefault,"ImGui::LogToFile")
-		->args({"auto_open_depth","filename"})
-		->arg_init(0,make_smart<ExprConstInt>(-1))
-		->arg_init(1,make_smart<ExprConstString>(""));
-	addExtern< void (*)(int) , ImGui::LogToClipboard >(*this,lib,"LogToClipboard",SideEffects::worstDefault,"ImGui::LogToClipboard")
-		->args({"auto_open_depth"})
-		->arg_init(0,make_smart<ExprConstInt>(-1));
-	addExtern< void (*)() , ImGui::LogFinish >(*this,lib,"LogFinish",SideEffects::worstDefault,"ImGui::LogFinish");
-	addExtern< void (*)() , ImGui::LogButtons >(*this,lib,"LogButtons",SideEffects::worstDefault,"ImGui::LogButtons");
-	addExtern< void (*)(const char *,va_list) , ImGui::LogTextV >(*this,lib,"LogTextV",SideEffects::worstDefault,"ImGui::LogTextV")
-		->args({"fmt","args"});
-	addExtern< bool (*)(ImGuiDragDropFlags) , ImGui::BeginDragDropSource >(*this,lib,"BeginDragDropSource",SideEffects::worstDefault,"ImGui::BeginDragDropSource")
-		->args({"flags"})
-		->arg_type(0,makeType<ImGuiDragDropFlags_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)));
-	addExtern< bool (*)(const char *,const void *,size_t,ImGuiCond) , ImGui::SetDragDropPayload >(*this,lib,"SetDragDropPayload",SideEffects::worstDefault,"ImGui::SetDragDropPayload")
-		->args({"type","data","sz","cond"})
-		->arg_type(3,makeType<ImGuiCond_>(lib))
-		->arg_init(3,make_smart<ExprConstEnumeration>(0,makeType<ImGuiCond_>(lib)));
-	addExtern< void (*)() , ImGui::EndDragDropSource >(*this,lib,"EndDragDropSource",SideEffects::worstDefault,"ImGui::EndDragDropSource");
-	addExtern< bool (*)() , ImGui::BeginDragDropTarget >(*this,lib,"BeginDragDropTarget",SideEffects::worstDefault,"ImGui::BeginDragDropTarget");
-	addExtern< const ImGuiPayload * (*)(const char *,ImGuiDragDropFlags) , ImGui::AcceptDragDropPayload >(*this,lib,"AcceptDragDropPayload",SideEffects::worstDefault,"ImGui::AcceptDragDropPayload")
+	addExtern< const ImGuiPayload * (*)(const char *,int) , ImGui::AcceptDragDropPayload >(*this,lib,"AcceptDragDropPayload",SideEffects::worstDefault,"ImGui::AcceptDragDropPayload")
 		->args({"type","flags"})
 		->arg_type(1,makeType<ImGuiDragDropFlags_>(lib))
 		->arg_init(1,make_smart<ExprConstEnumeration>(0,makeType<ImGuiDragDropFlags_>(lib)));
@@ -54,10 +24,25 @@ void Module_dasIMGUI::initFunctions_14() {
 	addExtern< void (*)(int) , ImGui::SetKeyboardFocusHere >(*this,lib,"SetKeyboardFocusHere",SideEffects::worstDefault,"ImGui::SetKeyboardFocusHere")
 		->args({"offset"})
 		->arg_init(0,make_smart<ExprConstInt>(0));
-	addExtern< bool (*)(ImGuiHoveredFlags) , ImGui::IsItemHovered >(*this,lib,"IsItemHovered",SideEffects::worstDefault,"ImGui::IsItemHovered")
+	addExtern< bool (*)(int) , ImGui::IsItemHovered >(*this,lib,"IsItemHovered",SideEffects::worstDefault,"ImGui::IsItemHovered")
 		->args({"flags"})
 		->arg_type(0,makeType<ImGuiHoveredFlags_>(lib))
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiHoveredFlags_>(lib)));
+	addExtern< bool (*)() , ImGui::IsItemActive >(*this,lib,"IsItemActive",SideEffects::worstDefault,"ImGui::IsItemActive");
+	addExtern< bool (*)() , ImGui::IsItemFocused >(*this,lib,"IsItemFocused",SideEffects::worstDefault,"ImGui::IsItemFocused");
+	addExtern< bool (*)(int) , ImGui::IsItemClicked >(*this,lib,"IsItemClicked",SideEffects::worstDefault,"ImGui::IsItemClicked")
+		->args({"mouse_button"})
+		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
+		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)));
+	addExtern< bool (*)() , ImGui::IsItemVisible >(*this,lib,"IsItemVisible",SideEffects::worstDefault,"ImGui::IsItemVisible");
+	addExtern< bool (*)() , ImGui::IsItemEdited >(*this,lib,"IsItemEdited",SideEffects::worstDefault,"ImGui::IsItemEdited");
+	addExtern< bool (*)() , ImGui::IsItemActivated >(*this,lib,"IsItemActivated",SideEffects::worstDefault,"ImGui::IsItemActivated");
+	addExtern< bool (*)() , ImGui::IsItemDeactivated >(*this,lib,"IsItemDeactivated",SideEffects::worstDefault,"ImGui::IsItemDeactivated");
+	addExtern< bool (*)() , ImGui::IsItemDeactivatedAfterEdit >(*this,lib,"IsItemDeactivatedAfterEdit",SideEffects::worstDefault,"ImGui::IsItemDeactivatedAfterEdit");
+	addExtern< bool (*)() , ImGui::IsItemToggledOpen >(*this,lib,"IsItemToggledOpen",SideEffects::worstDefault,"ImGui::IsItemToggledOpen");
+	addExtern< bool (*)() , ImGui::IsAnyItemHovered >(*this,lib,"IsAnyItemHovered",SideEffects::worstDefault,"ImGui::IsAnyItemHovered");
+	addExtern< bool (*)() , ImGui::IsAnyItemActive >(*this,lib,"IsAnyItemActive",SideEffects::worstDefault,"ImGui::IsAnyItemActive");
+	addExtern< bool (*)() , ImGui::IsAnyItemFocused >(*this,lib,"IsAnyItemFocused",SideEffects::worstDefault,"ImGui::IsAnyItemFocused");
 }
 }
 

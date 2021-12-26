@@ -11,75 +11,64 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_23() {
-	using _method_79 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &),&ImDrawList::PathLineTo >;
-	addExtern<DAS_CALL_METHOD(_method_79)>(*this,lib,"PathLineTo",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &) , &ImDrawList::PathLineTo >::invoke")
-		->args({"self","pos"});
-	using _method_80 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &),&ImDrawList::PathLineToMergeDuplicate >;
-	addExtern<DAS_CALL_METHOD(_method_80)>(*this,lib,"PathLineToMergeDuplicate",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &) , &ImDrawList::PathLineToMergeDuplicate >::invoke")
-		->args({"self","pos"});
-	using _method_81 = das::das_call_member< void (ImDrawList::*)(ImU32),&ImDrawList::PathFillConvex >;
-	addExtern<DAS_CALL_METHOD(_method_81)>(*this,lib,"PathFillConvex",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(ImU32) , &ImDrawList::PathFillConvex >::invoke")
-		->args({"self","col"});
-	using _method_82 = das::das_call_member< void (ImDrawList::*)(ImU32,ImDrawFlags,float),&ImDrawList::PathStroke >;
-	addExtern<DAS_CALL_METHOD(_method_82)>(*this,lib,"PathStroke",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(ImU32,ImDrawFlags,float) , &ImDrawList::PathStroke >::invoke")
-		->args({"self","col","flags","thickness"})
-		->arg_type(2,makeType<ImDrawFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)))
-		->arg_init(3,make_smart<ExprConstFloat>(1.00000000000000000));
-	using _method_83 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,float,float,float,int),&ImDrawList::PathArcTo >;
-	addExtern<DAS_CALL_METHOD(_method_83)>(*this,lib,"PathArcTo",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,float,float,float,int) , &ImDrawList::PathArcTo >::invoke")
-		->args({"self","center","radius","a_min","a_max","num_segments"})
-		->arg_init(5,make_smart<ExprConstInt>(0));
-	using _method_84 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,float,int,int),&ImDrawList::PathArcToFast >;
-	addExtern<DAS_CALL_METHOD(_method_84)>(*this,lib,"PathArcToFast",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,float,int,int) , &ImDrawList::PathArcToFast >::invoke")
-		->args({"self","center","radius","a_min_of_12","a_max_of_12"});
-	using _method_85 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,int),&ImDrawList::PathBezierCubicCurveTo >;
-	addExtern<DAS_CALL_METHOD(_method_85)>(*this,lib,"PathBezierCubicCurveTo",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,int) , &ImDrawList::PathBezierCubicCurveTo >::invoke")
-		->args({"self","p2","p3","p4","num_segments"})
-		->arg_init(4,make_smart<ExprConstInt>(0));
-	using _method_86 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,int),&ImDrawList::PathBezierQuadraticCurveTo >;
-	addExtern<DAS_CALL_METHOD(_method_86)>(*this,lib,"PathBezierQuadraticCurveTo",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,int) , &ImDrawList::PathBezierQuadraticCurveTo >::invoke")
-		->args({"self","p2","p3","num_segments"})
-		->arg_init(3,make_smart<ExprConstInt>(0));
-	using _method_87 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,float,ImDrawFlags),&ImDrawList::PathRect >;
-	addExtern<DAS_CALL_METHOD(_method_87)>(*this,lib,"PathRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,float,ImDrawFlags) , &ImDrawList::PathRect >::invoke")
-		->args({"self","rect_min","rect_max","rounding","flags"})
-		->arg_init(3,make_smart<ExprConstFloat>(0.00000000000000000))
-		->arg_type(4,makeType<ImDrawFlags_>(lib))
-		->arg_init(4,make_smart<ExprConstEnumeration>(0,makeType<ImDrawFlags_>(lib)));
-	using _method_88 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::AddDrawCmd >;
-	addExtern<DAS_CALL_METHOD(_method_88)>(*this,lib,"AddDrawCmd",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::AddDrawCmd >::invoke")
-		->args({"self"});
-	using _method_89 = das::das_call_member< ImDrawList * (ImDrawList::*)() const,&ImDrawList::CloneOutput >;
-	addExtern<DAS_CALL_METHOD(_method_89)>(*this,lib,"CloneOutput",SideEffects::worstDefault,"das_call_member< ImDrawList * (ImDrawList::*)() const , &ImDrawList::CloneOutput >::invoke")
-		->args({"self"});
-	using _method_90 = das::das_call_member< void (ImDrawList::*)(int),&ImDrawList::ChannelsSplit >;
-	addExtern<DAS_CALL_METHOD(_method_90)>(*this,lib,"ChannelsSplit",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int) , &ImDrawList::ChannelsSplit >::invoke")
-		->args({"self","count"});
-	using _method_91 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::ChannelsMerge >;
-	addExtern<DAS_CALL_METHOD(_method_91)>(*this,lib,"ChannelsMerge",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::ChannelsMerge >::invoke")
-		->args({"self"});
-	using _method_92 = das::das_call_member< void (ImDrawList::*)(int),&ImDrawList::ChannelsSetCurrent >;
-	addExtern<DAS_CALL_METHOD(_method_92)>(*this,lib,"ChannelsSetCurrent",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int) , &ImDrawList::ChannelsSetCurrent >::invoke")
+	using _method_91 = das::das_call_member< void (ImDrawList::*)(int),&ImDrawList::ChannelsSetCurrent >;
+	addExtern<DAS_CALL_METHOD(_method_91)>(*this,lib,"ChannelsSetCurrent",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int) , &ImDrawList::ChannelsSetCurrent >::invoke")
 		->args({"self","n"});
-	using _method_93 = das::das_call_member< void (ImDrawList::*)(int,int),&ImDrawList::PrimReserve >;
-	addExtern<DAS_CALL_METHOD(_method_93)>(*this,lib,"PrimReserve",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int,int) , &ImDrawList::PrimReserve >::invoke")
+	using _method_92 = das::das_call_member< void (ImDrawList::*)(int,int),&ImDrawList::PrimReserve >;
+	addExtern<DAS_CALL_METHOD(_method_92)>(*this,lib,"PrimReserve",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int,int) , &ImDrawList::PrimReserve >::invoke")
 		->args({"self","idx_count","vtx_count"});
-	using _method_94 = das::das_call_member< void (ImDrawList::*)(int,int),&ImDrawList::PrimUnreserve >;
-	addExtern<DAS_CALL_METHOD(_method_94)>(*this,lib,"PrimUnreserve",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int,int) , &ImDrawList::PrimUnreserve >::invoke")
+	using _method_93 = das::das_call_member< void (ImDrawList::*)(int,int),&ImDrawList::PrimUnreserve >;
+	addExtern<DAS_CALL_METHOD(_method_93)>(*this,lib,"PrimUnreserve",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(int,int) , &ImDrawList::PrimUnreserve >::invoke")
 		->args({"self","idx_count","vtx_count"});
-	using _method_95 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,ImU32),&ImDrawList::PrimRect >;
-	addExtern<DAS_CALL_METHOD(_method_95)>(*this,lib,"PrimRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,ImU32) , &ImDrawList::PrimRect >::invoke")
+	using _method_94 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int),&ImDrawList::PrimRect >;
+	addExtern<DAS_CALL_METHOD(_method_94)>(*this,lib,"PrimRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int) , &ImDrawList::PrimRect >::invoke")
 		->args({"self","a","b","col"});
-	using _method_96 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,ImU32),&ImDrawList::PrimRectUV >;
-	addExtern<DAS_CALL_METHOD(_method_96)>(*this,lib,"PrimRectUV",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,ImU32) , &ImDrawList::PrimRectUV >::invoke")
+	using _method_95 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,unsigned int),&ImDrawList::PrimRectUV >;
+	addExtern<DAS_CALL_METHOD(_method_95)>(*this,lib,"PrimRectUV",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,unsigned int) , &ImDrawList::PrimRectUV >::invoke")
 		->args({"self","a","b","uv_a","uv_b","col"});
-	using _method_97 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,ImU32),&ImDrawList::PrimQuadUV >;
-	addExtern<DAS_CALL_METHOD(_method_97)>(*this,lib,"PrimQuadUV",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,ImU32) , &ImDrawList::PrimQuadUV >::invoke")
+	using _method_96 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,unsigned int),&ImDrawList::PrimQuadUV >;
+	addExtern<DAS_CALL_METHOD(_method_96)>(*this,lib,"PrimQuadUV",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,const ImVec2 &,unsigned int) , &ImDrawList::PrimQuadUV >::invoke")
 		->args({"self","a","b","c","d","uv_a","uv_b","uv_c","uv_d","col"});
-	using _method_98 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,ImU32),&ImDrawList::PrimWriteVtx >;
-	addExtern<DAS_CALL_METHOD(_method_98)>(*this,lib,"PrimWriteVtx",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,ImU32) , &ImDrawList::PrimWriteVtx >::invoke")
+	using _method_97 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int),&ImDrawList::PrimWriteVtx >;
+	addExtern<DAS_CALL_METHOD(_method_97)>(*this,lib,"PrimWriteVtx",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int) , &ImDrawList::PrimWriteVtx >::invoke")
 		->args({"self","pos","uv","col"});
+	using _method_98 = das::das_call_member< void (ImDrawList::*)(unsigned int),&ImDrawList::PrimWriteIdx >;
+	addExtern<DAS_CALL_METHOD(_method_98)>(*this,lib,"PrimWriteIdx",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(unsigned int) , &ImDrawList::PrimWriteIdx >::invoke")
+		->args({"self","idx"});
+	using _method_99 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int),&ImDrawList::PrimVtx >;
+	addExtern<DAS_CALL_METHOD(_method_99)>(*this,lib,"PrimVtx",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int) , &ImDrawList::PrimVtx >::invoke")
+		->args({"self","pos","uv","col"});
+	using _method_100 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_ResetForNewFrame >;
+	addExtern<DAS_CALL_METHOD(_method_100)>(*this,lib,"_ResetForNewFrame",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_ResetForNewFrame >::invoke")
+		->args({"self"});
+	using _method_101 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_ClearFreeMemory >;
+	addExtern<DAS_CALL_METHOD(_method_101)>(*this,lib,"_ClearFreeMemory",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_ClearFreeMemory >::invoke")
+		->args({"self"});
+	using _method_102 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_PopUnusedDrawCmd >;
+	addExtern<DAS_CALL_METHOD(_method_102)>(*this,lib,"_PopUnusedDrawCmd",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_PopUnusedDrawCmd >::invoke")
+		->args({"self"});
+	using _method_103 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_OnChangedClipRect >;
+	addExtern<DAS_CALL_METHOD(_method_103)>(*this,lib,"_OnChangedClipRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_OnChangedClipRect >::invoke")
+		->args({"self"});
+	using _method_104 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_OnChangedTextureID >;
+	addExtern<DAS_CALL_METHOD(_method_104)>(*this,lib,"_OnChangedTextureID",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_OnChangedTextureID >::invoke")
+		->args({"self"});
+	using _method_105 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::_OnChangedVtxOffset >;
+	addExtern<DAS_CALL_METHOD(_method_105)>(*this,lib,"_OnChangedVtxOffset",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::_OnChangedVtxOffset >::invoke")
+		->args({"self"});
+	using _method_106 = das::das_call_member< int (ImDrawList::*)(float) const,&ImDrawList::_CalcCircleAutoSegmentCount >;
+	addExtern<DAS_CALL_METHOD(_method_106)>(*this,lib,"_CalcCircleAutoSegmentCount",SideEffects::worstDefault,"das_call_member< int (ImDrawList::*)(float) const , &ImDrawList::_CalcCircleAutoSegmentCount >::invoke")
+		->args({"self","radius"});
+	using _method_107 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,float,int,int,int),&ImDrawList::_PathArcToFastEx >;
+	addExtern<DAS_CALL_METHOD(_method_107)>(*this,lib,"_PathArcToFastEx",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,float,int,int,int) , &ImDrawList::_PathArcToFastEx >::invoke")
+		->args({"self","center","radius","a_min_sample","a_max_sample","a_step"});
+	using _method_108 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,float,float,float,int),&ImDrawList::_PathArcToN >;
+	addExtern<DAS_CALL_METHOD(_method_108)>(*this,lib,"_PathArcToN",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(const ImVec2 &,float,float,float,int) , &ImDrawList::_PathArcToN >::invoke")
+		->args({"self","center","radius","a_min","a_max","num_segments"});
+	addCtorAndUsing<ImDrawData>(*this,lib,"ImDrawData","ImDrawData");
+	using _method_109 = das::das_call_member< void (ImDrawData::*)(),&ImDrawData::Clear >;
+	addExtern<DAS_CALL_METHOD(_method_109)>(*this,lib,"Clear",SideEffects::worstDefault,"das_call_member< void (ImDrawData::*)() , &ImDrawData::Clear >::invoke")
+		->args({"self"});
 }
 }
 

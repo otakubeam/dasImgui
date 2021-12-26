@@ -11,21 +11,6 @@
 #include "need_dasIMGUI.h"
 namespace das {
 void Module_dasIMGUI::initFunctions_15() {
-	addExtern< bool (*)() , ImGui::IsItemActive >(*this,lib,"IsItemActive",SideEffects::worstDefault,"ImGui::IsItemActive");
-	addExtern< bool (*)() , ImGui::IsItemFocused >(*this,lib,"IsItemFocused",SideEffects::worstDefault,"ImGui::IsItemFocused");
-	addExtern< bool (*)(ImGuiMouseButton) , ImGui::IsItemClicked >(*this,lib,"IsItemClicked",SideEffects::worstDefault,"ImGui::IsItemClicked")
-		->args({"mouse_button"})
-		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
-		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)));
-	addExtern< bool (*)() , ImGui::IsItemVisible >(*this,lib,"IsItemVisible",SideEffects::worstDefault,"ImGui::IsItemVisible");
-	addExtern< bool (*)() , ImGui::IsItemEdited >(*this,lib,"IsItemEdited",SideEffects::worstDefault,"ImGui::IsItemEdited");
-	addExtern< bool (*)() , ImGui::IsItemActivated >(*this,lib,"IsItemActivated",SideEffects::worstDefault,"ImGui::IsItemActivated");
-	addExtern< bool (*)() , ImGui::IsItemDeactivated >(*this,lib,"IsItemDeactivated",SideEffects::worstDefault,"ImGui::IsItemDeactivated");
-	addExtern< bool (*)() , ImGui::IsItemDeactivatedAfterEdit >(*this,lib,"IsItemDeactivatedAfterEdit",SideEffects::worstDefault,"ImGui::IsItemDeactivatedAfterEdit");
-	addExtern< bool (*)() , ImGui::IsItemToggledOpen >(*this,lib,"IsItemToggledOpen",SideEffects::worstDefault,"ImGui::IsItemToggledOpen");
-	addExtern< bool (*)() , ImGui::IsAnyItemHovered >(*this,lib,"IsAnyItemHovered",SideEffects::worstDefault,"ImGui::IsAnyItemHovered");
-	addExtern< bool (*)() , ImGui::IsAnyItemActive >(*this,lib,"IsAnyItemActive",SideEffects::worstDefault,"ImGui::IsAnyItemActive");
-	addExtern< bool (*)() , ImGui::IsAnyItemFocused >(*this,lib,"IsAnyItemFocused",SideEffects::worstDefault,"ImGui::IsAnyItemFocused");
 	addExtern< ImVec2 (*)() , ImGui::GetItemRectMin >(*this,lib,"GetItemRectMin",SideEffects::worstDefault,"ImGui::GetItemRectMin");
 	addExtern< ImVec2 (*)() , ImGui::GetItemRectMax >(*this,lib,"GetItemRectMax",SideEffects::worstDefault,"ImGui::GetItemRectMax");
 	addExtern< ImVec2 (*)() , ImGui::GetItemRectSize >(*this,lib,"GetItemRectSize",SideEffects::worstDefault,"ImGui::GetItemRectSize");
@@ -36,6 +21,27 @@ void Module_dasIMGUI::initFunctions_15() {
 	addExtern< bool (*)(const ImVec2 &,const ImVec2 &) , ImGui::IsRectVisible >(*this,lib,"IsRectVisible",SideEffects::worstDefault,"ImGui::IsRectVisible")
 		->args({"rect_min","rect_max"});
 	addExtern< double (*)() , ImGui::GetTime >(*this,lib,"GetTime",SideEffects::worstDefault,"ImGui::GetTime");
+	addExtern< int (*)() , ImGui::GetFrameCount >(*this,lib,"GetFrameCount",SideEffects::worstDefault,"ImGui::GetFrameCount");
+	addExtern< ImDrawList * (*)() , ImGui::GetBackgroundDrawList >(*this,lib,"GetBackgroundDrawList",SideEffects::worstDefault,"ImGui::GetBackgroundDrawList");
+	addExtern< ImDrawList * (*)() , ImGui::GetForegroundDrawList >(*this,lib,"GetForegroundDrawList",SideEffects::worstDefault,"ImGui::GetForegroundDrawList");
+	addExtern< ImDrawListSharedData * (*)() , ImGui::GetDrawListSharedData >(*this,lib,"GetDrawListSharedData",SideEffects::worstDefault,"ImGui::GetDrawListSharedData");
+	addExtern< const char * (*)(int) , ImGui::GetStyleColorName >(*this,lib,"GetStyleColorName",SideEffects::worstDefault,"ImGui::GetStyleColorName")
+		->args({"idx"})
+		->arg_type(0,makeType<ImGuiCol_>(lib));
+	addExtern< void (*)(ImGuiStorage *) , ImGui::SetStateStorage >(*this,lib,"SetStateStorage",SideEffects::worstDefault,"ImGui::SetStateStorage")
+		->args({"storage"});
+	addExtern< ImGuiStorage * (*)() , ImGui::GetStateStorage >(*this,lib,"GetStateStorage",SideEffects::worstDefault,"ImGui::GetStateStorage");
+	addExtern< void (*)(int,float,int *,int *) , ImGui::CalcListClipping >(*this,lib,"CalcListClipping",SideEffects::worstDefault,"ImGui::CalcListClipping")
+		->args({"items_count","items_height","out_items_display_start","out_items_display_end"});
+	addExtern< bool (*)(unsigned int,const ImVec2 &,int) , ImGui::BeginChildFrame >(*this,lib,"BeginChildFrame",SideEffects::worstDefault,"ImGui::BeginChildFrame")
+		->args({"id","size","flags"})
+		->arg_type(2,makeType<ImGuiWindowFlags_>(lib))
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiWindowFlags_>(lib)));
+	addExtern< void (*)() , ImGui::EndChildFrame >(*this,lib,"EndChildFrame",SideEffects::worstDefault,"ImGui::EndChildFrame");
+	addExtern< ImVec4 (*)(unsigned int) , ImGui::ColorConvertU32ToFloat4 >(*this,lib,"ColorConvertU32ToFloat4",SideEffects::worstDefault,"ImGui::ColorConvertU32ToFloat4")
+		->args({"in"});
+	addExtern< unsigned int (*)(const ImVec4 &) , ImGui::ColorConvertFloat4ToU32 >(*this,lib,"ColorConvertFloat4ToU32",SideEffects::worstDefault,"ImGui::ColorConvertFloat4ToU32")
+		->args({"in"});
 }
 }
 

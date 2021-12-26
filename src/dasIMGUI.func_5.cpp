@@ -19,15 +19,15 @@ void Module_dasIMGUI::initFunctions_5() {
 	addExtern< ImFont * (*)() , ImGui::GetFont >(*this,lib,"GetFont",SideEffects::worstDefault,"ImGui::GetFont");
 	addExtern< float (*)() , ImGui::GetFontSize >(*this,lib,"GetFontSize",SideEffects::worstDefault,"ImGui::GetFontSize");
 	addExtern< ImVec2 (*)() , ImGui::GetFontTexUvWhitePixel >(*this,lib,"GetFontTexUvWhitePixel",SideEffects::worstDefault,"ImGui::GetFontTexUvWhitePixel");
-	addExtern< ImU32 (*)(ImGuiCol,float) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
+	addExtern< unsigned int (*)(int,float) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
 		->args({"idx","alpha_mul"})
 		->arg_type(0,makeType<ImGuiCol_>(lib))
 		->arg_init(1,make_smart<ExprConstFloat>(1.00000000000000000));
-	addExtern< ImU32 (*)(const ImVec4 &) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
+	addExtern< unsigned int (*)(const ImVec4 &) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
 		->args({"col"});
-	addExtern< ImU32 (*)(ImU32) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
+	addExtern< unsigned int (*)(unsigned int) , ImGui::GetColorU32 >(*this,lib,"GetColorU32",SideEffects::worstDefault,"ImGui::GetColorU32")
 		->args({"col"});
-	addExtern< const ImVec4 & (*)(ImGuiCol) , ImGui::GetStyleColorVec4 , SimNode_ExtFuncCallRef>(*this,lib,"GetStyleColorVec4",SideEffects::worstDefault,"ImGui::GetStyleColorVec4")
+	addExtern< const ImVec4 & (*)(int) , ImGui::GetStyleColorVec4 , SimNode_ExtFuncCallRef>(*this,lib,"GetStyleColorVec4",SideEffects::worstDefault,"ImGui::GetStyleColorVec4")
 		->args({"idx"})
 		->arg_type(0,makeType<ImGuiCol_>(lib));
 	addExtern< void (*)() , ImGui::Separator >(*this,lib,"Separator",SideEffects::worstDefault,"ImGui::Separator");
