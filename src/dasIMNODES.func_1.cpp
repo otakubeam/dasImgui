@@ -11,35 +11,34 @@
 #include "need_dasIMNODES.h"
 namespace das {
 void Module_dasIMNODES::initFunctions_1() {
-	addExtern<void (*)(ImGuiContext *),imnodes::SetImGuiContext>(*this,lib,"SetImGuiContext",SideEffects::worstDefault,"imnodes::SetImGuiContext")
+	addCtorAndUsing<imnodes::IO::EmulateThreeButtonMouse>(*this,lib,"EmulateThreeButtonMouse","imnodes::IO::EmulateThreeButtonMouse");
+	addCtorAndUsing<imnodes::IO::LinkDetachWithModifierClick>(*this,lib,"LinkDetachWithModifierClick","imnodes::IO::LinkDetachWithModifierClick");
+	addCtorAndUsing<imnodes::IO>(*this,lib,"IO","imnodes::IO");
+	addCtorAndUsing<imnodes::Style>(*this,lib,"Style","imnodes::Style");
+	addExtern< void (*)(ImGuiContext *) , imnodes::SetImGuiContext >(*this,lib,"SetImGuiContext",SideEffects::worstDefault,"imnodes::SetImGuiContext")
 		->args({"ctx"});
-	addExtern<imnodes::Context * (*)(),imnodes::CreateContext>(*this,lib,"CreateContext",SideEffects::worstDefault,"imnodes::CreateContext");
-	addExtern<void (*)(imnodes::Context *),imnodes::DestroyContext>(*this,lib,"DestroyContext",SideEffects::worstDefault,"imnodes::DestroyContext")
+	addExtern< imnodes::Context * (*)() , imnodes::CreateContext >(*this,lib,"CreateContext",SideEffects::worstDefault,"imnodes::CreateContext");
+	addExtern< void (*)(imnodes::Context *) , imnodes::DestroyContext >(*this,lib,"DestroyContext",SideEffects::worstDefault,"imnodes::DestroyContext")
 		->args({"ctx"})
 		->arg_init(0,make_smart<ExprConstPtr>());
-	addExtern<imnodes::Context * (*)(),imnodes::GetCurrentContext>(*this,lib,"GetCurrentContext",SideEffects::worstDefault,"imnodes::GetCurrentContext");
-	addExtern<void (*)(imnodes::Context *),imnodes::SetCurrentContext>(*this,lib,"SetCurrentContext",SideEffects::worstDefault,"imnodes::SetCurrentContext")
+	addExtern< imnodes::Context * (*)() , imnodes::GetCurrentContext >(*this,lib,"GetCurrentContext",SideEffects::worstDefault,"imnodes::GetCurrentContext");
+	addExtern< void (*)(imnodes::Context *) , imnodes::SetCurrentContext >(*this,lib,"SetCurrentContext",SideEffects::worstDefault,"imnodes::SetCurrentContext")
 		->args({"ctx"});
-	addExtern<imnodes::EditorContext * (*)(),imnodes::EditorContextCreate>(*this,lib,"EditorContextCreate",SideEffects::worstDefault,"imnodes::EditorContextCreate");
-	addExtern<void (*)(imnodes::EditorContext *),imnodes::EditorContextFree>(*this,lib,"EditorContextFree",SideEffects::worstDefault,"imnodes::EditorContextFree")
+	addExtern< imnodes::EditorContext * (*)() , imnodes::EditorContextCreate >(*this,lib,"EditorContextCreate",SideEffects::worstDefault,"imnodes::EditorContextCreate");
+	addExtern< void (*)(imnodes::EditorContext *) , imnodes::EditorContextFree >(*this,lib,"EditorContextFree",SideEffects::worstDefault,"imnodes::EditorContextFree")
 		->args({""});
-	addExtern<void (*)(imnodes::EditorContext *),imnodes::EditorContextSet>(*this,lib,"EditorContextSet",SideEffects::worstDefault,"imnodes::EditorContextSet")
+	addExtern< void (*)(imnodes::EditorContext *) , imnodes::EditorContextSet >(*this,lib,"EditorContextSet",SideEffects::worstDefault,"imnodes::EditorContextSet")
 		->args({""});
-	addExtern<ImVec2 (*)(),imnodes::EditorContextGetPanning>(*this,lib,"EditorContextGetPanning",SideEffects::worstDefault,"imnodes::EditorContextGetPanning");
-	addExtern<void (*)(const ImVec2 &),imnodes::EditorContextResetPanning>(*this,lib,"EditorContextResetPanning",SideEffects::worstDefault,"imnodes::EditorContextResetPanning")
+	addExtern< ImVec2 (*)() , imnodes::EditorContextGetPanning >(*this,lib,"EditorContextGetPanning",SideEffects::worstDefault,"imnodes::EditorContextGetPanning");
+	addExtern< void (*)(const ImVec2 &) , imnodes::EditorContextResetPanning >(*this,lib,"EditorContextResetPanning",SideEffects::worstDefault,"imnodes::EditorContextResetPanning")
 		->args({"pos"});
-	addExtern<void (*)(const int),imnodes::EditorContextMoveToNode>(*this,lib,"EditorContextMoveToNode",SideEffects::worstDefault,"imnodes::EditorContextMoveToNode")
+	addExtern< void (*)(const int) , imnodes::EditorContextMoveToNode >(*this,lib,"EditorContextMoveToNode",SideEffects::worstDefault,"imnodes::EditorContextMoveToNode")
 		->args({"node_id"});
-	addExtern<imnodes::IO & (*)(),imnodes::GetIO, SimNode_ExtFuncCallRef>(*this,lib,"GetIO",SideEffects::worstDefault,"imnodes::GetIO");
-	addExtern<imnodes::Style & (*)(),imnodes::GetStyle, SimNode_ExtFuncCallRef>(*this,lib,"GetStyle",SideEffects::worstDefault,"imnodes::GetStyle");
-	addExtern<void (*)(),imnodes::StyleColorsDark>(*this,lib,"StyleColorsDark",SideEffects::worstDefault,"imnodes::StyleColorsDark");
-	addExtern<void (*)(),imnodes::StyleColorsClassic>(*this,lib,"StyleColorsClassic",SideEffects::worstDefault,"imnodes::StyleColorsClassic");
-	addExtern<void (*)(),imnodes::StyleColorsLight>(*this,lib,"StyleColorsLight",SideEffects::worstDefault,"imnodes::StyleColorsLight");
-	addExtern<void (*)(),imnodes::BeginNodeEditor>(*this,lib,"BeginNodeEditor",SideEffects::worstDefault,"imnodes::BeginNodeEditor");
-	addExtern<void (*)(),imnodes::EndNodeEditor>(*this,lib,"EndNodeEditor",SideEffects::worstDefault,"imnodes::EndNodeEditor");
-	addExtern<void (*)(imnodes::ColorStyle,unsigned int),imnodes::PushColorStyle>(*this,lib,"PushColorStyle",SideEffects::worstDefault,"imnodes::PushColorStyle")
-		->args({"item","color"});
-	addExtern<void (*)(),imnodes::PopColorStyle>(*this,lib,"PopColorStyle",SideEffects::worstDefault,"imnodes::PopColorStyle");
+	addExtern< imnodes::IO & (*)() , imnodes::GetIO , SimNode_ExtFuncCallRef>(*this,lib,"GetIO",SideEffects::worstDefault,"imnodes::GetIO");
+	addExtern< imnodes::Style & (*)() , imnodes::GetStyle , SimNode_ExtFuncCallRef>(*this,lib,"GetStyle",SideEffects::worstDefault,"imnodes::GetStyle");
+	addExtern< void (*)() , imnodes::StyleColorsDark >(*this,lib,"StyleColorsDark",SideEffects::worstDefault,"imnodes::StyleColorsDark");
+	addExtern< void (*)() , imnodes::StyleColorsClassic >(*this,lib,"StyleColorsClassic",SideEffects::worstDefault,"imnodes::StyleColorsClassic");
+	addExtern< void (*)() , imnodes::StyleColorsLight >(*this,lib,"StyleColorsLight",SideEffects::worstDefault,"imnodes::StyleColorsLight");
 }
 }
 

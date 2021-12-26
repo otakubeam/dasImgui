@@ -1,9 +1,9 @@
 // this file is generated via daScript automatic C++ binder
 // all user modifications will be lost after this file is re-generated
 
-class Enumeration_SaveReasonFlags : public das::Enumeration {
+class Enumeration_ax_NodeEditor_SaveReasonFlags : public das::Enumeration {
 public:
-	Enumeration_SaveReasonFlags() : das::Enumeration("SaveReasonFlags") {
+	Enumeration_ax_NodeEditor_SaveReasonFlags() : das::Enumeration("SaveReasonFlags") {
 		external = true;
 		cppName = "ax::NodeEditor::SaveReasonFlags";
 		baseType = (das::Type) das::ToBasicType<uint32_t>::type;
@@ -16,9 +16,9 @@ public:
 	}
 };
 
-class Enumeration_PinKind : public das::Enumeration {
+class Enumeration_ax_NodeEditor_PinKind : public das::Enumeration {
 public:
-	Enumeration_PinKind() : das::Enumeration("PinKind") {
+	Enumeration_ax_NodeEditor_PinKind() : das::Enumeration("PinKind") {
 		external = true;
 		cppName = "ax::NodeEditor::PinKind";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -27,9 +27,9 @@ public:
 	}
 };
 
-class Enumeration_StyleColor : public das::Enumeration {
+class Enumeration_ax_NodeEditor_StyleColor : public das::Enumeration {
 public:
-	Enumeration_StyleColor() : das::Enumeration("StyleColor") {
+	Enumeration_ax_NodeEditor_StyleColor() : das::Enumeration("StyleColor") {
 		external = true;
 		cppName = "ax::NodeEditor::StyleColor";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -55,9 +55,9 @@ public:
 	}
 };
 
-class Enumeration_StyleVar : public das::Enumeration {
+class Enumeration_ax_NodeEditor_StyleVar : public das::Enumeration {
 public:
-	Enumeration_StyleVar() : das::Enumeration("StyleVar") {
+	Enumeration_ax_NodeEditor_StyleVar() : das::Enumeration("StyleVar") {
 		external = true;
 		cppName = "ax::NodeEditor::StyleVar";
 		baseType = (das::Type) das::ToBasicType<int>::type;

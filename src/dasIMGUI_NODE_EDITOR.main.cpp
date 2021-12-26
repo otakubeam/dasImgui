@@ -13,11 +13,8 @@ namespace das {
     }
 
 	void Module_dasIMGUI_NODE_EDITOR::initMain () {
-        addCtorAndUsing<ax::NodeEditor::Config>(*this,lib,"Config","ax::NodeEditor::Config");
-
         auto fnLink = findUniqueFunction("Link");
         fnLink->arg_init(3, make_smart<ExprConstFloat4>(float4(1.0f)));
-
         // time to fix-up const & ImVec2 and const & ImVec4
         for ( auto & pfn : this->functions.each() ) {
             bool anyString = false;

@@ -1,9 +1,9 @@
 // this file is generated via daScript automatic C++ binder
 // all user modifications will be lost after this file is re-generated
 
-class Enumeration_ColorStyle : public das::Enumeration {
+class Enumeration_imnodes_ColorStyle : public das::Enumeration {
 public:
-	Enumeration_ColorStyle() : das::Enumeration("ColorStyle") {
+	Enumeration_imnodes_ColorStyle() : das::Enumeration("ColorStyle") {
 		external = true;
 		cppName = "imnodes::ColorStyle";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -27,9 +27,9 @@ public:
 	}
 };
 
-class Enumeration_StyleVar : public das::Enumeration {
+class Enumeration_imnodes_StyleVar : public das::Enumeration {
 public:
-	Enumeration_StyleVar() : das::Enumeration("StyleVar") {
+	Enumeration_imnodes_StyleVar() : das::Enumeration("StyleVar") {
 		external = true;
 		cppName = "imnodes::StyleVar";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -50,9 +50,9 @@ public:
 	}
 };
 
-class Enumeration_StyleFlags : public das::Enumeration {
+class Enumeration_imnodes_StyleFlags : public das::Enumeration {
 public:
-	Enumeration_StyleFlags() : das::Enumeration("StyleFlags") {
+	Enumeration_imnodes_StyleFlags() : das::Enumeration("StyleFlags") {
 		external = true;
 		cppName = "imnodes::StyleFlags";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -62,9 +62,9 @@ public:
 	}
 };
 
-class Enumeration_PinShape : public das::Enumeration {
+class Enumeration_imnodes_PinShape : public das::Enumeration {
 public:
-	Enumeration_PinShape() : das::Enumeration("PinShape") {
+	Enumeration_imnodes_PinShape() : das::Enumeration("PinShape") {
 		external = true;
 		cppName = "imnodes::PinShape";
 		baseType = (das::Type) das::ToBasicType<int>::type;
@@ -77,9 +77,9 @@ public:
 	}
 };
 
-class Enumeration_AttributeFlags : public das::Enumeration {
+class Enumeration_imnodes_AttributeFlags : public das::Enumeration {
 public:
-	Enumeration_AttributeFlags() : das::Enumeration("AttributeFlags") {
+	Enumeration_imnodes_AttributeFlags() : das::Enumeration("AttributeFlags") {
 		external = true;
 		cppName = "imnodes::AttributeFlags";
 		baseType = (das::Type) das::ToBasicType<int>::type;

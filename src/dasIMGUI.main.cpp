@@ -342,8 +342,6 @@ namespace das {
         // ImGuiInputTextCallbackData
         addExtern<DAS_BIND_FUN(das::InsertChars)>(*this,lib,"InsertChars",
             SideEffects::worstDefault,"das::InsertChars");
-        // clipper
-        addUsing<ImGuiListClipper>(*this,lib,"ImGuiListClipper");
         // SetNextWindowSizeConstraints
         addExtern<DAS_BIND_FUN(das::SetNextWindowSizeConstraints)>(*this,lib,"_builtin_SetNextWindowSizeConstraints",
             SideEffects::worstDefault,"das::SetNextWindowSizeConstraints");
