@@ -10,6 +10,7 @@
 #include "dasIMGUI_NODE_EDITOR.h"
 #include "need_dasIMGUI_NODE_EDITOR.h"
 namespace das {
+#include "dasIMGUI_NODE_EDITOR.func.aot.decl.inc"
 void Module_dasIMGUI_NODE_EDITOR::initFunctions_4() {
 	addExtern< bool (*)() , ax::NodeEditor::HasSelectionChanged >(*this,lib,"HasSelectionChanged",SideEffects::worstDefault,"ax::NodeEditor::HasSelectionChanged");
 	addExtern< int (*)() , ax::NodeEditor::GetSelectedObjectCount >(*this,lib,"GetSelectedObjectCount",SideEffects::worstDefault,"ax::NodeEditor::GetSelectedObjectCount");

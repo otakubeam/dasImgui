@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_12() {
 	addExtern< bool (*)(const char *,int) , ImGui::IsPopupOpen >(*this,lib,"IsPopupOpen",SideEffects::worstDefault,"ImGui::IsPopupOpen")
 		->args({"str_id","flags"})

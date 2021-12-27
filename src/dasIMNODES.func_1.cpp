@@ -10,6 +10,7 @@
 #include "dasIMNODES.h"
 #include "need_dasIMNODES.h"
 namespace das {
+#include "dasIMNODES.func.aot.decl.inc"
 void Module_dasIMNODES::initFunctions_1() {
 	addCtorAndUsing<imnodes::IO::EmulateThreeButtonMouse>(*this,lib,"EmulateThreeButtonMouse","imnodes::IO::EmulateThreeButtonMouse");
 	addCtorAndUsing<imnodes::IO::LinkDetachWithModifierClick>(*this,lib,"LinkDetachWithModifierClick","imnodes::IO::LinkDetachWithModifierClick");

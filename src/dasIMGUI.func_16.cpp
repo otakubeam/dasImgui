@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_16() {
 	addExtern< void (*)(float,float,float,float &,float &,float &) , ImGui::ColorConvertRGBtoHSV >(*this,lib,"ColorConvertRGBtoHSV",SideEffects::worstDefault,"ImGui::ColorConvertRGBtoHSV")
 		->args({"r","g","b","out_h","out_s","out_v"});

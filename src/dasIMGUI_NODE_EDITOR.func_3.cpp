@@ -10,6 +10,7 @@
 #include "dasIMGUI_NODE_EDITOR.h"
 #include "need_dasIMGUI_NODE_EDITOR.h"
 namespace das {
+#include "dasIMGUI_NODE_EDITOR.func.aot.decl.inc"
 void Module_dasIMGUI_NODE_EDITOR::initFunctions_3() {
 	addExtern< bool (*)() , ax::NodeEditor::AcceptNewItem >(*this,lib,"AcceptNewItem",SideEffects::worstDefault,"ax::NodeEditor::AcceptNewItem");
 	addExtern< bool (*)(const ImVec4 &,float) , ax::NodeEditor::AcceptNewItem >(*this,lib,"AcceptNewItem",SideEffects::worstDefault,"ax::NodeEditor::AcceptNewItem")

@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_11() {
 	addExtern< void (*)(const char *,float,const char *) , ImGui::Value >(*this,lib,"Value",SideEffects::worstDefault,"ImGui::Value")
 		->args({"prefix","v","float_format"})

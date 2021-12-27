@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_20() {
 	using _method_35 = das::das_call_member< void * (ImGuiStorage::*)(unsigned int) const,&ImGuiStorage::GetVoidPtr >;
 	addExtern<DAS_CALL_METHOD(_method_35)>(*this,lib,"GetVoidPtr",SideEffects::worstDefault,"das_call_member< void * (ImGuiStorage::*)(unsigned int) const , &ImGuiStorage::GetVoidPtr >::invoke")

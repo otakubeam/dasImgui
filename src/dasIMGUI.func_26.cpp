@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_26() {
 	using _method_146 = das::das_call_member< void (ImFontAtlas::*)(const ImFontAtlasCustomRect *,ImVec2 *,ImVec2 *) const,&ImFontAtlas::CalcCustomRectUV >;
 	addExtern<DAS_CALL_METHOD(_method_146)>(*this,lib,"CalcCustomRectUV",SideEffects::worstDefault,"das_call_member< void (ImFontAtlas::*)(const ImFontAtlasCustomRect *,ImVec2 *,ImVec2 *) const , &ImFontAtlas::CalcCustomRectUV >::invoke")

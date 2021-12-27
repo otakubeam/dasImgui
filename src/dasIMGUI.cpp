@@ -13,6 +13,7 @@
 namespace das {
 #include "dasIMGUI.enum.class.inc"
 #include "dasIMGUI.struct.class.inc"
+#include "dasIMGUI.func.aot.inc"
 Module_dasIMGUI::Module_dasIMGUI() : Module("imgui") {
 }
 bool Module_dasIMGUI::initDependencies() {

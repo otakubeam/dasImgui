@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_10() {
 	addExtern< void (*)(int) , ImGui::SetColorEditOptions >(*this,lib,"SetColorEditOptions",SideEffects::worstDefault,"ImGui::SetColorEditOptions")
 		->args({"flags"})

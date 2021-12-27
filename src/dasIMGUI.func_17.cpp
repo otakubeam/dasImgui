@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_17() {
 	addExtern< int (*)() , ImGui::GetMouseCursor >(*this,lib,"GetMouseCursor",SideEffects::worstDefault,"ImGui::GetMouseCursor")
 		->res_type(makeType<ImGuiMouseCursor_>(lib));

@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_4() {
 	addExtern< float (*)() , ImGui::GetScrollMaxY >(*this,lib,"GetScrollMaxY",SideEffects::worstDefault,"ImGui::GetScrollMaxY");
 	addExtern< void (*)(float) , ImGui::SetScrollHereX >(*this,lib,"SetScrollHereX",SideEffects::worstDefault,"ImGui::SetScrollHereX")

@@ -10,6 +10,7 @@
 #include "dasIMGUI_NODE_EDITOR.h"
 #include "need_dasIMGUI_NODE_EDITOR.h"
 namespace das {
+#include "dasIMGUI_NODE_EDITOR.func.aot.decl.inc"
 void Module_dasIMGUI_NODE_EDITOR::initFunctions_5() {
 	addExtern< bool (*)() , ax::NodeEditor::AcceptCut >(*this,lib,"AcceptCut",SideEffects::worstDefault,"ax::NodeEditor::AcceptCut");
 	addExtern< bool (*)() , ax::NodeEditor::AcceptCopy >(*this,lib,"AcceptCopy",SideEffects::worstDefault,"ax::NodeEditor::AcceptCopy");

@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_15() {
 	addExtern< ImVec2 (*)() , ImGui::GetItemRectMin >(*this,lib,"GetItemRectMin",SideEffects::worstDefault,"ImGui::GetItemRectMin");
 	addExtern< ImVec2 (*)() , ImGui::GetItemRectMax >(*this,lib,"GetItemRectMax",SideEffects::worstDefault,"ImGui::GetItemRectMax");

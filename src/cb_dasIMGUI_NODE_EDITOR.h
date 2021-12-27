@@ -22,7 +22,7 @@ template <> struct cast_arg<ax::NodeEditor::NodeId> {
     }
 };
 template <> struct cast_res<ax::NodeEditor::NodeId> {
-    static __forceinline vec4f from ( ax::NodeEditor::NodeId node ) {
+    static __forceinline vec4f from ( ax::NodeEditor::NodeId node, Context * ) {
         return cast<int32_t>::from(int32_t(node.Get()));
     }
 };
@@ -45,7 +45,7 @@ template <> struct cast_arg<ax::NodeEditor::PinId> {
     }
 };
 template <> struct cast_res<ax::NodeEditor::PinId> {
-    static __forceinline vec4f from ( ax::NodeEditor::PinId node ) {
+    static __forceinline vec4f from ( ax::NodeEditor::PinId node, Context * ) {
         return cast<int32_t>::from(int32_t(node.Get()));
     }
 };
@@ -68,7 +68,7 @@ template <> struct cast_arg<ax::NodeEditor::LinkId> {
     }
 };
 template <> struct cast_res<ax::NodeEditor::LinkId> {
-    static __forceinline vec4f from ( ax::NodeEditor::LinkId node ) {
+    static __forceinline vec4f from ( ax::NodeEditor::LinkId node, Context * ) {
         return cast<int32_t>::from(int32_t(node.Get()));
     }
 };

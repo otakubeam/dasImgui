@@ -13,6 +13,7 @@
 namespace das {
 #include "dasIMGUI_NODE_EDITOR.enum.class.inc"
 #include "dasIMGUI_NODE_EDITOR.struct.class.inc"
+#include "dasIMGUI_NODE_EDITOR.func.aot.inc"
 Module_dasIMGUI_NODE_EDITOR::Module_dasIMGUI_NODE_EDITOR() : Module("imgui_node_editor") {
 }
 bool Module_dasIMGUI_NODE_EDITOR::initDependencies() {

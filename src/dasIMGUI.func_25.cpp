@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_25() {
 	using _method_126 = das::das_call_member< void (ImFontAtlas::*)(),&ImFontAtlas::ClearInputData >;
 	addExtern<DAS_CALL_METHOD(_method_126)>(*this,lib,"ClearInputData",SideEffects::worstDefault,"das_call_member< void (ImFontAtlas::*)() , &ImFontAtlas::ClearInputData >::invoke")

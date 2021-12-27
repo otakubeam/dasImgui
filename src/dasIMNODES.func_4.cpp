@@ -10,6 +10,7 @@
 #include "dasIMNODES.h"
 #include "need_dasIMNODES.h"
 namespace das {
+#include "dasIMNODES.func.aot.decl.inc"
 void Module_dasIMNODES::initFunctions_4() {
 	addExtern< bool (*)(int *,bool) , imnodes::IsLinkDropped >(*this,lib,"IsLinkDropped",SideEffects::worstDefault,"imnodes::IsLinkDropped")
 		->args({"started_at_attribute_id","including_detached_links"})

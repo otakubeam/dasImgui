@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_9() {
 	addExtern< bool (*)(const char *,int,void *,int,const void *,const void *,const char *,int) , ImGui::SliderScalarN >(*this,lib,"SliderScalarN",SideEffects::worstDefault,"ImGui::SliderScalarN")
 		->args({"label","data_type","p_data","components","p_min","p_max","format","flags"})

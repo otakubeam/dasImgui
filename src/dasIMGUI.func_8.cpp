@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_8() {
 	addExtern< bool (*)(const char *,float [3],float,float,float,const char *,int) , ImGui::DragFloat3 >(*this,lib,"DragFloat3",SideEffects::worstDefault,"ImGui::DragFloat3")
 		->args({"label","v","v_speed","v_min","v_max","format","flags"})

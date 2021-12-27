@@ -10,6 +10,7 @@
 #include "dasIMNODES.h"
 #include "need_dasIMNODES.h"
 namespace das {
+#include "dasIMNODES.func.aot.decl.inc"
 void Module_dasIMNODES::initFunctions_2() {
 	addExtern< void (*)() , imnodes::BeginNodeEditor >(*this,lib,"BeginNodeEditor",SideEffects::worstDefault,"imnodes::BeginNodeEditor");
 	addExtern< void (*)() , imnodes::EndNodeEditor >(*this,lib,"EndNodeEditor",SideEffects::worstDefault,"imnodes::EndNodeEditor");

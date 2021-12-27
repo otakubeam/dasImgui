@@ -10,6 +10,7 @@
 #include "dasIMGUI_NODE_EDITOR.h"
 #include "need_dasIMGUI_NODE_EDITOR.h"
 namespace das {
+#include "dasIMGUI_NODE_EDITOR.func.aot.decl.inc"
 void Module_dasIMGUI_NODE_EDITOR::initFunctions_2() {
 	addExtern< void (*)(const ImVec2 &) , ax::NodeEditor::PinPivotSize >(*this,lib,"PinPivotSize",SideEffects::worstDefault,"ax::NodeEditor::PinPivotSize")
 		->args({"size"});

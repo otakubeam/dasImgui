@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_3() {
 	addExtern< void (*)(float) , ImGui::SetNextWindowBgAlpha >(*this,lib,"SetNextWindowBgAlpha",SideEffects::worstDefault,"ImGui::SetNextWindowBgAlpha")
 		->args({"alpha"});

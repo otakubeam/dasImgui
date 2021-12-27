@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_6() {
 	addExtern< float (*)() , ImGui::GetCursorPosX >(*this,lib,"GetCursorPosX",SideEffects::worstDefault,"ImGui::GetCursorPosX");
 	addExtern< float (*)() , ImGui::GetCursorPosY >(*this,lib,"GetCursorPosY",SideEffects::worstDefault,"ImGui::GetCursorPosY");

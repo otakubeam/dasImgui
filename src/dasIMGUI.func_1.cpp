@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_1() {
 	addExtern< ImGuiContext * (*)(ImFontAtlas *) , ImGui::CreateContext >(*this,lib,"CreateContext",SideEffects::worstDefault,"ImGui::CreateContext")
 		->args({"shared_font_atlas"})

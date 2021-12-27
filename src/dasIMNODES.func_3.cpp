@@ -10,6 +10,7 @@
 #include "dasIMNODES.h"
 #include "need_dasIMNODES.h"
 namespace das {
+#include "dasIMNODES.func.aot.decl.inc"
 void Module_dasIMNODES::initFunctions_3() {
 	addExtern< void (*)(int,const bool) , imnodes::SetNodeDraggable >(*this,lib,"SetNodeDraggable",SideEffects::worstDefault,"imnodes::SetNodeDraggable")
 		->args({"node_id","draggable"});

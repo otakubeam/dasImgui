@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_5() {
 	addExtern< float (*)() , ImGui::CalcItemWidth >(*this,lib,"CalcItemWidth",SideEffects::worstDefault,"ImGui::CalcItemWidth");
 	addExtern< void (*)(float) , ImGui::PushTextWrapPos >(*this,lib,"PushTextWrapPos",SideEffects::worstDefault,"ImGui::PushTextWrapPos")

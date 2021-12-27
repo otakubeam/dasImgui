@@ -13,6 +13,7 @@
 namespace das {
 #include "dasIMNODES.enum.class.inc"
 #include "dasIMNODES.struct.class.inc"
+#include "dasIMNODES.func.aot.inc"
 Module_dasIMNODES::Module_dasIMNODES() : Module("imnodes") {
 }
 bool Module_dasIMNODES::initDependencies() {

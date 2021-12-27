@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_2() {
 	addExtern< void (*)(ImGuiStyle *) , ImGui::StyleColorsClassic >(*this,lib,"StyleColorsClassic",SideEffects::worstDefault,"ImGui::StyleColorsClassic")
 		->args({"dst"})

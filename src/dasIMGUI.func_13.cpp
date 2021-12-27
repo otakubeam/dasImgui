@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_13() {
 	addExtern< float (*)(int) , ImGui::GetColumnWidth >(*this,lib,"GetColumnWidth",SideEffects::worstDefault,"ImGui::GetColumnWidth")
 		->args({"column_index"})

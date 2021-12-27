@@ -10,6 +10,7 @@
 #include "dasIMGUI.h"
 #include "need_dasIMGUI.h"
 namespace das {
+#include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_14() {
 	addExtern< const ImGuiPayload * (*)(const char *,int) , ImGui::AcceptDragDropPayload >(*this,lib,"AcceptDragDropPayload",SideEffects::worstDefault,"ImGui::AcceptDragDropPayload")
 		->args({"type","flags"})

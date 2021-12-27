@@ -91,6 +91,10 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.decl.inc
 		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.impl.inc
 		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.struct.cast.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func.reg.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func.decl.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func.aot.inc
+		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func.aot.decl.inc
 		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.const.inc
 	# generated functions
 		${DAS_IMGUI_BIND_DIR}/src/dasIMGUI.func_1.cpp
@@ -142,6 +146,10 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.decl.inc
 		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.impl.inc
 		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.struct.cast.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func.reg.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func.decl.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func.aot.inc
+		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func.aot.decl.inc
 		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.const.inc
 	# generated functions
 		${DAS_IMNODES_BIND_DIR}/src/dasIMNODES.func_1.cpp
@@ -170,6 +178,10 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.decl.inc
 		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.impl.inc
 		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.struct.cast.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func.reg.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func.decl.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func.aot.inc
+		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func.aot.decl.inc
 		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.const.inc
 	# generated functions
 		${DAS_IMGUI_NODE_EDITOR_BIND_DIR}/src/dasIMGUI_NODE_EDITOR.func_1.cpp
