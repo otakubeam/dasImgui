@@ -18,7 +18,7 @@ def reset_guids
 def get_unique_id ( guid:string ) : int
     var id = 0
     find_if_exists(guid_2_id, guid) <| $ ( val )
-        id = *val
+        id = val
     if id == 0
         id = guid_2_id_next++
         guid_2_id[guid] = id
