@@ -67,12 +67,6 @@ struct typeName<char> {
     }
 };
 
-template <>
-struct cast <char> {
-    static __forceinline char to ( vec4f x )             { return char(v_extract_xi(v_cast_vec4i(x))); }
-    static __forceinline vec4f from ( char x )           { return v_cast_vec4f(v_splatsi(x)); }
-};
-
 template <typename TT>
 struct typeName<TT *> {
     static string name() {

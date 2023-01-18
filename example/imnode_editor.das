@@ -201,7 +201,7 @@ class AstNodeView : NodeView
     def AstNodeView(fname:string)
         helper <- AstIdHelper()
         access := make_file_access("")
-        using <| $(var cop:CodeOfPolicies#)
+        using <| $(var cop:CodeOfPolicies)
             rtti::compile_file(fname,access,cop) <| $(ok,program,issues)
                 if ok
                     prog := program
