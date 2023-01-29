@@ -210,7 +210,7 @@ class Project
         self->add_insturction(i)
     def delete_instruction ( var dinst:Instruction? )
         var idx = -1
-        for i,index in instructions,range(INT_MAX)
+        for i,index in instructions,count()
             if i == dinst
                 idx = index
             for inp in i.pins.inputs

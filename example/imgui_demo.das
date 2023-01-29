@@ -420,7 +420,7 @@ def DasShowDemoWindowPopups()
         if BeginPopup("my_select_popup")
             Text("Aquarium")
             Separator()
-            for name,i in names,range(INT_MAX)
+            for name,i in names,count()
                 if Selectable(name)
                     selected_fish = i
             EndPopup()
@@ -811,7 +811,7 @@ def DasShowDemoWindowMisc()
                 "Your application can render a different mouse cursor based on what GetMouseCursor() returns. " +
                 "If software cursor rendering (io.MouseDrawCursor) is set ImGui will draw the right cursor for you, " +
                 "otherwise your backend needs to handle it.")
-            for mcn,i in mouse_cursors_names,range(INT_MAX)
+            for mcn,i in mouse_cursors_names,count()
                 let lab = "Mouse cursor {i}: {mcn}"
                 Bullet()
                 Selectable(lab, false)
@@ -1715,7 +1715,7 @@ class ExampleAppConsole
                     var c = 0
                     var all_candidates_matches = true
                     var ucandidates <- [{for cn in candidates; to_upper(cn)}]
-                    for cnn,i in ucandidates,range(INT_MAX)
+                    for cnn,i in ucandidates,count()
                         var tc : int
                         unsafe
                             tc = cnn|>character_uat(match_len)
@@ -1853,7 +1853,7 @@ def DasShowExampleAppDocuments(p_open:bool? implicit)
                 pass
             EndMenu()
         EndMenuBar()
-    for doc,doc_n in app.Documents,range(INT_MAX)
+    for doc,doc_n in app.Documents,count()
         if doc_n > 0
             SameLine()
         PushID(safe_addr(doc))
@@ -2434,7 +2434,7 @@ def EditTableSizingFlags(var p_flags:ImGuiTableFlags? implicit)
         else
             preview_text = policies[idx].Name |> slice(length("ImGuiTableFlags"))
     if BeginCombo("Sizing Policy", preview_text)
-        for pol,n in policies,range(INT_MAX)
+        for pol,n in policies,count()
             if Selectable(pol.Name, idx == n)
                 *p_flags = (*p_flags & ~ImGuiTableFlags SizingMask_) | pol.Value // TODO: add & and ~ to flags
         EndCombo()
