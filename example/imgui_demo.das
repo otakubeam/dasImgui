@@ -2801,7 +2801,7 @@ def DasShowDemoWindowTables()
             for cell in range(3*5)
                 TableNextColumn()
                 if init
-                    text_bufs |> emplace(new ImGuiInputTextBuffer("edit me",16))
+                    text_bufs |> push(new ImGuiInputTextBuffer("edit me",16))
                 SetNextItemWidth(-FLT_MIN)
                 PushID(cell)
                 InputText("##cell", *(text_bufs[cell]))

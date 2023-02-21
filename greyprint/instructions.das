@@ -441,7 +441,7 @@ def seal_instruction_factory
 
 def generate_node_init(name,category:string;var str:StructurePtr)
     let fnname = "init`instruction`{str.name}"
-    var fn <- compiling_module() |> find_unique_function(fnname)
+    var inscope fn <- compiling_module() |> find_unique_function(fnname)
     if fn == null
         fn <- new [[Function() at=str.at, atDecl=str.at, name:=fnname]]
         fn.flags |= FunctionFlags generated
@@ -472,17 +472,16 @@ def generate_serialize ( name : string; var str:StructurePtr )
     ]]
     fn.arguments |> emplace_new() <| new  [[Variable() at=str.at,
         name := "node",
-        _type <- clone_type() <| typeinfo(ast_typedecl type<table<string;json::JsonValue?> -const>)
+        _type <- typeinfo(ast_typedecl type<table<string;json::JsonValue?> -const>)
     ]]
     return <- fn
 
 // def override save ( var node:table<string;json:JsonValue?> )
 def generate_node_save(var str:StructurePtr)
     let name = "{str.name}`save"
-    var fn <- compiling_module() |> find_unique_function(name)
+    var inscope fn <- compiling_module() |> find_unique_function(name)
     if fn == null
-        unsafe
-            fn <- generate_serialize(name,str)
+        fn := generate_serialize(name,str)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation
@@ -511,10 +510,9 @@ def generate_node_save(var str:StructurePtr)
 // def override load ( var node:table<string;json:JsonValue?> )
 def generate_node_load(var str:StructurePtr)
     let name = "{str.name}`load"
-    var fn <- compiling_module() |> find_unique_function(name)
+    var inscope fn <- compiling_module() |> find_unique_function(name)
     if fn == null
-        unsafe
-            fn <- generate_serialize(name,str)
+        fn := generate_serialize(name,str)
         var blk <- new [[ExprBlock() at=str.at]]
         for fld in str.fields
             for ann in fld.annotation

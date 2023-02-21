@@ -134,33 +134,31 @@ def produce_project_text
         writer |> write("require math\n")
         writer |> write("\n")
         for act,actname in keys(g_CurrentProject.actions),values(g_CurrentProject.actions)
-            var pins <- collect_action_pins(g_CurrentProject,act)
-            defer_delete(pins)
-            write(writer,"// {actname}\n")
-            write(writer,"def fn_{decorate_name(act)}(")
-            var eidx = 0
-            for inp in pins.inputs
-                eidx ++
-                if eidx != 1
-                    writer |> write("; ")
-                writer |> write("arg_{decorate_name(inp.name)}:{reg_type(inp._type)}")
-            for outp in pins.outputs
-                eidx ++
-                if eidx != 1
-                    writer |> write("; ")
-                writer |> write("var arg_{decorate_name(outp.name)}:{reg_type(outp._type)}")
-                if outp._type!=TYPE_SURFACE
-                    writer |> write("&");
-            writer |> write(")\n")
-            var aevl <- produce_eval(act)
-            defer_delete(aevl)
-            for t in aevl
-                writer |> write("{t}\n")
-            writer |> write("\n")
+            if true
+                var inscope pins <- collect_action_pins(g_CurrentProject,act)
+                write(writer,"// {actname}\n")
+                write(writer,"def fn_{decorate_name(act)}(")
+                var eidx = 0
+                for inp in pins.inputs
+                    eidx ++
+                    if eidx != 1
+                        writer |> write("; ")
+                    writer |> write("arg_{decorate_name(inp.name)}:{reg_type(inp._type)}")
+                for outp in pins.outputs
+                    eidx ++
+                    if eidx != 1
+                        writer |> write("; ")
+                    writer |> write("var arg_{decorate_name(outp.name)}:{reg_type(outp._type)}")
+                    if outp._type!=TYPE_SURFACE
+                        writer |> write("&");
+                writer |> write(")\n")
+                var inscope aevl <- produce_eval(act)
+                for t in aevl
+                    writer |> write("{t}\n")
+                writer |> write("\n")
         writer |> write("[export]\n")
         writer |> write("def main\n")
-        var evl <- produce_eval()
-        defer_delete(evl)
+        var inscope evl <- produce_eval()
         for t in evl
             writer |> write("{t}\n")
         writer |> write("\n")
