@@ -165,11 +165,11 @@ namespace das {
 
     char * ImGTB_Slice ( ImGuiTextBuffer & buf, int32_t head, int32_t tail, Context * context, LineInfoArg * at ) {
         if ( head>tail ) {
-            context->throw_error_at(*at, "can't get slice of ImGuiTextBuffer, head > tail");
+            context->throw_error_at(at, "can't get slice of ImGuiTextBuffer, head > tail");
         }
         int32_t len = tail - head;
         if ( len>buf.size() ) {
-            context->throw_error_at(*at, "can't get slice of ImGuiTextBuffer, slice too big");
+            context->throw_error_at(at, "can't get slice of ImGuiTextBuffer, slice too big");
         }
         return context->stringHeap->allocateString(buf.begin() + head,len+1);
     }
