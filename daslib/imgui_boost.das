@@ -21,7 +21,7 @@ struct ImGuiInputTextBuffer
     context : Context?
     callback : lambda<(var it:ImGuiInputTextBuffer; var itc:ImGuiInputTextCallbackData):int>
     buffer : array<uint8>
-    at : LineInfo
+    at : LineInfo?
 
 def make_input_buffer ( var buf : ImGuiInputTextBuffer; txt:string; len:int )
     buf.buffer |> resize(len)
@@ -67,7 +67,7 @@ def InputTextMultiline ( lab:string; buf:ImGuiInputTextBuffer; siz:float2 = floa
 struct ImGuiSizeConstraints
     context: Context?
     callback: lambda<(var data:ImGuiSizeCallbackData):void>
-    at: LineInfo
+    at: LineInfo?
 
 def ImGuiSizeConstraints(var lmb:lambda<(var data:ImGuiSizeCallbackData):void>)
     var self : ImGuiSizeConstraints
@@ -81,7 +81,7 @@ def SetNextWindowSizeConstraints(size_min,size_max:float2; var cn:ImGuiSizeConst
 struct ImGuiComboGetter
     context : Context?
     callback : lambda<(idx:int;var result:string&):bool>
-    at : LineInfo
+    at : LineInfo?
 
 def ImGuiComboGetter(var lmb:lambda<(idx:int;var result:string&):bool>)
     var self : ImGuiComboGetter
@@ -95,7 +95,7 @@ def Combo ( lab:string; current_item:int? implicit; getter:ImGuiComboGetter; ite
 struct ImGuiPlotGetter
     context : Context?
     callback : lambda<(idx:int):float>
-    at : LineInfo
+    at : LineInfo?
 
 def ImGuiPlotGetter(var lmb:lambda<(idx:int):float>)
     var self : ImGuiPlotGetter

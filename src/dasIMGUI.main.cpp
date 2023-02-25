@@ -51,7 +51,7 @@ namespace das {
         Context *  context;
         TLambda<void,DasImguiInputText *,ImGuiInputTextCallbackData *>    callback;
         TArray<uint8_t> buffer;
-        LineInfo        at;
+        LineInfo *      at;
     };
 
     int InputTextCallback (ImGuiInputTextCallbackData* data) {
@@ -60,7 +60,7 @@ namespace das {
         if ( !diit->callback.capture ) {
             diit->context->throw_error("ImguiTextCallback: missing capture");
         }
-        return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, &diit->at, diit->callback, diit, data);
+        return das_invoke_lambda<int>::invoke<DasImguiInputText *,ImGuiInputTextCallbackData *>(diit->context, diit->at, diit->callback, diit, data);
     }
 
     bool InputTextMultiline(vec4f vdiit, const char* label, const ImVec2& size, ImGuiInputTextFlags_ flags, LineInfoArg * at, Context * context ) {
@@ -70,7 +70,7 @@ namespace das {
         }
         if ( diit->callback.capture ) {
             diit->context = context;
-            diit->at = *at;
+            diit->at = at;
             return ImGui::InputTextMultiline(
                 label,
                 diit->buffer.data,
@@ -92,7 +92,7 @@ namespace das {
         }
         if ( diit->callback.capture ) {
             diit->context = context;
-            diit->at = *at;
+            diit->at = at;
             return ImGui::InputText(
                 label,
                 diit->buffer.data,
@@ -113,7 +113,7 @@ namespace das {
         }
         if ( diit->callback.capture ) {
             diit->context = context;
-            diit->at = *at;
+            diit->at = at;
             return ImGui::InputTextWithHint(
                 label,
                 hint,
@@ -182,24 +182,24 @@ namespace das {
 
     // SetNextWindowSizeConstraints
 
-    struct SNWSCC {
+    struct DasImGuiSizeConstraints {
         Context *   context;
         Lambda      lambda;
-        LineInfo    at;
+        LineInfo *  at;
     };
 
     void SetNextWindowSizeConstraintsCallback ( ImGuiSizeCallbackData* data ) {
-        SNWSCC * temp = (SNWSCC *) data->UserData;
+        DasImGuiSizeConstraints * temp = (DasImGuiSizeConstraints *) data->UserData;
         if ( !temp->lambda.capture ) {
             temp->context->throw_error_at(temp->at, "expecting lambda");
         }
-        das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,&temp->at,temp->lambda,data);
+        das_invoke_lambda<void>::invoke<ImGuiSizeCallbackData*>(temp->context,temp->at,temp->lambda,data);
     }
 
     void SetNextWindowSizeConstraints ( vec4f snwscc, const ImVec2& size_min, const ImVec2& size_max, Context * context, LineInfoArg * at ) {
-        SNWSCC * temp = cast<SNWSCC *>::to(snwscc);
+        DasImGuiSizeConstraints * temp = cast<DasImGuiSizeConstraints *>::to(snwscc);
         temp->context = context;
-        temp->at = *at;
+        temp->at = at;
         ImGui::SetNextWindowSizeConstraints(size_min, size_max, &SetNextWindowSizeConstraintsCallback, temp);
     }
 
@@ -219,7 +219,7 @@ namespace das {
     struct ImGuiComboGetter {
         Context *   context;
         Lambda      lambda;
-        LineInfo    at;
+        LineInfo *  at;
     };
 
     bool ComboGetterCallback ( void* data, int idx, const char** out_text ) {
@@ -228,7 +228,7 @@ namespace das {
             getter->context->throw_error_at(getter->at, "expecting lambda");
         }
         *out_text = nullptr;
-        auto res = das_invoke_lambda<bool>::invoke<int,char **>(getter->context,&getter->at,getter->lambda,idx,(char **)out_text);
+        auto res = das_invoke_lambda<bool>::invoke<int,char **>(getter->context,getter->at,getter->lambda,idx,(char **)out_text);
         if ( *out_text==nullptr ) *out_text = "";
         return res;
     }
@@ -236,7 +236,7 @@ namespace das {
     bool Combo ( vec4f cg, const char * label, int * current_item, int items_count, int popup_max_height_in_items, Context * ctx, LineInfoArg * at ) {
         ImGuiComboGetter * getter = cast<ImGuiComboGetter *>::to(cg);
         getter->context = ctx;
-        getter->at = *at;
+        getter->at = at;
         return ImGui::Combo(label,current_item,&ComboGetterCallback,getter,items_count,popup_max_height_in_items);
     }
 
@@ -245,7 +245,7 @@ namespace das {
     struct ImGuiPlotGetter {
         Context *   context;
         Lambda      lambda;
-        LineInfo    at;
+        LineInfo *  at;
     };
 
     float PlotLinesCallback ( void* data, int idx ) {
@@ -253,14 +253,14 @@ namespace das {
         if ( !getter->lambda.capture ) {
             getter->context->throw_error_at(getter->at, "expecting lambda");
         }
-        return  das_invoke_lambda<float>::invoke<int>(getter->context,&getter->at,getter->lambda,idx);
+        return  das_invoke_lambda<float>::invoke<int>(getter->context,getter->at,getter->lambda,idx);
     }
 
     void PlotLines ( vec4f igpg, const char* label, int values_count, int values_offset, const char* overlay_text,
         float scale_min, float scale_max, ImVec2 graph_size, Context * ctx, LineInfoArg * at ) {
         ImGuiPlotGetter * getter = cast<ImGuiPlotGetter *>::to(igpg);
         getter->context = ctx;
-        getter->at = *at;
+        getter->at = at;
         return ImGui::PlotLines(label, &PlotLinesCallback, getter, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size );
     }
 
@@ -268,7 +268,7 @@ namespace das {
         float scale_min, float scale_max, ImVec2 graph_size, Context * ctx, LineInfoArg * at ) {
         ImGuiPlotGetter * getter = cast<ImGuiPlotGetter *>::to(igpg);
         getter->context = ctx;
-        getter->at = *at;
+        getter->at = at;
         return ImGui::PlotHistogram(label, &PlotLinesCallback, getter, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size );
     }
 
