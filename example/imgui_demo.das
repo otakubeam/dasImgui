@@ -133,7 +133,7 @@ def DasShowAboutWindow(p_open: bool? implicit)
         if ibf && ImGuiBackendFlags RendererHasVtxOffset
             Text(" RendererHasVtxOffset")
         Separator()
-        Text("io.Fonts: {io.Fonts.Fonts.length} fonts, Flags: {io.Fonts.Flags}, TexSize: {io.Fonts.TexWidth},{io.Fonts.TexHeight}")
+        Text("io.Fonts: {io.Fonts.Fonts} fonts, Flags: {io.Fonts.Flags}, TexSize: {io.Fonts.TexWidth},{io.Fonts.TexHeight}")
         Text("io.DisplaySize: {io.DisplaySize.x},{io.DisplaySize.y}")
         Text("io.DisplayFramebufferScale: {io.DisplayFramebufferScale.x},{io.DisplayFramebufferScale.y}")
         Separator()
@@ -688,7 +688,7 @@ def DasShowDemoWindowMisc()
                     Text("{i} (0x{uint(i)})")
             Text("Keys mods: {io.KeyCtrl ? "CTRL " : ""}{io.KeyShift ? "SHIFT " : ""}{io.KeyAlt ? "ALT " : ""}{io.KeySuper ? "SUPER " : ""}")
             Text("Chars queue:")
-            for i in range(io.InputQueueCharacters.length)
+            for i in range(io.InputQueueCharacters |> length)
                 let c = int(io.InputQueueCharacters[i])
                 SameLine()
                 Text("'{(c > ' ' && c <= 255) ? to_char(c) : "?"}' (0x{uint(c)})")
@@ -3600,7 +3600,7 @@ def DasShowDemoWindowTables()
                 item.Name = template_items_names[template_n]
                 item.Quantity = (template_n == 3) ? 10 : (template_n == 4) ? 20 : 0
         var parent_draw_list = GetWindowDrawList()
-        let parent_draw_list_draw_cmd_count = parent_draw_list.CmdBuffer.length
+        let parent_draw_list_draw_cmd_count = parent_draw_list.CmdBuffer |> length
         var table_scroll_cur = float2()
         var table_scroll_max = float2()
         var table_draw_list : ImDrawList?
@@ -3689,7 +3689,7 @@ def DasShowDemoWindowTables()
         Checkbox("Debug details", safe_addr(show_debug_details))
         if show_debug_details && table_draw_list!=null
             SameLine(0.0f, 0.0f)
-            let table_draw_list_draw_cmd_count = table_draw_list.CmdBuffer.length
+            let table_draw_list_draw_cmd_count = table_draw_list.CmdBuffer |> length
             if table_draw_list == parent_draw_list
                 Text(": DrawCmd: +{table_draw_list_draw_cmd_count - parent_draw_list_draw_cmd_count} (in same window)")
             else
