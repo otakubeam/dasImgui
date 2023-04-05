@@ -137,7 +137,12 @@ def public create_preview_objects
     program = create_shader_program(@@vs_preview_pbr,@@ps_preview_main)
     program_pbr = create_shader_program(@@vs_preview_pbr,@@ps_preview_pbr)
     program_lit = create_shader_program(@@vs_preview_pbr,@@ps_preview_lit)
-    font <- load_ttf("{get_das_root()}/modules/dasBGFX/bgfx/bgfx/examples/runtime/font/droidsansmono.ttf")
+    font <- load_ttf([
+      fname = "droidsansmono.ttf",
+      path1 = "{get_das_root()}/modules/dasBGFX/bgfx/bgfx/examples/runtime/font",
+      path2 = "{get_das_root()}/examples/media",
+      canfail = true
+    ])
     cube <- gen_cube() |> create_geometry_fragment
     sphere <- gen_sphere(32,16,false) |> create_geometry_fragment
     sphere_cuv <- gen_sphere(32,16,true) |> create_geometry_fragment

@@ -208,6 +208,23 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 	TARGET_INCLUDE_DIRECTORIES(libDasModuleImGui PUBLIC ${imgui_INCLUDE_DIR} ${imnodes_INCLUDE_DIR} ${imgui_node_editor_INCLUDE_DIR} ${DAS_IMGUI_BIND_DIR}/src)
 	SETUP_CPP11(libDasModuleImGui)
 
+    install(DIRECTORY ${PROJECT_SOURCE_DIR}/modules/dasImgui/daslib
+        DESTINATION modules/dasImgui
+        FILES_MATCHING
+        PATTERN "*.das"
+    )
+    install(FILES
+			${PROJECT_SOURCE_DIR}/modules/dasImgui/example/imgui_opengl2.das
+			${PROJECT_SOURCE_DIR}/modules/dasImgui/example/imgui_demo.das
+        DESTINATION examples/imgui
+    )
+    file(GLOB DAS_IMGUI_EXAMPLES
+        ${PROJECT_SOURCE_DIR}/modules/dasImgui/greyprint/*.das
+    )
+    install(FILES ${DAS_IMGUI_EXAMPLES}
+        DESTINATION examples/imgui/greyprint
+    )
+
 	FIND_PACKAGE(OpenGL)
 	IF(NOT OPENGL_FOUND)
 		MESSAGE(STATUS "OpenGL not found.")
@@ -247,8 +264,8 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 	SET(IMGUI_OPENGL_AOT_GENERATED_SRC)
 	DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_demo.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
 	DAS_AOT("${DAS_IMGUI_DIR}/example/imgui_opengl2.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
-	DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
-	DAS_AOT("${DAS_IMGUI_DIR}/imgui/imgui_node_editor_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
+	DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
+	DAS_AOT("${DAS_IMGUI_DIR}/daslib/imgui_node_editor_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
 	DAS_AOT("${DAS_IMGUI_DIR}/../dasGlfw/dasglfw/glfw_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
 	DAS_AOT("${DAS_IMGUI_DIR}/../dasOpenGL/opengl/opengl_boost.das" IMGUI_OPENGL_AOT_GENERATED_SRC dasImguiOpenGL_AOT daScript)
 	SOURCE_GROUP_FILES("aot stub" IMGUI_OPENGL_AOT_GENERATED_SRC)
