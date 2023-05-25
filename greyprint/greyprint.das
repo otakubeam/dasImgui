@@ -1092,7 +1092,7 @@ def main_editor_screen()
             properties_window()
         post_invoke_que()
 
-[export]
+[export, pinvoke]
 def main
     g_CurrentProject = new Project()
     g_PreviewUpdater = @@ <|
