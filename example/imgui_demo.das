@@ -1504,7 +1504,7 @@ class ExampleAppLog
 
 def DasShowExampleAppLog(p_open:bool? implicit)
     static_let <|
-        var log <- ExampleAppLog()
+        var log = new ExampleAppLog()
     SetNextWindowSize(float2(500., 400.), ImGuiCond FirstUseEver)
     Begin("Example: Log", p_open)
     if SmallButton("[Debug] Add 5 entries")
@@ -1751,7 +1751,7 @@ class ExampleAppConsole
 
 def DasShowExampleAppConsole(var p_open:bool? implicit)
     static_let <|
-        var console <- ExampleAppConsole()
+        var console = new ExampleAppConsole()
     console->Draw("Example: Console", p_open)
 
 struct MyDocument
