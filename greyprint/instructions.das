@@ -199,7 +199,7 @@ class Project
     def finalize
         self->clear()
     def find_instruction ( id:string implicit ) : Instruction?
-        return lookup?[id] ?? null
+        return lookup?[id] ?? [[Instruction?]]
     def add_insturction ( var i : Instruction? )
         unsafe
             i.owner = addr(self)
