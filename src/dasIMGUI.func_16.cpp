@@ -66,16 +66,16 @@ void Module_dasIMGUI::initFunctions_16() {
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< bool (*)() , ImGui::IsAnyMouseDown , SimNode_ExtFuncCall , imguiTempFn>(lib,"IsAnyMouseDown","ImGui::IsAnyMouseDown")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetMousePos , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetMousePos","ImGui::GetMousePos")
+	makeExtern< ImVec2 (*)() , ImGui::GetMousePos , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetMousePos","ImGui::GetMousePos")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetMousePosOnOpeningCurrentPopup , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetMousePosOnOpeningCurrentPopup","ImGui::GetMousePosOnOpeningCurrentPopup")
+	makeExtern< ImVec2 (*)() , ImGui::GetMousePosOnOpeningCurrentPopup , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetMousePosOnOpeningCurrentPopup","ImGui::GetMousePosOnOpeningCurrentPopup")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< bool (*)(int,float) , ImGui::IsMouseDragging , SimNode_ExtFuncCall , imguiTempFn>(lib,"IsMouseDragging","ImGui::IsMouseDragging")
 		->args({"button","lock_threshold"})
 		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(1,make_smart<ExprConstFloat>(-1.00000000000000000))
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)(int,float) , ImGui::GetMouseDragDelta , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetMouseDragDelta","ImGui::GetMouseDragDelta")
+	makeExtern< ImVec2 (*)(int,float) , ImGui::GetMouseDragDelta , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetMouseDragDelta","ImGui::GetMouseDragDelta")
 		->args({"button","lock_threshold"})
 		->arg_type(0,makeType<ImGuiMouseButton_>(lib))
 		->arg_init(0,make_smart<ExprConstEnumeration>(0,makeType<ImGuiMouseButton_>(lib)))

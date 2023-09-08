@@ -47,12 +47,12 @@ void Module_dasIMGUI_NODE_EDITOR::initFunctions_5() {
 	makeExtern< bool (*)(ax::NodeEditor::PinId) , ax::NodeEditor::PinHadAnyLinks , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"PinHadAnyLinks","ax::NodeEditor::PinHadAnyLinks")
 		->args({"pinId"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetScreenSize , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"GetScreenSize","ax::NodeEditor::GetScreenSize")
+	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetScreenSize , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetScreenSize","ax::NodeEditor::GetScreenSize")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)(const ImVec2 &) , ax::NodeEditor::ScreenToCanvas , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"ScreenToCanvas","ax::NodeEditor::ScreenToCanvas")
+	makeExtern< ImVec2 (*)(const ImVec2 &) , ax::NodeEditor::ScreenToCanvas , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"ScreenToCanvas","ax::NodeEditor::ScreenToCanvas")
 		->args({"pos"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)(const ImVec2 &) , ax::NodeEditor::CanvasToScreen , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"CanvasToScreen","ax::NodeEditor::CanvasToScreen")
+	makeExtern< ImVec2 (*)(const ImVec2 &) , ax::NodeEditor::CanvasToScreen , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"CanvasToScreen","ax::NodeEditor::CanvasToScreen")
 		->args({"pos"})
 		->addToModule(*this, SideEffects::worstDefault);
 }

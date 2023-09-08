@@ -53,13 +53,13 @@ void Module_dasIMGUI::initFunctions_3() {
 	makeExtern< void (*)(const char *) , ImGui::SetWindowFocus , SimNode_ExtFuncCall , imguiTempFn>(lib,"SetWindowFocus","ImGui::SetWindowFocus")
 		->args({"name"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetContentRegionAvail , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetContentRegionAvail","ImGui::GetContentRegionAvail")
+	makeExtern< ImVec2 (*)() , ImGui::GetContentRegionAvail , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetContentRegionAvail","ImGui::GetContentRegionAvail")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetContentRegionMax , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetContentRegionMax","ImGui::GetContentRegionMax")
+	makeExtern< ImVec2 (*)() , ImGui::GetContentRegionMax , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetContentRegionMax","ImGui::GetContentRegionMax")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMin , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetWindowContentRegionMin","ImGui::GetWindowContentRegionMin")
+	makeExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMin , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowContentRegionMin","ImGui::GetWindowContentRegionMin")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMax , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetWindowContentRegionMax","ImGui::GetWindowContentRegionMax")
+	makeExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMax , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowContentRegionMax","ImGui::GetWindowContentRegionMax")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< float (*)() , ImGui::GetWindowContentRegionWidth , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowContentRegionWidth","ImGui::GetWindowContentRegionWidth")
 		->addToModule(*this, SideEffects::worstDefault);

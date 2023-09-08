@@ -25,9 +25,9 @@ void Module_dasIMGUI::initFunctions_6() {
 	makeExtern< void (*)(float) , ImGui::SetCursorPosY , SimNode_ExtFuncCall , imguiTempFn>(lib,"SetCursorPosY","ImGui::SetCursorPosY")
 		->args({"local_y"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetCursorStartPos , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetCursorStartPos","ImGui::GetCursorStartPos")
+	makeExtern< ImVec2 (*)() , ImGui::GetCursorStartPos , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetCursorStartPos","ImGui::GetCursorStartPos")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetCursorScreenPos , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetCursorScreenPos","ImGui::GetCursorScreenPos")
+	makeExtern< ImVec2 (*)() , ImGui::GetCursorScreenPos , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetCursorScreenPos","ImGui::GetCursorScreenPos")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< void (*)(const ImVec2 &) , ImGui::SetCursorScreenPos , SimNode_ExtFuncCall , imguiTempFn>(lib,"SetCursorScreenPos","ImGui::SetCursorScreenPos")
 		->args({"pos"})

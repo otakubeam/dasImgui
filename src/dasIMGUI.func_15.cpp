@@ -12,11 +12,11 @@
 namespace das {
 #include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_15() {
-	makeExtern< ImVec2 (*)() , ImGui::GetItemRectMin , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetItemRectMin","ImGui::GetItemRectMin")
+	makeExtern< ImVec2 (*)() , ImGui::GetItemRectMin , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetItemRectMin","ImGui::GetItemRectMin")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetItemRectMax , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetItemRectMax","ImGui::GetItemRectMax")
+	makeExtern< ImVec2 (*)() , ImGui::GetItemRectMax , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetItemRectMax","ImGui::GetItemRectMax")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetItemRectSize , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetItemRectSize","ImGui::GetItemRectSize")
+	makeExtern< ImVec2 (*)() , ImGui::GetItemRectSize , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetItemRectSize","ImGui::GetItemRectSize")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< void (*)() , ImGui::SetItemAllowOverlap , SimNode_ExtFuncCall , imguiTempFn>(lib,"SetItemAllowOverlap","ImGui::SetItemAllowOverlap")
 		->addToModule(*this, SideEffects::worstDefault);
@@ -57,7 +57,7 @@ void Module_dasIMGUI::initFunctions_15() {
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< void (*)() , ImGui::EndChildFrame , SimNode_ExtFuncCall , imguiTempFn>(lib,"EndChildFrame","ImGui::EndChildFrame")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec4 (*)(unsigned int) , ImGui::ColorConvertU32ToFloat4 , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"ColorConvertU32ToFloat4","ImGui::ColorConvertU32ToFloat4")
+	makeExtern< ImVec4 (*)(unsigned int) , ImGui::ColorConvertU32ToFloat4 , SimNode_ExtFuncCall , imguiTempFn>(lib,"ColorConvertU32ToFloat4","ImGui::ColorConvertU32ToFloat4")
 		->args({"in"})
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< unsigned int (*)(const ImVec4 &) , ImGui::ColorConvertFloat4ToU32 , SimNode_ExtFuncCall , imguiTempFn>(lib,"ColorConvertFloat4ToU32","ImGui::ColorConvertFloat4ToU32")

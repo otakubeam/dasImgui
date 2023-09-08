@@ -45,10 +45,10 @@ void Module_dasIMGUI_NODE_EDITOR::initFunctions_3() {
 	makeExtern< void (*)(ax::NodeEditor::NodeId,const ImVec2 &) , ax::NodeEditor::SetNodePosition , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"SetNodePosition","ax::NodeEditor::SetNodePosition")
 		->args({"nodeId","editorPosition"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::GetNodePosition , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"GetNodePosition","ax::NodeEditor::GetNodePosition")
+	makeExtern< ImVec2 (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::GetNodePosition , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetNodePosition","ax::NodeEditor::GetNodePosition")
 		->args({"nodeId"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::GetNodeSize , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"GetNodeSize","ax::NodeEditor::GetNodeSize")
+	makeExtern< ImVec2 (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::GetNodeSize , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetNodeSize","ax::NodeEditor::GetNodeSize")
 		->args({"nodeId"})
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< void (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::CenterNodeOnScreen , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"CenterNodeOnScreen","ax::NodeEditor::CenterNodeOnScreen")

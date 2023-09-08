@@ -31,9 +31,9 @@ void Module_dasIMGUI_NODE_EDITOR::initFunctions_2() {
 	makeExtern< bool (*)(ax::NodeEditor::NodeId) , ax::NodeEditor::BeginGroupHint , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"BeginGroupHint","ax::NodeEditor::BeginGroupHint")
 		->args({"nodeId"})
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetGroupMin , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"GetGroupMin","ax::NodeEditor::GetGroupMin")
+	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetGroupMin , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetGroupMin","ax::NodeEditor::GetGroupMin")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetGroupMax , SimNode_ExtFuncCallAndCopyOrMove , imgui_node_editorTempFn>(lib,"GetGroupMax","ax::NodeEditor::GetGroupMax")
+	makeExtern< ImVec2 (*)() , ax::NodeEditor::GetGroupMax , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetGroupMax","ax::NodeEditor::GetGroupMax")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< ImDrawList * (*)() , ax::NodeEditor::GetHintForegroundDrawList , SimNode_ExtFuncCall , imgui_node_editorTempFn>(lib,"GetHintForegroundDrawList","ax::NodeEditor::GetHintForegroundDrawList")
 		->addToModule(*this, SideEffects::worstDefault);

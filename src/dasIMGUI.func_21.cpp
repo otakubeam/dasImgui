@@ -34,11 +34,11 @@ void Module_dasIMGUI::initFunctions_21() {
 		->args({"self"})
 		->addToModule(*this, SideEffects::worstDefault);
 	using _method_56 = das::das_call_member< ImVec2 (ImDrawList::*)() const,&ImDrawList::GetClipRectMin >;
-	makeExtern<DAS_CALL_METHOD(_method_56), SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetClipRectMin","das_call_member< ImVec2 (ImDrawList::*)() const , &ImDrawList::GetClipRectMin >::invoke")
+	makeExtern<DAS_CALL_METHOD(_method_56), SimNode_ExtFuncCall , imguiTempFn>(lib,"GetClipRectMin","das_call_member< ImVec2 (ImDrawList::*)() const , &ImDrawList::GetClipRectMin >::invoke")
 		->args({"self"})
 		->addToModule(*this, SideEffects::worstDefault);
 	using _method_57 = das::das_call_member< ImVec2 (ImDrawList::*)() const,&ImDrawList::GetClipRectMax >;
-	makeExtern<DAS_CALL_METHOD(_method_57), SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetClipRectMax","das_call_member< ImVec2 (ImDrawList::*)() const , &ImDrawList::GetClipRectMax >::invoke")
+	makeExtern<DAS_CALL_METHOD(_method_57), SimNode_ExtFuncCall , imguiTempFn>(lib,"GetClipRectMax","das_call_member< ImVec2 (ImDrawList::*)() const , &ImDrawList::GetClipRectMax >::invoke")
 		->args({"self"})
 		->addToModule(*this, SideEffects::worstDefault);
 	using _method_58 = das::das_call_member< void (ImDrawList::*)(const ImVec2 &,const ImVec2 &,unsigned int,float),&ImDrawList::AddLine >;

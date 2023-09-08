@@ -24,7 +24,7 @@ void Module_dasIMGUI::initFunctions_5() {
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< float (*)() , ImGui::GetFontSize , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetFontSize","ImGui::GetFontSize")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetFontTexUvWhitePixel , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetFontTexUvWhitePixel","ImGui::GetFontTexUvWhitePixel")
+	makeExtern< ImVec2 (*)() , ImGui::GetFontTexUvWhitePixel , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetFontTexUvWhitePixel","ImGui::GetFontTexUvWhitePixel")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< unsigned int (*)(int,float) , ImGui::GetColorU32 , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetColorU32","ImGui::GetColorU32")
 		->args({"idx","alpha_mul"})
@@ -67,7 +67,7 @@ void Module_dasIMGUI::initFunctions_5() {
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< void (*)() , ImGui::EndGroup , SimNode_ExtFuncCall , imguiTempFn>(lib,"EndGroup","ImGui::EndGroup")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetCursorPos , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetCursorPos","ImGui::GetCursorPos")
+	makeExtern< ImVec2 (*)() , ImGui::GetCursorPos , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetCursorPos","ImGui::GetCursorPos")
 		->addToModule(*this, SideEffects::worstDefault);
 }
 }

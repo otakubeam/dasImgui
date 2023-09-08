@@ -54,9 +54,9 @@ void Module_dasIMGUI::initFunctions_2() {
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< ImDrawList * (*)() , ImGui::GetWindowDrawList , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowDrawList","ImGui::GetWindowDrawList")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetWindowPos , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetWindowPos","ImGui::GetWindowPos")
+	makeExtern< ImVec2 (*)() , ImGui::GetWindowPos , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowPos","ImGui::GetWindowPos")
 		->addToModule(*this, SideEffects::worstDefault);
-	makeExtern< ImVec2 (*)() , ImGui::GetWindowSize , SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"GetWindowSize","ImGui::GetWindowSize")
+	makeExtern< ImVec2 (*)() , ImGui::GetWindowSize , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowSize","ImGui::GetWindowSize")
 		->addToModule(*this, SideEffects::worstDefault);
 	makeExtern< float (*)() , ImGui::GetWindowWidth , SimNode_ExtFuncCall , imguiTempFn>(lib,"GetWindowWidth","ImGui::GetWindowWidth")
 		->addToModule(*this, SideEffects::worstDefault);

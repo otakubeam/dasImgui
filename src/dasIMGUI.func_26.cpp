@@ -43,7 +43,7 @@ void Module_dasIMGUI::initFunctions_26() {
 		->args({"self"})
 		->addToModule(*this, SideEffects::worstDefault);
 	using _method_153 = das::das_call_member< ImVec2 (ImFont::*)(float,float,float,const char *,const char *,const char **) const,&ImFont::CalcTextSizeA >;
-	makeExtern<DAS_CALL_METHOD(_method_153), SimNode_ExtFuncCallAndCopyOrMove , imguiTempFn>(lib,"CalcTextSizeA","das_call_member< ImVec2 (ImFont::*)(float,float,float,const char *,const char *,const char **) const , &ImFont::CalcTextSizeA >::invoke")
+	makeExtern<DAS_CALL_METHOD(_method_153), SimNode_ExtFuncCall , imguiTempFn>(lib,"CalcTextSizeA","das_call_member< ImVec2 (ImFont::*)(float,float,float,const char *,const char *,const char **) const , &ImFont::CalcTextSizeA >::invoke")
 		->args({"self","size","max_width","wrap_width","text_begin","text_end","remaining"})
 		->arg_init(5,make_smart<ExprConstString>(""))
 		->arg_init(6,make_smart<ExprConstPtr>())
